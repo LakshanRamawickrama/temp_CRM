@@ -169,7 +169,7 @@ const PwReq = ({ met, label }) => (
 /* ═════════════════════════════════════════════
    MAIN COMPONENT
 ═════════════════════════════════════════════ */
-const Login = () => {
+const Login = ({ onLogin }) => {
 
     // ── VIEW STATES ──
     // 'login' | 'fp-email' | 'fp-otp' | 'fp-newpw' | 'fp-success'
@@ -213,13 +213,31 @@ const Login = () => {
     };
 
     /* ── LOGIN SUBMIT ── */
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         setLoginError('');
         if (!loginEmail) { setLoginError('Please enter your email address.'); return; }
         if (!loginPassword) { setLoginError('Please enter your password.'); return; }
-        // TODO: call your auth API
-        alert('Signed in successfully! (demo)');
+
+        try {
+            const res = await fetch('http://localhost:8000/api/auth/login/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                // Store user data in localStorage for demo persistence
+                localStorage.setItem('user', JSON.stringify(data));
+                if (onLogin) onLogin();
+            } else {
+                setLoginError(data.error || 'Authentication failed');
+            }
+        } catch (err) {
+            setLoginError('Server connection error. Please try again.');
+        }
     };
 
     /* ── FP STEP 1: SEND CODE ── */
