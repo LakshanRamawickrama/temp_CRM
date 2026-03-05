@@ -129,18 +129,20 @@ const Sidebar = ({ activePage, onNavigate, onLogout }) => {
                 <div className="sidebar-user">
                     <div className="sidebar-user-avatar">{initials}</div>
                     <div className="sidebar-user-info">
-                        <span className="sidebar-user-name">{name}</span>
+                        <div className="sidebar-user-name-row">
+                            <span className="sidebar-user-name">{name}</span>
+                            <button className="btn-logout-small" onClick={onLogout} title="Logout">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                                    strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    <polyline points="16 17 21 12 16 7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                            </button>
+                        </div>
                         <span className="sidebar-user-role">{user.is_staff ? 'Super Admin' : 'Staff'}</span>
                     </div>
                 </div>
-                <button className="btn-logout" onClick={onLogout} title="Logout">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                        strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                        <polyline points="16 17 21 12 16 7" />
-                        <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                </button>
             </div>
         </aside>
     );

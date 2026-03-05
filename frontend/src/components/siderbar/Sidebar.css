@@ -135,39 +135,40 @@
   text-overflow: ellipsis;
 }
 
-/* ── User Profile ── */
 .sidebar-footer {
-  padding: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+  border-top: 1px solid #f0f4fb;
+}
+
+.sidebar-user-name-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto;
+  gap: 8px;
 }
 
-.btn-logout {
+.btn-logout-small {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: #94a3b8;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+  padding: 4px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   transition: all 0.2s;
 }
 
-.btn-logout:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ff4d4d;
+.btn-logout-small:hover {
+  background: #fee2e2;
+  color: #ef4444;
 }
 
 .sidebar-user {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 16px 20px;
-  border-top: 1px solid #f0f4fb;
   background: #fafbff;
 }
 
