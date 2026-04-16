@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Lead - TaskFlow CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+            background-color: #f8fafc;
+        }
+
+        .sora { font-family: 'Sora', sans-serif; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .form-input {
+            width: 100%;
+            background: #fdfdfd;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #2447d7;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(36, 71, 215, 0.05);
+        }
+
+        .label-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 9px;
+            font-weight: 800;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 8px;
+        }
+
+        .radio-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .radio-btn.active {
+            border-color: #2447d7;
+            background: #ebf0ff;
+            color: #2447d7;
+        }
+
+        .side-nav {
+            width: 80px;
+            background: #0f172a;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 25px;
+            z-index: 50;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active { color: white; }
+        .nav-text { font-size: 8px; font-weight: 700; text-transform: uppercase; }
+
+        @media (max-width: 1024px) {
+            .side-nav { display: none; }
+            .main-content { margin-left: 0 !important; }
+        }
+    </style>
+</head>
+
+<body class="flex">
+
+    <!-- Sidebar -->
+    <nav class="side-nav">
+        <div class="mb-10 text-white"><i class="fa-solid fa-bolt text-2xl"></i></div>
+        <a href="task_management.html" class="nav-item">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="nav-text">Home</span>
+        </a>
+        <a href="all_tasks.html" class="nav-item">
+            <i class="fa-solid fa-tasks text-lg"></i>
+            <span class="nav-text">Tasks</span>
+        </a>
+        <a href="create_lead.html" class="nav-item active">
+            <i class="fa-solid fa-users text-lg"></i>
+            <span class="nav-text">Leads</span>
+        </a>
+        <div class="mt-auto nav-item">
+            <i class="fa-solid fa-cog text-lg"></i>
+            <span class="nav-text">Set</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content flex-1 ml-20 p-6 lg:ml-0 overflow-y-auto custom-scrollbar h-screen">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6 px-2">
+            <div>
+                <h1 class="text-xl font-bold text-gray-900 sora">Create Lead</h1>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Lead Specification AF-2026-0001</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-bold text-gray-400 uppercase">Status:</span>
+                <select class="bg-orange-50 text-orange-600 border border-orange-200 text-[11px] font-bold px-4 py-1.5 rounded-full outline-none">
+                    <option>Warm</option><option>Hot</option><option>Cool</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-[24px] border border-gray-100 shadow-sm p-8 max-w-5xl mx-auto mb-10">
+            
+            <form id="leadForm" class="space-y-10">
+                
+                <!-- 1. CONTACT INFORMATION -->
+                <section>
+                    <h3 class="section-title">Contact Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+                        <div class="space-y-1">
+                            <label class="label-text">Title <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="e.g. Mr, Mrs, Dr..." class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Full Name <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="e.g. Jonathan Doe" class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Date of Birth <span class="text-red-500">*</span></label>
+                            <input type="date" class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Company / Organization Name <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="Registered company name..." class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Company House Number <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="e.g. 12345678" class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Business Annual Turnover <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">£</span>
+                                <input type="text" placeholder="0.00" class="form-input pl-8">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Job Title / Position</label>
+                            <input type="text" placeholder="e.g. Managing Director" class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Email Address <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                                <input type="email" placeholder="client@example.com" class="form-input pl-10">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Phone Number <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                                <input type="tel" placeholder="+44 7700 900000" class="form-input pl-10">
+                            </div>
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                             <label class="label-text">Preferred Contact Method <span class="text-red-500">*</span></label>
+                             <div class="flex flex-wrap gap-2">
+                                <div class="radio-btn active" onclick="this.classList.toggle('active')"><i class="fa-solid fa-check"></i> Email</div>
+                                <div class="radio-btn" onclick="this.classList.toggle('active')"><i class="fa-solid fa-check hidden"></i> Phone</div>
+                                <div class="radio-btn" onclick="this.classList.toggle('active')"><i class="fa-solid fa-check hidden"></i> WhatsApp</div>
+                                <div class="radio-btn" onclick="this.classList.toggle('active')"><i class="fa-solid fa-check hidden"></i> Other</div>
+                             </div>
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="label-text">Home Owner <span class="text-red-500">*</span></label>
+                            <div class="flex gap-2">
+                               <div class="radio-btn" onclick="setRadio(this, 'homeOwner')">Yes</div>
+                               <div class="radio-btn active" onclick="setRadio(this, 'homeOwner')">No</div>
+                            </div>
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="label-text">Residential Address <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="Full residential address..." class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Time at Current Address</label>
+                            <input type="text" placeholder="e.g. 3 years" class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Previous Address</label>
+                            <input type="text" placeholder="Enter if living at current address < 3 years" class="form-input">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. LOAN DETAILS -->
+                <section>
+                    <h3 class="section-title">Loan Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+                        <div class="space-y-1">
+                            <label class="label-text">Amount Needed <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">£</span>
+                                <input type="text" placeholder="0.00" class="form-input pl-8">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Purpose of Taking Loan</label>
+                            <input type="text" placeholder="e.g. Business expansion" class="form-input">
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="label-text">Existing Loan</label>
+                            <div class="flex gap-2">
+                               <div class="radio-btn" onclick="toggleExistingLoan(true)">Yes</div>
+                               <div class="radio-btn active" onclick="toggleExistingLoan(false)">No</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Conditional Existing Loan Section -->
+                        <div id="existingLoanSection" class="hidden md:col-span-2 bg-gray-50/50 p-6 rounded-[20px] border border-gray-100 space-y-5">
+                             <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Existing Indebtedness</p>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input type="text" placeholder="Lender Name" class="form-input">
+                                <input type="text" placeholder="Amount Taken (£)" class="form-input">
+                                <input type="text" placeholder="Interest Rate (%)" class="form-input">
+                                <input type="text" placeholder="Monthly Repayment (£)" class="form-input">
+                                <input type="text" placeholder="Loan Term" class="form-input md:col-span-2">
+                             </div>
+                        </div>
+
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="label-text">Overdraft Facility</label>
+                            <div class="flex gap-2">
+                               <div class="radio-btn" onclick="setRadio(this, 'overdraft')">Yes</div>
+                               <div class="radio-btn active" onclick="setRadio(this, 'overdraft')">No</div>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Company Bank</label>
+                            <select class="form-input appearance-none cursor-pointer">
+                                <option value="">Select a bank...</option>
+                                <option>Santander</option><option>HSBC</option><option>Lloyds</option><option>Starling</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Lead Source</label>
+                            <select class="form-input appearance-none cursor-pointer">
+                                <option value="">Select source...</option>
+                                <option>Advertisement</option><option>Cold Call</option><option>Web</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Funding Timeline</label>
+                            <input type="text" placeholder="e.g. Within 2 weeks" class="form-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="label-text">Industry</label>
+                            <select class="form-input appearance-none cursor-pointer">
+                                <option value="">Select industry...</option>
+                                <option>Software</option><option>Retail</option><option>Health</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="label-text">Previous Alpha Funding Loan? <span class="text-red-500">*</span></label>
+                            <div class="flex gap-2">
+                               <div class="radio-btn" onclick="setRadio(this, 'prevLoan')">Yes</div>
+                               <div class="radio-btn active" onclick="setRadio(this, 'prevLoan')">No</div>
+                            </div>
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="label-text">Credit Search Consent <span class="text-red-500">*</span></label>
+                            <p class="text-[11px] text-gray-400 -mt-1 mb-2">Does the client consent to a credit search?</p>
+                            <div class="flex gap-2">
+                               <div class="radio-btn" onclick="setRadio(this, 'consent')">Yes</div>
+                               <div class="radio-btn active" onclick="setRadio(this, 'consent')">No</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. DOCUMENTS -->
+                <section>
+                    <h3 class="section-title">Supporting Documents</h3>
+                    <div class="p-8 border-2 border-dashed border-gray-100 rounded-[24px] bg-gray-50/30 text-center">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-200 mb-4 block"></i>
+                        <p class="text-sm font-semibold text-gray-600">Click to upload or drag documents</p>
+                        <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-bold">PDF, DOC, DOCX up to 10MB</p>
+                        <button type="button" class="mt-6 px-8 py-3 bg-[#ebf0ff] text-[#2447d7] text-xs font-bold rounded-xl hover:bg-[#2447d7] hover:text-white transition-all uppercase tracking-widest">Select Files</button>
+                    </div>
+                </section>
+
+                <!-- 4. COMMENTS -->
+                <section>
+                    <h3 class="section-title">Additional Comments</h3>
+                    <textarea rows="4" placeholder="Enter notes, special requirements or context..." class="form-input resize-none"></textarea>
+                </section>
+
+                <!-- 5. FOLLOW-UP -->
+                <section class="bg-[#f8faff] rounded-[24px] border border-[#ebf0ff] p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-white rounded-xl shadow-sm border border-gray-50 flex items-center justify-center text-[#2447d7]">
+                                <i class="fa-solid fa-bell"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">Follow-up & Reminders</h4>
+                                <p class="text-[10px] text-gray-400">Schedule initial contact for this lead</p>
+                            </div>
+                        </div>
+                        <div class="relative inline-block w-10 h-5">
+                            <input type="checkbox" id="followUpToggle" class="sr-only peer" onchange="document.getElementById('followUpForm').classList.toggle('hidden')">
+                            <label for="followUpToggle" class="absolute inset-0 bg-gray-200 rounded-full cursor-pointer transition-colors peer-checked:bg-[#2447d7] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:w-4 after:h-4 after:rounded-full after:transition-all peer-checked:after:translate-x-5"></label>
+                        </div>
+                    </div>
+                    
+                    <div id="followUpForm" class="hidden animate-fadeIn space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                             <div><label class="label-text">Task Date</label><input type="date" class="form-input"></div>
+                             <div><label class="label-text">Preferred Time</label><input type="time" class="form-input"></div>
+                             <div>
+                                <label class="label-text">Task Type</label>
+                                <select class="form-input appearance-none cursor-pointer">
+                                    <option>Initial Call</option><option>Document Request</option><option>Lender Meeting</option>
+                                </select>
+                             </div>
+                        </div>
+                        <div>
+                            <label class="label-text">Context Notes</label>
+                            <textarea rows="2" placeholder="Instructions for follow-up..." class="form-input resize-none"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ACTIONS -->
+                <div class="flex justify-end gap-5 pt-10 border-t border-gray-50">
+                    <button type="button" class="px-8 py-3.5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Cancel</button>
+                    <button type="submit" class="px-10 py-4 bg-[#2447d7] text-white font-bold text-[11px] uppercase tracking-widest rounded-2xl shadow-[0_8px_16px_rgba(36,71,215,0.2)] hover:bg-[#1a38b1] hover:scale-[1.02] transition-all">Save Lead</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function setRadio(el, groupName) {
+            const btns = el.parentElement.querySelectorAll('.radio-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function toggleExistingLoan(show) {
+            const section = document.getElementById('existingLoanSection');
+            if (show) section.classList.remove('hidden');
+            else section.classList.add('hidden');
+            
+            // Highlight button
+            const event = window.event;
+            setRadio(event.currentTarget, 'existingLoan');
+        }
+    </script>
+</body>
+
+</html>
