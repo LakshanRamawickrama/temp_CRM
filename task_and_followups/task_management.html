@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Task Hub - TaskFlow CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #ffffff;
+            margin: 0;
+            display: flex;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 300px 1fr;
+            gap: 0.75rem;
+            height: 100vh;
+            padding: 0.75rem;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .side-nav {
+            width: 70px;
+            background: #0f172a;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+            gap: 20px;
+            border-right: 1px solid #1e293b;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #94a3b8;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+        }
+
+        .nav-text {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        .panel-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .calendar-mini {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+        }
+
+        .cal-day {
+            aspect-ratio: 1.2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .cal-day.today {
+            background-color: #111827;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .label-text {
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .input-compact {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .task-item:hover {
+            background-color: #f1f5f9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slim Sidebar -->
+    <nav class="side-nav">
+        <div class="mb-6">
+            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+        </div>
+
+        <a href="task_management.html" class="nav-item active">
+            <i class="fa-solid fa-tasks"></i>
+            <span class="nav-text">Tasks & Followups</span>
+        </a>
+
+    </nav>
+
+    <!-- Unified Dashboard -->
+    <main class="dashboard-container">
+
+        <!-- COLUMN 1: CREATE TASK -->
+        <section class="panel-card">
+            <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                <h2 class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Create New Task</h2>
+                <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            </div>
+            <div class="flex-1 p-4 space-y-2.5 overflow-y-auto custom-scrollbar">
+                <div>
+                    <label class="label-text">Task Description</label>
+                    <input type="text" placeholder="Title..." class="input-compact">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="label-text">Assignee</label>
+                        <select class="input-compact">
+                            <option>Thanushika</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label-text">Client</label>
+                        <select class="input-compact">
+                            <option>ABC Corp</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="label-text">Phone</label>
+                        <input type="tel" placeholder="077..." class="input-compact">
+                    </div>
+                    <div>
+                        <label class="label-text">Status</label>
+                        <select class="input-compact">
+                            <option>Warm</option>
+                            <option>Hot</option>
+                            <option>Cold</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-text">Email</label>
+                    <input type="email" placeholder="mail@lead.com" class="input-compact">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="label-text">Date</label>
+                        <input type="date" class="input-compact" value="2026-04-16">
+                    </div>
+                    <div>
+                        <label class="label-text">Time</label>
+                        <input type="time" class="input-compact" value="14:30">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="label-text">Notes</label>
+                    <textarea rows="2" placeholder="..." class="input-compact resize-none"></textarea>
+                </div>
+                <button
+                    class="w-full py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                    Create Task
+                </button>
+            </div>
+        </section>
+
+        <!-- COLUMN 2: SCHEDULE FEED -->
+        <section class="panel-card">
+            <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                <h2 class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Calender View</h2>
+                <span class="text-[9px] font-bold text-gray-400 font-mono">2026</span>
+            </div>
+            <div class="flex-1 p-4 flex flex-col">
+                <div class="calendar-mini mb-4">
+                    <div class="cal-day font-bold">S</div>
+                    <div class="cal-day font-bold">M</div>
+                    <div class="cal-day font-bold">T</div>
+                    <div class="cal-day font-bold">W</div>
+                    <div class="cal-day font-bold">T</div>
+                    <div class="cal-day font-bold">F</div>
+                    <div class="cal-day font-bold">S</div>
+                    <div class="cal-day opacity-20">29</div>
+                    <div class="cal-day opacity-20">30</div>
+                    <div class="cal-day">1</div>
+                    <div class="cal-day">2</div>
+                    <div class="cal-day">3</div>
+                    <div class="cal-day">4</div>
+                    <div class="cal-day">5</div>
+                    <div class="cal-day">6</div>
+                    <div class="cal-day">7</div>
+                    <div class="cal-day">8</div>
+                    <div class="cal-day">9</div>
+                    <div class="cal-day">10</div>
+                    <div class="cal-day">11</div>
+                    <div class="cal-day">12</div>
+                    <div class="cal-day">13</div>
+                    <div class="cal-day">14</div>
+                    <div class="cal-day">15</div>
+                    <div class="cal-day today font-bold">16</div>
+                    <div class="cal-day">17</div>
+                    <div class="cal-day">18</div>
+                    <div class="cal-day">19</div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto custom-scrollbar pr-1">
+                    <label class="label-text block mb-2">Today's Priority</label>
+                    <div class="space-y-2">
+                        <div class="p-2.5 bg-blue-50/40 border border-blue-100 rounded-lg">
+                            <p class="text-[8px] font-bold text-blue-600 uppercase">14:30 • CALL</p>
+                            <p class="text-[10px] font-bold text-gray-800">ABC Followup</p>
+                        </div>
+                        <div class="p-2.5 bg-purple-50/40 border border-purple-100 rounded-lg">
+                            <p class="text-[8px] font-bold text-purple-600 uppercase">16:00 • MEETING</p>
+                            <p class="text-[10px] font-bold text-gray-800">Review XYZ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COLUMN 3: TASK INVENTORY -->
+        <section class="panel-card">
+            <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-900 text-white">
+                <h2 class="text-[9px] font-bold uppercase tracking-widest">All Tasks</h2>
+
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <table class="w-full text-left">
+                    <thead class="sticky top-0 bg-gray-50 border-b border-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Task
+                                Details</th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Client
+                            </th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Schedule
+                            </th>
+                            <th class="px-4 py-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-2.5">
+                                <p class="text-[10px] font-bold text-gray-900 line-clamp-1">ABC Quotation Review</p>
+                                <p class="text-[7px] text-blue-500 font-bold uppercase mt-0.5">📞 Outbound</p>
+                            </td>
+                            <td class="px-4 py-2.5">
+                                <p class="text-[10px] font-bold text-gray-700">John P.</p>
+                            </td>
+                            <td class="px-4 py-2.5">
+                                <p class="text-[9px] font-bold text-gray-400">Tdy, 14:30</p>
+                            </td>
+                            <td class="px-4 py-2.5 text-center">
+                                <i
+                                    class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer"></i>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-2.5">
+                                <p class="text-[10px] font-bold text-gray-900 line-clamp-1">Contract Negotiation</p>
+                                <p class="text-[7px] text-purple-500 font-bold uppercase mt-0.5">🤝 Meeting</p>
+                            </td>
+                            <td class="px-4 py-2.5">
+                                <p class="text-[10px] font-bold text-gray-700">Sarah S.</p>
+                            </td>
+                            <td class="px-4 py-2.5">
+                                <p class="text-[9px] font-bold text-gray-400">Tmr, 09:00</p>
+                            </td>
+                            <td class="px-4 py-2.5 text-center">
+                                <i
+                                    class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-3 border-t border-gray-50 bg-gray-50/30 text-center">
+                <button
+                    class="text-[8px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">Refresh
+                    Database</button>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+
+</html>
