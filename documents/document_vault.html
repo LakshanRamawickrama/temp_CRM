@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Vault - Whiterock CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        body { font-family: 'Inter', system-ui, sans-serif; overflow: hidden; height: 100vh; background: #fff; margin: 0; display: flex; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 0.75rem;
+            height: 100vh;
+            padding: 0.75rem;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        /* Sidebar */
+        .side-nav { width: 70px; background: #0f172a; height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px 0; gap: 20px; border-right: 1px solid #1e293b; flex-shrink: 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #94a3b8; transition: all .2s; cursor: pointer; text-decoration: none; padding: 8px; border-radius: 8px; width: 50px; }
+        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(255,255,255,.08); }
+        .nav-item i { font-size: 16px; }
+        .nav-text { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+
+        /* Cards */
+        .panel-card { background: #fff; border-radius: 12px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+
+        /* Form elements */
+        .label-text { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; margin-bottom: 3px; display: block; }
+        .input-compact { width: 100%; background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8px; padding: 7px 10px; font-size: 10.5px; font-weight: 500; outline: none; transition: border-color .15s; color: #1e293b; }
+        .input-compact:focus { border-color: #94a3b8; background: #fff; }
+        .form-section { border-top: 1px solid #f1f5f9; padding-top: 10px; margin-top: 10px; }
+        .form-section-title { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #cbd5e1; margin-bottom: 7px; display: flex; align-items: center; gap: 5px; }
+
+        /* Upload zone */
+        .upload-zone { border: 2px dashed #e2e8f0; border-radius: 10px; padding: 22px 16px; text-align: center; cursor: pointer; transition: all .2s; background: #f8fafc; position: relative; }
+        .upload-zone:hover, .upload-zone.drag-over { border-color: #6366f1; background: #eef2ff; }
+        .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+
+        /* Dark header select */
+        .dark-select { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 7px; padding: 5px 22px 5px 9px; font-size: 9px; font-weight: 700; color: #d1d5db; outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23ffffff60' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; flex-shrink: 0; }
+        .dark-select option { background: #1e293b; color: #fff; }
+
+        /* Status badges */
+        .badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 99px; font-size: 8px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+        .badge-new      { background: #dcfce7; color: #15803d; }
+        .badge-updated  { background: #dbeafe; color: #1d4ed8; }
+        .badge-archived { background: #f1f5f9; color: #94a3b8; }
+
+        /* Category tag chips in form */
+        .cat-tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background: #f1f5f9; border-radius: 6px; font-size: 9px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .03em; border: 1px solid #e2e8f0; cursor: pointer; transition: all .15s; }
+        .cat-tag:hover { background: #e2e8f0; }
+        .cat-tag.selected { background: #0f172a; color: #fff; border-color: #0f172a; }
+        .cat-tag .remove-cat { color: inherit; opacity: .5; cursor: pointer; font-size: 8px; }
+        .cat-tag .remove-cat:hover { opacity: 1; }
+
+        /* View toggle */
+        .view-btn { padding: 5px 8px; border-radius: 6px; font-size: 10px; color: #94a3b8; cursor: pointer; border: none; background: transparent; transition: all .15s; }
+        .view-btn.active { background: rgba(255,255,255,.12); color: #fff; }
+
+        /* Doc grid card */
+        .doc-card { background: #fff; border: 1px solid #f1f5f9; border-radius: 10px; padding: 14px; cursor: pointer; transition: all .15s; }
+        .doc-card:hover { border-color: #e2e8f0; box-shadow: 0 4px 14px rgba(0,0,0,.07); transform: translateY(-1px); }
+        .doc-card:active { transform: translateY(0); }
+
+        /* Doc list row */
+        .doc-row { transition: background .1s; cursor: pointer; }
+        .doc-row:hover { background: #f8fafc; }
+        .doc-row.expanded { background: #f8fafc; }
+
+        /* Row chevron */
+        .row-chevron { transition: transform .2s ease; }
+        .row-chevron.open { transform: rotate(90deg); }
+
+        /* Accordion expand */
+        .detail-expand-row td { padding: 0; }
+        .detail-expand-inner { background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 2px solid #e2e8f0; animation: expandDown .18s ease; }
+        @keyframes expandDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Progress bar */
+        .progress-bar-bg { background: #f1f5f9; border-radius: 99px; height: 3px; overflow: hidden; margin-top: 5px; }
+        .progress-bar { height: 100%; border-radius: 99px; transition: width .35s ease; }
+
+        mark { background: #fef9c3; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="side-nav">
+    <div class="mb-4">
+        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
+            <i class="fa-solid fa-bolt text-sm"></i>
+        </div>
+    </div>
+    <a href="../task_and_followups/task_management.html" class="nav-item">
+        <i class="fa-solid fa-tasks"></i><span class="nav-text">Tasks</span>
+    </a>
+    <a href="../lenders/lender_management.html" class="nav-item">
+        <i class="fa-solid fa-building-columns"></i><span class="nav-text">Lenders</span>
+    </a>
+    <a href="document_vault.html" class="nav-item active">
+        <i class="fa-solid fa-vault"></i><span class="nav-text">Docs</span>
+    </a>
+</nav>
+
+<main class="dashboard-container">
+
+    <!-- ── LEFT: UPLOAD PANEL ── -->
+    <section class="panel-card" id="left-panel">
+        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+            <h2 class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Upload Document</h2>
+            <div style="width:6px;height:6px;border-radius:50%;background:#6366f1;"></div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto" style="scrollbar-width:none;-ms-overflow-style:none;">
+            <style>#left-panel .flex-1::-webkit-scrollbar{display:none}</style>
+            <div class="p-4">
+
+                <!-- Drop zone -->
+                <div class="upload-zone" id="upload-zone"
+                    ondragover="handleDragOver(event)"
+                    ondragleave="handleDragLeave(event)"
+                    ondrop="handleDrop(event)">
+                    <input type="file" multiple id="file-input" onchange="handleFileSelect(event)">
+                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-indigo-300 mb-2 block"></i>
+                    <p class="text-[10px] font-bold text-gray-600 mb-0.5">Drop files here or <span class="text-indigo-500">browse</span></p>
+                    <p class="text-[8px] text-gray-400">PDF, DOCX, XLSX, PNG — Max 20 MB each</p>
+                </div>
+
+                <!-- Upload queue -->
+                <div id="upload-queue" class="space-y-1.5 mt-3"></div>
+
+                <!-- Document details -->
+                <div class="form-section">
+                    <p class="form-section-title"><i class="fa-solid fa-tag text-[8px]"></i> Document Details</p>
+                    <div class="space-y-2.5">
+                        <div>
+                            <label class="label-text">Title *</label>
+                            <input id="f-title" type="text" placeholder="e.g. Home Loan Product Guide 2026" class="input-compact">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="label-text">Status</label>
+                                <select id="f-status" class="input-compact">
+                                    <option value="New">New</option>
+                                    <option value="Updated">Updated</option>
+                                    <option value="Archived">Archived</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="label-text">Version</label>
+                                <input id="f-version" type="text" placeholder="v1.0" class="input-compact">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="label-text">Description</label>
+                            <textarea id="f-desc" rows="2" placeholder="Brief description..." class="input-compact resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div class="form-section">
+                    <p class="form-section-title"><i class="fa-solid fa-tags text-[8px]"></i> Category</p>
+                    <div id="cat-tags-container" class="flex flex-wrap gap-1.5 mb-2"></div>
+                    <div class="flex gap-1.5">
+                        <input id="cat-custom-input" type="text" placeholder="Add category..."
+                            class="input-compact flex-1 text-[9px]"
+                            onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomCat();}">
+                        <button onclick="addCustomCat()"
+                            class="px-2.5 py-1.5 bg-gray-900 text-white rounded-lg text-[9px] font-bold hover:bg-black transition-all flex-shrink-0">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="pt-3">
+                    <button onclick="uploadDocument()"
+                        class="w-full py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all flex items-center justify-center gap-2" id="submit-btn">
+                        <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i>
+                        <span id="submit-label">Upload Document</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ── RIGHT: VAULT ── -->
+    <section class="panel-card">
+
+        <!-- Dark header -->
+        <div class="px-4 border-b border-white/5 bg-gray-900 flex items-center gap-3" style="min-height:48px;">
+            <i class="fa-solid fa-vault text-indigo-400 text-[13px] flex-shrink-0"></i>
+            <h2 class="text-[9px] font-bold uppercase tracking-widest text-white flex-shrink-0">Document Vault</h2>
+            <span id="result-count" class="text-[8px] font-bold text-gray-500 font-mono flex-shrink-0"></span>
+
+            <!-- Search -->
+            <div class="relative flex-1 min-w-[100px]">
+                <input id="search-input" type="text" placeholder="Search documents..."
+                    style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:5px 10px 5px 26px;font-size:9px;font-weight:600;color:#fff;outline:none;"
+                    oninput="applyFilters()"
+                    onfocus="this.style.background='rgba(255,255,255,0.12)'"
+                    onblur="this.style.background='rgba(255,255,255,0.07)'">
+                <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-[8px]" style="color:rgba(255,255,255,0.3);"></i>
+            </div>
+
+            <!-- Category filter -->
+            <select id="dd-category" class="dark-select" onchange="toggleFilter('category', this.value)">
+                <option value="All">All Categories</option>
+            </select>
+
+            <!-- Status filter -->
+            <select id="dd-status" class="dark-select" onchange="toggleFilter('status', this.value)">
+                <option value="All">All Status</option>
+                <option value="New">New</option>
+                <option value="Updated">Updated</option>
+                <option value="Archived">Archived</option>
+            </select>
+
+            <!-- View toggle -->
+            <div class="flex items-center gap-0.5 bg-white/5 rounded-lg p-0.5 flex-shrink-0">
+                <button id="btn-grid" class="view-btn active" onclick="setView('grid')" title="Grid"><i class="fa-solid fa-grip"></i></button>
+                <button id="btn-list" class="view-btn" onclick="setView('list')" title="List"><i class="fa-solid fa-list"></i></button>
+            </div>
+
+            <!-- Clear -->
+            <button onclick="clearFilters()" id="clear-btn"
+                class="hidden flex-shrink-0 text-[8px] font-bold text-gray-400 hover:text-white uppercase tracking-widest transition-colors">
+                <i class="fa-solid fa-xmark mr-0.5"></i>Clear
+            </button>
+
+            <!-- Stats -->
+            <div class="flex items-center gap-0 flex-shrink-0 border-l border-white/10 pl-3 ml-1">
+                <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10">
+                    <span id="stat-total"    class="text-[13px] font-black text-white">0</span>
+                    <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Total</span>
+                </div>
+                <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10">
+                    <span id="stat-new"      class="text-[13px] font-black text-green-400">0</span>
+                    <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">New</span>
+                </div>
+                <div class="flex items-center gap-1.5 px-2.5 py-2">
+                    <span id="stat-archived" class="text-[13px] font-black text-gray-500">0</span>
+                    <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Archived</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar" id="vault-content">
+            <div id="grid-view" class="p-4 grid grid-cols-3 gap-3" style="align-content:start;"></div>
+            <div id="list-view" class="hidden">
+                <table class="w-full text-left">
+                    <thead class="sticky top-0 bg-gray-50 border-b border-gray-100 z-10">
+                        <tr>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Document</th>
+                            <th class="px-3 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Category</th>
+                            <th class="px-3 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
+                            <th class="px-3 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Version</th>
+                            <th class="px-3 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Date</th>
+                            <th class="px-3 py-2 w-6"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-tbody" class="divide-y divide-gray-50"></tbody>
+                </table>
+            </div>
+            <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center">
+                <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-folder-open text-2xl text-gray-200"></i>
+                </div>
+                <p class="text-[11px] font-bold text-gray-400">No documents found</p>
+                <p class="text-[9px] text-gray-300 mt-1">Adjust filters or upload your first document</p>
+                <button onclick="clearFilters()" class="mt-3 text-[9px] font-bold text-gray-900 underline">Clear filters</button>
+            </div>
+        </div>
+
+        <div class="p-3 border-t border-gray-50 bg-gray-50/30 flex items-center justify-between">
+            <span id="footer-count" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest"></span>
+            <button onclick="exportCSV()" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">
+                <i class="fa-solid fa-download mr-1"></i>Export CSV
+            </button>
+        </div>
+    </section>
+</main>
+
+<!-- ── PREVIEW MODAL ── -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+
+        <!-- Modal header -->
+        <div class="px-6 py-4 border-b border-gray-100 flex items-start gap-3">
+            <div id="modal-icon" class="w-11 h-11 rounded-xl flex items-center justify-center text-lg flex-shrink-0"></div>
+            <div class="flex-1 min-w-0">
+                <h3 id="modal-title" class="text-[13px] font-black text-gray-900 leading-tight"></h3>
+                <p id="modal-meta"  class="text-[9px] text-gray-400 mt-0.5"></p>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <div id="modal-badge"></div>
+                <button onclick="document.getElementById('modal-overlay').classList.add('hidden')"
+                    class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-400 text-[10px] transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Preview area -->
+        <div id="modal-preview-area" class="mx-6 mt-4 rounded-xl border border-gray-100 flex items-center justify-center" style="height:160px;">
+            <div class="text-center">
+                <i id="modal-preview-icon" class="text-5xl mb-2 block"></i>
+                <p class="text-[8px] font-bold text-gray-300 uppercase tracking-widest">Preview not available</p>
+                <p id="modal-filename" class="text-[8px] text-gray-300 mt-0.5 font-mono"></p>
+            </div>
+        </div>
+
+        <!-- Detail grid -->
+        <div class="px-6 py-4 grid grid-cols-3 gap-2.5">
+            <div class="bg-gray-50 rounded-lg p-3">
+                <p class="label-text mb-1">Category</p>
+                <p id="modal-category" class="text-[11px] font-bold text-gray-800"></p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+                <p class="label-text mb-1">Version</p>
+                <p id="modal-version"  class="text-[11px] font-bold text-gray-800"></p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+                <p class="label-text mb-1">File Size</p>
+                <p id="modal-size"     class="text-[11px] font-bold text-gray-800"></p>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div id="modal-desc-wrap" class="hidden px-6 pb-4">
+            <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-3">
+                <p class="label-text text-indigo-400 mb-1">Description</p>
+                <p id="modal-desc" class="text-[10px] text-gray-700 leading-relaxed"></p>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="px-6 pb-5 flex items-center gap-2">
+            <button onclick="modalDownload()"
+                class="flex items-center gap-1.5 px-4 py-2 bg-gray-900 hover:bg-black text-white text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all">
+                <i class="fa-solid fa-download text-[8px]"></i> Download
+            </button>
+            <button onclick="modalCycleStatus()"
+                class="flex items-center gap-1.5 px-4 py-2 border border-gray-200 text-gray-600 hover:bg-gray-50 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all">
+                <i class="fa-solid fa-rotate text-[8px]"></i> Change Status
+            </button>
+            <div class="flex-1"></div>
+            <button onclick="modalDelete()"
+                class="flex items-center gap-1.5 px-3 py-2 border border-red-100 text-red-400 hover:border-red-300 hover:text-red-600 text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all">
+                <i class="fa-solid fa-trash text-[8px]"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ── CATEGORY CONFIG ──────────────────────────────────────────────────────────
+const PRESET_CATS = ["Knowledge Base", "Guides", "FAQs", "Products", "Policies", "Scripts"];
+
+const CAT_STYLE = {
+    "Knowledge Base": { icon: "fa-solid fa-book-open",      bg: "#dbeafe", color: "#1d4ed8" },
+    "Guides":         { icon: "fa-solid fa-map",             bg: "#f3e8ff", color: "#7e22ce" },
+    "FAQs":           { icon: "fa-solid fa-circle-question", bg: "#fef3c7", color: "#b45309" },
+    "Products":       { icon: "fa-solid fa-box",             bg: "#d1fae5", color: "#065f46" },
+    "Policies":       { icon: "fa-solid fa-shield-halved",   bg: "#fee2e2", color: "#b91c1c" },
+    "Scripts":        { icon: "fa-solid fa-terminal",        bg: "#f1f5f9", color: "#334155" },
+    "_custom":        { icon: "fa-solid fa-tag",             bg: "#fdf4ff", color: "#86198f" }
+};
+
+const FILE_ICONS = {
+    pdf:  { icon: "fa-solid fa-file-pdf",   bg: "#fee2e2", color: "#dc2626" },
+    docx: { icon: "fa-solid fa-file-word",  bg: "#dbeafe", color: "#1d4ed8" },
+    doc:  { icon: "fa-solid fa-file-word",  bg: "#dbeafe", color: "#1d4ed8" },
+    xlsx: { icon: "fa-solid fa-file-excel", bg: "#d1fae5", color: "#059669" },
+    xls:  { icon: "fa-solid fa-file-excel", bg: "#d1fae5", color: "#059669" },
+    png:  { icon: "fa-solid fa-file-image", bg: "#f3e8ff", color: "#7e22ce" },
+    jpg:  { icon: "fa-solid fa-file-image", bg: "#f3e8ff", color: "#7e22ce" },
+    jpeg: { icon: "fa-solid fa-file-image", bg: "#f3e8ff", color: "#7e22ce" },
+    pptx: { icon: "fa-solid fa-file-powerpoint", bg: "#fff7ed", color: "#c2410c" },
+};
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+let documents = [
+    { id:1,  title:"Home Loan Product Guide 2026",       category:"Products",       status:"New",      version:"v2.1", filename:"home_loan_guide_2026.pdf", fileType:"pdf",  fileSize:"3.4 MB", desc:"Comprehensive guide covering all home loan products, rates, and eligibility criteria for 2026.", uploaded:"2026-04-10" },
+    { id:2,  title:"AML & KYC Compliance Policy",        category:"Policies",       status:"Updated",  version:"v4.0", filename:"aml_kyc_policy.pdf",        fileType:"pdf",  fileSize:"1.2 MB", desc:"Updated anti-money laundering and know-your-customer policy document aligned with AUSTRAC 2026 guidelines.", uploaded:"2026-04-08" },
+    { id:3,  title:"Broker Onboarding FAQ",              category:"FAQs",           status:"New",      version:"v1.3", filename:"broker_onboarding_faq.docx", fileType:"docx", fileSize:"420 KB", desc:"Frequently asked questions for new brokers joining the Whiterock panel.", uploaded:"2026-04-12" },
+    { id:4,  title:"Cold Call Script — Refinance",       category:"Scripts",        status:"New",      version:"v1.0", filename:"cold_call_refi_script.docx", fileType:"docx", fileSize:"190 KB", desc:"Structured outbound call script for refinance lead conversations.", uploaded:"2026-04-14" },
+    { id:5,  title:"Lender Panel Overview Guide",        category:"Guides",         status:"Updated",  version:"v3.2", filename:"lender_panel_guide.pdf",     fileType:"pdf",  fileSize:"5.1 MB", desc:"Full overview of all lenders on the Whiterock panel including products, BDMs, and turnaround times.", uploaded:"2026-04-05" },
+    { id:6,  title:"CRM Usage Knowledge Base",           category:"Knowledge Base", status:"New",      version:"v1.1", filename:"crm_knowledge_base.pdf",     fileType:"pdf",  fileSize:"2.8 MB", desc:"Internal knowledge base for using the Whiterock CRM platform.", uploaded:"2026-04-15" },
+    { id:7,  title:"Commercial Loan Product Sheet",      category:"Products",       status:"New",      version:"v1.0", filename:"commercial_loan_sheet.xlsx", fileType:"xlsx", fileSize:"680 KB", desc:"Rate and product comparison sheet for commercial lending solutions.", uploaded:"2026-04-13" },
+    { id:8,  title:"Privacy Policy 2026",                category:"Policies",       status:"Archived", version:"v2.9", filename:"privacy_policy_2026.pdf",    fileType:"pdf",  fileSize:"890 KB", desc:"Client privacy and data handling policy. Superseded by v3.0.", uploaded:"2026-03-01" },
+    { id:9,  title:"Settlement Checklist Guide",         category:"Guides",         status:"Updated",  version:"v2.0", filename:"settlement_checklist.docx",  fileType:"docx", fileSize:"310 KB", desc:"Step-by-step settlement checklist for brokers to share with clients.", uploaded:"2026-04-07" },
+    { id:10, title:"Product FAQ — Investment Loans",     category:"FAQs",           status:"New",      version:"v1.0", filename:"investment_faq.pdf",         fileType:"pdf",  fileSize:"540 KB", desc:"Common questions and answers for investment property loan enquiries.", uploaded:"2026-04-11" },
+    { id:11, title:"Inbound Lead Response Script",       category:"Scripts",        status:"Updated",  version:"v2.3", filename:"inbound_lead_script.docx",   fileType:"docx", fileSize:"220 KB", desc:"Script for handling inbound lead calls from various marketing channels.", uploaded:"2026-04-09" },
+];
+
+let formCats      = [...PRESET_CATS];
+let selectedCat   = "";            // single-select in form
+let filters       = { category: "All", status: "All" };
+let viewMode      = "grid";
+let activeDocId   = null;
+let nextId        = 12;
+
+// ── CATEGORY CHIPS (form) ────────────────────────────────────────────────────
+function renderCatTags() {
+    const container = document.getElementById("cat-tags-container");
+    container.innerHTML = formCats.map(cat => {
+        const isCustom = !PRESET_CATS.includes(cat);
+        return `<span class="cat-tag ${selectedCat === cat ? 'selected' : ''}" onclick="selectCat('${cat}')">
+            ${cat}
+            ${isCustom ? `<i class="fa-solid fa-xmark remove-cat" onclick="event.stopPropagation();removeCustomCat('${cat}')"></i>` : ""}
+        </span>`;
+    }).join("");
+}
+
+function selectCat(cat) {
+    selectedCat = selectedCat === cat ? "" : cat;
+    renderCatTags();
+}
+
+function addCustomCat() {
+    const input = document.getElementById("cat-custom-input");
+    const val   = input.value.trim();
+    if (!val) return;
+    const norm  = val.charAt(0).toUpperCase() + val.slice(1);
+    if (!formCats.includes(norm)) formCats.push(norm);
+    selectedCat = norm;
+    input.value = "";
+    renderCatTags();
+    rebuildCatFilter();
+}
+
+function removeCustomCat(cat) {
+    formCats  = formCats.filter(c => c !== cat);
+    if (selectedCat === cat) selectedCat = "";
+    renderCatTags();
+    rebuildCatFilter();
+}
+
+function rebuildCatFilter() {
+    const dd = document.getElementById("dd-category");
+    const cur = dd.value;
+    const allCats = [...new Set([...PRESET_CATS, ...documents.map(d => d.category), ...formCats])];
+    dd.innerHTML = `<option value="All">All Categories</option>` +
+        allCats.map(c => `<option value="${c}" ${c===cur?'selected':''}>${c}</option>`).join("");
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function getFileIcon(type) {
+    return FILE_ICONS[type?.toLowerCase()] || { icon: "fa-solid fa-file", bg: "#f1f5f9", color: "#475569" };
+}
+
+function getCatStyle(cat) {
+    return CAT_STYLE[cat] || CAT_STYLE["_custom"];
+}
+
+function statusBadgeHTML(s) {
+    const map = { New: "badge-new", Updated: "badge-updated", Archived: "badge-archived" };
+    const dot = s === "New" ? "✦" : s === "Updated" ? "↑" : "○";
+    return `<span class="badge ${map[s]||'badge-new'}">${dot} ${s}</span>`;
+}
+
+function highlight(text, q) {
+    if (!q) return text;
+    const esc = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return text.replace(new RegExp(`(${esc})`, "gi"), "<mark>$1</mark>");
+}
+
+function formatDate(d) {
+    return new Date(d + "T00:00:00").toLocaleDateString("en-AU", { day:"numeric", month:"short", year:"2-digit" });
+}
+
+// ── FILTER ───────────────────────────────────────────────────────────────────
+function getFiltered() {
+    const q = (document.getElementById("search-input").value || "").toLowerCase().trim();
+    return documents.filter(d => {
+        if (filters.category !== "All" && d.category !== filters.category) return false;
+        if (filters.status   !== "All" && d.status   !== filters.status)   return false;
+        if (q) {
+            const hay = [d.title, d.category, d.status, d.version, d.desc, d.filename].join(" ").toLowerCase();
+            if (!hay.includes(q)) return false;
+        }
+        return true;
+    });
+}
+
+function toggleFilter(dim, val) {
+    filters[dim] = val;
+    document.getElementById("dd-" + dim).value = val;
+    updateClearBtn(); renderVault();
+}
+
+function clearFilters() {
+    filters = { category: "All", status: "All" };
+    document.getElementById("search-input").value = "";
+    document.getElementById("dd-category").value = "All";
+    document.getElementById("dd-status").value = "All";
+    updateClearBtn(); renderVault();
+}
+
+function applyFilters() { updateClearBtn(); renderVault(); }
+
+function updateClearBtn() {
+    const q = (document.getElementById("search-input").value || "").trim();
+    const active = q || Object.values(filters).some(v => v !== "All");
+    document.getElementById("clear-btn").classList.toggle("hidden", !active);
+}
+
+// ── VIEW ─────────────────────────────────────────────────────────────────────
+function setView(v) {
+    viewMode = v;
+    document.getElementById("grid-view").classList.toggle("hidden", v !== "grid");
+    document.getElementById("list-view").classList.toggle("hidden", v !== "list");
+    document.getElementById("btn-grid").classList.toggle("active", v === "grid");
+    document.getElementById("btn-list").classList.toggle("active", v === "list");
+    renderVault();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderVault() {
+    const filtered = getFiltered();
+    const q        = (document.getElementById("search-input").value || "").trim();
+    const gridEl   = document.getElementById("grid-view");
+    const listEl   = document.getElementById("list-tbody");
+    const emptyEl  = document.getElementById("empty-state");
+
+    document.getElementById("result-count").textContent  = filtered.length === documents.length ? "" : `(${filtered.length} of ${documents.length})`;
+    document.getElementById("footer-count").textContent  = `Showing ${filtered.length} document${filtered.length !== 1 ? "s" : ""}`;
+    document.getElementById("stat-total").textContent    = documents.length;
+    document.getElementById("stat-new").textContent      = documents.filter(d => d.status === "New").length;
+    document.getElementById("stat-archived").textContent = documents.filter(d => d.status === "Archived").length;
+
+    if (filtered.length === 0) {
+        gridEl.innerHTML = ""; listEl.innerHTML = "";
+        emptyEl.classList.remove("hidden"); emptyEl.classList.add("flex"); return;
+    }
+    emptyEl.classList.add("hidden"); emptyEl.classList.remove("flex");
+
+    // GRID
+    gridEl.innerHTML = filtered.map(d => {
+        const cs = getCatStyle(d.category);
+        const fi = getFileIcon(d.fileType);
+        return `
+        <div class="doc-card" onclick="openModal(${d.id})">
+            <div class="flex items-start justify-between mb-3">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:${cs.bg}">
+                    <i class="${cs.icon} text-sm" style="color:${cs.color}"></i>
+                </div>
+                ${statusBadgeHTML(d.status)}
+            </div>
+            <p class="text-[11px] font-bold text-gray-900 leading-tight mb-1 line-clamp-2">${highlight(d.title, q)}</p>
+            <p class="text-[8px] text-gray-400 mb-3 truncate">${d.filename}</p>
+            <div class="flex items-center justify-between pt-2.5 border-t border-gray-50">
+                <span class="text-[8px] font-bold" style="color:${cs.color}">${highlight(d.category, q)}</span>
+                <span class="text-[8px] font-mono text-gray-300">${d.version || "—"}</span>
+            </div>
+        </div>`;
+    }).join("");
+
+    // LIST
+    listEl.innerHTML = filtered.map(d => {
+        const cs = getCatStyle(d.category);
+        const fi = getFileIcon(d.fileType);
+        return `
+        <tr class="doc-row" onclick="openModal(${d.id})">
+            <td class="px-4 py-2.5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:${fi.bg}">
+                        <i class="${fi.icon} text-[11px]" style="color:${fi.color}"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-900">${highlight(d.title, q)}</p>
+                        <p class="text-[7px] text-gray-400 mt-0.5">${d.filename} · ${d.fileSize}</p>
+                    </div>
+                </div>
+            </td>
+            <td class="px-3 py-2.5">
+                <div class="flex items-center gap-1.5">
+                    <i class="${cs.icon} text-[9px]" style="color:${cs.color}"></i>
+                    <span class="text-[9px] font-semibold text-gray-600">${highlight(d.category, q)}</span>
+                </div>
+            </td>
+            <td class="px-3 py-2.5">${statusBadgeHTML(d.status)}</td>
+            <td class="px-3 py-2.5"><span class="text-[9px] font-mono text-gray-400">${d.version || "—"}</span></td>
+            <td class="px-3 py-2.5"><span class="text-[9px] font-mono text-gray-400">${formatDate(d.uploaded)}</span></td>
+            <td class="px-3 py-2.5 text-center"><i class="fa-solid fa-chevron-right text-[9px] text-gray-200"></i></td>
+        </tr>`;
+    }).join("");
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(id) {
+    const d  = documents.find(x => x.id === id);
+    if (!d) return;
+    activeDocId = id;
+
+    const cs = getCatStyle(d.category);
+    const fi = getFileIcon(d.fileType);
+
+    document.getElementById("modal-icon").className = "w-11 h-11 rounded-xl flex items-center justify-center text-lg flex-shrink-0";
+    document.getElementById("modal-icon").style.cssText = `background:${cs.bg};`;
+    document.getElementById("modal-icon").innerHTML = `<i class="${cs.icon}" style="color:${cs.color};font-size:18px;"></i>`;
+
+    document.getElementById("modal-title").textContent  = d.title;
+    document.getElementById("modal-meta").textContent   = `${d.fileSize} · ${d.filename} · Uploaded ${formatDate(d.uploaded)}`;
+    document.getElementById("modal-badge").innerHTML    = statusBadgeHTML(d.status);
+
+    const previewArea = document.getElementById("modal-preview-area");
+    previewArea.style.background = fi.bg + "33";
+    previewArea.style.borderColor = fi.bg;
+    document.getElementById("modal-preview-icon").className = fi.icon + " text-5xl mb-2 block";
+    document.getElementById("modal-preview-icon").style.color = fi.color;
+    document.getElementById("modal-filename").textContent = d.filename;
+
+    document.getElementById("modal-category").textContent = d.category;
+    document.getElementById("modal-version").textContent  = d.version || "—";
+    document.getElementById("modal-size").textContent     = d.fileSize;
+
+    const descWrap = document.getElementById("modal-desc-wrap");
+    if (d.desc) { descWrap.classList.remove("hidden"); document.getElementById("modal-desc").textContent = d.desc; }
+    else          descWrap.classList.add("hidden");
+
+    document.getElementById("modal-overlay").classList.remove("hidden");
+}
+
+function closeModal(e) {
+    document.getElementById("modal-overlay").classList.add("hidden");
+    activeDocId = null;
+}
+
+function modalCycleStatus() {
+    const d = documents.find(x => x.id === activeDocId);
+    if (!d) return;
+    const cycle = { New: "Updated", Updated: "Archived", Archived: "New" };
+    d.status = cycle[d.status] || "New";
+    document.getElementById("modal-badge").innerHTML = statusBadgeHTML(d.status);
+    renderVault();
+}
+
+function modalDownload() {
+    const d = documents.find(x => x.id === activeDocId);
+    if (!d) return;
+    const a = document.createElement("a");
+    a.href = "#"; a.download = d.filename;
+    const btn = document.querySelector('[onclick="modalDownload()"]');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check text-[8px]"></i> Downloaded';
+    btn.style.background = "#15803d";
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ""; }, 1400);
+}
+
+function modalDelete() {
+    const d = documents.find(x => x.id === activeDocId);
+    if (!d || !confirm(`Delete "${d.title}"? This cannot be undone.`)) return;
+    documents = documents.filter(x => x.id !== activeDocId);
+    document.getElementById("modal-overlay").classList.add("hidden");
+    activeDocId = null;
+    renderVault(); rebuildCatFilter();
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────────────────
+function handleDragOver(e) { e.preventDefault(); document.getElementById("upload-zone").classList.add("drag-over"); }
+function handleDragLeave()  { document.getElementById("upload-zone").classList.remove("drag-over"); }
+function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById("upload-zone").classList.remove("drag-over");
+    processFiles(Array.from(e.dataTransfer.files));
+}
+function handleFileSelect(e) { processFiles(Array.from(e.target.files)); }
+
+function processFiles(files) {
+    const queue = document.getElementById("upload-queue");
+    files.forEach((file, i) => {
+        const ext  = file.name.split(".").pop().toLowerCase();
+        const fi   = getFileIcon(ext);
+        const size = file.size > 1048576 ? (file.size/1048576).toFixed(1)+" MB" : (file.size/1024).toFixed(0)+" KB";
+        const el   = document.createElement("div");
+        el.className = "upload-item bg-gray-50 border border-gray-100 rounded-lg p-2";
+        el.innerHTML = `
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style="background:${fi.bg}">
+                    <i class="${fi.icon} text-[9px]" style="color:${fi.color}"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-[9px] font-bold text-gray-700 truncate">${file.name}</p>
+                    <p class="text-[7px] text-gray-400">${size}</p>
+                </div>
+                <span class="text-[7px] font-bold text-indigo-500 flex-shrink-0 upload-st">Uploading...</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar bg-indigo-400" style="width:0%"></div></div>`;
+        queue.appendChild(el);
+
+        let pct = 0;
+        const bar = el.querySelector(".progress-bar"), st = el.querySelector(".upload-st");
+        const iv  = setInterval(() => {
+            pct += Math.random() * 30 + 10;
+            if (pct >= 100) { pct = 100; clearInterval(iv); st.textContent = "Ready"; st.style.color = "#15803d"; }
+            bar.style.width = pct + "%";
+        }, 160);
+
+        if (!document.getElementById("f-title").value) {
+            document.getElementById("f-title").value = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+        }
+    });
+}
+
+// ── UPLOAD ────────────────────────────────────────────────────────────────────
+function uploadDocument() {
+    const title = document.getElementById("f-title").value.trim();
+    if (!title) { document.getElementById("f-title").focus(); return; }
+
+    const queue    = document.getElementById("upload-queue");
+    const qItems   = queue.querySelectorAll(".upload-item");
+    const filename = qItems.length
+        ? qItems[qItems.length - 1].querySelector("p").textContent
+        : title.toLowerCase().replace(/\s+/g, "_") + ".pdf";
+    const ext = filename.split(".").pop().toLowerCase();
+
+    documents.unshift({
+        id:       nextId++,
+        title,
+        category: selectedCat || "Knowledge Base",
+        status:   document.getElementById("f-status").value,
+        version:  document.getElementById("f-version").value.trim() || "v1.0",
+        filename,
+        fileType: ext,
+        fileSize: "—",
+        desc:     document.getElementById("f-desc").value.trim(),
+        uploaded: new Date().toISOString().slice(0, 10)
+    });
+
+    // Reset form
+    ["f-title","f-version","f-desc"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("f-status").value = "New";
+    queue.innerHTML = "";
+    selectedCat = "";
+    renderCatTags();
+    rebuildCatFilter();
+
+    // Flash button
+    const btn = document.getElementById("submit-btn");
+    const lbl = document.getElementById("submit-label");
+    btn.style.background = "#15803d";
+    lbl.textContent = "Uploaded!";
+    setTimeout(() => { btn.style.background = ""; lbl.textContent = "Upload Document"; }, 1500);
+
+    renderVault();
+}
+
+// ── EXPORT CSV ────────────────────────────────────────────────────────────────
+function exportCSV() {
+    const filtered = getFiltered();
+    const headers  = ["ID","Title","Category","Status","Version","Filename","File Size","Description","Uploaded"];
+    const rows     = filtered.map(d => [
+        d.id, `"${d.title}"`, `"${d.category}"`, d.status, d.version,
+        `"${d.filename}"`, `"${d.fileSize}"`, `"${(d.desc||"").replace(/"/g,'""')}"`, d.uploaded
+    ]);
+    const csv = [headers, ...rows].map(r => r.join(",")).join("\n");
+    const a   = document.createElement("a");
+    a.href    = "data:text/csv," + encodeURIComponent(csv);
+    a.download = "documents_export.csv";
+    a.click();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+renderCatTags();
+rebuildCatFilter();
+renderVault();
+</script>
+</body>
+</html>
