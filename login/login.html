@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Login | Alpha Funding CRM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --accent: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.1);
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --border: #e2e8f0;
+            --radius-md: 10px;
+            --gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .login-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* LEFT PANEL */
+        .branding-section {
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px;
+        }
+
+        .branding-content {
+            max-width: 520px;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 30px;
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .branding-section h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 46px;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+
+        .branding-section p {
+            opacity: 0.85;
+            font-size: 18px;
+        }
+
+        .features {
+            margin-top: 50px;
+            list-style: none;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            opacity: 0.9;
+        }
+
+        .feature-bullet {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #60a5fa;
+        }
+
+        /* RIGHT PANEL */
+        .form-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px;
+            background: var(--bg-card);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .form-header {
+            margin-bottom: 28px;
+        }
+
+        .form-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 34px;
+            margin-bottom: 6px;
+        }
+
+        .form-header p {
+            color: var(--text-sub);
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 0;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            background: transparent;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .input-field:focus {
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+            font-size: 13px;
+        }
+
+        .meta-row a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-text {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        /* MOBILE */
+        @media (max-width: 900px) {
+            .login-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .branding-section {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-grid">
+
+        <!-- LEFT -->
+        <div class="branding-section">
+            <div class="branding-content">
+
+                <div class="logo-box">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="logo-text">Alpha Funding</span>
+                </div>
+
+                <h1>Empowering Precision Lending.</h1>
+                <p>The next-generation ecosystem for modern financial origination.</p>
+
+                <ul class="features">
+                    <li class="feature-item">
+                        <div class="feature-bullet"></div> Real-time Pipeline Intelligence
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-bullet"></div> Automated Risk Scoring Engine
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-bullet"></div> Enterprise Audit Trails
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="form-section">
+
+            <div class="login-card">
+
+                <div class="form-header">
+                    <h2>Sign In</h2>
+                    <p>Enter your credentials to continue</p>
+                </div>
+
+                <form id="loginForm">
+
+                    <div class="input-group">
+                        <label class="input-label">Email</label>
+                        <input type="email" class="input-field" placeholder="jane@company.com" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Password</label>
+                        <input type="password" class="input-field" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="meta-row">
+                        <label style="display:flex;align-items:center;gap:8px;">
+                            <input type="checkbox">
+                            Remember me
+                        </label>
+
+                        <a href="#">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Sign In</button>
+
+                </form>
+
+                <div class="footer-text">
+                    © 2025 Alpha Funding Group. Secure Enterprise Access.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const btn = this.querySelector('.btn-submit');
+            btn.innerText = "Authenticating...";
+            btn.style.opacity = "0.7";
+
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 800);
+        });
+    </script>
+
+</body>
+
+</html>

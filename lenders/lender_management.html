@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lender Database - TaskFlow CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #ffffff;
+            margin: 0;
+            display: flex;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 0.75rem;
+            height: 100vh;
+            padding: 0.75rem;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        /* Filter bar dropdowns */
+        .filter-select {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 7px;
+            padding: 5px 24px 5px 8px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #374151;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+        .filter-select:focus { border-color: #94a3b8; background-color: white; }
+        .filter-select.active { background-color: #0f172a; color: white;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            border-color: #0f172a; }
+
+        .side-nav {
+            width: 70px;
+            background: #0f172a;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+            gap: 20px;
+            border-right: 1px solid #1e293b;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #94a3b8;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 8px;
+            width: 50px;
+        }
+
+        .nav-item:hover, .nav-item.active { color: white; background: rgba(255,255,255,0.08); }
+        .nav-item i { font-size: 16px; }
+        .nav-text { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+
+        .panel-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+        }
+
+        .label-text {
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .input-compact {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 10px;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.15s;
+            color: #1e293b;
+        }
+
+        .input-compact:focus { border-color: #94a3b8; background: white; }
+
+        /* Badge styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 7px;
+            border-radius: 99px;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .badge-bank       { background: #dbeafe; color: #1d4ed8; }
+        .badge-nonbank    { background: #fef3c7; color: #b45309; }
+        .badge-credit     { background: #d1fae5; color: #065f46; }
+        .badge-active     { background: #dcfce7; color: #15803d; }
+        .badge-inactive   { background: #f1f5f9; color: #94a3b8; }
+
+        /* Stat card */
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .stat-value { font-size: 20px; font-weight: 800; color: #0f172a; line-height: 1; }
+        .stat-label { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-top: 2px; }
+
+        /* Table rows */
+        .lender-row { cursor: pointer; transition: background 0.1s; }
+        .lender-row:hover { background: #f8fafc; }
+
+        /* Modal backdrop */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.45);
+            backdrop-filter: blur(2px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* Detail modal specific */
+        .detail-section { border-bottom: 1px solid #f1f5f9; }
+
+        .rate-chip {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 6px 10px;
+            text-align: center;
+        }
+
+        .category-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        /* Active filter pill */
+        .filter-active {
+            background: #0f172a !important;
+            color: white !important;
+        }
+
+        /* Search highlight */
+        mark { background: #fef9c3; border-radius: 2px; }
+
+        /* Transition for modal */
+        .modal-backdrop { animation: fadeIn 0.15s ease; }
+        .modal-box { animation: slideUp 0.18s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slim Sidebar -->
+    <nav class="side-nav">
+        <div class="mb-4">
+            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+        </div>
+
+        <a href="../task_and_followups/task_management.html" class="nav-item">
+            <i class="fa-solid fa-tasks"></i>
+            <span class="nav-text">Tasks</span>
+        </a>
+
+        <a href="lender_management.html" class="nav-item active">
+            <i class="fa-solid fa-building-columns"></i>
+            <span class="nav-text">Lenders</span>
+        </a>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-container">
+
+        <!-- COLUMN 1: STATS + QUICK ADD -->
+        <section class="panel-card">
+            <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                <h2 class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Lender Overview</h2>
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+            </div>
+            <div class="flex-1 p-4 space-y-3 overflow-y-auto custom-scrollbar">
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-total">6</div>
+                        <div class="stat-label">Total Lenders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value text-green-600" id="stat-active">5</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value text-blue-600" id="stat-banks">4</div>
+                        <div class="stat-label">Banks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value text-amber-600" id="stat-nonbank">2</div>
+                        <div class="stat-label">Non-Bank</div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 pt-3">
+                    <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-3">Add New Lender</p>
+
+                    <div class="space-y-2.5">
+                        <div>
+                            <label class="label-text">Lender Name</label>
+                            <input id="add-name" type="text" placeholder="e.g. ANZ Bank" class="input-compact">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="label-text">Type</label>
+                                <select id="add-type" class="input-compact">
+                                    <option value="Bank">Bank</option>
+                                    <option value="Non-Bank">Non-Bank</option>
+                                    <option value="Credit Union">Credit Union</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="label-text">Status</label>
+                                <select id="add-status" class="input-compact">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="label-text">Min Rate %</label>
+                                <input id="add-rate-min" type="number" step="0.01" placeholder="5.99" class="input-compact">
+                            </div>
+                            <div>
+                                <label class="label-text">Max Rate %</label>
+                                <input id="add-rate-max" type="number" step="0.01" placeholder="12.99" class="input-compact">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="label-text">Min Loan $</label>
+                                <input id="add-loan-min" type="number" placeholder="10000" class="input-compact">
+                            </div>
+                            <div>
+                                <label class="label-text">Max Loan $</label>
+                                <input id="add-loan-max" type="number" placeholder="2000000" class="input-compact">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="label-text">Categories</label>
+                            <div class="grid grid-cols-2 gap-1.5 mt-1">
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" class="add-cat-check w-3 h-3 rounded accent-gray-900" value="Home Loan">
+                                    <span class="text-[9px] font-semibold text-gray-600">Home Loan</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" class="add-cat-check w-3 h-3 rounded accent-gray-900" value="Investment">
+                                    <span class="text-[9px] font-semibold text-gray-600">Investment</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" class="add-cat-check w-3 h-3 rounded accent-gray-900" value="Personal">
+                                    <span class="text-[9px] font-semibold text-gray-600">Personal</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" class="add-cat-check w-3 h-3 rounded accent-gray-900" value="Business">
+                                    <span class="text-[9px] font-semibold text-gray-600">Business</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" class="add-cat-check w-3 h-3 rounded accent-gray-900" value="SMSF">
+                                    <span class="text-[9px] font-semibold text-gray-600">SMSF</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" class="add-cat-check w-3 h-3 rounded accent-gray-900" value="Refinance">
+                                    <span class="text-[9px] font-semibold text-gray-600">Refinance</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="label-text">Notes</label>
+                            <textarea id="add-notes" rows="2" placeholder="..." class="input-compact resize-none"></textarea>
+                        </div>
+                        <button onclick="addLender()"
+                            class="w-full py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                            <i class="fa-solid fa-plus mr-1.5"></i>Add Lender
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COLUMN 2: LENDER TABLE -->
+        <section class="panel-card">
+            <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-900 text-white">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-[9px] font-bold uppercase tracking-widest">Lender Database</h2>
+                    <span id="result-count" class="text-[8px] font-bold text-gray-400 font-mono"></span>
+                </div>
+                <div class="flex items-center gap-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">
+                    <i class="fa-solid fa-building-columns text-gray-500"></i>
+                    <span>6 Registered</span>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="px-4 py-2.5 border-b border-gray-100 bg-white flex items-center gap-2 flex-wrap">
+                <!-- Search -->
+                <div class="relative flex-1 min-w-[140px]">
+                    <input id="search-input" type="text" placeholder="Search lenders..."
+                        class="w-full bg-gray-50 border border-gray-200 rounded-lg pl-7 pr-3 py-[5px] text-[9px] font-semibold text-gray-700 outline-none focus:border-gray-400 focus:bg-white transition-all"
+                        oninput="applyFilters()">
+                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-300 text-[8px]"></i>
+                </div>
+
+                <!-- Type dropdown -->
+                <select id="dd-type" class="filter-select" onchange="toggleFilter('type', this.value)">
+                    <option value="All">All Types</option>
+                    <option value="Bank">Bank</option>
+                    <option value="Non-Bank">Non-Bank</option>
+                    <option value="Credit Union">Credit Union</option>
+                </select>
+
+                <!-- Status dropdown -->
+                <select id="dd-status" class="filter-select" onchange="toggleFilter('status', this.value)">
+                    <option value="All">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+
+                <!-- Category dropdown -->
+                <select id="dd-category" class="filter-select" onchange="toggleFilter('category', this.value)">
+                    <option value="All">All Categories</option>
+                    <option value="Home Loan">Home Loan</option>
+                    <option value="Investment">Investment</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Business">Business</option>
+                    <option value="SMSF">SMSF</option>
+                    <option value="Refinance">Refinance</option>
+                </select>
+
+                <!-- Rate max -->
+                <div class="flex items-center gap-1.5 border border-gray-200 rounded-lg px-2 py-[4px] bg-gray-50">
+                    <i class="fa-solid fa-percent text-[7px] text-gray-300"></i>
+                    <input id="filter-rate-max" type="range" min="1" max="25" value="25" step="0.5"
+                        style="width:64px; accent-color:#0f172a;" oninput="updateRateLabel(); applyFilters()">
+                    <span id="rate-label" class="text-[9px] font-bold text-gray-500 w-8">Any</span>
+                </div>
+
+                <!-- Active filter chips + clear -->
+                <div id="active-chips" class="flex items-center gap-1"></div>
+                <button onclick="clearFilters()" id="clear-btn"
+                    class="hidden text-[8px] font-bold text-gray-400 hover:text-gray-800 uppercase tracking-widest transition-colors ml-1">
+                    <i class="fa-solid fa-xmark mr-0.5"></i>Clear
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <table class="w-full text-left">
+                    <thead class="sticky top-0 bg-gray-50 border-b border-gray-100 z-10">
+                        <tr>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Lender</th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Type</th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Rates</th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Loan Limits</th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Categories</th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
+                            <th class="px-4 py-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="lender-tbody" class="divide-y divide-gray-50">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+
+                <!-- Empty state -->
+                <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
+                    <i class="fa-solid fa-building-columns text-3xl text-gray-200 mb-3"></i>
+                    <p class="text-[10px] font-bold text-gray-400">No lenders match your filters</p>
+                    <button onclick="clearFilters()" class="mt-2 text-[9px] font-bold text-gray-900 underline">Clear filters</button>
+                </div>
+            </div>
+
+            <div class="p-3 border-t border-gray-50 bg-gray-50/30 flex items-center justify-between">
+                <span id="footer-count" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest"></span>
+                <button onclick="exportCSV()" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">
+                    <i class="fa-solid fa-download mr-1"></i>Export CSV
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ── DETAIL / EDIT MODAL ── -->
+    <div id="detail-modal" class="modal-backdrop hidden" onclick="closeDetailModal(event)">
+        <div class="modal-box mx-4" style="max-width: 560px;" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="flex items-start justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <div class="flex items-center gap-3">
+                    <div id="modal-icon" class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-building-columns text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 id="modal-name" class="text-sm font-bold text-gray-900"></h3>
+                        <div class="flex items-center gap-1.5 mt-0.5" id="modal-badges"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="openEditMode()" id="btn-edit-modal"
+                        class="text-[8px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 border border-gray-200 rounded-lg px-3 py-1.5 hover:border-gray-400 transition-all">
+                        <i class="fa-solid fa-pen mr-1"></i>Edit
+                    </button>
+                    <button onclick="closeModal()"
+                        class="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 transition-all">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- View Mode -->
+            <div id="view-mode">
+                <div class="px-6 py-4 space-y-4">
+
+                    <!-- Rates & Limits -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <p class="label-text">Interest Rates</p>
+                            <div class="grid grid-cols-2 gap-2 mt-1">
+                                <div class="rate-chip">
+                                    <p class="text-[8px] font-bold text-gray-400 uppercase">Min</p>
+                                    <p id="modal-rate-min" class="text-sm font-bold text-gray-900"></p>
+                                </div>
+                                <div class="rate-chip">
+                                    <p class="text-[8px] font-bold text-gray-400 uppercase">Max</p>
+                                    <p id="modal-rate-max" class="text-sm font-bold text-gray-900"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="label-text">Loan Limits</p>
+                            <div class="grid grid-cols-2 gap-2 mt-1">
+                                <div class="rate-chip">
+                                    <p class="text-[8px] font-bold text-gray-400 uppercase">Min</p>
+                                    <p id="modal-loan-min" class="text-[11px] font-bold text-gray-900"></p>
+                                </div>
+                                <div class="rate-chip">
+                                    <p class="text-[8px] font-bold text-gray-400 uppercase">Max</p>
+                                    <p id="modal-loan-max" class="text-[11px] font-bold text-gray-900"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div>
+                        <p class="label-text mb-1.5">Loan Categories</p>
+                        <div id="modal-categories" class="flex flex-wrap gap-1.5"></div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div id="modal-notes-wrap">
+                        <p class="label-text mb-1">Notes</p>
+                        <p id="modal-notes" class="text-[10px] text-gray-600 bg-gray-50 rounded-lg px-3 py-2 leading-relaxed"></p>
+                    </div>
+
+                    <!-- Meta -->
+                    <div class="flex items-center justify-between pt-2 border-t border-gray-50">
+                        <span class="text-[8px] text-gray-300 font-mono" id="modal-meta"></span>
+                        <button onclick="deleteLender()" class="text-[8px] font-bold text-red-400 hover:text-red-600 uppercase tracking-widest transition-colors">
+                            <i class="fa-solid fa-trash mr-1"></i>Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Mode -->
+            <div id="edit-mode" class="hidden">
+                <div class="px-6 py-4 space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="label-text">Lender Name</label>
+                            <input id="edit-name" type="text" class="input-compact">
+                        </div>
+                        <div>
+                            <label class="label-text">Type</label>
+                            <select id="edit-type" class="input-compact">
+                                <option value="Bank">Bank</option>
+                                <option value="Non-Bank">Non-Bank</option>
+                                <option value="Credit Union">Credit Union</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="label-text">Status</label>
+                            <select id="edit-status" class="input-compact">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="label-text">Min Rate %</label>
+                            <input id="edit-rate-min" type="number" step="0.01" class="input-compact">
+                        </div>
+                        <div>
+                            <label class="label-text">Max Rate %</label>
+                            <input id="edit-rate-max" type="number" step="0.01" class="input-compact">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="label-text">Min Loan $</label>
+                            <input id="edit-loan-min" type="number" class="input-compact">
+                        </div>
+                        <div>
+                            <label class="label-text">Max Loan $</label>
+                            <input id="edit-loan-max" type="number" class="input-compact">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="label-text mb-1.5">Categories</label>
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" class="edit-cat-check w-3 h-3 accent-gray-900" value="Home Loan">
+                                <span class="text-[9px] font-semibold text-gray-600">Home Loan</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" class="edit-cat-check w-3 h-3 accent-gray-900" value="Investment">
+                                <span class="text-[9px] font-semibold text-gray-600">Investment</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" class="edit-cat-check w-3 h-3 accent-gray-900" value="Personal">
+                                <span class="text-[9px] font-semibold text-gray-600">Personal</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" class="edit-cat-check w-3 h-3 accent-gray-900" value="Business">
+                                <span class="text-[9px] font-semibold text-gray-600">Business</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" class="edit-cat-check w-3 h-3 accent-gray-900" value="SMSF">
+                                <span class="text-[9px] font-semibold text-gray-600">SMSF</span>
+                            </label>
+                            <label class="flex items-center gap-1.5 cursor-pointer">
+                                <input type="checkbox" class="edit-cat-check w-3 h-3 accent-gray-900" value="Refinance">
+                                <span class="text-[9px] font-semibold text-gray-600">Refinance</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="label-text">Notes</label>
+                        <textarea id="edit-notes" rows="2" class="input-compact resize-none"></textarea>
+                    </div>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="saveEdit()"
+                            class="flex-1 py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                            Save Changes
+                        </button>
+                        <button onclick="cancelEdit()"
+                            class="px-4 py-2.5 border border-gray-200 text-gray-500 text-[9px] font-bold uppercase tracking-widest rounded-lg hover:border-gray-400 transition-all">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── DATA ──────────────────────────────────────────────────────────────
+
+        let lenders = [
+            {
+                id: 1,
+                name: "ANZ Bank",
+                type: "Bank",
+                status: "Active",
+                rateMin: 5.74,
+                rateMax: 9.49,
+                loanMin: 20000,
+                loanMax: 5000000,
+                categories: ["Home Loan", "Investment", "Refinance", "Business"],
+                notes: "One of Australia's Big Four banks. Strong digital platform. Good for first home buyers.",
+                added: "2026-01-10"
+            },
+            {
+                id: 2,
+                name: "Commonwealth Bank",
+                type: "Bank",
+                status: "Active",
+                rateMin: 5.69,
+                rateMax: 9.99,
+                loanMin: 10000,
+                loanMax: 10000000,
+                categories: ["Home Loan", "Investment", "Personal", "Business", "SMSF"],
+                notes: "Australia's largest bank by market cap. Excellent branch network. NetBank is market-leading.",
+                added: "2026-01-10"
+            },
+            {
+                id: 3,
+                name: "Macquarie Bank",
+                type: "Bank",
+                status: "Active",
+                rateMin: 5.59,
+                rateMax: 8.75,
+                loanMin: 50000,
+                loanMax: 20000000,
+                categories: ["Home Loan", "Investment", "SMSF", "Refinance"],
+                notes: "Highly competitive rates for investment and SMSF lending. Tech-forward platform. No physical branches.",
+                added: "2026-01-15"
+            },
+            {
+                id: 4,
+                name: "Westpac",
+                type: "Bank",
+                status: "Active",
+                rateMin: 5.89,
+                rateMax: 10.49,
+                loanMin: 20000,
+                loanMax: 5000000,
+                categories: ["Home Loan", "Investment", "Personal", "Business", "Refinance"],
+                notes: "Australia's oldest bank. Strong in construction loans and family guarantee products.",
+                added: "2026-01-20"
+            },
+            {
+                id: 5,
+                name: "NAB",
+                type: "Bank",
+                status: "Active",
+                rateMin: 5.79,
+                rateMax: 9.89,
+                loanMin: 20000,
+                loanMax: 8000000,
+                categories: ["Home Loan", "Investment", "Business", "Refinance"],
+                notes: "Strong SME lending focus. Good for self-employed applicants. UBank is digital subsidiary.",
+                added: "2026-02-01"
+            },
+            {
+                id: 6,
+                name: "Suncorp",
+                type: "Non-Bank",
+                status: "Inactive",
+                rateMin: 6.19,
+                rateMax: 11.25,
+                loanMin: 15000,
+                loanMax: 3000000,
+                categories: ["Home Loan", "Personal", "Refinance"],
+                notes: "Regional bank focus. Good for QLD and NSW clients. Limited to certain postcodes for investment.",
+                added: "2026-02-10"
+            }
+        ];
+
+        let filters = { type: 'All', status: 'All', category: 'All' };
+        let activeModalId = null;
+        let nextId = 7;
+
+        // ── HELPERS ───────────────────────────────────────────────────────────
+
+        const fmt$ = n => n >= 1000000
+            ? '$' + (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + 'M'
+            : '$' + (n / 1000).toFixed(0) + 'K';
+
+        const typeBadgeClass = t => t === 'Bank' ? 'badge-bank' : t === 'Non-Bank' ? 'badge-nonbank' : 'badge-credit';
+        const iconColor = t => t === 'Bank' ? '#2563eb' : t === 'Non-Bank' ? '#d97706' : '#059669';
+
+        function getInitials(name) {
+            return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+        }
+
+        // ── RENDER ────────────────────────────────────────────────────────────
+
+        function getFiltered() {
+            const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
+            const rateMax = parseFloat(document.getElementById('filter-rate-max').value);
+
+            return lenders.filter(l => {
+                if (filters.type !== 'All' && l.type !== filters.type) return false;
+                if (filters.status !== 'All' && l.status !== filters.status) return false;
+                if (filters.category !== 'All' && !l.categories.includes(filters.category)) return false;
+                if (rateMax < 25 && l.rateMin > rateMax) return false;
+                if (q) {
+                    const haystack = (l.name + ' ' + l.categories.join(' ') + ' ' + (l.notes || '')).toLowerCase();
+                    if (!haystack.includes(q)) return false;
+                }
+                return true;
+            });
+        }
+
+        function renderTable() {
+            const filtered = getFiltered();
+            const tbody = document.getElementById('lender-tbody');
+            const empty = document.getElementById('empty-state');
+
+            document.getElementById('result-count').textContent =
+                filtered.length === lenders.length ? '' : `(${filtered.length} of ${lenders.length})`;
+            document.getElementById('footer-count').textContent =
+                `Showing ${filtered.length} lender${filtered.length !== 1 ? 's' : ''}`;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                empty.classList.remove('hidden');
+                empty.classList.add('flex');
+                return;
+            }
+            empty.classList.add('hidden');
+            empty.classList.remove('flex');
+
+            tbody.innerHTML = filtered.map(l => `
+                <tr class="lender-row" onclick="openDetail(${l.id})">
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[9px] font-black flex-shrink-0"
+                                style="background:${iconColor(l.type)}">${getInitials(l.name)}</div>
+                            <div>
+                                <p class="text-[10px] font-bold text-gray-900">${l.name}</p>
+                                <p class="text-[7px] text-gray-400 font-mono mt-0.5">ID #${String(l.id).padStart(3,'0')}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="badge ${typeBadgeClass(l.type)}">${l.type}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <p class="text-[10px] font-bold text-gray-800">${l.rateMin}% – ${l.rateMax}%</p>
+                        <p class="text-[7px] text-gray-400 font-semibold mt-0.5">p.a.</p>
+                    </td>
+                    <td class="px-4 py-3">
+                        <p class="text-[10px] font-bold text-gray-800">${fmt$(l.loanMin)} – ${fmt$(l.loanMax)}</p>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex flex-wrap gap-1">
+                            ${l.categories.slice(0, 3).map(c => `<span class="category-chip">${c}</span>`).join('')}
+                            ${l.categories.length > 3 ? `<span class="category-chip text-gray-400">+${l.categories.length - 3}</span>` : ''}
+                        </div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="badge ${l.status === 'Active' ? 'badge-active' : 'badge-inactive'}">
+                            ${l.status === 'Active' ? '● ' : '○ '}${l.status}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="event.stopPropagation(); openDetail(${l.id})"
+                            class="text-gray-200 hover:text-gray-700 transition-colors">
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('stat-total').textContent = lenders.length;
+            document.getElementById('stat-active').textContent = lenders.filter(l => l.status === 'Active').length;
+            document.getElementById('stat-banks').textContent = lenders.filter(l => l.type === 'Bank').length;
+            document.getElementById('stat-nonbank').textContent = lenders.filter(l => l.type !== 'Bank').length;
+        }
+
+        // ── FILTERS ───────────────────────────────────────────────────────────
+
+        function toggleFilter(dimension, value) {
+            filters[dimension] = value;
+            // Sync dropdown
+            const dd = document.getElementById('dd-' + dimension);
+            if (dd) { dd.value = value; dd.classList.toggle('active', value !== 'All'); }
+            updateFilterChips();
+            renderTable();
+        }
+
+        function clearFilters() {
+            filters = { type: 'All', status: 'All', category: 'All' };
+            document.getElementById('search-input').value = '';
+            document.getElementById('filter-rate-max').value = 25;
+            document.getElementById('rate-label').textContent = 'Any';
+            ['type', 'status', 'category'].forEach(dim => {
+                const dd = document.getElementById('dd-' + dim);
+                if (dd) { dd.value = 'All'; dd.classList.remove('active'); }
+            });
+            updateFilterChips();
+            renderTable();
+        }
+
+        function updateFilterChips() {
+            const container = document.getElementById('active-chips');
+            const clearBtn  = document.getElementById('clear-btn');
+            const chips = [];
+            if (filters.type     !== 'All') chips.push({ dim: 'type',     label: filters.type });
+            if (filters.status   !== 'All') chips.push({ dim: 'status',   label: filters.status });
+            if (filters.category !== 'All') chips.push({ dim: 'category', label: filters.category });
+            const rateVal = parseFloat(document.getElementById('filter-rate-max').value);
+            if (rateVal < 25) chips.push({ dim: 'rate', label: '≤ ' + rateVal + '%' });
+            const q = (document.getElementById('search-input').value || '').trim();
+            if (q) chips.push({ dim: 'search', label: '"' + q + '"' });
+
+            container.innerHTML = chips.map(c => `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-900 text-white rounded-full text-[8px] font-bold">
+                    ${c.label}
+                    <button onclick="removeChip('${c.dim}')" class="hover:text-gray-300 transition-colors leading-none">
+                        <i class="fa-solid fa-xmark text-[7px]"></i>
+                    </button>
+                </span>`).join('');
+            clearBtn.classList.toggle('hidden', chips.length === 0);
+        }
+
+        function removeChip(dim) {
+            if (dim === 'rate') { document.getElementById('filter-rate-max').value = 25; document.getElementById('rate-label').textContent = 'Any'; }
+            else if (dim === 'search') { document.getElementById('search-input').value = ''; }
+            else { filters[dim] = 'All'; document.getElementById('dd-' + dim).value = 'All'; document.getElementById('dd-' + dim).classList.remove('active'); }
+            updateFilterChips();
+            renderTable();
+        }
+
+        function updateRateLabel() {
+            const val = parseFloat(document.getElementById('filter-rate-max').value);
+            document.getElementById('rate-label').textContent = val >= 25 ? 'Any' : val.toFixed(1) + '%';
+        }
+
+        function applyFilters() { updateFilterChips(); renderTable(); }
+
+        // ── DETAIL MODAL ──────────────────────────────────────────────────────
+
+        function openDetail(id) {
+            activeModalId = id;
+            const l = lenders.find(x => x.id === id);
+            if (!l) return;
+
+            // Header
+            document.getElementById('modal-name').textContent = l.name;
+            document.getElementById('modal-icon').style.background = iconColor(l.type);
+            document.getElementById('modal-icon').innerHTML = `<i class="fa-solid fa-building-columns text-sm"></i>`;
+            document.getElementById('modal-badges').innerHTML = `
+                <span class="badge ${typeBadgeClass(l.type)}">${l.type}</span>
+                <span class="badge ${l.status === 'Active' ? 'badge-active' : 'badge-inactive'} ml-1">${l.status}</span>
+            `;
+
+            // Rates & limits
+            document.getElementById('modal-rate-min').textContent = l.rateMin + '%';
+            document.getElementById('modal-rate-max').textContent = l.rateMax + '%';
+            document.getElementById('modal-loan-min').textContent = fmt$(l.loanMin);
+            document.getElementById('modal-loan-max').textContent = fmt$(l.loanMax);
+
+            // Categories
+            document.getElementById('modal-categories').innerHTML =
+                l.categories.map(c => `<span class="category-chip">${c}</span>`).join('');
+
+            // Notes
+            document.getElementById('modal-notes').textContent = l.notes || 'No notes added.';
+            document.getElementById('modal-notes-wrap').style.display = l.notes ? '' : 'none';
+
+            // Meta
+            document.getElementById('modal-meta').textContent = `Added ${l.added}  ·  ID #${String(l.id).padStart(3, '0')}`;
+
+            // Show view mode
+            document.getElementById('view-mode').classList.remove('hidden');
+            document.getElementById('edit-mode').classList.add('hidden');
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        function openEditMode() {
+            const l = lenders.find(x => x.id === activeModalId);
+            if (!l) return;
+
+            document.getElementById('edit-name').value = l.name;
+            document.getElementById('edit-type').value = l.type;
+            document.getElementById('edit-status').value = l.status;
+            document.getElementById('edit-rate-min').value = l.rateMin;
+            document.getElementById('edit-rate-max').value = l.rateMax;
+            document.getElementById('edit-loan-min').value = l.loanMin;
+            document.getElementById('edit-loan-max').value = l.loanMax;
+            document.getElementById('edit-notes').value = l.notes || '';
+
+            document.querySelectorAll('.edit-cat-check').forEach(cb => {
+                cb.checked = l.categories.includes(cb.value);
+            });
+
+            document.getElementById('view-mode').classList.add('hidden');
+            document.getElementById('edit-mode').classList.remove('hidden');
+        }
+
+        function saveEdit() {
+            const l = lenders.find(x => x.id === activeModalId);
+            if (!l) return;
+
+            l.name = document.getElementById('edit-name').value.trim() || l.name;
+            l.type = document.getElementById('edit-type').value;
+            l.status = document.getElementById('edit-status').value;
+            l.rateMin = parseFloat(document.getElementById('edit-rate-min').value) || l.rateMin;
+            l.rateMax = parseFloat(document.getElementById('edit-rate-max').value) || l.rateMax;
+            l.loanMin = parseInt(document.getElementById('edit-loan-min').value) || l.loanMin;
+            l.loanMax = parseInt(document.getElementById('edit-loan-max').value) || l.loanMax;
+            l.notes = document.getElementById('edit-notes').value.trim();
+
+            const checked = Array.from(document.querySelectorAll('.edit-cat-check:checked')).map(cb => cb.value);
+            l.categories = checked.length ? checked : l.categories;
+
+            renderTable();
+            openDetail(activeModalId); // refresh view mode
+        }
+
+        function cancelEdit() {
+            document.getElementById('view-mode').classList.remove('hidden');
+            document.getElementById('edit-mode').classList.add('hidden');
+        }
+
+        function deleteLender() {
+            if (!confirm(`Delete ${lenders.find(x => x.id === activeModalId)?.name}? This cannot be undone.`)) return;
+            lenders = lenders.filter(x => x.id !== activeModalId);
+            closeModal();
+            renderTable();
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            activeModalId = null;
+        }
+
+        function closeDetailModal(event) {
+            if (event.target === document.getElementById('detail-modal')) closeModal();
+        }
+
+        // Keyboard ESC closes modal
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        // ── ADD LENDER ────────────────────────────────────────────────────────
+
+        function addLender() {
+            const name = document.getElementById('add-name').value.trim();
+            if (!name) { document.getElementById('add-name').focus(); return; }
+
+            const cats = Array.from(document.querySelectorAll('.add-cat-check:checked')).map(cb => cb.value);
+
+            lenders.push({
+                id: nextId++,
+                name,
+                type: document.getElementById('add-type').value,
+                status: document.getElementById('add-status').value,
+                rateMin: parseFloat(document.getElementById('add-rate-min').value) || 6.00,
+                rateMax: parseFloat(document.getElementById('add-rate-max').value) || 12.00,
+                loanMin: parseInt(document.getElementById('add-loan-min').value) || 10000,
+                loanMax: parseInt(document.getElementById('add-loan-max').value) || 1000000,
+                categories: cats.length ? cats : ['Home Loan'],
+                notes: document.getElementById('add-notes').value.trim(),
+                added: new Date().toISOString().slice(0, 10)
+            });
+
+            // Reset form
+            document.getElementById('add-name').value = '';
+            document.getElementById('add-rate-min').value = '';
+            document.getElementById('add-rate-max').value = '';
+            document.getElementById('add-loan-min').value = '';
+            document.getElementById('add-loan-max').value = '';
+            document.getElementById('add-notes').value = '';
+            document.querySelectorAll('.add-cat-check').forEach(cb => cb.checked = false);
+
+            renderTable();
+
+            // Flash the add button
+            const btn = event.currentTarget;
+            btn.textContent = '✓ Added!';
+            btn.classList.add('bg-green-700');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fa-solid fa-plus mr-1.5"></i>Add Lender';
+                btn.classList.remove('bg-green-700');
+            }, 1500);
+        }
+
+        // ── EXPORT CSV ────────────────────────────────────────────────────────
+
+        function exportCSV() {
+            const filtered = getFiltered();
+            const headers = ['ID','Name','Type','Status','Rate Min','Rate Max','Loan Min','Loan Max','Categories','Notes','Added'];
+            const rows = filtered.map(l => [
+                l.id, `"${l.name}"`, l.type, l.status,
+                l.rateMin, l.rateMax, l.loanMin, l.loanMax,
+                `"${l.categories.join(', ')}"`,
+                `"${(l.notes || '').replace(/"/g, '""')}"`,
+                l.added
+            ]);
+            const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+            const a = document.createElement('a');
+            a.href = 'data:text/csv,' + encodeURIComponent(csv);
+            a.download = 'lenders_export.csv';
+            a.click();
+        }
+
+        // ── INIT ──────────────────────────────────────────────────────────────
+        updateFilterChips();
+        renderTable();
+    </script>
+</body>
+</html>
