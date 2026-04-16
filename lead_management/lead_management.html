@@ -10,787 +10,347 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            background-color: #ffffff;
-            margin: 0;
-            display: flex;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-
-        .dashboard-container {
-            display: grid;
-            grid-template-columns: 240px 1fr 260px;
-            gap: 0.25rem;
-            height: 100vh;
-            padding: 0.25rem;
-            flex-grow: 1;
-            min-width: 0;
-            transition: all 0.3s ease;
-        }
-
-        .dashboard-container.create-mode {
-            grid-template-columns: 0px 1fr 0px;
-            gap: 0;
-            padding: 0;
-        }
-
-        .dashboard-container.create-mode > section:nth-child(1),
-        .dashboard-container.create-mode > section:nth-child(3) {
-            display: none;
-        }
-
-        .dashboard-container.create-mode .detail-header-info {
-            display: none;
-        }
-
-        .dashboard-container.create-mode #edit-toggle-btn {
-            display: none;
-        }
-
-        .side-nav {
-            width: 60px;
-            background: #0f172a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px 0;
-            gap: 14px;
-            border-right: 1px solid #1e293b;
-            flex-shrink: 0;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: #94a3b8;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            color: white;
-        }
-
-        .nav-item i {
-            font-size: 16px;
-        }
-
-        .nav-text {
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            text-align: center;
-        }
-
-        .panel-card {
-            background: white;
-            border-radius: 7px;
-            border: 1px solid #f1f5f9;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-
-        .label-text {
-            font-size: 8px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #94a3b8;
-            margin-bottom: 1px;
-        }
-
-        .input-compact {
-            width: 100%;
-            background: #f8fafc;
-            border: 1px solid #f1f5f9;
-            border-radius: 6px;
-            padding: 3px 8px;
-            min-height: 26px;
-            font-size: 10px;
-            font-weight: 500;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .input-compact:focus {
-            border-color: #2563eb;
-            background: #fff;
-        }
-
-        .lead-row {
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .lead-row:hover {
-            background-color: #f8fafc;
-        }
-
-        .lead-row.active {
-            background-color: #eff6ff;
-            border-left: 3px solid #2563eb;
-        }
-
-        .status-badge {
-            font-size: 8px;
-            font-weight: 800;
-            padding: 1px 5px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .section-header {
-            padding: 4px 8px;
-            border-bottom: 1px solid #f1f5f9;
-            background: #f8fafc;
-            font-size: 9px;
-            font-weight: 800;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .doc-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 5px 7px;
-            background: #f8fafc;
-            border-radius: 6px;
-            margin-bottom: 3px;
-        }
-
-        .notes-textarea {
-            min-height: 56px;
-        }
-
-        .followup-editor {
-            background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
-            border: 1px solid #dbeafe;
-            border-radius: 7px;
-            padding: 6px;
-        }
-
-        #lead-form-container {
-            padding: 8px;
-            gap: 6px;
-        }
-
-        #lead-form-container .grid {
-            gap: 0.25rem;
-        }
-
-        #lead-form-container .space-y-3 > * + * {
-            margin-top: 0.22rem;
-        }
-
-        #lead-form-container .space-y-4 > * + * {
-            margin-top: 0.28rem;
-        }
-
-        #lead-form-container .pt-3,
-        #lead-form-container .pt-4 {
-            padding-top: 0.22rem;
-        }
-
-        #lead-form-container .mb-3,
-        #lead-form-container .mb-4 {
-            margin-bottom: 0.22rem;
-        }
-
-        #lead-form-container .pb-3 {
-            padding-bottom: 0.22rem;
-        }
-
-        #lead-form-container .-mx-6 {
-            margin-left: -8px;
-            margin-right: -8px;
-        }
-
-        #lead-form-container .-mt-3,
-        #lead-form-container .-mt-4 {
-            margin-top: -0.22rem;
-        }
-
-        #lead-form-container textarea.input-compact {
-            min-height: 48px;
-        }
-
-        #lead-form-container .h-24 {
-            min-height: 48px;
-            height: 48px;
-        }
-
-        #lead-form-container .grid-cols-4 {
-            grid-template-columns: 110px 1fr 1fr 1fr;
-        }
-
-        #lead-form-container .grid-cols-3 {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
+        body { font-family: 'Inter', system-ui, sans-serif; overflow: hidden; height: 100vh; background: #fff; margin: 0; display: flex; }
+        .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dashboard-container { display: grid; grid-template-columns: 480px 1fr; gap: .75rem; height: 100vh; padding: .75rem; flex-grow: 1; min-width: 0; }
+        .dashboard-container.create-mode { grid-template-columns: 1fr 0px; }
+        .dashboard-container.create-mode > #lead-database-panel { display: none; }
+        .dashboard-container.create-mode .detail-header-info { display: none; }
+        .dashboard-container.create-mode #edit-toggle-btn { display: none; }
+        .side-nav { width: 70px; background: #0f172a; height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px 0; gap: 20px; border-right: 1px solid #1e293b; flex-shrink: 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #94a3b8; transition: all .2s; cursor: pointer; text-decoration: none; padding: 8px; border-radius: 8px; width: 50px; }
+        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(255,255,255,.08); }
+        .nav-item i { font-size: 16px; }
+        .nav-text { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+        .panel-card { background: #fff; border-radius: 12px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+        .label-text { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; margin-bottom: 3px; display: block; }
+        .input-compact { width: 100%; background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8px; padding: 7px 10px; font-size: 10.5px; font-weight: 500; outline: none; transition: border-color .15s; color: #1e293b; }
+        .input-compact:focus { border-color: #94a3b8; background: #fff; }
+        .form-section { border-top: 1px solid #f1f5f9; padding-top: 10px; margin-top: 10px; }
+        .form-section-title { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #cbd5e1; margin-bottom: 7px; display: flex; align-items: center; gap: 5px; }
+        .status-badge { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 99px; font-size: 8px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+        .badge-hot { background: #fee2e2; color: #b91c1c; }
+        .badge-warm { background: #fef3c7; color: #b45309; }
+        .badge-cool { background: #dbeafe; color: #1d4ed8; }
+        .metric-card { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 10px; padding: 10px 12px; }
+        .metric-value { font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1; }
+        .metric-label { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; margin-top: 2px; }
+        .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 6px; }
+        .followup-card { padding: 10px 12px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 8px; }
+        .lead-row { cursor: pointer; transition: background .1s; }
+        .lead-row:hover, .lead-row.expanded { background: #f8fafc; }
+        .row-chevron { transition: transform .2s ease; }
+        .row-chevron.open { transform: rotate(90deg); }
+        .detail-expand-row td { padding: 0; }
+        .detail-expand-inner { background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 2px solid #e2e8f0; animation: expandDown .18s ease; }
+        @keyframes expandDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        .summary-chip { display: inline-flex; align-items: center; padding: 3px 8px; background: #f1f5f9; border-radius: 6px; font-size: 9px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .03em; }
+        .dark-select { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 7px; padding: 5px 22px 5px 9px; font-size: 9px; font-weight: 700; color: #d1d5db; outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23ffffff60' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; flex-shrink: 0; }
+        .dark-select option { background: #1e293b; color: #fff; }
     </style>
 </head>
 
 <body>
-
-    <!-- Slim Sidebar -->
     <nav class="side-nav">
-        <div class="mb-6">
-            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-bolt text-sm"></i>
-            </div>
-        </div>
-
-        <a href="task_management.html" class="nav-item active">
+        <div class="mb-4"><div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white"><i class="fa-solid fa-bolt text-sm"></i></div></div>
+        <a href="../task_and_followups/task_management.html" class="nav-item"><i class="fa-solid fa-tasks"></i><span class="nav-text">Tasks</span></a>
+        <a href="#" class="nav-item active"><i class="fa-solid fa-users"></i><span class="nav-text">Leads</span></a>
+        <a href="../reporting/reporting_logs.html" class="nav-item active">
             <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">Tasks & Followups</span>
+            <span class="nav-text">Reporting Logs</span>
         </a>
-
-        <a href="../lead_management/lead_management.html" class="nav-item active">
-            <i class="fa-solid fa-users"></i>
-            <span class="nav-text">Leads</span>
-        </a>
-
-        <a href="../lenders/lender_management.html" class="nav-item active">
-            <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">Lenders</span>
-        </a>
-
-        <a href="../documents/document_vault.html" class="nav-item active">
-            <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">Documents</span>
-        </a>
-
-        <a href="../user_management/user_management.html" class="nav-item active">
-            <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">User Management</span>
-        </a>
-
     </nav>
 
-    <!-- Main Dashboard -->
     <main class="dashboard-container">
-
-        <!-- COLUMN 1: LEAD INVENTORY (DASHBOARD) -->
-        <section class="panel-card">
-            <div class="px-2.5 py-1.5 border-b border-gray-100 flex items-center justify-between bg-gray-900 text-white">
-                <h2 class="text-[9px] font-bold uppercase tracking-widest">Lead Inventory</h2>
-                <button onclick="createNewLead()"
-                    class="w-6 h-6 bg-white/10 rounded-md flex items-center justify-center hover:bg-white/20">
-                    <i class="fa-solid fa-plus text-[10px]"></i>
-                </button>
-            </div>
-            <div class="p-1.5 border-b border-gray-50 bg-gray-50/30">
-                <input type="text" placeholder="Search leads..." class="input-compact text-[9px] py-1.5">
-            </div>
-            <div id="leads-list" class="flex-1 overflow-y-auto custom-scrollbar">
-                <!-- Lead Row -->
-                <div class="lead-row p-2.5 border-b border-gray-50 active" onclick="selectLead('L-1004')">
-                    <div class="flex justify-between items-start mb-1">
-                        <p class="text-[11px] font-bold text-gray-900">John Perera</p>
-                        <span class="status-badge bg-orange-100 text-orange-600">Warm</span>
-                    </div>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase mb-2">ABC Solutions Ltd</p>
-                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-medium">
-                        <span>£45,000 Need</span>
-                        <span class="text-blue-500 font-bold">14 Apr 2026</span>
-                    </div>
-                </div>
-                <!-- More Rows -->
-                <div class="lead-row p-2.5 border-b border-gray-50" onclick="selectLead('L-1005')">
-                    <div class="flex justify-between items-start mb-1">
-                        <p class="text-[11px] font-bold text-gray-900">Sarah Silva</p>
-                        <span class="status-badge bg-red-100 text-red-600">Hot</span>
-                    </div>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase mb-2">XYZ Logistics</p>
-                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-medium">
-                        <span>£120,000 Need</span>
-                        <span>15 Apr 2026</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- COLUMN 2: LEAD DETAILS / EDIT / CREATE -->
-        <section class="panel-card relative">
-            <div class="px-3 py-1.5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+        <section class="panel-card" id="lead-detail-panel">
+            <div id="panel-header" class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 transition-all duration-200">
                 <div class="flex items-center gap-2">
-                    <button id="back-to-dash" onclick="exitCreateMode()" class="hidden mr-1.5 w-7 h-7 rounded-full hover:bg-gray-200 flex items-center justify-center">
-                        <i class="fa-solid fa-arrow-left text-gray-600"></i>
-                    </button>
+                    <button id="back-to-dash" onclick="exitCreateMode()" class="hidden mr-2 w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center"><i class="fa-solid fa-arrow-left text-gray-600"></i></button>
                     <div class="detail-header-info">
-                        <h2 id="lead-view-title" class="text-[10px] font-bold text-gray-900 uppercase tracking-widest">Lead Specification</h2>
-                        <span id="lead-view-id" class="text-[8px] font-bold text-blue-500 uppercase">AF-2026-0001</span>
+                        <h2 id="panel-title" class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Lead Specification</h2>
+                        <p id="panel-subtitle" class="text-[8px] text-blue-600 font-semibold">AF-CASE-1004</p>
                     </div>
                     <div id="creation-header-title" class="hidden">
-                         <h2 class="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest">Register New CRM Lead</h2>
-                         <p class="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Entry Panel</p>
+                        <h2 class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Register New Lead</h2>
+                        <p class="text-[8px] text-amber-600 font-semibold">Entry Panel</p>
                     </div>
                 </div>
-                <div class="flex gap-1.5">
-                    <button id="edit-toggle-btn" onclick="toggleEditMode()"
-                        class="px-3 py-1 bg-gray-900 text-white text-[9px] font-bold rounded-lg uppercase">Edit
-                        Lead</button>
-                    <button onclick="saveLead()"
-                        class="px-3 py-1 bg-blue-600 text-white text-[9px] font-bold rounded-lg uppercase">Save
-                        Changes</button>
+                <div class="flex items-center gap-2">
+                    <button id="edit-toggle-btn" onclick="toggleEditMode()" class="px-3 py-1.5 bg-gray-900 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest">Edit Lead</button>
+                    <button id="save-btn" onclick="saveLead()" class="px-3 py-1.5 bg-amber-600 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest">Save Changes</button>
+                    <div id="panel-dot" style="width:6px;height:6px;border-radius:50%;background:#3b82f6;"></div>
                 </div>
             </div>
 
-            <div id="lead-form-container" class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-5">
+            <div class="flex-1 overflow-y-auto custom-scrollbar" style="scrollbar-width:none;-ms-overflow-style:none;">
+                <style>#lead-detail-panel .flex-1::-webkit-scrollbar{display:none}</style>
+                <div id="lead-form-container" class="p-4">
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <div class="metric-card"><div class="metric-value" id="metric-total-leads">2</div><div class="metric-label">Total Leads</div></div>
+                        <div class="metric-card"><div class="metric-value text-red-500" id="metric-hot-leads">1</div><div class="metric-label">Hot Leads</div></div>
+                        <div class="metric-card"><div class="metric-value text-amber-500" id="metric-warm-leads">1</div><div class="metric-label">Warm Leads</div></div>
+                    </div>
 
-                <!-- LEAD HEADER METADATA -->
-                <div class="grid grid-cols-2 gap-2 pb-3 border-b border-gray-50 mb-3">
-                    <div>
-                        <label class="label-text">Lead Status</label>
-                        <select id="field-leadStatus" class="input-compact font-bold" disabled>
-                            <option value="Hot">🔥 Hot</option>
-                            <option value="Warm">☀️ Warm</option>
-                            <option value="Cool">❄️ Cool</option>
-                        </select>
+                    <div class="mt-4 grid grid-cols-2 gap-2.5">
+                        <div><label class="label-text">Lead Status</label><select id="field-leadStatus" class="input-compact font-bold" disabled><option value="Hot">Hot</option><option value="Warm">Warm</option><option value="Cool">Cool</option></select></div>
+                        <div><label class="label-text">Case ID</label><input type="text" id="field-id" class="input-compact font-mono text-blue-600" disabled></div>
                     </div>
-                    <div>
-                        <label class="label-text">Case ID</label>
-                        <input type="text" id="field-id" class="input-compact font-mono text-blue-600" disabled>
-                    </div>
-                </div>
 
-                <!-- CONTACT INFORMATION (Ultra Compact) -->
-                <div class="space-y-3">
-                    <div class="section-header -mx-6 -mt-3 mb-3">Contact Information</div>
-                    <div class="grid grid-cols-4 gap-2">
-                        <div class="col-span-1">
-                            <label class="label-text">Title</label>
-                            <input type="text" id="field-title" class="input-compact" disabled>
-                        </div>
-                        <div class="col-span-3">
-                            <label class="label-text">Full Name <span class="text-red-500">*</span></label>
-                            <input type="text" id="field-fullName" class="input-compact" disabled>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">DOB <span class="text-red-500">*</span></label>
-                            <input type="date" id="field-dob" class="input-compact" disabled>
-                        </div>
-                        <div>
-                            <label class="label-text">Co. House No <span class="text-red-500">*</span></label>
-                            <input type="text" id="field-companyHouseNumber" class="input-compact" disabled>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="label-text">Company Name <span class="text-red-500">*</span></label>
-                        <input type="text" id="field-companyName" class="input-compact" disabled>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Job Title</label>
-                            <input type="text" id="field-jobTitle" class="input-compact" disabled>
-                        </div>
-                        <div>
-                            <label class="label-text">Turnover <span class="text-red-500">*</span></label>
-                            <input type="text" id="field-businessAnnualTurnover" class="input-compact" disabled>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Email <span class="text-red-500">*</span></label>
-                            <input type="email" id="field-emailAddress" class="input-compact" disabled>
-                        </div>
-                        <div>
-                            <label class="label-text">Phone <span class="text-red-500">*</span></label>
-                            <input type="text" id="field-phoneNumber" class="input-compact" disabled>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Home Owner</label>
-                            <select id="field-homeOwner" class="input-compact" disabled>
-                                <option>Yes</option>
-                                <option>No</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="label-text">Time at Address</label>
-                            <input type="text" id="field-timeAtCurrentAddress" class="input-compact" disabled>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="label-text">Residential Address <span class="text-red-500">*</span></label>
-                        <input type="text" id="field-residentialAddress" class="input-compact" disabled>
-                    </div>
-                    <div>
-                        <label class="label-text">Previous Address</label>
-                        <input type="text" id="field-previousAddress" placeholder="..." class="input-compact" disabled>
-                    </div>
-                </div>
-
-                <!-- LOAN DETAILS (Compact) -->
-                <div class="space-y-3 pt-3">
-                    <div class="section-header -mx-6 -mt-3 mb-3">Loan Details</div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Amount <span class="text-red-500">*</span></label>
-                            <input type="text" id="field-loanAmount" class="input-compact" disabled>
-                        </div>
-                        <div>
-                            <label class="label-text">Timeline</label>
-                            <input type="text" id="field-fundingTimeline" class="input-compact" disabled>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="label-text">Purpose</label>
-                        <input type="text" id="field-loanPurpose" class="input-compact" disabled>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Lead Sync</label>
-                            <input type="text" id="field-leadSource" class="input-compact" disabled>
-                        </div>
-                        <div>
-                            <label class="label-text">Consent</label>
-                            <select id="field-creditConsent" class="input-compact" disabled>
-                                <option>Yes</option>
-                                <option>No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Existing Loan</label>
-                            <select id="field-existingLoan" class="input-compact" disabled>
-                                <option>No</option>
-                                <option>Yes</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="label-text">Overdraft</label>
-                            <select id="field-overdraftFacility" class="input-compact" disabled>
-                                <option>No</option>
-                                <option>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div>
-                            <label class="label-text">Prev Alpha</label>
-                            <select id="field-previousAlphaFundingLoan" class="input-compact" disabled>
-                                <option>No</option>
-                                <option>Yes</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="label-text">Bank</label>
-                            <input type="text" id="field-companyBank" class="input-compact" disabled>
-                        </div>
-                        <div>
-                            <label class="label-text">Industry</label>
-                            <input type="text" id="field-industry" class="input-compact" disabled>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- NOTES SECTION -->
-                <div class="space-y-3 pt-3 border-t border-gray-50">
-                    <div class="section-header -mx-6 -mt-3 mb-3 bg-blue-50/30">Process Notes</div>
-                    <textarea id="field-additionalComments" class="input-compact notes-textarea resize-none" disabled
-                        placeholder="..."></textarea>
-                </div>
-
-                <!-- FOLLOW UP (HIDDEN IN DETAILS, VISIBLE IN CREATE/EDIT) -->
-                <div id="followup-section" class="hidden space-y-4 pt-4">
-                    <div class="section-header -mx-6 -mt-4 mb-4">Task Follow-up</div>
-                    <div class="followup-editor space-y-3">
-                        <div class="grid grid-cols-3 gap-3">
-                            <div>
-                                <label class="label-text">Task Date</label>
-                                <input type="date" class="input-compact">
+                    <div class="form-section">
+                        <p class="form-section-title"><i class="fa-solid fa-user text-[8px]"></i> Contact</p>
+                        <div class="space-y-2.5">
+                            <div class="grid grid-cols-4 gap-2.5">
+                                <div class="col-span-1"><label class="label-text">Title</label><input type="text" id="field-title" class="input-compact" disabled></div>
+                                <div class="col-span-3"><label class="label-text">Full Name <span class="text-red-500">*</span></label><input type="text" id="field-fullName" class="input-compact" disabled></div>
                             </div>
-                            <div>
-                                <label class="label-text">Time</label>
-                                <input type="time" class="input-compact">
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div><label class="label-text">DOB <span class="text-red-500">*</span></label><input type="date" id="field-dob" class="input-compact" disabled></div>
+                                <div><label class="label-text">Co. House No <span class="text-red-500">*</span></label><input type="text" id="field-companyHouseNumber" class="input-compact" disabled></div>
                             </div>
-                            <div>
-                                <label class="label-text">Type</label>
-                                <select class="input-compact">
-                                    <option>Initial Call</option>
-                                    <option>Follow-up Call</option>
-                                    <option>Document Chase</option>
-                                    <option>Lender Review</option>
-                                </select>
+                            <div><label class="label-text">Company Name <span class="text-red-500">*</span></label><input type="text" id="field-companyName" class="input-compact" disabled></div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div><label class="label-text">Job Title</label><input type="text" id="field-jobTitle" class="input-compact" disabled></div>
+                                <div><label class="label-text">Turnover <span class="text-red-500">*</span></label><input type="text" id="field-businessAnnualTurnover" class="input-compact" disabled></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div><label class="label-text">Email <span class="text-red-500">*</span></label><input type="email" id="field-emailAddress" class="input-compact" disabled></div>
+                                <div><label class="label-text">Phone <span class="text-red-500">*</span></label><input type="text" id="field-phoneNumber" class="input-compact" disabled></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div><label class="label-text">Home Owner</label><select id="field-homeOwner" class="input-compact" disabled><option>Yes</option><option>No</option></select></div>
+                                <div><label class="label-text">Time at Address</label><input type="text" id="field-timeAtCurrentAddress" class="input-compact" disabled></div>
+                            </div>
+                            <div><label class="label-text">Residential Address <span class="text-red-500">*</span></label><input type="text" id="field-residentialAddress" class="input-compact" disabled></div>
+                            <div><label class="label-text">Previous Address</label><input type="text" id="field-previousAddress" class="input-compact" disabled></div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <p class="form-section-title"><i class="fa-solid fa-sterling-sign text-[8px]"></i> Loan Details</p>
+                        <div class="space-y-2.5">
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div><label class="label-text">Amount <span class="text-red-500">*</span></label><input type="text" id="field-loanAmount" class="input-compact" disabled></div>
+                                <div><label class="label-text">Timeline</label><input type="text" id="field-fundingTimeline" class="input-compact" disabled></div>
+                            </div>
+                            <div><label class="label-text">Purpose</label><input type="text" id="field-loanPurpose" class="input-compact" disabled></div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div><label class="label-text">Lead Sync</label><input type="text" id="field-leadSource" class="input-compact" disabled></div>
+                                <div><label class="label-text">Consent</label><select id="field-creditConsent" class="input-compact" disabled><option>Yes</option><option>No</option></select></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div><label class="label-text">Existing Loan</label><select id="field-existingLoan" class="input-compact" disabled><option>No</option><option>Yes</option></select></div>
+                                <div><label class="label-text">Overdraft</label><select id="field-overdraftFacility" class="input-compact" disabled><option>No</option><option>Yes</option></select></div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <div><label class="label-text">Prev Alpha</label><select id="field-previousAlphaFundingLoan" class="input-compact" disabled><option>No</option><option>Yes</option></select></div>
+                                <div><label class="label-text">Bank</label><input type="text" id="field-companyBank" class="input-compact" disabled></div>
+                                <div><label class="label-text">Industry</label><input type="text" id="field-industry" class="input-compact" disabled></div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="label-text">Owner</label>
-                                <input type="text" class="input-compact" placeholder="Assigned advisor">
+                    </div>
+
+                    <div class="form-section">
+                        <p class="form-section-title"><i class="fa-solid fa-file-import text-[8px]"></i> Documents</p>
+                        <div class="flex gap-2 mb-2.5">
+                            <input type="text" placeholder="Doc name..." class="input-compact flex-1">
+                            <button class="px-3 py-1.5 bg-gray-900 text-white rounded-lg text-[9px] font-bold hover:bg-black transition-all flex-shrink-0"><i class="fa-solid fa-upload"></i></button>
+                        </div>
+                        <div id="doc-list-container"></div>
+                    </div>
+
+                    <div class="form-section">
+                        <p class="form-section-title"><i class="fa-solid fa-note-sticky text-[8px]"></i> Notes</p>
+                        <textarea id="field-additionalComments" rows="4" class="input-compact resize-none" disabled placeholder="Internal notes..."></textarea>
+                    </div>
+
+                    <div id="followup-section" class="form-section hidden">
+                        <p class="form-section-title"><i class="fa-solid fa-calendar-check text-[8px]"></i> Follow-up</p>
+                        <div class="space-y-2.5">
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <div><label class="label-text">Task Date</label><input type="date" class="input-compact"></div>
+                                <div><label class="label-text">Time</label><input type="time" class="input-compact"></div>
+                                <div><label class="label-text">Type</label><select class="input-compact"><option>Initial Call</option><option>Follow-up Call</option><option>Document Chase</option><option>Lender Review</option></select></div>
                             </div>
-                            <div>
-                                <label class="label-text">Priority</label>
-                                <select class="input-compact">
-                                    <option>High</option>
-                                    <option>Medium</option>
-                                    <option>Low</option>
-                                </select>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div><label class="label-text">Owner</label><input type="text" class="input-compact" placeholder="Assigned advisor"></div>
+                                <div><label class="label-text">Priority</label><select class="input-compact"><option>High</option><option>Medium</option><option>Low</option></select></div>
                             </div>
-                        </div>
-                        <div>
-                            <label class="label-text">Follow-up Notes</label>
-                            <textarea class="input-compact h-24 resize-none" placeholder="Add next-step instructions, call outcomes, or required documents..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- COLUMN 3: DOCS & FOLLOWUPS -->
-        <section class="panel-card">
-            <div class="flex-1 flex flex-col overflow-hidden">
-
-                <!-- Subtopic: Document Uploading Section -->
-                <div class="flex-none bg-gray-50 border-b border-gray-100 p-2">
-                    <h2
-                        class="text-[10px] font-extrabold text-gray-900 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-file-import text-blue-500"></i> Documents
-                    </h2>
-                    <div class="flex gap-2">
-                        <input type="text" placeholder="Doc name..." class="input-compact py-1.5 flex-1">
-                        <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-bold"><i
-                                class="fa-solid fa-upload"></i></button>
-                    </div>
-                </div>
-
-                <div class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-3">
-
-                    <!-- Document List (Dynamic) -->
-                    <div>
-                        <label class="label-text block mb-3">Supporting Files</label>
-                        <div id="doc-list-container">
-                            <!-- Dynamic Docs -->
+                            <div><label class="label-text">Follow-up Notes</label><textarea rows="3" class="input-compact resize-none" placeholder="Add next-step instructions, call outcomes, or required documents..."></textarea></div>
                         </div>
                     </div>
 
-                    <!-- Related Tasks & Followups -->
-                    <div class="space-y-3 pt-3 border-t border-gray-50 flex-1 flex flex-col min-h-[180px]">
-                        <label class="label-text block mb-2 text-blue-600">Pending Followups</label>
-                        <div id="task-feed-container" class="space-y-2 flex-1">
-                            <!-- Dynamic Tasks -->
-                        </div>
+                    <div class="form-section">
+                        <p class="form-section-title"><i class="fa-solid fa-list-check text-[8px]"></i> Pending Followups</p>
+                        <div id="task-feed-container" class="space-y-2"></div>
                     </div>
 
-                </div>
-
-                <!-- Final Delete for the whole lead -->
-                <div class="p-2 border-t border-gray-50 bg-red-50/30">
-                    <button
-                        class="w-full py-2 border border-red-200 text-red-600 text-[9px] font-bold uppercase rounded-lg hover:bg-red-600 hover:text-white transition-all">
-                        <i class="fa-solid fa-trash-alt mr-2"></i> Delete Lead Entirely
-                    </button>
+                    <div class="pt-3">
+                        <button class="w-full py-2.5 border border-red-100 text-red-400 text-[8px] font-bold uppercase tracking-widest rounded-lg hover:border-red-300 hover:text-red-600 transition-all"><i class="fa-solid fa-trash text-[7px] mr-1.5"></i>Delete Lead</button>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <section class="panel-card" id="lead-database-panel">
+            <div class="px-4 border-b border-white/5 bg-gray-900 flex items-center gap-3" style="min-height:48px;">
+                <h2 class="text-[9px] font-bold uppercase tracking-widest text-white flex-shrink-0">Lead Database</h2>
+                <span id="result-count" class="text-[8px] font-bold text-gray-500 font-mono flex-shrink-0"></span>
+                <div class="relative flex-1 min-w-[120px]">
+                    <input id="lead-search" type="text" placeholder="Search leads..." style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:5px 10px 5px 26px;font-size:9px;font-weight:600;color:#fff;outline:none;" oninput="renderLeadTable()" onfocus="this.style.background='rgba(255,255,255,.12)'" onblur="this.style.background='rgba(255,255,255,.07)'">
+                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-[8px]" style="color:rgba(255,255,255,.3);"></i>
+                </div>
+                <select id="status-filter" onchange="renderLeadTable()" class="dark-select">
+                    <option value="All">All Status</option>
+                    <option value="Hot">Hot</option>
+                    <option value="Warm">Warm</option>
+                    <option value="Cool">Cool</option>
+                </select>
+                <div class="flex items-center gap-0 flex-shrink-0 border-l border-white/10 pl-3 ml-1">
+                    <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10"><span id="stat-total" class="text-[13px] font-black text-white">2</span><span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Total</span></div>
+                    <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10"><span id="stat-hot" class="text-[13px] font-black text-red-400">1</span><span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Hot</span></div>
+                    <div class="flex items-center gap-1.5 px-2.5 py-2"><span id="stat-warm" class="text-[13px] font-black text-amber-400">1</span><span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Warm</span></div>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <table class="w-full text-left">
+                    <thead class="sticky top-0 bg-gray-50 border-b border-gray-100 z-10">
+                        <tr>
+                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Lead</th>
+                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Company</th>
+                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Need</th>
+                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
+                            <th class="px-2 py-1.5 w-6"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="lead-tbody" class="divide-y divide-gray-50"></tbody>
+                </table>
+                <div id="lead-empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
+                    <i class="fa-solid fa-users text-3xl text-gray-200 mb-3"></i>
+                    <p class="text-[10px] font-bold text-gray-400">No leads match your filters</p>
+                </div>
+            </div>
+
+            <div class="p-3 border-t border-gray-50 bg-gray-50/30 flex items-center justify-between">
+                <span id="footer-count" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest"></span>
+                <button onclick="createNewLead()" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all"><i class="fa-solid fa-plus mr-1"></i>New Lead</button>
+            </div>
+        </section>
     </main>
-
     <script>
         const leadsDB = {
-            'L-1004': {
-                id: 'AF-CASE-1004',
-                fullName: 'John Perera',
-                title: 'Mr',
-                dob: '1985-06-12',
-                companyName: 'ABC Solutions Ltd',
-                jobTitle: 'Managing Director',
-                companyHouseNumber: '12345678',
-                businessAnnualTurnover: '£250,000',
-                emailAddress: 'john@abc.com',
-                phoneNumber: '+44 7700 900000',
-                residentialAddress: '99 Halbutt Street, Dagenham, RM9 5AR',
-                timeAtCurrentAddress: '3 Years',
-                homeOwner: 'Yes',
-                loanAmount: '£45,000',
-                fundingTimeline: 'Within 2 weeks',
-                loanPurpose: 'Business Expansion',
-                companyBank: 'Santander',
-                industry: 'Software',
-                leadSource: 'Web',
-                creditConsent: 'Yes',
-                existingLoan: 'No',
-                overdraftFacility: 'No',
-                previousAlphaFundingLoan: 'No',
-                additionalComments: 'Client interested in quick repayment terms.',
-                leadStatus: 'Warm',
-                documents: ['Bank Statement Jan.pdf', 'ID Verification.jpg'],
-                tasks: [
-                    { time: '14:30', type: 'Initial Call', desc: 'Discuss loan purpose' }
-                ]
-            },
-            'L-1005': {
-                id: 'AF-CASE-1005',
-                fullName: 'Sarah Silva',
-                title: 'Ms',
-                dob: '1992-11-20',
-                companyName: 'XYZ Logistics',
-                jobTitle: 'CFO',
-                companyHouseNumber: '87654321',
-                businessAnnualTurnover: '£1,200,000',
-                emailAddress: 'sarah@xyz.com',
-                phoneNumber: '+44 7700 111222',
-                residentialAddress: '24 Riverside Gardens, Reading, RG1 2AB',
-                timeAtCurrentAddress: '5 Years',
-                homeOwner: 'No',
-                loanAmount: '£120,000',
-                fundingTimeline: 'ASAP',
-                loanPurpose: 'Warehouse Scaling',
-                companyBank: 'HSBC',
-                industry: 'Logistics',
-                leadSource: 'Referral',
-                creditConsent: 'Yes',
-                existingLoan: 'Yes',
-                overdraftFacility: 'Yes',
-                previousAlphaFundingLoan: 'Yes',
-                additionalComments: 'Urgent funding needed for peak season.',
-                leadStatus: 'Hot',
-                documents: ['Incorporation Cert.pdf', 'VAT Returns.xlsx'],
-                tasks: [
-                    { time: '10:00', type: 'Site Visit', desc: 'Inspect Reading warehouse' }
-                ]
-            }
+            'L-1004': { id: 'AF-CASE-1004', fullName: 'John Perera', title: 'Mr', dob: '1985-06-12', companyName: 'ABC Solutions Ltd', jobTitle: 'Managing Director', companyHouseNumber: '12345678', businessAnnualTurnover: '�250,000', emailAddress: 'john@abc.com', phoneNumber: '+44 7700 900000', residentialAddress: '99 Halbutt Street, Dagenham, RM9 5AR', previousAddress: '', timeAtCurrentAddress: '3 Years', homeOwner: 'Yes', loanAmount: '�45,000', fundingTimeline: 'Within 2 weeks', loanPurpose: 'Business Expansion', companyBank: 'Santander', industry: 'Software', leadSource: 'Web', creditConsent: 'Yes', existingLoan: 'No', overdraftFacility: 'No', previousAlphaFundingLoan: 'No', additionalComments: 'Client interested in quick repayment terms.', leadStatus: 'Warm', createdAt: '14 Apr 2026', documents: ['Bank Statement Jan.pdf', 'ID Verification.jpg'], tasks: [{ time: '14:30', type: 'Initial Call', desc: 'Discuss loan purpose' }] },
+            'L-1005': { id: 'AF-CASE-1005', fullName: 'Sarah Silva', title: 'Ms', dob: '1992-11-20', companyName: 'XYZ Logistics', jobTitle: 'CFO', companyHouseNumber: '87654321', businessAnnualTurnover: '�1,200,000', emailAddress: 'sarah@xyz.com', phoneNumber: '+44 7700 111222', residentialAddress: '24 Riverside Gardens, Reading, RG1 2AB', previousAddress: '', timeAtCurrentAddress: '5 Years', homeOwner: 'No', loanAmount: '�120,000', fundingTimeline: 'ASAP', loanPurpose: 'Warehouse Scaling', companyBank: 'HSBC', industry: 'Logistics', leadSource: 'Referral', creditConsent: 'Yes', existingLoan: 'Yes', overdraftFacility: 'Yes', previousAlphaFundingLoan: 'Yes', additionalComments: 'Urgent funding needed for peak season.', leadStatus: 'Hot', createdAt: '15 Apr 2026', documents: ['Incorporation Cert.pdf', 'VAT Returns.xlsx'], tasks: [{ time: '10:00', type: 'Site Visit', desc: 'Inspect Reading warehouse' }] }
         };
 
+        let currentLeadKey = 'L-1004';
+        let expandedLeadId = 'L-1004';
         let isEditMode = false;
 
+        function getStatusBadgeClass(status) { return status === 'Hot' ? 'badge-hot' : status === 'Warm' ? 'badge-warm' : 'badge-cool'; }
+
+        function getFilteredLeads() {
+            const q = (document.getElementById('lead-search')?.value || '').toLowerCase().trim();
+            const status = document.getElementById('status-filter')?.value || 'All';
+            return Object.entries(leadsDB).filter(([, lead]) => {
+                const haystack = [lead.fullName, lead.companyName, lead.loanAmount, lead.id, lead.industry, lead.emailAddress].filter(Boolean).join(' ').toLowerCase();
+                return (!q || haystack.includes(q)) && (status === 'All' || lead.leadStatus === status);
+            });
+        }
+
+        function updateLeadStats() {
+            const leads = Object.values(leadsDB);
+            const total = leads.length;
+            const hot = leads.filter(lead => lead.leadStatus === 'Hot').length;
+            const warm = leads.filter(lead => lead.leadStatus === 'Warm').length;
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-hot').textContent = hot;
+            document.getElementById('stat-warm').textContent = warm;
+            document.getElementById('metric-total-leads').textContent = total;
+            document.getElementById('metric-hot-leads').textContent = hot;
+            document.getElementById('metric-warm-leads').textContent = warm;
+        }
+
+        function renderLeadTable() {
+            const filtered = getFilteredLeads();
+            const tbody = document.getElementById('lead-tbody');
+            const empty = document.getElementById('lead-empty-state');
+            document.getElementById('result-count').textContent = `${filtered.length} results`;
+            document.getElementById('footer-count').textContent = `${filtered.length} lead records`;
+            if (!filtered.length) {
+                tbody.innerHTML = '';
+                empty.classList.remove('hidden');
+                empty.classList.add('flex');
+                return;
+            }
+            empty.classList.add('hidden');
+            empty.classList.remove('flex');
+            tbody.innerHTML = filtered.map(([key, lead]) => {
+                const open = expandedLeadId === key;
+                return `
+                    <tr class="lead-row ${open ? 'expanded' : ''}" onclick="toggleLeadRow('${key}')">
+                        <td class="px-3 py-2"><div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded-lg bg-gray-900 text-white text-[9px] font-black flex items-center justify-center flex-shrink-0">${lead.fullName.split(' ').map(part => part[0]).join('').slice(0, 2)}</div><div><p class="text-[10px] font-bold text-gray-900">${lead.fullName}</p><p class="text-[7px] text-gray-400 mt-0.5">${lead.id}</p></div></div></td>
+                        <td class="px-3 py-2"><p class="text-[10px] font-semibold text-gray-800">${lead.companyName}</p><p class="text-[7px] text-gray-400 mt-0.5">${lead.industry || 'General'}</p></td>
+                        <td class="px-3 py-2"><p class="text-[10px] font-semibold text-gray-800">${lead.loanAmount}</p><p class="text-[7px] text-gray-400 mt-0.5">${lead.fundingTimeline || 'Pending timeline'}</p></td>
+                        <td class="px-3 py-2"><span class="status-badge ${getStatusBadgeClass(lead.leadStatus)}">${lead.leadStatus}</span></td>
+                        <td class="px-2 py-2 text-center"><i class="fa-solid fa-chevron-right text-[10px] text-gray-300 row-chevron ${open ? 'open' : ''}"></i></td>
+                    </tr>
+                    ${open ? `<tr class="detail-expand-row" id="detail-${key}"><td colspan="5"><div class="detail-expand-inner px-6 py-4"><div class="grid grid-cols-4 gap-4"><div><p class="label-text mb-2"><i class="fa-solid fa-building mr-1"></i>Company</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Business</p><p class="text-[10px] font-semibold text-gray-800">${lead.companyName}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Job Title</p><p class="text-[10px] font-semibold text-gray-800">${lead.jobTitle || 'N/A'}</p></div></div></div><div><p class="label-text mb-2"><i class="fa-solid fa-address-card mr-1"></i>Contact</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Email</p><p class="text-[9px] font-semibold text-blue-600 break-all">${lead.emailAddress}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Phone</p><p class="text-[10px] font-semibold text-gray-800">${lead.phoneNumber}</p></div></div></div><div><p class="label-text mb-2"><i class="fa-solid fa-sack-dollar mr-1"></i>Funding</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Amount</p><p class="text-[10px] font-semibold text-gray-800">${lead.loanAmount}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Purpose</p><p class="text-[9px] font-semibold text-gray-700">${lead.loanPurpose || 'N/A'}</p></div></div></div><div class="flex flex-col justify-between"><div><p class="label-text mb-2"><i class="fa-solid fa-tags mr-1"></i>Summary</p><div class="flex flex-wrap gap-1"><span class="summary-chip">${lead.leadStatus}</span><span class="summary-chip">${lead.companyBank || 'No Bank'}</span><span class="summary-chip">${lead.homeOwner || 'Address Pending'}</span></div>${lead.additionalComments ? `<p class="text-[8px] text-gray-400 mt-2 leading-relaxed">${lead.additionalComments}</p>` : ''}</div><div class="flex gap-2 mt-3"><button onclick="event.stopPropagation();selectLead('${key}')" class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 text-white text-[8px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all"><i class="fa-solid fa-eye text-[7px]"></i>Open</button><button onclick="event.stopPropagation();toggleEditFromRow('${key}')" class="flex items-center gap-1.5 px-3 py-1.5 border border-amber-100 text-amber-600 text-[8px] font-bold uppercase tracking-widest rounded-lg hover:border-amber-300 transition-all"><i class="fa-solid fa-pen text-[7px]"></i>Edit</button></div><p class="text-[7px] text-gray-300 font-mono mt-1">Created ${lead.createdAt || 'N/A'}</p></div></div></div></td></tr>` : ''}
+                `;
+            }).join('');
+        }
+
+        function toggleLeadRow(id) { expandedLeadId = expandedLeadId === id ? null : id; renderLeadTable(); }
+        function toggleEditFromRow(id) { selectLead(id); if (!isEditMode) toggleEditMode(); }
         function selectLead(id) {
             const lead = leadsDB[id];
             if (!lead || !lead.fullName) return;
-
-            // Highlight row
-            document.querySelectorAll('.lead-row').forEach(row => {
-                row.classList.remove('active');
-                if (row.innerHTML.includes(lead.fullName)) row.classList.add('active');
-            });
-
-            // Update Header Display
-            document.getElementById('lead-view-title').innerText = lead.fullName.toUpperCase();
-            document.getElementById('lead-view-id').innerText = lead.id;
-
-            // Map all database keys to field IDs
-            const fieldsToMap = [
-                'title', 'fullName', 'dob', 'companyName', 'jobTitle', 
-                'companyHouseNumber', 'businessAnnualTurnover', 'emailAddress', 
-                'phoneNumber', 'homeOwner', 'timeAtCurrentAddress', 'residentialAddress', 
-                'previousAddress', 'loanAmount', 'fundingTimeline', 'loanPurpose', 
-                'leadSource', 'creditConsent', 'existingLoan', 'overdraftFacility', 
-                'previousAlphaFundingLoan', 'companyBank', 'industry', 
-                'additionalComments', 'leadStatus', 'id'
-            ];
-
-            fieldsToMap.forEach(key => {
-                const el = document.getElementById('field-' + key);
-                if (el) {
-                    el.value = lead[key] !== undefined ? lead[key] : '';
-                    console.log(`Mapping ${key} -> ${lead[key]}`);
-                }
-            });
-
-            // Update Documents column
-            const docContainer = document.getElementById('doc-list-container');
-            if (docContainer && lead.documents) {
-                docContainer.innerHTML = lead.documents.map(doc => `
-                    <div class="doc-item">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-file-lines text-blue-500"></i>
-                            <span class="text-[10px] font-bold text-gray-700">${doc}</span>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Update Tasks col
-            const taskContainer = document.getElementById('task-feed-container');
-            if (taskContainer && lead.tasks) {
-                taskContainer.innerHTML = lead.tasks.map(task => `
-                    <div class="p-2 border border-blue-50 bg-blue-50/20 rounded-lg">
-                        <p class="text-[8px] font-extrabold text-blue-600 uppercase">${task.time} • ${task.type}</p>
-                        <p class="text-[10px] font-bold text-gray-800">${task.desc}</p>
-                    </div>
-                `).join('');
-            }
-
-            // Lock to view mode
-            isEditMode = true; 
-            toggleEditMode(); 
+            currentLeadKey = id;
+            expandedLeadId = id;
+            document.getElementById('panel-title').innerText = lead.fullName.toUpperCase();
+            document.getElementById('panel-subtitle').innerText = lead.id;
+            ['title','fullName','dob','companyName','jobTitle','companyHouseNumber','businessAnnualTurnover','emailAddress','phoneNumber','homeOwner','timeAtCurrentAddress','residentialAddress','previousAddress','loanAmount','fundingTimeline','loanPurpose','leadSource','creditConsent','existingLoan','overdraftFacility','previousAlphaFundingLoan','companyBank','industry','additionalComments','leadStatus','id'].forEach(key => { const el = document.getElementById('field-' + key); if (el) el.value = lead[key] !== undefined ? lead[key] : ''; });
+            document.getElementById('doc-list-container').innerHTML = (lead.documents || []).map(doc => `<div class="doc-item"><div class="flex items-center gap-3"><i class="fa-solid fa-file-lines text-blue-500"></i><span class="text-[10px] font-bold text-gray-700">${doc}</span></div></div>`).join('');
+            document.getElementById('task-feed-container').innerHTML = (lead.tasks || []).map(task => `<div class="followup-card"><p class="text-[8px] font-extrabold text-blue-600 uppercase">${task.time} � ${task.type}</p><p class="text-[10px] font-bold text-gray-800">${task.desc}</p></div>`).join('');
+            isEditMode = true;
+            toggleEditMode();
+            renderLeadTable();
         }
-
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const inputs = document.querySelectorAll('#lead-form-container input, #lead-form-container select, #lead-form-container textarea');
             const btn = document.getElementById('edit-toggle-btn');
             const followup = document.getElementById('followup-section');
-
-            inputs.forEach(input => {
-                input.disabled = !isEditMode;
-                input.classList.toggle('bg-white', isEditMode);
-            });
-
-            btn.innerText = isEditMode ? "Cancel Edit" : "Edit Lead";
+            inputs.forEach(input => { input.disabled = !isEditMode; input.classList.toggle('bg-white', isEditMode); });
+            btn.innerText = isEditMode ? 'Cancel Edit' : 'Edit Lead';
             btn.classList.toggle('bg-red-500', isEditMode);
+            btn.classList.toggle('bg-gray-900', !isEditMode);
             followup.classList.toggle('hidden', !isEditMode);
         }
-
-        // Initialize with first lead
-        window.onload = () => selectLead('L-1004');
-
         function createNewLead() {
             document.querySelector('.dashboard-container').classList.add('create-mode');
             document.getElementById('back-to-dash').classList.remove('hidden');
             document.getElementById('creation-header-title').classList.remove('hidden');
-            
+            document.querySelector('.detail-header-info').classList.add('hidden');
             const inputs = document.querySelectorAll('#lead-form-container input, #lead-form-container select, #lead-form-container textarea');
-            inputs.forEach(i => { i.value = ""; i.disabled = false; i.classList.add('bg-white'); });
-            
+            inputs.forEach(input => { input.value = ''; input.disabled = false; input.classList.add('bg-white'); });
             isEditMode = true;
-            document.getElementById('edit-toggle-btn').innerText = "Discard";
+            document.getElementById('edit-toggle-btn').innerText = 'Discard';
             document.getElementById('followup-section').classList.remove('hidden');
+            document.getElementById('doc-list-container').innerHTML = '';
+            document.getElementById('task-feed-container').innerHTML = '';
         }
-
         function exitCreateMode() {
             document.querySelector('.dashboard-container').classList.remove('create-mode');
             document.getElementById('back-to-dash').classList.add('hidden');
             document.getElementById('creation-header-title').classList.add('hidden');
-            selectLead('L-1004'); // Reset to default view
+            document.querySelector('.detail-header-info').classList.remove('hidden');
+            selectLead(currentLeadKey);
         }
-
-        function saveLead() {
-            alert('Selection and Changes Persisted to Database.');
-            exitCreateMode();
-        }
+        function saveLead() { alert('Selection and Changes Persisted to Database.'); exitCreateMode(); }
+        window.onload = () => { updateLeadStats(); renderLeadTable(); selectLead('L-1004'); };
     </script>
-
 </body>
 
 </html>
