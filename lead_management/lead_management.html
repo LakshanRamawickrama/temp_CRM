@@ -40,6 +40,26 @@
             padding: 0.75rem;
             flex-grow: 1;
             min-width: 0;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-container.create-mode {
+            grid-template-columns: 0px 1fr 0px;
+            gap: 0;
+            padding: 0;
+        }
+
+        .dashboard-container.create-mode > section:nth-child(1),
+        .dashboard-container.create-mode > section:nth-child(3) {
+            display: none;
+        }
+
+        .dashboard-container.create-mode .detail-header-info {
+            display: none;
+        }
+
+        .dashboard-container.create-mode #edit-toggle-btn {
+            display: none;
         }
 
         .side-nav {
@@ -238,9 +258,17 @@
         <section class="panel-card relative">
             <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
                 <div class="flex items-center gap-2">
-                    <h2 id="lead-view-title" class="text-[10px] font-bold text-gray-900 uppercase tracking-widest">Lead
-                        Specification</h2>
-                    <span id="lead-view-id" class="text-[8px] font-bold text-blue-500 uppercase">AF-2026-0001</span>
+                    <button id="back-to-dash" onclick="exitCreateMode()" class="hidden mr-2 w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-left text-gray-600"></i>
+                    </button>
+                    <div class="detail-header-info">
+                        <h2 id="lead-view-title" class="text-[10px] font-bold text-gray-900 uppercase tracking-widest">Lead Specification</h2>
+                        <span id="lead-view-id" class="text-[8px] font-bold text-blue-500 uppercase">AF-2026-0001</span>
+                    </div>
+                    <div id="creation-header-title" class="hidden">
+                         <h2 class="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest">Register New CRM Lead</h2>
+                         <p class="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Entry Panel</p>
+                    </div>
                 </div>
                 <div class="flex gap-2">
                     <button id="edit-toggle-btn" onclick="toggleEditMode()"
@@ -253,10 +281,26 @@
             </div>
 
             <div id="lead-form-container" class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-5">
-                
+
+                <!-- LEAD HEADER METADATA -->
+                <div class="grid grid-cols-2 gap-2 pb-3 border-b border-gray-50 mb-3">
+                    <div>
+                        <label class="label-text">Lead Status</label>
+                        <select id="field-leadStatus" class="input-compact font-bold" disabled>
+                            <option value="Hot">🔥 Hot</option>
+                            <option value="Warm">☀️ Warm</option>
+                            <option value="Cool">❄️ Cool</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label-text">Case ID</label>
+                        <input type="text" id="field-id" class="input-compact font-mono text-blue-600" disabled>
+                    </div>
+                </div>
+
                 <!-- CONTACT INFORMATION (Ultra Compact) -->
                 <div class="space-y-3">
-                    <div class="section-header -mx-6 -mt-6 mb-3">Contact Information</div>
+                    <div class="section-header -mx-6 -mt-3 mb-3">Contact Information</div>
                     <div class="grid grid-cols-4 gap-2">
                         <div class="col-span-1">
                             <label class="label-text">Title</label>
@@ -302,9 +346,12 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                         <div>
+                        <div>
                             <label class="label-text">Home Owner</label>
-                            <select id="field-homeOwner" class="input-compact" disabled><option>Yes</option><option>No</option></select>
+                            <select id="field-homeOwner" class="input-compact" disabled>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
                         </div>
                         <div>
                             <label class="label-text">Time at Address</label>
@@ -345,23 +392,35 @@
                         </div>
                         <div>
                             <label class="label-text">Consent</label>
-                            <select id="field-creditConsent" class="input-compact" disabled><option>Yes</option><option>No</option></select>
+                            <select id="field-creditConsent" class="input-compact" disabled>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="label-text">Existing Loan</label>
-                            <select id="field-existingLoan" class="input-compact" disabled><option>No</option><option>Yes</option></select>
+                            <select id="field-existingLoan" class="input-compact" disabled>
+                                <option>No</option>
+                                <option>Yes</option>
+                            </select>
                         </div>
                         <div>
                             <label class="label-text">Overdraft</label>
-                            <select id="field-overdraftFacility" class="input-compact" disabled><option>No</option><option>Yes</option></select>
+                            <select id="field-overdraftFacility" class="input-compact" disabled>
+                                <option>No</option>
+                                <option>Yes</option>
+                            </select>
                         </div>
                     </div>
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="label-text">Prev Alpha</label>
-                            <select id="field-previousAlphaFundingLoan" class="input-compact" disabled><option>No</option><option>Yes</option></select>
+                            <select id="field-previousAlphaFundingLoan" class="input-compact" disabled>
+                                <option>No</option>
+                                <option>Yes</option>
+                            </select>
                         </div>
                         <div>
                             <label class="label-text">Bank</label>
@@ -377,7 +436,8 @@
                 <!-- NOTES SECTION -->
                 <div class="space-y-3 pt-3 border-t border-gray-50">
                     <div class="section-header -mx-6 -mt-3 mb-3 bg-blue-50/30">Process Notes</div>
-                    <textarea id="field-additionalComments" class="input-compact h-16 resize-none" disabled placeholder="..."></textarea>
+                    <textarea id="field-additionalComments" class="input-compact h-16 resize-none" disabled
+                        placeholder="..."></textarea>
                 </div>
 
                 <!-- FOLLOW UP (HIDDEN IN DETAILS, VISIBLE IN CREATE/EDIT) -->
@@ -422,12 +482,12 @@
                 </div>
 
                 <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-5">
-                    
+
                     <!-- Document List (Dynamic) -->
                     <div>
                         <label class="label-text block mb-3">Supporting Files</label>
                         <div id="doc-list-container">
-                             <!-- Dynamic Docs -->
+                            <!-- Dynamic Docs -->
                         </div>
                     </div>
 
@@ -435,7 +495,7 @@
                     <div class="space-y-3 pt-3 border-t border-gray-50">
                         <label class="label-text block mb-2 text-blue-600">Pending Followups</label>
                         <div id="task-feed-container" class="space-y-2">
-                             <!-- Dynamic Tasks -->
+                            <!-- Dynamic Tasks -->
                         </div>
                     </div>
 
@@ -522,6 +582,7 @@
                 overdraftFacility: 'No',
                 previousAlphaFundingLoan: 'No',
                 additionalComments: 'Client interested in quick repayment terms.',
+                leadStatus: 'Warm',
                 documents: ['Bank Statement Jan.pdf', 'ID Verification.jpg'],
                 tasks: [
                     { time: '14:30', type: 'Initial Call', desc: 'Discuss loan purpose' }
@@ -552,6 +613,7 @@
                 overdraftFacility: 'Yes',
                 previousAlphaFundingLoan: 'Yes',
                 additionalComments: 'Urgent funding needed for peak season.',
+                leadStatus: 'Hot',
                 documents: ['Incorporation Cert.pdf', 'VAT Returns.xlsx'],
                 tasks: [
                     { time: '10:00', type: 'Site Visit', desc: 'Inspect Reading warehouse' }
@@ -563,7 +625,7 @@
 
         function selectLead(id) {
             const lead = leadsDB[id];
-            if (!lead) return;
+            if (!lead || !lead.fullName) return;
 
             // Highlight row
             document.querySelectorAll('.lead-row').forEach(row => {
@@ -571,38 +633,56 @@
                 if (row.innerHTML.includes(lead.fullName)) row.classList.add('active');
             });
 
-            // Update Titles
-            document.getElementById('lead-view-title').innerText = lead.fullName;
+            // Update Header Display
+            document.getElementById('lead-view-title').innerText = lead.fullName.toUpperCase();
             document.getElementById('lead-view-id').innerText = lead.id;
 
-            // Map all fields
-            Object.keys(lead).forEach(key => {
+            // Map all database keys to field IDs
+            const fieldsToMap = [
+                'title', 'fullName', 'dob', 'companyName', 'jobTitle', 
+                'companyHouseNumber', 'businessAnnualTurnover', 'emailAddress', 
+                'phoneNumber', 'homeOwner', 'timeAtCurrentAddress', 'residentialAddress', 
+                'previousAddress', 'loanAmount', 'fundingTimeline', 'loanPurpose', 
+                'leadSource', 'creditConsent', 'existingLoan', 'overdraftFacility', 
+                'previousAlphaFundingLoan', 'companyBank', 'industry', 
+                'additionalComments', 'leadStatus', 'id'
+            ];
+
+            fieldsToMap.forEach(key => {
                 const el = document.getElementById('field-' + key);
-                if (el) el.value = lead[key];
+                if (el) {
+                    el.value = lead[key] !== undefined ? lead[key] : '';
+                    console.log(`Mapping ${key} -> ${lead[key]}`);
+                }
             });
 
             // Update Documents column
             const docContainer = document.getElementById('doc-list-container');
-            docContainer.innerHTML = lead.documents.map(doc => `
-                <div class="doc-item">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-file-lines text-blue-500"></i>
-                        <span class="text-[10px] font-bold text-gray-700">${doc}</span>
+            if (docContainer && lead.documents) {
+                docContainer.innerHTML = lead.documents.map(doc => `
+                    <div class="doc-item">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-file-lines text-blue-500"></i>
+                            <span class="text-[10px] font-bold text-gray-700">${doc}</span>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
             // Update Tasks col
             const taskContainer = document.getElementById('task-feed-container');
-            taskContainer.innerHTML = lead.tasks.map(task => `
-                <div class="p-2 border border-blue-50 bg-blue-50/20 rounded-lg">
-                    <p class="text-[8px] font-extrabold text-blue-600 uppercase">${task.time} • ${task.type}</p>
-                    <p class="text-[10px] font-bold text-gray-800">${task.desc}</p>
-                </div>
-            `).join('');
+            if (taskContainer && lead.tasks) {
+                taskContainer.innerHTML = lead.tasks.map(task => `
+                    <div class="p-2 border border-blue-50 bg-blue-50/20 rounded-lg">
+                        <p class="text-[8px] font-extrabold text-blue-600 uppercase">${task.time} • ${task.type}</p>
+                        <p class="text-[10px] font-bold text-gray-800">${task.desc}</p>
+                    </div>
+                `).join('');
+            }
 
-            // Reset UI state to view mode
-            isEditMode = true; toggleEditMode(); 
+            // Lock to view mode
+            isEditMode = true; 
+            toggleEditMode(); 
         }
 
         function toggleEditMode() {
@@ -625,16 +705,28 @@
         window.onload = () => selectLead('L-1004');
 
         function createNewLead() {
-            document.getElementById('lead-view-title').innerText = "Register New Lead";
+            document.querySelector('.dashboard-container').classList.add('create-mode');
+            document.getElementById('back-to-dash').classList.remove('hidden');
+            document.getElementById('creation-header-title').classList.remove('hidden');
+            
             const inputs = document.querySelectorAll('#lead-form-container input, #lead-form-container select, #lead-form-container textarea');
             inputs.forEach(i => { i.value = ""; i.disabled = false; i.classList.add('bg-white'); });
+            
             isEditMode = true;
             document.getElementById('edit-toggle-btn').innerText = "Discard";
+            document.getElementById('followup-section').classList.remove('hidden');
+        }
+
+        function exitCreateMode() {
+            document.querySelector('.dashboard-container').classList.remove('create-mode');
+            document.getElementById('back-to-dash').classList.add('hidden');
+            document.getElementById('creation-header-title').classList.add('hidden');
+            selectLead('L-1004'); // Reset to default view
         }
 
         function saveLead() {
             alert('Selection and Changes Persisted to Database.');
-            isEditMode = true; toggleEditMode();
+            exitCreateMode();
         }
     </script>
 
