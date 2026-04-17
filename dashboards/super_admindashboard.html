@@ -189,6 +189,7 @@
             color: #2447d7;
             border-bottom-color: #2447d7;
         }
+
         /* AI Chatbot Widget Styles */
         .ai-fab {
             position: fixed;
@@ -236,8 +237,15 @@
         }
 
         @keyframes widgetReveal {
-            from { opacity: 0; transform: translateY(20px) scale(0.9); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .ai-header {
@@ -288,8 +296,13 @@
         }
 
         @keyframes gentleShake {
-            from { transform: rotate(-0.2deg); }
-            to { transform: rotate(0.2deg); }
+            from {
+                transform: rotate(-0.2deg);
+            }
+
+            to {
+                transform: rotate(0.2deg);
+            }
         }
 
         .sortable-ghost {
@@ -326,7 +339,7 @@
         .card-wide {
             grid-column: span 2 !important;
         }
-        
+
         @media (max-width: 768px) {
             .card-wide {
                 grid-column: span 1;
@@ -435,7 +448,7 @@
                 </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="toggleDashboardView('calculator')"
+            <a href="javascript:void(0)" onclick="openCalculator()"
                 class="glass-card p-2.5 flex items-center gap-3 hover:border-amber-400/50 group transition-all w-[130px]">
                 <div
                     class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-amber-500 group-hover:bg-[#fbbf24] group-hover:text-white transition-all shrink-0">
@@ -729,10 +742,6 @@
                                     <button onclick="filterLeads('hot')"
                                         class="lead-filter-btn px-1.5 py-0.5 text-[7px] font-black uppercase tracking-widest rounded text-rose-500 hover:bg-rose-50 transition-all">Hot</button>
                                 </div>
-                                <button onclick="toggleDashboardView('calculator')"
-                                    class="w-6 h-6 bg-amber-500 text-white rounded-lg flex items-center justify-center hover:bg-amber-600 transition-all">
-                                    <i class="fa-solid fa-calculator text-[10px]"></i>
-                                </button>
                             </div>
                         </div>
                         <div class="p-3">
@@ -840,94 +849,209 @@
 
                     <!-- 2. Advanced Loan Calculator -->
                     <div id="calculatorView"
-                        class="glass-card flex flex-col h-auto hidden bg-white/50 animate-in slide-in-from-right duration-300">
-                        <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white/80">
+                        class="glass-card flex flex-col h-auto hidden bg-white animate-in slide-in-from-right duration-500 overflow-hidden border-2 border-amber-500/20 shadow-2xl shadow-amber-500/5">
+                        <div
+                            class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-lg shadow-amber-100">
-                                    <i class="fa-solid fa-calculator"></i>
+                                    class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-lg shadow-amber-200">
+                                    <i class="fa-solid fa-calculator text-lg"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-[12px] font-black uppercase tracking-wider text-slate-900">Advanced
-                                        Loan Calculator</h3>
-                                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Real-time
-                                        Financial Assessment</p>
+                                        Financial Engineering</h3>
+                                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Amortizing
+                                        Loan & Yield Analysis</p>
                                 </div>
                             </div>
-                            <button onclick="toggleDashboardView('portfolio')"
-                                class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg text-[8px] font-black uppercase hover:bg-slate-200 transition-all">Back
-                                to Portfolio</button>
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleDashboardView('portfolio')"
+                                    class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg text-[8px] font-black uppercase hover:bg-rose-500 hover:text-white transition-all">
+                                    <i class="fa-solid fa-xmark mr-1"></i> Close
+                                </button>
+                            </div>
                         </div>
-                        <div class="p-8">
-                            <div class="grid grid-cols-12 gap-8">
-                                <div class="col-span-12 md:col-span-5 space-y-6">
-                                    <div class="space-y-3">
-                                        <label
-                                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loan
-                                            Amount</label>
-                                        <div class="relative">
-                                            <span
-                                                class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">£</span>
-                                            <input type="number" id="calcAmount" value="224000"
-                                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-8 pr-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-amber-500/20 outline-none"
-                                                oninput="updateCalculator()">
-                                        </div>
-                                        <input type="range" id="amountSlider" min="10000" max="1000000" step="5000"
-                                            value="224000"
-                                            class="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500"
-                                            oninput="syncCalculator('amount')">
-                                    </div>
-                                    <div class="space-y-3">
+
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Inputs Column -->
+                                <div class="space-y-6">
+                                    <!-- Principal -->
+                                    <div class="space-y-2">
                                         <div class="flex justify-between items-center">
                                             <label
-                                                class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loan
-                                                Term</label>
-                                            <span id="termLabel"
-                                                class="text-[10px] font-black text-amber-600 uppercase">32 Months</span>
+                                                class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Base
+                                                Loan Amount</label>
+                                            <span class="text-[10px] font-black text-amber-600"
+                                                id="valDisplayAmount">£50,000</span>
                                         </div>
-                                        <input type="range" id="termSlider" min="6" max="120" step="1" value="32"
-                                            class="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500"
-                                            oninput="syncCalculator('term')">
-                                    </div>
-                                    <div class="space-y-3">
-                                        <label
-                                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Interest
-                                            Rate (%)</label>
                                         <div class="relative">
-                                            <input type="number" id="calcRate" value="30"
-                                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-amber-500/20 outline-none"
-                                                oninput="updateCalculator()">
                                             <span
-                                                class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
+                                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px]">£</span>
+                                            <input type="number" id="calcAmount" value="50000"
+                                                class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 pl-7 pr-3 text-[11px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
+                                                oninput="syncInput('amount')">
+                                        </div>
+                                        <input type="range" id="sliderAmount" min="1000" max="500000" step="1000"
+                                            value="50000"
+                                            class="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                                            oninput="syncSlider('amount')">
+                                    </div>
+
+                                    <!-- Term -->
+                                    <div class="space-y-2">
+                                        <div class="flex justify-between items-center">
+                                            <label
+                                                class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Loan
+                                                Term (Months)</label>
+                                            <span class="text-[10px] font-black text-amber-600" id="valDisplayTerm">12
+                                                Months</span>
+                                        </div>
+                                        <input type="number" id="calcTerm" value="12"
+                                            class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 px-3 text-[11px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
+                                            oninput="syncInput('term')">
+                                        <input type="range" id="sliderTerm" min="1" max="60" step="1" value="12"
+                                            class="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                                            oninput="syncSlider('term')">
+                                    </div>
+
+                                    <!-- Arrangement Fee -->
+                                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
+                                        <div class="flex justify-between items-center">
+                                            <label
+                                                class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Arrangement
+                                                Fee</label>
+                                            <div class="flex bg-white p-0.5 rounded-lg border border-slate-200">
+                                                <button onclick="setFeeType('percent')" id="feeTypePct"
+                                                    class="px-2 py-0.5 text-[7px] font-black uppercase rounded bg-slate-900 text-white shadow-sm transition-all">%</button>
+                                                <button onclick="setFeeType('fixed')" id="feeTypeFix"
+                                                    class="px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all">£</button>
+                                            </div>
+                                        </div>
+                                        <div class="relative">
+                                            <input type="number" id="calcFeeValue" value="2.5"
+                                                class="w-full bg-white border border-slate-200 rounded-xl py-3 px-3 text-[11px] font-black text-slate-900 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
+                                                oninput="updateCalculator()">
+                                            <span id="feeSuffix"
+                                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px]">%</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Interest Rate Section -->
+                                    <div class="p-4 bg-amber-50/30 rounded-2xl border border-amber-100 space-y-4">
+                                        <div class="flex flex-col gap-2">
+                                            <label
+                                                class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Rate
+                                                Calculation Model</label>
+                                            <div class="grid grid-cols-2 gap-2">
+                                                <button onclick="setRateType('annual')" id="rtAnnual"
+                                                    class="py-2 text-[7px] font-black uppercase rounded-lg bg-slate-900 text-white shadow-md transition-all">Annual
+                                                    Amort.</button>
+                                                <button onclick="setRateType('monthly')" id="rtMonthly"
+                                                    class="py-2 text-[7px] font-black uppercase rounded-lg bg-white text-slate-400 border border-slate-200 transition-all">Monthly
+                                                    Amort.</button>
+                                                <button onclick="setRateType('flat')" id="rtFlat"
+                                                    class="py-2 text-[7px] font-black uppercase rounded-lg bg-white text-slate-400 border border-slate-200 transition-all">Flat
+                                                    Rate %</button>
+                                                <button onclick="setRateType('factor')" id="rtFactor"
+                                                    class="py-2 text-[7px] font-black uppercase rounded-lg bg-white text-slate-400 border border-slate-200 transition-all">Factor
+                                                    Rate</button>
+                                            </div>
+                                        </div>
+                                        <div class="relative">
+                                            <input type="number" id="calcRateValue" value="15.0"
+                                                class="w-full bg-white border border-amber-200 rounded-xl py-3 px-3 text-[11px] font-black text-slate-900 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
+                                                oninput="updateCalculator()">
+                                            <span id="rateSuffix"
+                                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px]">%</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-span-12 md:col-span-7 space-y-6">
-                                    <div class="bg-slate-900 rounded-[24px] p-6 text-center">
-                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">
-                                            Monthly Payment</p>
-                                        <h2 id="resMonthly" class="text-3xl font-black text-white mb-6">£10,457.14</h2>
-                                        <div class="grid grid-cols-2 gap-4 pt-6 border-t border-slate-800">
+
+                                <!-- Results Column -->
+                                <div class="flex flex-col gap-4">
+                                    <div
+                                        class="bg-slate-900 rounded-[32px] p-8 text-center relative overflow-hidden group border border-slate-800">
+                                        <div
+                                            class="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all duration-700">
+                                        </div>
+                                        <p class="text-[8px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">
+                                            Contractual Monthly Payment</p>
+                                        <h2 id="resMonthly"
+                                            class="text-4xl lg:text-5xl font-black text-white mb-8 transition-all">£0.00
+                                        </h2>
+
+                                        <div class="grid grid-cols-2 gap-6 pt-6 border-t border-slate-800">
                                             <div>
                                                 <p
                                                     class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">
-                                                    Interest</p>
-                                                <p id="resTotalInterest" class="text-xs font-black text-amber-500">
-                                                    £106,148.61</p>
+                                                    Total Cost of Credit</p>
+                                                <p id="resTotalInterest" class="text-[14px] font-black text-amber-500">
+                                                    £0.00</p>
                                             </div>
                                             <div class="border-l border-slate-800">
                                                 <p
                                                     class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">
-                                                    Total</p>
-                                                <p id="resTotalPayable" class="text-xs font-black text-white">
-                                                    £334,628.61</p>
+                                                    Total Amount Payable</p>
+                                                <p id="resTotalPayable" class="text-[14px] font-black text-white">£0.00
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
-                                    <button
-                                        class="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-amber-100">
-                                        Use Quote for Lead <i class="fa-solid fa-arrow-right-long"></i>
-                                    </button>
+
+                                    <!-- Apples-to-Apples Metrics -->
+                                    <div class="grid grid-cols-3 gap-3">
+                                        <div
+                                            class="bg-white border border-slate-100 rounded-2xl p-4 text-center hover:border-amber-500/30 transition-all group">
+                                            <p
+                                                class="text-[7px] font-black text-slate-400 uppercase tracking-tighter mb-1 group-hover:text-amber-600">
+                                                Yield (Total %)</p>
+                                            <p id="metricYield"
+                                                class="text-[12px] font-black text-slate-900 group-hover:scale-110 transition-transform">
+                                                0.00%</p>
+                                        </div>
+                                        <div
+                                            class="bg-white border border-slate-100 rounded-2xl p-4 text-center hover:border-indigo-500/30 transition-all group">
+                                            <p
+                                                class="text-[7px] font-black text-slate-400 uppercase tracking-tighter mb-1 group-hover:text-indigo-600">
+                                                Factor Rate</p>
+                                            <p id="metricFactor"
+                                                class="text-[12px] font-black text-slate-900 group-hover:scale-110 transition-transform">
+                                                0.0000</p>
+                                        </div>
+                                        <div
+                                            class="bg-white border border-slate-100 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all group">
+                                            <p
+                                                class="text-[7px] font-black text-slate-400 uppercase tracking-tighter mb-1 group-hover:text-emerald-600">
+                                                Daily Int. Rate</p>
+                                            <p id="metricDaily"
+                                                class="text-[12px] font-black text-slate-900 group-hover:scale-110 transition-transform">
+                                                0.00%</p>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="mt-4 p-4 bg-emerald-50/50 border border-emerald-100 rounded-2xl flex items-center gap-4">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0">
+                                            <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="text-[10px] font-black text-emerald-900 uppercase">Principal
+                                                Analysis</h4>
+                                            <p class="text-[8px] font-bold text-emerald-700 uppercase">Financed
+                                                Principal: <span id="resFinancedPrincipal"
+                                                    class="font-black">£0.00</span></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex-1 flex flex-col justify-end pt-4">
+                                        <button
+                                            class="group w-full bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg shadow-amber-200 transition-all active:scale-95">
+                                            Bind Quote to Lead File <i
+                                                class="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1144,322 +1268,222 @@
                     </div>
                 </div>
 
-                </div>
-
-                <script>
-                    let currentDate = new Date();
-                    let selectedDate = null;
-
-                    function renderCalendar() {
-                        const monthYearElement = document.getElementById('currentMonthYear');
-                        const calendarGrid = document.getElementById('calendarGrid');
-
-                        const year = currentDate.getFullYear();
-                        const month = currentDate.getMonth();
-
-                        const monthNames = ["January", "February", "March", "April", "May", "June",
-                            "July", "August", "September", "October", "November", "December"];
-
-                        monthYearElement.innerText = `${monthNames[month]} ${year}`;
-
-                        // Clear grid
-                        calendarGrid.innerHTML = '';
-
-                        const firstDay = new Date(year, month, 1).getDay();
-                        const daysInMonth = new Date(year, month + 1, 0).getDate();
-                        const prevMonthDays = new Date(year, month, 0).getDate();
-
-                        // Previous month padding
-                        for (let i = firstDay; i > 0; i--) {
-                            const dayDiv = document.createElement('div');
-                            dayDiv.className = 'h-8 flex items-center justify-center text-[10px] font-bold text-slate-200 cursor-not-allowed';
-                            dayDiv.innerText = prevMonthDays - i + 1;
-                            calendarGrid.appendChild(dayDiv);
-                        }
-
-                        // Current month
-                        for (let i = 1; i <= daysInMonth; i++) {
-                            const dayDiv = document.createElement('div');
-                            const isToday = i === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
-                            const isSelected = selectedDate && i === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear();
-
-                            dayDiv.className = `h-8 flex items-center justify-center text-[10px] font-black rounded-lg relative cursor-pointer transition-all ${isToday ? 'bg-slate-900 text-white' : isSelected ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-900 hover:bg-slate-50'}`;
-                            dayDiv.innerText = i;
-
-                            dayDiv.onclick = () => {
-                                selectedDate = new Date(year, month, i);
-                                renderCalendar();
-                            };
-
-                            // Mock dots
-                            if (i % 7 === 0) {
-                                const dot = document.createElement('div');
-                                dot.className = `absolute bottom-1 w-1 h-1 rounded-full ${isToday || isSelected ? 'bg-white' : 'bg-indigo-500'}`;
-                                dayDiv.appendChild(dot);
-                            }
-
-                            calendarGrid.appendChild(dayDiv);
-                        }
-                    }
-
-                    function changeMonth(delta) {
-                        currentDate.setMonth(currentDate.getMonth() + delta);
-                        renderCalendar();
-                    }
-
-                    renderCalendar();
-                </script>
-
-
-
-
-
-
             </div>
+
+            <script>
+                let currentDate = new Date();
+                let selectedDate = null;
+
+                function renderCalendar() {
+                    const monthYearElement = document.getElementById('currentMonthYear');
+                    const calendarGrid = document.getElementById('calendarGrid');
+
+                    const year = currentDate.getFullYear();
+                    const month = currentDate.getMonth();
+
+                    const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+
+                    monthYearElement.innerText = `${monthNames[month]} ${year}`;
+
+                    // Clear grid
+                    calendarGrid.innerHTML = '';
+
+                    const firstDay = new Date(year, month, 1).getDay();
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                    const prevMonthDays = new Date(year, month, 0).getDate();
+
+                    // Previous month padding
+                    for (let i = firstDay; i > 0; i--) {
+                        const dayDiv = document.createElement('div');
+                        dayDiv.className = 'h-8 flex items-center justify-center text-[10px] font-bold text-slate-200 cursor-not-allowed';
+                        dayDiv.innerText = prevMonthDays - i + 1;
+                        calendarGrid.appendChild(dayDiv);
+                    }
+
+                    // Current month
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        const dayDiv = document.createElement('div');
+                        const isToday = i === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
+                        const isSelected = selectedDate && i === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear();
+
+                        dayDiv.className = `h-8 flex items-center justify-center text-[10px] font-black rounded-lg relative cursor-pointer transition-all ${isToday ? 'bg-slate-900 text-white' : isSelected ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-900 hover:bg-slate-50'}`;
+                        dayDiv.innerText = i;
+
+                        dayDiv.onclick = () => {
+                            selectedDate = new Date(year, month, i);
+                            renderCalendar();
+                        };
+
+                        // Mock dots
+                        if (i % 7 === 0) {
+                            const dot = document.createElement('div');
+                            dot.className = `absolute bottom-1 w-1 h-1 rounded-full ${isToday || isSelected ? 'bg-white' : 'bg-indigo-500'}`;
+                            dayDiv.appendChild(dot);
+                        }
+
+                        calendarGrid.appendChild(dayDiv);
+                    }
+                }
+
+                function changeMonth(delta) {
+                    currentDate.setMonth(currentDate.getMonth() + delta);
+                    renderCalendar();
+                }
+
+                renderCalendar();
+            </script>
+
+
+
+
+
+
+        </div>
         </div>
     </main>
 
-    <!-- Loan Calculator Modal -->
-    <div id="calculatorModal" class="fixed inset-0 z-[100] hidden">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeCalculator()"></div>
-        <div
-            class="absolute inset-10 bg-[#f8fafc] rounded-[32px] shadow-2xl overflow-hidden flex flex-col border border-white animate-in fade-in zoom-in duration-300">
+    <!-- Right Side Calculator Drawer -->
+    <div id="calculatorModal" class="fixed inset-0 z-[100] hidden flex justify-end overflow-hidden">
+        <div class="absolute inset-0 bg-slate-900/20 backdrop-blur-[2px] transition-opacity duration-300"
+            onclick="closeCalculator()"></div>
+        <div id="calculatorPanel"
+            class="relative w-full max-w-[520px] bg-white h-full shadow-[-20px_0_50px_rgba(0,0,0,0.1)] border-l border-slate-100 translate-x-full transition-transform duration-500 ease-out flex flex-col">
             <!-- Modal Header -->
-            <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white">
+            <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
-                        <i class="fa-solid fa-calculator"></i>
+                    <div class="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500">
+                        <i class="fa-solid fa-calculator text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-black text-slate-900">Professional Loan Calculator</h2>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Instant Quote
-                            Generation</p>
+                        <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">Business
+                            Loan</h2>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-tight">Calculator Hub</p>
                     </div>
                 </div>
                 <button onclick="closeCalculator()"
-                    class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all">
+                    class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-all">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <!-- Modal Content -->
-            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
-                <div class="grid grid-cols-12 gap-8 max-w-7xl mx-auto">
-                    <!-- Left: Quote Details -->
-                    <div class="col-span-12 lg:col-span-4 space-y-6">
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                            <h3 class="text-sm font-black text-slate-900 mb-6">Quote Details</h3>
-
-                            <!-- Loan Amount -->
-                            <div class="space-y-3 mb-6">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loan
-                                    Amount</label>
-                                <div class="relative">
-                                    <span
-                                        class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">£</span>
-                                    <input type="number" id="calcAmount" value="224000"
-                                        class="w-full bg-slate-50 border-none rounded-2xl py-4 pl-8 pr-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-                                        oninput="updateCalculator()">
-                                </div>
-                                <input type="range" id="amountSlider" min="10000" max="1000000" step="5000"
-                                    value="224000"
-                                    class="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                                    oninput="syncCalculator('amount')">
-                            </div>
-
-                            <!-- Loan Term -->
-                            <div class="space-y-3 mb-6">
-                                <div class="flex justify-between items-center">
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loan
-                                        Term</label>
-                                    <span id="termLabel" class="text-[10px] font-black text-indigo-600 uppercase">32
-                                        Months</span>
-                                </div>
-                                <input type="range" id="termSlider" min="6" max="120" step="1" value="32"
-                                    class="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                                    oninput="syncCalculator('term')">
-                            </div>
-
-                            <!-- Interest Rate -->
-                            <div class="space-y-3 mb-6">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Interest
-                                    Rate</label>
-                                <div class="grid grid-cols-2 gap-2 p-1 bg-slate-50 rounded-xl mb-3">
-                                    <button
-                                        class="py-2 text-[9px] font-black uppercase rounded-lg bg-slate-900 text-white shadow-sm">Annual
-                                        Rate</button>
-                                    <button
-                                        class="py-2 text-[9px] font-black uppercase rounded-lg text-slate-400 hover:text-slate-600">Monthly
-                                        Rate</button>
-                                </div>
-                                <div class="relative">
-                                    <input type="number" id="calcRate" value="30"
-                                        class="w-full bg-slate-50 border-none rounded-2xl py-4 px-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-indigo-500/20 outline-none"
-                                        oninput="updateCalculator()">
-                                    <span
-                                        class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
-                                </div>
-                            </div>
-
-                            <!-- Arrangement Fees -->
-                            <div class="space-y-3">
-                                <label
-                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Arrangement
-                                    Fees</label>
-                                <div class="grid grid-cols-2 gap-2 p-1 bg-slate-50 rounded-xl mb-3">
-                                    <button
-                                        class="py-2 text-[9px] font-black uppercase rounded-lg bg-[#0ea5e9] text-white shadow-sm">Percentage
-                                        %</button>
-                                    <button
-                                        class="py-2 text-[9px] font-black uppercase rounded-lg text-slate-400 hover:text-slate-600">Fixed
-                                        Amount £</button>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <span class="text-[9px] font-bold text-slate-400">0%</span>
-                                    <input type="range" id="feeSlider" min="0" max="10" step="0.5" value="2"
-                                        class="flex-1 h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0ea5e9]"
-                                        oninput="updateCalculator()">
-                                    <span class="text-[9px] font-bold text-slate-400">10%</span>
-                                </div>
-                            </div>
+            <!-- Modal Content (User's Specific Design - Ultra Compact) -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-5 bg-slate-50/30">
+                <div class="w-full bg-white rounded-2xl shadow-sm p-5 border border-slate-100">
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Loan Amount
+                                (£)</label>
+                            <input type="number" id="mod-loanAmount" value="75000"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
                         </div>
-                    </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Term
+                                (Months)</label>
+                            <input type="number" id="mod-loanTerm" value="18"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
+                        </div>
 
-                    <!-- Center: Results & AI -->
-                    <div class="col-span-12 lg:col-span-4 space-y-6">
                         <div
-                            class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 text-center flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden">
+                            class="col-span-2 text-[8px] font-black text-slate-300 uppercase tracking-[0.2em] pt-2 pb-0.5 border-t border-slate-100">
+                            Interest Rate Inputs</div>
+
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Annual
+                                (%)</label>
+                            <input type="number" id="mod-rateAnnual" value="30" step="0.01"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Monthly
+                                (%)</label>
+                            <input type="number" id="mod-rateMonthly" step="0.01"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Flat
+                                (%)</label>
+                            <input type="number" id="mod-rateFlat" step="0.01"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Factor
+                                (Dec)</label>
+                            <input type="number" id="mod-rateFactor" step="0.0001"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
+                        </div>
+
+                        <div
+                            class="col-span-2 text-[8px] font-black text-slate-300 uppercase tracking-[0.2em] pt-2 pb-0.5 border-t border-slate-100">
+                            Arrangement Fees</div>
+
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Percentage
+                                (%)</label>
+                            <input type="number" id="mod-feePercent" value="2" step="0.1"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Fixed Amount
+                                (£)</label>
+                            <input type="number" id="mod-feeFixed" step="1"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <!-- User's Results Area Style -->
+                    <div class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="text-center mb-4">
+                            <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Estimated
+                                Monthly Payment</span>
+                            <span class="block text-2xl font-black text-emerald-600 mt-1"
+                                id="mod-resMonthlyDisplay">£0.00</span>
+                        </div>
+
+                        <div class="space-y-2">
                             <div
-                                class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-emerald-500">
+                                class="flex justify-between items-center text-[10px] font-bold border-b border-dotted border-slate-200 pb-1.5">
+                                <span class="text-slate-400 uppercase tracking-tight">Loan Principal</span>
+                                <span class="text-slate-900" id="mod-resPrincipalDisplay">£0.00</span>
                             </div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Estimated
-                                Monthly Payment</p>
-                            <h2 id="resMonthly" class="text-4xl lg:text-5xl font-black text-slate-900 mb-8">£10,457.14
-                            </h2>
-
-                            <div class="grid grid-cols-2 gap-4 w-full border-t border-slate-50 pt-8">
-                                <div class="text-center">
-                                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Total
-                                        Interest</p>
-                                    <p id="resTotalInterest" class="text-sm font-black text-indigo-600">£106,148.61</p>
-                                </div>
-                                <div class="text-center border-l border-slate-50">
-                                    <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Total
-                                        Payable</p>
-                                    <p id="resTotalPayable" class="text-sm font-black text-slate-900">£334,628.61</p>
-                                </div>
+                            <div
+                                class="flex justify-between items-center text-[10px] font-bold border-b border-dotted border-slate-200 pb-1.5">
+                                <span class="text-slate-400 uppercase tracking-tight">Arrangement Fees</span>
+                                <span class="text-slate-900" id="mod-resFeeDisplay">£0.00</span>
+                            </div>
+                            <div
+                                class="flex justify-between items-center text-[10px] font-bold border-b border-dotted border-slate-200 pb-1.5">
+                                <span class="text-slate-400 uppercase tracking-tight">Total Interest</span>
+                                <span class="text-slate-900" id="mod-resInterestDisplay">£0.00</span>
+                            </div>
+                            <div
+                                class="flex justify-between items-center text-[11px] font-black bg-indigo-50 text-indigo-700 p-2 rounded-lg">
+                                <span class="uppercase tracking-widest">Total Payable</span>
+                                <span id="mod-resTotalDisplay">£0.00</span>
                             </div>
                         </div>
 
-                        <!-- AI Insights -->
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                            <div class="flex items-center justify-between mb-6">
-                                <div class="flex items-center gap-2">
-                                    <i class="fa-solid fa-sparkles text-indigo-600 text-sm"></i>
-                                    <span class="text-[10px] font-black text-slate-900 uppercase tracking-widest">AI
-                                        Insights</span>
-                                </div>
-                                <span class="text-[8px] font-bold text-slate-400 uppercase">Based on inputs</span>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-2 mt-4 pt-4 border-t border-slate-200">
+                            <div class="flex justify-between items-center text-[9px] font-bold">
+                                <span class="text-slate-400 uppercase">Daily:</span>
+                                <span class="text-slate-900" id="mod-outDailyDisplay">0%</span>
                             </div>
-
-                            <div class="space-y-4">
-                                <div class="flex gap-3">
-                                    <i class="fa-solid fa-circle-check text-emerald-500 text-[10px] mt-1"></i>
-                                    <p class="text-[10px] text-slate-600 leading-relaxed">At <span
-                                            id="insightRate">30.0</span>% APR over <span id="insightTerm">32</span>
-                                        months, this is a competitive rate for unsecured business funding.</p>
-                                </div>
-                                <div class="flex gap-3">
-                                    <i class="fa-solid fa-circle-check text-emerald-500 text-[10px] mt-1"></i>
-                                    <p class="text-[10px] text-slate-600 leading-relaxed">Shorter terms available if you
-                                        can stretch to £12k/month.</p>
-                                </div>
-                                <div class="flex gap-3">
-                                    <i class="fa-solid fa-circle-check text-emerald-500 text-[10px] mt-1"></i>
-                                    <p class="text-[10px] text-slate-600 leading-relaxed">Great progress! These numbers
-                                        show healthy funding capacity.</p>
-                                </div>
+                            <div class="flex justify-between items-center text-[9px] font-bold">
+                                <span class="text-slate-400 uppercase">Yield:</span>
+                                <span class="text-slate-900" id="mod-outYieldDisplay">0%</span>
                             </div>
-
-                            <button
-                                class="w-full mt-8 bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 transition-all shadow-lg shadow-sky-100">
-                                Get Your Actual Quote <i class="fa-solid fa-arrow-right"></i>
-                            </button>
+                            <div class="flex justify-between items-center text-[9px] font-bold">
+                                <span class="text-slate-400 uppercase">Factor:</span>
+                                <span class="text-slate-900" id="mod-outFactorDisplay">0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[9px] font-bold">
+                                <span class="text-slate-400 uppercase">Flat:</span>
+                                <span class="text-slate-900" id="mod-outFlatDisplay">0%</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Right: Summary & Charts -->
-                    <div class="col-span-12 lg:col-span-4 space-y-6">
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                            <h3 class="text-sm font-black text-slate-900 mb-6">Your Loan Quote Summary</h3>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="font-bold text-slate-500">Loan Amount</span>
-                                    <span id="sumAmount" class="font-black text-slate-900">£224,000.00</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <div class="flex flex-col">
-                                        <span class="font-bold text-slate-500">Mandatory Fees</span>
-                                        <span id="sumFeeLabel"
-                                            class="text-[8px] text-rose-500 font-bold uppercase">2.00% of Loan
-                                            Value</span>
-                                    </div>
-                                    <span id="sumFee" class="font-black text-rose-500">£4,480.00</span>
-                                </div>
-                                <div
-                                    class="flex justify-between items-center text-[11px] pt-4 border-t border-slate-50">
-                                    <span class="font-bold text-slate-500">Total Loan Amount</span>
-                                    <span id="sumTotalLoan" class="font-black text-slate-900">£228,480.00</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="font-bold text-slate-500">Loan Term</span>
-                                    <span id="sumTerm" class="font-black text-slate-900">32 Months</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="font-bold text-slate-500">Monthly Payment</span>
-                                    <span id="sumMonthly" class="font-black text-slate-900">£10,457.14</span>
-                                </div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="font-bold text-slate-500">Total Interest</span>
-                                    <span id="sumTotalInterest" class="font-black text-indigo-600">£106,148.61</span>
-                                </div>
-                                <div
-                                    class="flex justify-between items-center text-[13px] pt-4 border-t border-slate-100">
-                                    <span class="font-black text-slate-900 uppercase">Total Payable</span>
-                                    <span id="sumTotalPayable"
-                                        class="font-black text-slate-900 text-lg">£334,628.61</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Chart (Simplified for demo) -->
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                            <div class="text-center mb-4">
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cost
-                                    Breakdown</p>
-                            </div>
-                            <div class="flex justify-center mb-6">
-                                <div class="w-32 h-32 rounded-full border-[12px] border-slate-100 relative">
-                                    <div class="absolute inset-0 rounded-full border-[12px] border-indigo-500"
-                                        style="clip-path: polygon(50% 50%, -100% -100%, 200% -100%)"></div>
-                                </div>
-                            </div>
-                            <div class="flex flex-wrap gap-4 justify-center">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-2 h-2 rounded-full bg-rose-500"></div>
-                                    <span class="text-[8px] font-black text-slate-500 uppercase">Fees</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-2 h-2 rounded-full bg-[#0ea5e9]"></div>
-                                    <span class="text-[8px] font-black text-slate-500 uppercase">Principal</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-2 h-2 rounded-full bg-slate-900"></div>
-                                    <span class="text-[8px] font-black text-slate-500 uppercase">Interest</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1558,72 +1582,282 @@
         }
 
         // Calculator Logic
-        function toggleDashboardView(view) {
-            const portfolio = document.getElementById('portfolioView');
-            const calculator = document.getElementById('calculatorView');
+        let currentFeeType = 'percent';
+        let currentRateType = 'annual';
 
-            if (view === 'calculator') {
-                portfolio.classList.add('hidden');
-                calculator.classList.remove('hidden');
-                updateCalculator();
-                // Scroll to the content area
-                calculator.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        function setFeeType(type) {
+            currentFeeType = type;
+            const pctBtn = document.getElementById('feeTypePct');
+            const fixBtn = document.getElementById('feeTypeFix');
+            const suffix = document.getElementById('feeSuffix');
+
+            if (type === 'percent') {
+                pctBtn.className = 'px-2 py-0.5 text-[7px] font-black uppercase rounded bg-slate-900 text-white shadow-sm transition-all';
+                fixBtn.className = 'px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all';
+                suffix.textContent = '%';
             } else {
-                calculator.classList.add('hidden');
-                portfolio.classList.remove('hidden');
-                portfolio.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
-
-        function syncCalculator(type) {
-            if (type === 'amount') {
-                document.getElementById('calcAmount').value = document.getElementById('amountSlider').value;
-            } else if (type === 'term') {
-                document.getElementById('termLabel').textContent = document.getElementById('termSlider').value + ' Months';
+                fixBtn.className = 'px-2 py-0.5 text-[7px] font-black uppercase rounded bg-slate-900 text-white shadow-sm transition-all';
+                pctBtn.className = 'px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all';
+                suffix.textContent = '£';
             }
             updateCalculator();
         }
 
+
+        function openCalculator() {
+            const modal = document.getElementById('calculatorModal');
+            const panel = document.getElementById('calculatorPanel');
+            modal.classList.remove('hidden');
+            // Force reflow for animation
+            void panel.offsetWidth;
+            panel.classList.remove('translate-x-full');
+
+            if (typeof calculateAdvanced === 'function') {
+                calculateAdvanced();
+            } else {
+                updateCalculator();
+            }
+        }
+
+        function closeCalculator() {
+            const modal = document.getElementById('calculatorModal');
+            const panel = document.getElementById('calculatorPanel');
+            panel.classList.add('translate-x-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 500);
+        }
+
+        function setFeeType(type) {
+            currentFeeType = type;
+            updateCalculator();
+        }
+
+        function setRateType(type) {
+            currentRateType = type;
+            updateCalculator();
+        }
+
+        function toggleDashboardView(view) {
+            const portfolio = document.getElementById('portfolioView');
+            const calculator = document.getElementById('calculatorView');
+            const dynamicContent = document.querySelector('[data-id="dynamic-content"]');
+
+            if (view === 'calculator') {
+                portfolio.classList.add('hidden');
+                calculator.classList.remove('hidden');
+                dynamicContent.classList.add('card-wide');
+                updateCalculator();
+                calculator.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                calculator.classList.add('hidden');
+                portfolio.classList.remove('hidden');
+                dynamicContent.classList.remove('card-wide');
+                portfolio.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if (typeof saveDashboardLayout === 'function') saveDashboardLayout();
+        }
+
+        function syncSlider(type, isModal = false) {
+            const suffix = isModal ? 'mod-' : '';
+            const otherSuffix = isModal ? '' : 'mod-';
+            const val = document.getElementById(suffix + 'slider' + type.charAt(0).toUpperCase() + type.slice(1)).value;
+
+            const targets = [
+                suffix + 'calc' + type.charAt(0).toUpperCase() + type.slice(1),
+                otherSuffix + 'calc' + type.charAt(0).toUpperCase() + type.slice(1),
+                otherSuffix + 'slider' + type.charAt(0).toUpperCase() + type.slice(1)
+            ];
+            targets.forEach(id => { if (document.getElementById(id)) document.getElementById(id).value = val; });
+            updateCalculator();
+        }
+
+        function syncInput(type, isModal = false) {
+            const suffix = isModal ? 'mod-' : '';
+            const otherSuffix = isModal ? '' : 'mod-';
+            const val = document.getElementById(suffix + 'calc' + type.charAt(0).toUpperCase() + type.slice(1)).value;
+
+            const targets = [
+                suffix + 'slider' + type.charAt(0).toUpperCase() + type.slice(1),
+                otherSuffix + 'calc' + type.charAt(0).toUpperCase() + type.slice(1),
+                otherSuffix + 'slider' + type.charAt(0).toUpperCase() + type.slice(1)
+            ];
+            targets.forEach(id => { if (document.getElementById(id)) document.getElementById(id).value = val; });
+            updateCalculator();
+        }
+
         function updateCalculator() {
-            const principal = parseFloat(document.getElementById('calcAmount').value) || 0;
-            const termMonths = parseInt(document.getElementById('termSlider').value) || 0;
-            const annualRate = parseFloat(document.getElementById('calcRate').value) || 0;
-            const feePercent = parseFloat(document.getElementById('feeSlider').value) || 0;
+            const pElem = document.getElementById('calcAmount');
+            const tElem = document.getElementById('calcTerm');
+            const fElem = document.getElementById('calcFeeValue');
+            const rElem = document.getElementById('calcRateValue');
 
-            const feeAmount = (principal * feePercent) / 100;
-            const totalLoan = principal + feeAmount;
+            if (!pElem || !tElem) return;
 
-            // Standard Amortization Formula: M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1 ]
-            const monthlyRate = (annualRate / 100) / 12;
-            let monthlyPayment = 0;
+            const principalBase = parseFloat(pElem.value) || 0;
+            const termMonths = parseInt(tElem.value) || 0;
+            const feeValue = parseFloat(fElem.value) || 0;
+            const rateValue = parseFloat(rElem.value) || 0;
 
-            if (monthlyRate > 0 && termMonths > 0) {
-                monthlyPayment = totalLoan * (monthlyRate * Math.pow(1 + monthlyRate, termMonths)) / (Math.pow(1 + monthlyRate, termMonths) - 1);
-            } else if (termMonths > 0) {
-                monthlyPayment = totalLoan / termMonths;
+            document.getElementById('valDisplayAmount').textContent = '£' + principalBase.toLocaleString();
+            document.getElementById('valDisplayTerm').textContent = termMonths + ' Months';
+
+            if (principalBase <= 0 || termMonths <= 0) return;
+
+            let feeAmount = 0;
+            if (currentFeeType === 'percent') {
+                feeAmount = principalBase * (feeValue / 100);
+            } else { feeAmount = feeValue; }
+            const P = principalBase + feeAmount;
+
+            let M = 0; let totalPayable = 0; let monthlyRateDecimal = 0;
+            if (currentRateType === 'annual') {
+                monthlyRateDecimal = (rateValue / 100) / 12;
+                if (monthlyRateDecimal > 0) {
+                    M = P * (monthlyRateDecimal * Math.pow(1 + monthlyRateDecimal, termMonths)) / (Math.pow(1 + monthlyRateDecimal, termMonths) - 1);
+                } else { M = P / termMonths; }
+                totalPayable = M * termMonths;
+            } else if (currentRateType === 'monthly') {
+                monthlyRateDecimal = rateValue / 100;
+                if (monthlyRateDecimal > 0) {
+                    M = P * (monthlyRateDecimal * Math.pow(1 + monthlyRateDecimal, termMonths)) / (Math.pow(1 + monthlyRateDecimal, termMonths) - 1);
+                } else { M = P / termMonths; }
+                totalPayable = M * termMonths;
+            } else if (currentRateType === 'flat') {
+                const totalInterest = P * (rateValue / 100) * (termMonths / 12);
+                totalPayable = P + totalInterest;
+                M = totalPayable / termMonths;
+                monthlyRateDecimal = findMonthlyRate(P, M, termMonths);
+            } else if (currentRateType === 'factor') {
+                totalPayable = P * rateValue;
+                M = totalPayable / termMonths;
+                monthlyRateDecimal = findMonthlyRate(P, M, termMonths);
             }
 
-            const totalPayable = monthlyPayment * termMonths;
-            const totalInterest = totalPayable - totalLoan;
+            totalPayable = Math.round(totalPayable * 100) / 100;
+            const totalInterest = totalPayable - P;
+            const yieldPct = (totalInterest / P) * 100;
+            const factorRate = totalPayable / P;
+            const dailyRatePct = (monthlyRateDecimal * 12 / 365) * 100;
+
+            const fmt = (val) => '£' + val.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const mapping = {
+                'resMonthly': fmt(M), 'resTotalInterest': fmt(totalInterest), 'resTotalPayable': fmt(totalPayable),
+                'metricYield': yieldPct.toFixed(2) + '%', 'metricFactor': factorRate.toFixed(4), 'metricDaily': dailyRatePct.toFixed(4) + '%',
+                'resFinancedPrincipal': fmt(P)
+            };
+            Object.keys(mapping).forEach(id => { if (document.getElementById(id)) document.getElementById(id).textContent = mapping[id]; });
+        }
+
+        function calculateAdvanced(triggerId) {
+            const inputs = {
+                loan: document.getElementById('mod-loanAmount'),
+                term: document.getElementById('mod-loanTerm'),
+                rAnn: document.getElementById('mod-rateAnnual'),
+                rMon: document.getElementById('mod-rateMonthly'),
+                rFla: document.getElementById('mod-rateFlat'),
+                rFac: document.getElementById('mod-rateFactor'),
+                fPer: document.getElementById('mod-feePercent'),
+                fFix: document.getElementById('mod-feeFixed')
+            };
+
+            let L = parseFloat(inputs.loan.value) || 0;
+            let T = parseInt(inputs.term.value) || 1;
+
+            // Fee Cross-Linking (User's Logic)
+            if (triggerId === 'mod-feePercent') {
+                inputs.fFix.value = (L * (parseFloat(inputs.fPer.value) / 100)).toFixed(2);
+            } else if (triggerId === 'mod-feeFixed') {
+                inputs.fPer.value = L > 0 ? ((parseFloat(inputs.fFix.value) / L) * 100).toFixed(2) : 0;
+            } else {
+                inputs.fFix.value = (L * (parseFloat(inputs.fPer.value) / 100)).toFixed(2);
+            }
+
+            let fee = parseFloat(inputs.fFix.value) || 0;
+            let P = L + fee;
+
+            // Rate Logic (User's Logic)
+            if (triggerId === 'mod-rateMonthly') {
+                inputs.rAnn.value = (parseFloat(inputs.rMon.value) * 12).toFixed(2);
+            } else if (triggerId === 'mod-rateFlat') {
+                let flat = parseFloat(inputs.rFla.value) / 100;
+                let totalInt = P * flat * (T / 12);
+                inputs.rAnn.value = ((totalInt / P) / (T / 12) * 180).toFixed(2);
+            } else if (triggerId === 'mod-rateFactor') {
+                let factor = parseFloat(inputs.rFac.value);
+                let totalPay = P * factor;
+                let totalInt = totalPay - P;
+                inputs.rAnn.value = ((totalInt / P) / (T / 12) * 180).toFixed(2);
+            }
+
+            let rAnn = (parseFloat(inputs.rAnn.value) || 0) / 100;
+            let rMon = rAnn / 12;
+
+            // Amortization Formula
+            let M = (rMon === 0) ? P / T : P * (rMon * Math.pow(1 + rMon, T)) / (Math.pow(1 + rMon, T) - 1);
+
+            let totalPayable = M * T;
+            let totalInterest = totalPayable - P;
+
+            // Update Rates fields (except the one being changed)
+            if (triggerId !== 'mod-rateMonthly') inputs.rMon.value = (rAnn / 12 * 100).toFixed(2);
+            if (triggerId !== 'mod-rateFlat') inputs.rFla.value = ((totalInterest / P) / (T / 12) * 100).toFixed(2);
+            if (triggerId !== 'mod-rateFactor') inputs.rFac.value = (totalPayable / P).toFixed(4);
+
+            // Formatter
+            const fmt = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
 
             // Update UI
-            const fmt = (val) => '£' + val.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('mod-resMonthlyDisplay').innerText = fmt.format(M);
+            document.getElementById('mod-resPrincipalDisplay').innerText = fmt.format(L);
+            document.getElementById('mod-resFeeDisplay').innerText = fmt.format(fee);
+            document.getElementById('mod-resInterestDisplay').innerText = fmt.format(totalInterest);
+            document.getElementById('mod-resTotalDisplay').innerText = fmt.format(totalPayable);
 
-            document.getElementById('resMonthly').textContent = fmt(monthlyPayment);
-            document.getElementById('resTotalInterest').textContent = fmt(totalInterest);
-            document.getElementById('resTotalPayable').textContent = fmt(totalPayable);
+            // Update Rates Metrics
+            document.getElementById('mod-outDailyDisplay').innerText = (rAnn / 365 * 100).toFixed(4) + '%';
+            document.getElementById('mod-outYieldDisplay').innerText = ((totalInterest / P) * 100).toFixed(2) + '%';
+            document.getElementById('mod-outFactorDisplay').innerText = (totalPayable / P).toFixed(4);
+            document.getElementById('mod-outFlatDisplay').innerText = ((totalInterest / P) / (T / 12) * 100).toFixed(2) + '%';
+        }
 
-            document.getElementById('sumAmount').textContent = fmt(principal);
-            document.getElementById('sumFeeLabel').textContent = feePercent.toFixed(2) + '% of Loan Value';
-            document.getElementById('sumFee').textContent = fmt(feeAmount);
-            document.getElementById('sumTotalLoan').textContent = fmt(totalLoan);
-            document.getElementById('sumTerm').textContent = termMonths + ' Months';
-            document.getElementById('sumMonthly').textContent = fmt(monthlyPayment);
-            document.getElementById('sumTotalInterest').textContent = fmt(totalInterest);
-            document.getElementById('sumTotalPayable').textContent = fmt(totalPayable);
+        // Add event listeners to modal inputs once
+        let modalCalcInitialized = false;
+        function handleModalInput(e) {
+            calculateAdvanced(e.target.id);
+        }
 
-            document.getElementById('insightRate').textContent = annualRate.toFixed(1);
-            document.getElementById('insightTerm').textContent = termMonths;
+        function initModalCalculator() {
+            if (modalCalcInitialized) {
+                calculateAdvanced();
+                return;
+            }
+            const ids = ['mod-loanAmount', 'mod-loanTerm', 'mod-rateAnnual', 'mod-rateMonthly', 'mod-rateFlat', 'mod-rateFactor', 'mod-feePercent', 'mod-feeFixed'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', handleModalInput);
+            });
+            modalCalcInitialized = true;
+            calculateAdvanced();
+        }
+
+        // Hook into openCalculator
+        const oldOpenCalculator = openCalculator;
+        openCalculator = function () {
+            oldOpenCalculator();
+            setTimeout(initModalCalculator, 50);
+        };
+
+        function findMonthlyRate(P, M, n) {
+            if (M * n <= P) return 0;
+            let low = 0, high = 1, tolerance = 0.0000001, iterations = 0;
+            while (high - low > tolerance && iterations < 100) {
+                let mid = (low + high) / 2;
+                let f_mid = P * (mid * Math.pow(1 + mid, n)) / (Math.pow(1 + mid, n) - 1) - M;
+                if (f_mid > 0) high = mid; else low = mid;
+                iterations++;
+            }
+            return (low + high) / 2;
         }
 
         // Licenses & Insurance Logic
@@ -1701,11 +1935,12 @@
     </div>
 
     <!-- AI Core Assistant Widget -->
-    <div id="aiWidget" class="ai-widget glass-card" style="width: 260px; overflow: hidden; border: 1px solid rgba(255,255,255,0.4);">
+    <div id="aiWidget" class="ai-widget glass-card"
+        style="width: 260px; overflow: hidden; border: 1px solid rgba(255,255,255,0.4);">
         <div class="ai-header">
             <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">AI Core Assistant</h3>
         </div>
-        
+
         <div class="py-1">
             <!-- Product Info Option -->
             <div class="ai-option">
@@ -1735,10 +1970,10 @@
         function toggleAIWidget() {
             const widget = document.getElementById('aiWidget');
             widget.classList.toggle('active');
-            
+
             // Subtle FAB rotation or icon change
             const icon = document.querySelector('.ai-fab i');
-            if(widget.classList.contains('active')) {
+            if (widget.classList.contains('active')) {
                 icon.classList.remove('fa-robot');
                 icon.classList.add('fa-xmark');
             } else {
@@ -1766,16 +2001,16 @@
             const btn = document.getElementById('designModeBtn');
             const iconBox = document.getElementById('designIconBox');
             const label = document.getElementById('designModeLabel');
-            
+
             isDesignMode = !isDesignMode;
-            
+
             if (isDesignMode) {
                 grid.classList.add('design-mode');
                 btn.classList.add('border-indigo-500', 'bg-indigo-50/30');
                 iconBox.classList.replace('bg-slate-50', 'bg-indigo-600');
                 iconBox.classList.replace('text-indigo-500', 'text-white');
                 label.textContent = 'SAVE LAYOUT';
-                
+
                 // Initialize Sortable
                 sortableInstance = new Sortable(grid, {
                     animation: 150,
@@ -1790,7 +2025,7 @@
                 iconBox.classList.replace('bg-indigo-600', 'bg-slate-50');
                 iconBox.classList.replace('text-white', 'text-indigo-500');
                 label.textContent = 'DESIGN MODE';
-                
+
                 if (sortableInstance) {
                     sortableInstance.destroy();
                     sortableInstance = null;
@@ -1816,7 +2051,7 @@
 
             const grid = document.querySelector('.module-grid');
             const modules = Array.from(grid.children);
-            
+
             order.forEach(item => {
                 const module = modules.find(m => m.getAttribute('data-id') === item.id);
                 if (module) {
