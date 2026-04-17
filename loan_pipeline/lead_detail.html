@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Detail - Whiterock CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: #fff;
+            margin: 0;
+            display: flex;
+        }
+
+        ::-webkit-scrollbar { width: 3px; height: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .side-nav {
+            width: 70px; background: #0f172a; height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 15px 0; gap: 20px; border-right: 1px solid #1e293b; flex-shrink: 0;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            color: #94a3b8; transition: all .2s; cursor: pointer; text-decoration: none;
+            padding: 8px; border-radius: 8px; width: 50px;
+        }
+        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(255,255,255,.08); }
+        .nav-item i { font-size: 16px; }
+        .nav-text { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+
+        .main-wrap { display: flex; flex-direction: column; flex: 1; min-width: 0; background: #fafafa; overflow: hidden; }
+
+        .top-bar {
+            background: #fff; border-bottom: 1px solid #e2e8f0;
+            padding: 11px 18px; display: flex; align-items: center;
+            justify-content: space-between; flex-shrink: 0;
+        }
+
+        .content-area { flex: 1; overflow-y: auto; padding: 14px 16px; }
+
+        /* Single master table */
+        .master-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+
+        /* Section header row */
+        .sec-row td {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 5px 14px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: #64748b;
+        }
+
+        .sec-row:first-child td { border-top: none; }
+
+        /* Label cell */
+        .lbl {
+            width: 130px;
+            padding: 6px 14px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #94a3b8;
+            border-bottom: 1px solid #f1f5f9;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        /* Value cell */
+        .val {
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #0f172a;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        /* Divider between paired columns */
+        .divider { width: 1px; background: #f1f5f9; padding: 0; border-bottom: 1px solid #f1f5f9; }
+
+        tr:hover .lbl, tr:hover .val { background: #f8fafc; }
+        .sec-row:hover td { background: #f8fafc; }
+
+
+        /* Doc sub-rows */
+        .doc-lbl { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; padding:5px 14px; background:#f8fafc; border-bottom:1px solid #e2e8f0; }
+        .doc-val  { padding:5px 14px; font-size:10px; color:#334155; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
+        tr:hover .doc-val { background:#f8fafc; }
+
+        /* Timeline rows */
+        .tl-val { padding:6px 14px; border-bottom:1px solid #f1f5f9; vertical-align:top; }
+        tr:hover .tl-val { background:#f8fafc; }
+
+        /* Note rows */
+        .note-val { padding:6px 14px; border-bottom:1px solid #f1f5f9; vertical-align:top; }
+        tr:hover .note-val { background:#f8fafc; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 6px 14px; border-radius: 7px; font-size: 9px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: .05em; cursor: pointer; border: none;
+            transition: all .15s; font-family: 'Inter', sans-serif;
+        }
+        .btn-ghost  { background:#f1f5f9; color:#475569; }
+        .btn-ghost:hover { background:#e2e8f0; }
+        .btn-indigo { background:#eef2ff; color:#4338ca; }
+        .btn-indigo:hover { background:#e0e7ff; }
+        .btn-dark   { background:#0f172a; color:#fff; }
+        .btn-dark:hover { background:#000; }
+        .btn-red    { background:#fef2f2; color:#b91c1c; }
+        .btn-red:hover { background:#fee2e2; }
+    </style>
+</head>
+
+<body>
+
+    <nav class="side-nav">
+        <div class="mb-6">
+            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+        </div>
+        <a href="../task_and_followups/task_management.html" class="nav-item"><i class="fa-solid fa-tasks"></i><span class="nav-text">Tasks</span></a>
+        <a href="../lead_management/lead_management.html" class="nav-item"><i class="fa-solid fa-user-group"></i><span class="nav-text">Leads</span></a>
+        <a href="loan_pipeline.html" class="nav-item active"><i class="fa-solid fa-diagram-project"></i><span class="nav-text">Pipeline</span></a>
+        <a href="../lenders/lender_management.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span class="nav-text">Lenders</span></a>
+        <a href="../documents/document_vault.html" class="nav-item"><i class="fa-solid fa-folder-open"></i><span class="nav-text">Documents</span></a>
+        <a href="../user_management/user_management.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span class="nav-text">Users</span></a>
+        <a href="../reporting/reporting_logs.html" class="nav-item"><i class="fa-solid fa-chart-line"></i><span class="nav-text">Reports</span></a>
+    </nav>
+
+    <div class="main-wrap">
+
+        <div class="top-bar">
+            <div class="flex items-center gap-3">
+                <button onclick="history.back()" class="btn btn-ghost">
+                    <i class="fa-solid fa-arrow-left text-[9px]"></i> Back
+                </button>
+                <div class="w-px h-5 bg-gray-200"></div>
+                <div>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest" id="hdr-id"></p>
+                    <h1 class="text-sm font-black text-gray-900 tracking-tight leading-tight" id="hdr-name"></h1>
+                </div>
+                <div id="hdr-badges" class="flex items-center gap-2"></div>
+            </div>
+            <div class="flex items-center gap-2" id="hdr-actions"></div>
+        </div>
+
+        <div class="content-area">
+            <table class="master-table" id="master-table">
+                <colgroup>
+                    <col style="width:140px">
+                    <col>
+                    <col style="width:1px;background:#f1f5f9">
+                    <col style="width:140px">
+                    <col>
+                </colgroup>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        const leads = [
+            { id:'AF-028', name:'Minosh Example', business:'ex ABC',           amount:'£3,456',      agent:'Sarah White',  bank:'Starling', stage:'verified',   priority:'High',   days:3,  lender:'NAB',               notes:'Awaiting final sign-off.' },
+            { id:'AF-027', name:'ABC Corp',       business:'ABCD Ltd',         amount:'£2,345',      agent:'Cody Lane',    bank:'—',        stage:'verified',   priority:'Medium', days:5,  lender:'Commonwealth Bank', notes:'Docs reviewed, all clear.' },
+            { id:'AF-026', name:'Kavi',           business:'No Company',       amount:'£34,567',     agent:'Sarah White',  bank:'—',        stage:'collecting', priority:'Low',    days:8,  lender:'—',                 notes:'Waiting on bank statements.' },
+            { id:'AF-029', name:'Priya',          business:'No Company',       amount:'£456.90',     agent:'Sarah White',  bank:'—',        stage:'collecting', priority:'Medium', days:2,  lender:'—',                 notes:'ID docs pending.' },
+            { id:'AF-025', name:'John',           business:'ex Company',       amount:'£456.90',     agent:'Jane Doe',     bank:'—',        stage:'verified',   priority:'Low',    days:6,  lender:'—',                 notes:'All documents verified.' },
+            { id:'AF-001', name:'Robert Miller',  business:'Miller Logistics', amount:'£250,000',    agent:'Cody Lane',    bank:'Barclays', stage:'collecting', priority:'High',   days:12, lender:'—',                 notes:'Missing payslips x3.' },
+            { id:'AF-002', name:'Alice Huang',    business:'Huang Tech',       amount:'£1,200,000',  agent:'Leo Kumar',    bank:'HSBC',     stage:'lender',     priority:'High',   days:4,  lender:'ANZ',               notes:'Shortlisting lenders.' },
+            { id:'AF-011', name:'Bruce Wayne',    business:'Wayne Enterprises',amount:'£50,000,000', agent:'Priya Sharma', bank:'HSBC',     stage:'lender',     priority:'High',   days:7,  lender:'—',                 notes:'Multiple lenders contacted.' },
+            { id:'AF-003', name:'David Rivera',   business:'Rivera Designs',   amount:'£85,000',     agent:'Priya Sharma', bank:'—',        stage:'approved',   priority:'Medium', days:1,  lender:'Westpac',           notes:'Approval letter received.' },
+            { id:'AF-004', name:'Sarah Connor',   business:'Connor Security',  amount:'£120,000',    agent:'Jane Doe',     bank:'—',        stage:'rejected',   priority:'Low',    days:20, lender:'—',                 notes:'Credit score insufficient.' },
+            { id:'AF-005', name:'Michael Scott',  business:'Dunder Mifflin',   amount:'£18,500',     agent:'Leo Kumar',    bank:'Barclays', stage:'completed',  priority:'Low',    days:0,  lender:'ANZ',               notes:'Funds disbursed. Case closed.' },
+            { id:'AF-006', name:'James Carter',   business:'Carter Holdings',  amount:'£500,000',    agent:'Jane Doe',     bank:'HSBC',     stage:'approved',   priority:'High',   days:2,  lender:'NAB',               notes:'Awaiting drawdown date.' },
+        ];
+
+        const STAGE_ORDER  = ['collecting','verified','lender','approved','completed'];
+        const STAGE_LABELS = { collecting:'Doc Collection', verified:'Doc Verified', lender:'Lender Selection', approved:'Loan Approved', completed:'Completed', rejected:'Rejected' };
+        const stageAccent  = { collecting:'#64748b', verified:'#3b82f6', lender:'#8b5cf6', approved:'#22c55e', completed:'#0f172a', rejected:'#ef4444' };
+        const stageBg      = { collecting:'#f1f5f9', verified:'#eff6ff', lender:'#f5f3ff', approved:'#f0fdf4', completed:'#f1f5f9', rejected:'#fef2f2' };
+        const prioStyle    = { High:'background:#fee2e2;color:#b91c1c;border:1px solid #fecaca', Medium:'background:#fffbeb;color:#92400e;border:1px solid #fde68a', Low:'background:#f0fdf4;color:#166534;border:1px solid #bbf7d0' };
+
+        const params = new URLSearchParams(window.location.search);
+        const lead   = leads.find(l => l.id === params.get('id')) || leads[0];
+        document.title = lead.name + ' — Whiterock CRM';
+
+        const stageIdx = STAGE_ORDER.indexOf(lead.stage);
+
+        // Header
+        document.getElementById('hdr-id').textContent   = '#' + lead.id;
+        document.getElementById('hdr-name').textContent = lead.name;
+        document.getElementById('hdr-badges').innerHTML = `
+            <span style="${prioStyle[lead.priority]};padding:2px 9px;border-radius:20px;font-size:8px;font-weight:700">${lead.priority} Priority</span>
+            <span style="background:${stageBg[lead.stage]};color:${stageAccent[lead.stage]};border:1px solid ${stageAccent[lead.stage]}33;padding:2px 9px;border-radius:20px;font-size:8px;font-weight:700">${STAGE_LABELS[lead.stage]}</span>`;
+        document.getElementById('hdr-actions').innerHTML = `
+            <button class="btn btn-ghost"><i class="fa-solid fa-pen"></i> Edit</button>
+            <button class="btn btn-indigo"><i class="fa-solid fa-arrow-right"></i> Advance Stage</button>
+            <button class="btn btn-red"><i class="fa-solid fa-circle-xmark"></i> Reject</button>`;
+
+        // Documents
+        const docs = [
+            { name:'Passport_ID.pdf',        type:'Identity',   by:lead.agent,  date:'2026-03-11', status:'Verified' },
+            { name:'Bank_Statement_3mo.pdf',  type:'Financial',  by:lead.agent,  date:'2026-03-12', status:'Verified' },
+            { name:'Payslips_x3.pdf',         type:'Income',     by:lead.agent,  date:'2026-03-14', status: lead.stage==='collecting'?'Pending':'Verified' },
+            { name:'Employment_Letter.pdf',   type:'Employment', by:lead.agent,  date:'2026-03-15', status: lead.stage==='collecting'?'Missing':'Verified' },
+            { name:'Credit_Report.pdf',       type:'Credit',     by:'System',    date:'2026-03-16', status: lead.stage==='rejected'?'Failed':'Verified' },
+        ];
+        const docStatus = { Verified:'background:#f0fdf4;color:#166534;border:1px solid #bbf7d0', Pending:'background:#fffbeb;color:#92400e;border:1px solid #fde68a', Missing:'background:#fef2f2;color:#b91c1c;border:1px solid #fecaca', Failed:'background:#fef2f2;color:#b91c1c;border:1px solid #fecaca' };
+
+        // Timeline — fixed lifecycle steps, status based on current stage
+        const stageStep = STAGE_ORDER.indexOf(lead.stage);
+        const isRejected = lead.stage === 'rejected';
+        const tlSteps = [
+            { icon:'fa-plus',              color:'#6366f1', label:'Lead Created',           sub:'By '+lead.agent,        time:'2026-03-10 09:12', minStage: 0 },
+            { icon:'fa-file-arrow-up',     color:'#3b82f6', label:'Documents Collected',    sub:'All files submitted',   time:'2026-03-14 14:05', minStage: 1 },
+            { icon:'fa-file-circle-check', color:'#10b981', label:'Documents Verified',     sub:'Reviewed & approved',   time:'2026-03-17 11:20', minStage: 2 },
+            { icon:'fa-building-columns',  color:'#8b5cf6', label:'Lender Selected',        sub:'Shortlist confirmed',   time:'2026-03-25 10:00', minStage: 3 },
+            isRejected
+                ? { icon:'fa-circle-xmark', color:'#ef4444', label:'Loan Rejected',         sub:'Application declined',  time:'2026-04-01 09:00', minStage: 4 }
+                : { icon:'fa-circle-check', color:'#22c55e', label:'Loan Confirmed',         sub:'Funds approved',        time:'2026-04-01 09:00', minStage: 4 },
+        ];
+        const timeline = tlSteps.map(t => ({
+            ...t,
+            done: isRejected ? (t.minStage < 4) : (t.minStage <= stageStep),
+        }));
+
+        // Reminders — linked to Task & Follow-ups
+        const reminders = [
+            { type:'Call',       title:'Follow up on bank statements',  assignee: lead.agent,  due:'2026-04-18', status:'Pending'   },
+            { type:'Meeting',    title:'Lender introduction call',       assignee: lead.agent,  due:'2026-04-20', status:'Pending'   },
+            { type:'Follow-up',  title:'Check document verification',    assignee: lead.agent,  due:'2026-04-12', status:'Overdue'   },
+            { type:'Document',   title:'Request updated payslips',       assignee:'Sarah White', due:'2026-04-15', status:'Completed' },
+        ];
+
+        // Notes
+        const notes = [
+            { author:'Sarah White', time:'2026-04-10 10:22', text: lead.notes },
+            { author:'Cody Lane',   time:'2026-04-08 15:40', text:'Client confirmed availability for lender call next week.' },
+            { author:'System',      time:'2026-04-07 09:00', text:'Automated reminder sent to client for outstanding documents.' },
+        ];
+
+        // ── Build the single master table ─────────────────────────────────
+        function row(l1, v1, l2, v2) {
+            if (l2 !== undefined) {
+                return `<tr>
+                    <td class="lbl">${l1}</td><td class="val">${v1}</td>
+                    <td class="divider"></td>
+                    <td class="lbl">${l2}</td><td class="val">${v2}</td>
+                </tr>`;
+            }
+            return `<tr><td class="lbl">${l1}</td><td class="val" colspan="4">${v1}</td></tr>`;
+        }
+
+        function sec(icon, title, extra) {
+            return `<tr class="sec-row"><td colspan="5" style="padding:8px 14px">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#475569">
+                        <i class="fa-solid ${icon}" style="color:#94a3b8"></i>${title}
+                    </span>
+                    ${extra || ''}
+                </div>
+            </td></tr>`;
+        }
+
+        const html = [
+
+            // Lead Information & Loan Details — side by side section headers
+            `<tr class="sec-row">
+                <td colspan="2" style="padding:5px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">
+                    <span style="display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#475569">
+                        <i class="fa-solid fa-user" style="color:#94a3b8"></i>Lead Information
+                    </span>
+                </td>
+                <td class="divider" style="background:#e2e8f0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0"></td>
+                <td colspan="2" style="padding:5px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">
+                    <span style="display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#475569">
+                        <i class="fa-solid fa-coins" style="color:#94a3b8"></i>Loan Details
+                    </span>
+                </td>
+            </tr>`,
+            row('Lead ID',        `<span style="font-family:monospace;font-weight:700">#${lead.id}</span>`,   'Loan Amount',    `<span style="font-size:13px;font-weight:900;color:#0f172a">${lead.amount}</span>`),
+            row('Full Name',      lead.name,                                                                   'Bank',           lead.bank),
+            row('Business',       lead.business,                                                               'Lender Partner', lead.lender),
+            row('Assigned Agent', lead.agent,                                                                  'Current Stage',  `<span style="background:${stageBg[lead.stage]};color:${stageAccent[lead.stage]};border:1px solid ${stageAccent[lead.stage]}33;padding:2px 9px;border-radius:10px;font-size:9px;font-weight:700">${STAGE_LABELS[lead.stage]}</span>`),
+            row('Priority',       `<span style="${prioStyle[lead.priority]};padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700">${lead.priority}</span>`, 'Days in Stage', lead.days + ' day' + (lead.days!==1?'s':'')),
+            row('Notes',          `<span style="color:#64748b;font-size:10px">${lead.notes}</span>`),
+
+            // Documents + Activity Timeline — side by side section headers
+            `<tr class="sec-row">
+                <td colspan="2" style="padding:5px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">
+                    <span style="display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#475569">
+                        <i class="fa-solid fa-folder-open" style="color:#94a3b8"></i>Documents
+                        <span style="font-size:9px;color:#94a3b8;font-weight:600;text-transform:none;letter-spacing:0">${docs.length} files</span>
+                    </span>
+                </td>
+                <td class="divider" style="background:#e2e8f0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0"></td>
+                <td colspan="2" style="padding:5px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">
+                    <span style="display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#475569">
+                        <i class="fa-solid fa-timeline" style="color:#94a3b8"></i>Activity Timeline
+                    </span>
+                </td>
+            </tr>`,
+
+            // Paired rows: doc on left, timeline event on right
+            ...Array.from({ length: Math.max(docs.length, timeline.length) }, (_, i) => {
+                const d = docs[i];
+                const t = timeline[i];
+
+                const leftLbl = d
+                    ? `<div style="width:20px;height:20px;background:#f1f5f9;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:9px"><i class="fa-regular fa-file-pdf"></i></div>`
+                    : '';
+                const leftVal = d
+                    ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                           <span style="font-weight:700;color:#0f172a;font-size:10px">${d.name}</span>
+                           <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+                               <span style="font-family:monospace;font-size:8px;color:#94a3b8">${d.date}</span>
+                               <span style="font-size:8px;color:#94a3b8">· ${d.by}</span>
+                               <button style="background:#f8fafc;border:1px solid #e2e8f0;padding:2px 8px;border-radius:5px;font-size:8px;font-weight:700;color:#475569;cursor:pointer;white-space:nowrap"><i class="fa-solid fa-download" style="margin-right:3px"></i>Download</button>
+                           </div>
+                       </div>`
+                    : '';
+
+                const rightLbl = t
+                    ? `<div style="width:20px;height:20px;border-radius:50%;background:${t.done ? t.color+'22' : '#f1f5f9'};border:1.5px solid ${t.done ? t.color+'66' : '#e2e8f0'};display:flex;align-items:center;justify-content:center">
+                           <i class="fa-solid ${t.icon}" style="font-size:8px;color:${t.done ? t.color : '#cbd5e1'}"></i>
+                       </div>`
+                    : '';
+                const rightVal = t
+                    ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                           <div>
+                               <span style="font-size:10px;font-weight:700;color:${t.done ? '#0f172a' : '#94a3b8'}">${t.label}</span>
+                               <span style="font-size:9px;color:${t.done ? '#64748b' : '#cbd5e1'};margin-left:6px">${t.sub}</span>
+                           </div>
+                           <span style="font-size:8px;color:#94a3b8;font-family:monospace;white-space:nowrap">${t.done ? t.time : '—'}</span>
+                       </div>`
+                    : '';
+
+                return `<tr>
+                    <td class="lbl">${leftLbl}</td>
+                    <td class="val">${leftVal}</td>
+                    <td class="divider"></td>
+                    <td class="lbl">${rightLbl}</td>
+                    <td class="val">${rightVal}</td>
+                </tr>`;
+            }),
+
+            // Notes + Reminders — side by side
+            `<tr class="sec-row">
+                <td colspan="2" style="padding:5px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">
+                    <span style="display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#475569">
+                        <i class="fa-solid fa-note-sticky" style="color:#94a3b8"></i>Notes
+                    </span>
+                </td>
+                <td class="divider" style="background:#e2e8f0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0"></td>
+                <td colspan="2" style="padding:5px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                        <span style="display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#475569">
+                            <i class="fa-solid fa-bell" style="color:#94a3b8"></i>Reminders & Follow-ups
+                        </span>
+                        <a href="../task_and_followups/task_management.html" style="background:#eef2ff;color:#4338ca;border:none;padding:3px 9px;border-radius:6px;font-size:8px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;display:inline-flex;align-items:center;gap:4px">
+                            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:7px"></i>Task Hub
+                        </a>
+                    </div>
+                </td>
+            </tr>`,
+
+            // Notes rows paired with reminder rows
+            ...Array.from({ length: Math.max(notes.length, reminders.length) }, (_, i) => {
+                const n = notes[i];
+                const r = reminders[i];
+                const typeColors = { Call:'#3b82f6', Meeting:'#8b5cf6', 'Follow-up':'#f59e0b', Document:'#10b981' };
+                const typeIcons  = { Call:'fa-phone', Meeting:'fa-users', 'Follow-up':'fa-rotate-right', Document:'fa-file' };
+                const statusColors = { Pending:'#f59e0b', Completed:'#10b981', Overdue:'#ef4444' };
+
+                const leftCell = n ? `
+                    <td class="lbl">${n.author}</td>
+                    <td class="val">
+                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+                            <span style="font-size:10px;color:#475569;line-height:1.5">${n.text}</span>
+                            <span style="font-size:8px;color:#94a3b8;font-family:monospace;white-space:nowrap;flex-shrink:0">${n.time}</span>
+                        </div>
+                    </td>` : `<td class="lbl"></td><td class="val"></td>`;
+
+                const rightCell = r ? `
+                    <td class="lbl">
+                        <div style="display:flex;align-items:center;gap:5px">
+                            <div style="width:18px;height:18px;border-radius:50%;background:${typeColors[r.type]}18;border:1.5px solid ${typeColors[r.type]}44;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                                <i class="fa-solid ${typeIcons[r.type]}" style="font-size:7px;color:${typeColors[r.type]}"></i>
+                            </div>
+                            <span style="font-size:8px;font-weight:700;color:${typeColors[r.type]};text-transform:uppercase">${r.type}</span>
+                        </div>
+                    </td>
+                    <td class="val">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                            <div>
+                                <span style="font-size:10px;font-weight:700;color:#0f172a">${r.title}</span>
+                                <span style="font-size:9px;color:#64748b;margin-left:6px">${r.assignee}</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+                                <span style="font-family:monospace;font-size:8px;color:#94a3b8">${r.due}</span>
+                                <span style="background:${statusColors[r.status]}18;color:${statusColors[r.status]};border:1px solid ${statusColors[r.status]}44;padding:1px 7px;border-radius:10px;font-size:8px;font-weight:700">${r.status}</span>
+                            </div>
+                        </div>
+                    </td>` : `<td class="lbl"></td><td class="val"></td>`;
+
+                return `<tr>${leftCell}<td class="divider"></td>${rightCell}</tr>`;
+            }),
+
+            // Add note + Add reminder row
+            `<tr>
+                <td colspan="2" style="padding:8px 14px;border-bottom:none;vertical-align:top">
+                    <textarea style="width:100%;border:1px solid #e2e8f0;border-radius:7px;padding:7px 10px;font-size:10px;color:#334155;resize:none;outline:none;font-family:Inter,sans-serif;background:#fff" rows="2" placeholder="Write a note..."></textarea>
+                    <div style="display:flex;justify-content:flex-end;margin-top:5px">
+                        <button class="btn btn-dark" style="font-size:8px;padding:4px 12px">Save Note</button>
+                    </div>
+                </td>
+                <td class="divider" style="border-bottom:none"></td>
+                <td colspan="2" style="padding:8px 14px;border-bottom:none;vertical-align:top">
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                        <select style="flex:1;border:1px solid #e2e8f0;border-radius:7px;padding:5px 8px;font-size:10px;font-weight:600;color:#334155;outline:none;font-family:Inter,sans-serif;background:#fff">
+                            <option>Call</option>
+                            <option>Meeting</option>
+                            <option>Follow-up</option>
+                            <option>Document</option>
+                        </select>
+                        <input type="text" placeholder="Reminder title..." style="flex:2;border:1px solid #e2e8f0;border-radius:7px;padding:5px 10px;font-size:10px;color:#334155;outline:none;font-family:Inter,sans-serif;background:#fff">
+                        <input type="date" style="flex:1;border:1px solid #e2e8f0;border-radius:7px;padding:5px 8px;font-size:10px;color:#334155;outline:none;font-family:Inter,sans-serif;background:#fff">
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+                        <a href="../task_and_followups/task_management.html" style="font-size:8px;color:#6366f1;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px">
+                            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:7px"></i>View all in Task Hub
+                        </a>
+                        <button class="btn btn-dark" style="font-size:8px;padding:4px 12px">Add Reminder</button>
+                    </div>
+                </td>
+            </tr>`,
+
+        ].join('');
+
+        const colgroup = `<colgroup>
+            <col style="width:140px">
+            <col>
+            <col style="width:1px;background:#f1f5f9">
+            <col style="width:140px">
+            <col>
+        </colgroup>`;
+        document.getElementById('master-table').innerHTML = colgroup + html;
+    </script>
+
+</body>
+</html>

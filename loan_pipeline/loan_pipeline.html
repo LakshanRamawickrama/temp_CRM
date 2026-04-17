@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Pipeline - Whiterock CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: #fff;
+            margin: 0;
+            display: flex;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 3px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Sidebar */
+        .side-nav {
+            width: 70px;
+            background: #0f172a;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+            gap: 20px;
+            border-right: 1px solid #1e293b;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #94a3b8;
+            transition: all .2s;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 8px;
+            width: 50px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #fff;
+            background: rgba(255,255,255,.08);
+        }
+
+        .nav-item i { font-size: 16px; }
+
+        .nav-text {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            text-align: center;
+        }
+
+        /* Main layout */
+        .main-wrap {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
+            background: #fafafa;
+        }
+
+        /* Top bar */
+        .top-bar {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        /* Pipeline scroll area */
+        .pipeline-scroll {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        /* Stage column */
+        .stage-col {
+            flex-shrink: 0;
+            width: 230px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            height: 100%;
+        }
+
+        .stage-header {
+            border-radius: 10px 10px 0 0;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .stage-title {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .stage-count {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.55);
+        }
+
+        .stage-body {
+            flex: 1;
+            border-radius: 0 0 10px 10px;
+            padding: 8px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-height: 200px;
+            transition: background .15s;
+        }
+
+        .stage-body.drag-over {
+            background: rgba(99,102,241,.07) !important;
+            outline: 2px dashed #6366f1;
+            outline-offset: -3px;
+        }
+
+        /* Stage themes */
+        .stage-collecting  .stage-header { background: #f1f5f9; color: #475569; }
+        .stage-collecting  .stage-body   { background: #f8fafc; }
+        .stage-collecting  .stage-count  { color: #475569; }
+
+        .stage-verified    .stage-header { background: #eff6ff; color: #1d4ed8; }
+        .stage-verified    .stage-body   { background: #f0f7ff; }
+        .stage-verified    .stage-count  { color: #1d4ed8; }
+
+        .stage-lender      .stage-header { background: #f5f3ff; color: #6d28d9; }
+        .stage-lender      .stage-body   { background: #f6f4ff; }
+        .stage-lender      .stage-count  { color: #6d28d9; }
+
+        .stage-approved    .stage-header { background: #f0fdf4; color: #166534; }
+        .stage-approved    .stage-body   { background: #f2fdf5; }
+        .stage-approved    .stage-count  { color: #166534; }
+
+        .stage-completed   .stage-header { background: #0f172a; color: #e2e8f0; }
+        .stage-completed   .stage-body   { background: #f8fafc; }
+        .stage-completed   .stage-count  { color: #94a3b8; background: rgba(255,255,255,.12); }
+
+        .stage-rejected    .stage-header { background: #fef2f2; color: #b91c1c; }
+        .stage-rejected    .stage-body   { background: #fff5f5; }
+        .stage-rejected    .stage-count  { color: #b91c1c; }
+
+        /* Lead card */
+        .lead-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            padding: 10px 11px;
+            cursor: grab;
+            transition: box-shadow .15s, transform .15s, opacity .15s;
+            user-select: none;
+            position: relative;
+        }
+
+        .lead-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,.08);
+            transform: translateY(-1px);
+        }
+
+        .lead-card.dragging {
+            opacity: .45;
+            transform: rotate(1.5deg) scale(.97);
+            cursor: grabbing;
+        }
+
+        .card-priority-bar {
+            position: absolute;
+            left: 0; top: 8px; bottom: 8px;
+            width: 3px;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .priority-high   { background: #ef4444; }
+        .priority-medium { background: #f59e0b; }
+        .priority-low    { background: #10b981; }
+
+        .card-id {
+            font-size: 8px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .card-name {
+            font-size: 11px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-amount {
+            font-size: 12px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-top: 5px;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .card-agent {
+            font-size: 8px;
+            font-weight: 600;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-days {
+            font-size: 8px;
+            font-weight: 700;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .card-bank {
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 600;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+            margin-top: 7px;
+            padding-top: 7px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .card-btn {
+            font-size: 8px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            transition: all .15s;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .btn-view {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-view:hover { background: #e2e8f0; }
+
+
+        /* Input */
+        .input-clean {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            padding: 6px 12px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #1e293b;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-clean:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px #e0e7ff;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+            animation: fadeIn .15s ease;
+        }
+
+        .modal-backdrop.hidden { display: none; }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 14px;
+            width: 520px;
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,.18);
+            animation: slideUp .18s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            border: none;
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            transition: all .15s;
+        }
+
+        .modal-close:hover { background: #e2e8f0; color: #0f172a; }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #f8fafc;
+            gap: 12px;
+        }
+
+        .detail-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            width: 110px;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            font-size: 11px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        /* Stage move btn */
+        .move-btn {
+            padding: 6px 14px;
+            border-radius: 7px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            cursor: pointer;
+            border: none;
+            transition: all .15s;
+        }
+
+        /* Timeline */
+        .timeline-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <nav class="side-nav">
+        <div class="mb-6">
+            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+        </div>
+
+        <a href="../task_and_followups/task_management.html" class="nav-item">
+            <i class="fa-solid fa-tasks"></i>
+            <span class="nav-text">Tasks</span>
+        </a>
+
+        <a href="../lead_management/lead_management.html" class="nav-item">
+            <i class="fa-solid fa-user-group"></i>
+            <span class="nav-text">Leads</span>
+        </a>
+
+        <a href="../loan_pipeline/loan_pipeline.html" class="nav-item active">
+            <i class="fa-solid fa-diagram-project"></i>
+            <span class="nav-text">Pipeline</span>
+        </a>
+
+        <a href="../lenders/lender_management.html" class="nav-item">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+            <span class="nav-text">Lenders</span>
+        </a>
+
+        <a href="../documents/document_vault.html" class="nav-item">
+            <i class="fa-solid fa-folder-open"></i>
+            <span class="nav-text">Documents</span>
+        </a>
+
+        <a href="../user_management/user_management.html" class="nav-item">
+            <i class="fa-solid fa-user-gear"></i>
+            <span class="nav-text">Users</span>
+        </a>
+
+        <a href="../reporting/reporting_logs.html" class="nav-item">
+            <i class="fa-solid fa-chart-line"></i>
+            <span class="nav-text">Reports</span>
+        </a>
+    </nav>
+
+    <div class="main-wrap">
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+                    <i class="fa-solid fa-diagram-project text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black text-gray-900 tracking-tight">Loan Pipeline</h1>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Visual Lifecycle Tracker</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[9px] text-gray-400"></i>
+                    <input id="pipeline-search" type="text" class="input-clean pl-8 w-44" placeholder="Search leads..." oninput="filterCards()">
+                </div>
+                <select id="pipeline-agent" class="input-clean w-36" onchange="filterCards()">
+                    <option value="">All Agents</option>
+                    <option>Sarah White</option>
+                    <option>Cody Lane</option>
+                    <option>Jane Doe</option>
+                    <option>Leo Kumar</option>
+                    <option>Priya Sharma</option>
+                </select>
+                <select id="pipeline-priority" class="input-clean w-32" onchange="filterCards()">
+                    <option value="">All Priority</option>
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                </select>
+                <button onclick="openAddModal()" class="bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-lg text-[9px] font-bold uppercase tracking-widest transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-[10px]"></i> Add Lead
+                </button>
+            </div>
+        </div>
+
+        <!-- Kanban Board -->
+        <div class="pipeline-scroll" id="kanban-board">
+
+            <!-- Col: Document Collection -->
+            <div class="stage-col stage-collecting">
+                <div class="stage-header">
+                    <span class="stage-title">
+                        <i class="fa-solid fa-file-arrow-up text-[10px]"></i>
+                        Doc Collection
+                    </span>
+                    <span class="stage-count" id="count-collecting">0</span>
+                </div>
+                <div class="stage-body" id="col-collecting"
+                    ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'collecting')">
+                </div>
+            </div>
+
+            <!-- Col: Document Verified -->
+            <div class="stage-col stage-verified">
+                <div class="stage-header">
+                    <span class="stage-title">
+                        <i class="fa-solid fa-file-circle-check text-[10px]"></i>
+                        Doc Verified
+                    </span>
+                    <span class="stage-count" id="count-verified">0</span>
+                </div>
+                <div class="stage-body" id="col-verified"
+                    ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'verified')">
+                </div>
+            </div>
+
+            <!-- Col: Lender Selection -->
+            <div class="stage-col stage-lender">
+                <div class="stage-header">
+                    <span class="stage-title">
+                        <i class="fa-solid fa-building-columns text-[10px]"></i>
+                        Lender Selection
+                    </span>
+                    <span class="stage-count" id="count-lender">0</span>
+                </div>
+                <div class="stage-body" id="col-lender"
+                    ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'lender')">
+                </div>
+            </div>
+
+            <!-- Col: Loan Approved -->
+            <div class="stage-col stage-approved">
+                <div class="stage-header">
+                    <span class="stage-title">
+                        <i class="fa-solid fa-circle-check text-[10px]"></i>
+                        Loan Approved
+                    </span>
+                    <span class="stage-count" id="count-approved">0</span>
+                </div>
+                <div class="stage-body" id="col-approved"
+                    ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'approved')">
+                </div>
+            </div>
+
+            <!-- Col: Completed -->
+            <div class="stage-col stage-completed">
+                <div class="stage-header">
+                    <span class="stage-title">
+                        <i class="fa-solid fa-flag-checkered text-[10px]"></i>
+                        Completed
+                    </span>
+                    <span class="stage-count" id="count-completed">0</span>
+                </div>
+                <div class="stage-body" id="col-completed"
+                    ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'completed')">
+                </div>
+            </div>
+
+            <!-- Col: Rejected -->
+            <div class="stage-col stage-rejected">
+                <div class="stage-header">
+                    <span class="stage-title">
+                        <i class="fa-solid fa-circle-xmark text-[10px]"></i>
+                        Rejected
+                    </span>
+                    <span class="stage-count" id="count-rejected">0</span>
+                </div>
+                <div class="stage-body" id="col-rejected"
+                    ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'rejected')">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Lead detail now opens as a full page (lead_detail.html?id=...) -->
+    <div class="modal-backdrop hidden" id="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest" id="modal-id"></p>
+                    <h2 class="text-base font-black text-gray-900 mt-0.5" id="modal-name"></h2>
+                    <div class="flex items-center gap-2 mt-1.5" id="modal-badges"></div>
+                </div>
+                <button class="modal-close" onclick="document.getElementById('modal-backdrop').classList.add('hidden')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Stage Progress -->
+            <div class="px-5 pt-4 pb-2">
+                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-3">Pipeline Progress</p>
+                <div class="flex items-center gap-0" id="modal-progress"></div>
+            </div>
+
+            <!-- Details -->
+            <div class="mt-2" id="modal-details"></div>
+
+            <!-- Timeline -->
+            <div class="px-5 py-4 border-t border-gray-100">
+                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-3">Activity Timeline</p>
+                <div class="flex flex-col gap-3" id="modal-timeline"></div>
+            </div>
+
+            <!-- Actions -->
+            <div class="px-5 py-4 border-t border-gray-100 flex items-center justify-between">
+                <button id="modal-prev-btn" class="move-btn bg-gray-100 text-gray-600 hover:bg-gray-200" onclick="moveFromModal(-1)">
+                    <i class="fa-solid fa-arrow-left mr-1.5"></i> Previous Stage
+                </button>
+                <button id="modal-next-btn" class="move-btn bg-gray-900 text-white hover:bg-black" onclick="moveFromModal(1)">
+                    Next Stage <i class="fa-solid fa-arrow-right ml-1.5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Data ────────────────────────────────────────────────────────────
+        const STAGES = ['collecting','verified','lender','approved','completed','rejected'];
+        const STAGE_LABELS = {
+            collecting: 'Doc Collection',
+            verified:   'Doc Verified',
+            lender:     'Lender Selection',
+            approved:   'Loan Approved',
+            completed:  'Completed',
+            rejected:   'Rejected',
+        };
+
+        let leads = [
+            { id:'AF-028', name:'Minosh Example', business:'ex ABC',         amount:'£3,456',      agent:'Sarah White',  bank:'Starling',  stage:'verified',   priority:'High',   days:3,  lender:'NAB',              notes:'Awaiting final sign-off.' },
+            { id:'AF-027', name:'ABC Corp',       business:'ABCD Ltd',       amount:'£2,345',      agent:'Cody Lane',    bank:'—',         stage:'verified',   priority:'Medium', days:5,  lender:'Commonwealth Bank', notes:'Docs reviewed, all clear.' },
+            { id:'AF-026', name:'Kavi',           business:'No Company',     amount:'£34,567',     agent:'Sarah White',  bank:'—',         stage:'collecting', priority:'Low',    days:8,  lender:'—',                notes:'Waiting on bank statements.' },
+            { id:'AF-029', name:'Priya',          business:'No Company',     amount:'£456.90',     agent:'Sarah White',  bank:'—',         stage:'collecting', priority:'Medium', days:2,  lender:'—',                notes:'ID docs pending.' },
+            { id:'AF-025', name:'John',           business:'ex Company',     amount:'£456.90',     agent:'Jane Doe',     bank:'—',         stage:'verified',   priority:'Low',    days:6,  lender:'—',                notes:'All documents verified.' },
+            { id:'AF-001', name:'Robert Miller',  business:'Miller Logistics',amount:'£250,000',   agent:'Cody Lane',    bank:'Barclays',  stage:'collecting', priority:'High',   days:12, lender:'—',                notes:'Missing payslips x3.' },
+            { id:'AF-002', name:'Alice Huang',    business:'Huang Tech',     amount:'£1,200,000',  agent:'Leo Kumar',    bank:'HSBC',      stage:'lender',     priority:'High',   days:4,  lender:'ANZ',              notes:'Shortlisting lenders.' },
+            { id:'AF-011', name:'Bruce Wayne',    business:'Wayne Enterprises',amount:'£50,000,000',agent:'Priya Sharma',bank:'HSBC',     stage:'lender',     priority:'High',   days:7,  lender:'—',                notes:'Multiple lenders contacted.' },
+            { id:'AF-003', name:'David Rivera',   business:'Rivera Designs', amount:'£85,000',     agent:'Priya Sharma', bank:'—',         stage:'approved',   priority:'Medium', days:1,  lender:'Westpac',          notes:'Approval letter received.' },
+            { id:'AF-004', name:'Sarah Connor',   business:'Connor Security',amount:'£120,000',    agent:'Jane Doe',     bank:'—',         stage:'rejected',   priority:'Low',    days:20, lender:'—',                notes:'Credit score insufficient.' },
+            { id:'AF-005', name:'Michael Scott',  business:'Dunder Mifflin', amount:'£18,500',     agent:'Leo Kumar',    bank:'Barclays',  stage:'completed',  priority:'Low',    days:0,  lender:'ANZ',              notes:'Funds disbursed. Case closed.' },
+            { id:'AF-006', name:'James Carter',   business:'Carter Holdings',amount:'£500,000',    agent:'Jane Doe',     bank:'HSBC',      stage:'approved',   priority:'High',   days:2,  lender:'NAB',              notes:'Awaiting drawdown date.' },
+        ];
+
+        let dragId    = null;
+        let modalId   = null;
+
+        // ── Render ──────────────────────────────────────────────────────────
+        function priorityColor(p) {
+            return p === 'High' ? 'priority-high' : p === 'Medium' ? 'priority-medium' : 'priority-low';
+        }
+
+        function stageAccent(stage) {
+            const map = {
+                collecting: '#64748b', verified: '#3b82f6', lender: '#8b5cf6',
+                approved: '#22c55e',   completed: '#0f172a', rejected: '#ef4444',
+            };
+            return map[stage] || '#64748b';
+        }
+
+        function buildCard(lead) {
+            const div = document.createElement('div');
+            div.className = 'lead-card';
+            div.id = 'card-' + lead.id;
+            div.draggable = true;
+            div.innerHTML = `
+                <div class="card-priority-bar ${priorityColor(lead.priority)}"></div>
+                <div style="padding-left:8px">
+                    <div class="card-id">${lead.id}</div>
+                    <div class="card-name">${lead.name}</div>
+                    <div class="card-amount">${lead.amount}</div>
+                    <div class="card-bank"><i class="fa-solid fa-building-columns text-[8px]"></i> ${lead.bank !== '—' ? lead.bank : 'No bank assigned'}</div>
+                    <div class="card-meta">
+                        <span class="card-agent"><i class="fa-solid fa-user text-[7px]"></i> ${lead.agent}</span>
+                        <span class="card-days"><i class="fa-regular fa-clock text-[7px]"></i> ${lead.days}d</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-btn btn-view" onclick="window.location.href='lead_detail.html?id=${lead.id}'">
+                            <i class="fa-solid fa-eye mr-1"></i>View
+                        </button>
+                    </div>
+                </div>
+            `;
+            div.addEventListener('dragstart', e => {
+                dragId = lead.id;
+                setTimeout(() => div.classList.add('dragging'), 0);
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            div.addEventListener('dragend', () => div.classList.remove('dragging'));
+            return div;
+        }
+
+        function renderBoard() {
+            const q        = (document.getElementById('pipeline-search').value || '').toLowerCase();
+            const agentF   = document.getElementById('pipeline-agent').value;
+            const prioF    = document.getElementById('pipeline-priority').value;
+
+            STAGES.forEach(stage => {
+                const col = document.getElementById('col-' + stage);
+                col.innerHTML = '';
+                const stageLeads = leads.filter(l =>
+                    l.stage === stage &&
+                    (!q      || l.name.toLowerCase().includes(q) || l.id.toLowerCase().includes(q)) &&
+                    (!agentF || l.agent === agentF) &&
+                    (!prioF  || l.priority === prioF)
+                );
+                stageLeads.forEach(l => col.appendChild(buildCard(l)));
+                document.getElementById('count-' + stage).textContent = stageLeads.length;
+            });
+        }
+
+        function filterCards() { renderBoard(); }
+
+        // ── Drag & Drop ─────────────────────────────────────────────────────
+        function onDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function onDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function onDrop(e, stage) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!dragId) return;
+            const lead = leads.find(l => l.id === dragId);
+            if (lead && lead.stage !== stage) {
+                lead.stage = stage;
+                lead.days  = 0;
+                renderBoard();
+            }
+            dragId = null;
+        }
+
+        // ── Modal ────────────────────────────────────────────────────────────
+        const STAGE_ORDER = ['collecting','verified','lender','approved','completed'];
+
+        function openModal(id) {
+            const lead = leads.find(l => l.id === id);
+            if (!lead) return;
+            modalId = id;
+
+            document.getElementById('modal-id').textContent   = '#' + lead.id;
+            document.getElementById('modal-name').textContent = lead.name;
+
+            // Badges
+            const prioColors = { High:'background:#fee2e2;color:#b91c1c', Medium:'background:#fffbeb;color:#92400e', Low:'background:#f0fdf4;color:#166534' };
+            document.getElementById('modal-badges').innerHTML = `
+                <span style="${prioColors[lead.priority]};padding:2px 8px;border-radius:12px;font-size:8px;font-weight:700">${lead.priority} Priority</span>
+                <span style="background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:12px;font-size:8px;font-weight:700">${STAGE_LABELS[lead.stage]}</span>
+            `;
+
+            // Progress
+            const stageIdx = STAGE_ORDER.indexOf(lead.stage);
+            document.getElementById('modal-progress').innerHTML = STAGE_ORDER.map((s, i) => `
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative">
+                    ${i < STAGE_ORDER.length - 1 ? `<div style="position:absolute;top:9px;left:50%;width:100%;height:2px;background:${i < stageIdx ? '#6366f1' : '#e2e8f0'};z-index:0"></div>` : ''}
+                    <div style="width:18px;height:18px;border-radius:50%;z-index:1;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;
+                        ${i < stageIdx  ? 'background:#6366f1;color:#fff;border:2px solid #6366f1' :
+                          i === stageIdx ? 'background:#fff;color:#4338ca;border:2px solid #6366f1;box-shadow:0 0 0 3px #e0e7ff' :
+                                           'background:#fff;color:#94a3b8;border:2px solid #e2e8f0'}">
+                        ${i < stageIdx ? '<i class="fa-solid fa-check" style="font-size:6px"></i>' : i + 1}
+                    </div>
+                    <span style="font-size:7px;font-weight:700;color:${i <= stageIdx ? '#4338ca' : '#94a3b8'};text-transform:uppercase;letter-spacing:.03em;margin-top:3px;text-align:center">${STAGE_LABELS[s]}</span>
+                </div>
+            `).join('');
+
+            // Details
+            document.getElementById('modal-details').innerHTML = `
+                <div class="detail-row"><span class="detail-label">Business</span><span class="detail-value">${lead.business}</span></div>
+                <div class="detail-row"><span class="detail-label">Loan Amount</span><span class="detail-value font-black text-lg">${lead.amount}</span></div>
+                <div class="detail-row"><span class="detail-label">Assigned Agent</span><span class="detail-value">${lead.agent}</span></div>
+                <div class="detail-row"><span class="detail-label">Bank</span><span class="detail-value">${lead.bank}</span></div>
+                <div class="detail-row"><span class="detail-label">Lender</span><span class="detail-value">${lead.lender}</span></div>
+                <div class="detail-row"><span class="detail-label">Days in Stage</span><span class="detail-value">${lead.days} day${lead.days !== 1 ? 's' : ''}</span></div>
+                <div class="detail-row"><span class="detail-label">Notes</span><span class="detail-value text-gray-500">${lead.notes}</span></div>
+            `;
+
+            // Timeline
+            const tl = [
+                { label: 'Lead created', time: '2026-03-10', icon: 'fa-plus', color: '#6366f1' },
+                { label: 'Documents requested', time: '2026-03-11', icon: 'fa-file-arrow-up', color: '#3b82f6' },
+                { label: 'Documents submitted', time: '2026-03-14', icon: 'fa-file-circle-check', color: '#10b981' },
+                { label: `Moved to ${STAGE_LABELS[lead.stage]}`, time: '2026-04-' + (10 + leads.indexOf(lead)), icon: 'fa-arrow-right', color: stageAccent(lead.stage) },
+            ];
+            document.getElementById('modal-timeline').innerHTML = tl.map(t => `
+                <div style="display:flex;gap:10px;align-items:flex-start">
+                    <div class="timeline-dot" style="background:${t.color}"></div>
+                    <div>
+                        <p style="font-size:10px;font-weight:700;color:#1e293b;margin:0">${t.label}</p>
+                        <p style="font-size:8px;color:#94a3b8;margin:2px 0 0;font-family:monospace">${t.time}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Move buttons
+            const isRejected = lead.stage === 'rejected';
+            const isFirst    = lead.stage === 'collecting';
+            const isLast     = lead.stage === 'completed' || lead.stage === 'rejected';
+
+            const prevBtn = document.getElementById('modal-prev-btn');
+            const nextBtn = document.getElementById('modal-next-btn');
+            prevBtn.style.display = (isFirst || isRejected) ? 'none' : 'block';
+            nextBtn.style.display = isLast ? 'none' : 'block';
+            if (!isLast) {
+                const nextStage = lead.stage === 'approved' ? 'completed' : STAGE_ORDER[STAGE_ORDER.indexOf(lead.stage) + 1];
+                nextBtn.innerHTML = `Move to ${STAGE_LABELS[nextStage] || 'Next'} <i class="fa-solid fa-arrow-right ml-1.5"></i>`;
+            }
+
+            document.getElementById('modal-backdrop').classList.remove('hidden');
+        }
+
+        function closeModal(e) {
+            document.getElementById('modal-backdrop').classList.add('hidden');
+        }
+
+        function moveFromModal(dir) {
+            const lead = leads.find(l => l.id === modalId);
+            if (!lead) return;
+            const idx = STAGE_ORDER.indexOf(lead.stage);
+            const newIdx = idx + dir;
+            if (newIdx < 0 || newIdx >= STAGE_ORDER.length) return;
+            lead.stage = STAGE_ORDER[newIdx];
+            lead.days  = 0;
+            renderBoard();
+            openModal(modalId);
+        }
+
+        function openAddModal() {
+            // Placeholder — wire to create lead flow
+            alert('Connect to Create Lead form (AF-XXX)');
+        }
+
+        // ── Init ─────────────────────────────────────────────────────────────
+        renderBoard();
+    </script>
+
+</body>
+</html>
