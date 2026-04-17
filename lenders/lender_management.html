@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -80,9 +80,9 @@
             flex-direction: column;
             align-items: center;
             padding: 15px 0;
-            gap: 20px;
+            gap: 8px;
             border-right: 1px solid #1e293b;
-            flex-shrink: 0;
+            flex-shrink: 0; overflow:hidden;
         }
 
         .nav-item {
@@ -360,6 +360,104 @@
             background: #1e293b;
             color: #fff;
         }
+
+        /* Tabs */
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #94a3b8;
+            border-bottom: 2px solid transparent;
+            transition: all .2s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            color: #0f172a;
+            border-bottom-color: #0f172a;
+        }
+
+        .promo-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .promo-title {
+            font-size: 10px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .promo-detail {
+            font-size: 9px;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .promo-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 8px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .promo-badge {
+            background: #0f172a;
+            color: #fff;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 7px;
+        }
+
+        /* Drop Zone */
+        .drop-zone {
+            border: 1px dashed #cbd5e1;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .drop-zone.dragover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            transform: scale(1.01);
+        }
+
+        .drop-zone-text {
+            font-size: 8px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        #p-doc-name {
+            font-size: 8px;
+            font-family: monospace;
+            color: #0f172a;
+            background: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
+        }
     </style>
 </head>
 
@@ -373,17 +471,22 @@
             </div>
         </div>
 
-        <a href="../task_and_followups/task_management.html" class="nav-item">
+        <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
+            <i class="fa-solid fa-gauge-high"></i>
+            <span class="nav-text">Dashboard</span>
+        </a>
+
+        <a href="../task_and_followups/task_management.html" id="nav-tasks" class="nav-item">
             <i class="fa-solid fa-tasks"></i>
             <span class="nav-text">Tasks & Followups</span>
         </a>
 
-        <a href="../lead_management/lead_management.html" class="nav-item">
+        <a href="../lead_management/lead_management.html" id="nav-leads" class="nav-item">
             <i class="fa-solid fa-user-group"></i>
             <span class="nav-text">Leads</span>
         </a>
 
-        <a href="../loan_pipeline/loan_pipeline.html" class="nav-item">
+        <a href="../loan_pipeline/loan_pipeline.html" id="nav-pipeline" class="nav-item">
             <i class="fa-solid fa-diagram-project"></i>
             <span class="nav-text">Loan Pipeline</span>
         </a>
@@ -393,22 +496,38 @@
             <span class="nav-text">Lenders</span>
         </a>
 
-        <a href="../documents/document_vault.html" class="nav-item">
+        <a href="../documents/document_vault.html" id="nav-docs" class="nav-item">
             <i class="fa-solid fa-folder-open"></i>
             <span class="nav-text">Documents Vault</span>
         </a>
 
-        <a href="../user_management/user_management.html" class="nav-item">
+        <a href="../user_management/user_management.html" id="nav-users" class="nav-item">
             <i class="fa-solid fa-user-gear"></i>
             <span class="nav-text">User Management</span>
         </a>
 
-        <a href="../reporting/reporting_logs.html" class="nav-item">
+        <a href="../reporting/reporting_logs.html" id="nav-reports" class="nav-item">
             <i class="fa-solid fa-chart-line"></i>
             <span class="nav-text">Reporting Logs</span>
         </a>
-
+        <div style="flex:1;"></div>
+        <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="nav-text">Logout</span>
+        </div>
     </nav>
+<script>
+(function(){
+    const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
+    if(!s){window.location.replace('../login/login.html');return;}
+    const el=document.getElementById('nav-dashboard');
+    if(el&&s.landing){el.href='../dashboard/'+s.landing.split('/').pop();}
+    const ROLE_NAV={'Admin':['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'],'Team Leader':['nav-tasks','nav-leads','nav-pipeline','nav-docs','nav-reports'],'Tele Agent':['nav-tasks','nav-leads','nav-pipeline','nav-docs'],'Accounts Manager':['nav-tasks','nav-leads','nav-lenders','nav-docs','nav-reports']};
+    const allowed=ROLE_NAV[s.role]||ROLE_NAV['Admin'];
+    ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'].forEach(id=>{const n=document.getElementById(id);if(n&&!allowed.includes(id))n.style.display='none';});
+})();
+function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}
+</script>
 
     <!-- Dashboard -->
     <main class="dashboard-container">
@@ -432,14 +551,80 @@
                 </div>
             </div>
 
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-gray-100 bg-gray-50/30">
+                <div id="tab-lender" class="tab-btn active" onclick="switchLeftTab('lender')">Lender Info</div>
+                <div id="tab-promotions" class="tab-btn" onclick="switchLeftTab('promotions')">Promotions</div>
+                <div id="tab-sendapp" class="tab-btn" onclick="switchLeftTab('sendapp')">Send Application</div>
+            </div>
+
             <div class="flex-1 overflow-y-auto" style="scrollbar-width:none;-ms-overflow-style:none;">
                 <style>
                     #left-panel .flex-1::-webkit-scrollbar {
-                        display: none
+                        display: none;
                     }
                 </style>
 
-                <div class="p-4">
+                <!-- Promotions Tab -->
+                <div id="promotions-tab" class="hidden">
+                    <div id="promo-form" class="p-4 space-y-3 mb-4 bg-gray-50/50 border-b border-gray-100">
+                        <p class="form-section-title"><i class="fa-solid fa-bullhorn text-[8px]"></i> Add New Promotion</p>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="label-text">Promotion Name</label>
+                                <input id="p-name" type="text" placeholder="e.g. Q3 Cashback" class="input-compact bg-white">
+                            </div>
+                            <div>
+                                <label class="label-text">Commission %</label>
+                                <input id="p-comm" type="text" placeholder="e.g. 0.5%" class="input-compact bg-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="label-text">Offer Details</label>
+                            <textarea id="p-offer" rows="2" placeholder="Describe the offer..." class="input-compact bg-white resize-none"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="label-text">Expiry Date</label>
+                                <input id="p-expiry" type="date" class="input-compact bg-white">
+                            </div>
+                            <div>
+                                <label class="label-text">Supporting Document</label>
+                                <div id="promo-drop-zone" class="drop-zone"
+                                     onclick="document.getElementById('p-file-input').click()"
+                                     ondragover="handleDragOver(event)"
+                                     ondragleave="handleDragLeave(event)"
+                                     ondrop="handleDrop(event)">
+                                    <div class="drop-zone-text">
+                                        <i class="fa-solid fa-cloud-arrow-up mb-1 block text-[10px]"></i>
+                                        Drop PDF/JPG or Click
+                                    </div>
+                                    <input type="file" id="p-file-input" class="hidden" accept=".pdf,.jpg,.jpeg,.png" 
+                                           onchange="handleFileSelect(event)">
+                                    <div id="p-doc-display" class="hidden">
+                                        <span id="p-doc-name"></span>
+                                        <button onclick="clearSelectedFile(event)" class="ml-1 text-red-500 hover:text-red-700">
+                                            <i class="fa-solid fa-circle-xmark"></i>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="p-doc" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="addPromotion()" class="w-full py-2.5 bg-indigo-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-indigo-700 transition-all shadow-sm">
+                            Add Promotion
+                        </button>
+                    </div>
+
+                    <div id="active-promos-list" class="p-4">
+                        <p class="form-section-title mb-3"><i class="fa-solid fa-clock-rotate-left text-[8px]"></i> Current Promotions</p>
+                        <div id="promo-list-container" class="space-y-2">
+                            <!-- Promotions will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="lender-info-tab" class="p-4">
                     <input type="hidden" id="edit-id" value="">
                     <input type="hidden" id="f-type" value="Bank">
 
@@ -542,6 +727,101 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- ══ SEND APPLICATION TAB ══ -->
+                <div id="sendapp-tab" class="hidden p-4 space-y-3">
+                    <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;font-size:8px;font-weight:700;color:#b45309;margin-bottom:4px;">
+                        <i class="fa-solid fa-paper-plane" style="margin-right:5px;"></i>Select a lender from the table, then fill in client details to generate the application.
+                    </div>
+                    <div id="sendapp-lender-badge" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:7px 12px;display:flex;align-items:center;gap:8px;">
+                        <i class="fa-solid fa-building-columns" style="font-size:11px;color:#15803d;"></i>
+                        <span style="font-size:10px;font-weight:700;color:#15803d;" id="sendapp-lender-name">—</span>
+                        <span style="font-size:7px;font-weight:700;color:#94a3b8;margin-left:auto;">Selected Lender</span>
+                    </div>
+
+                    <!-- Lender Contact -->
+                    <div>
+                        <p style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">Lender Contact</p>
+                        <label class="label-text">Account Manager Name *</label>
+                        <input id="sa-am-name" type="text" placeholder="e.g. Shifat" class="input-compact">
+                    </div>
+
+                    <!-- Client Details -->
+                    <div>
+                        <p style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">Client Details</p>
+                        <div class="space-y-2">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="label-text">Full Name *</label><input id="sa-name" type="text" placeholder="Eduard Ceban" class="input-compact"></div>
+                                <div><label class="label-text">Business Name *</label><input id="sa-business" type="text" placeholder="CES COMMUNICATIONS LTD" class="input-compact"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="label-text">Date of Birth</label><input id="sa-dob" type="text" placeholder="DD/MM/YYYY" class="input-compact"></div>
+                                <div><label class="label-text">Contact Number</label><input id="sa-phone" type="text" placeholder="07546516898" class="input-compact"></div>
+                            </div>
+                            <div><label class="label-text">Email Address</label><input id="sa-email" type="email" placeholder="client@company.co.uk" class="input-compact"></div>
+                            <div><label class="label-text">Residential Address</label><input id="sa-address" type="text" placeholder="99 Halbutt Street, Dagenham, RM9 5AR" class="input-compact"></div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="label-text">Time at Current Address</label><input id="sa-time-addr" type="text" placeholder="e.g. 2 years / NA" class="input-compact"></div>
+                                <div><label class="label-text">Homeowner</label><select id="sa-homeowner" class="input-compact"><option>NO</option><option>YES</option></select></div>
+                            </div>
+                            <div><label class="label-text">Previous Address</label><input id="sa-prev-addr" type="text" placeholder="37 Lechmere Ave, IG8 8QF (05/2020–07/2025)" class="input-compact"></div>
+                        </div>
+                    </div>
+
+                    <!-- Loan Details -->
+                    <div>
+                        <p style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">Loan Details</p>
+                        <div class="space-y-2">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="label-text">Amount Requested *</label><input id="sa-amount" type="text" placeholder="25K" class="input-compact"></div>
+                                <div><label class="label-text">Loan Purpose</label><input id="sa-purpose" type="text" placeholder="Working Capital" class="input-compact"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="label-text">Overdraft</label><input id="sa-overdraft" type="text" placeholder="2K / NA" class="input-compact"></div>
+                                <div><label class="label-text">Documents Attached</label><input id="sa-docs" type="text" placeholder="6 months bank statements…" class="input-compact"></div>
+                            </div>
+                            <div><label class="label-text">Business Overview</label><textarea id="sa-biz" rows="2" placeholder="Construction of utility projects…" class="input-compact resize-none"></textarea></div>
+                        </div>
+                    </div>
+
+                    <!-- Existing Loans -->
+                    <div>
+                        <p style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">Existing Loans</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="label-text">Lender Name</label><input id="sa-el-lender" type="text" placeholder="Iwoca / NA" class="input-compact"></div>
+                            <div><label class="label-text">Amount Taken</label><input id="sa-el-amount" type="text" placeholder="12K" class="input-compact"></div>
+                            <div><label class="label-text">Interest Rate</label><input id="sa-el-rate" type="text" placeholder="5.7%" class="input-compact"></div>
+                            <div><label class="label-text">Term</label><input id="sa-el-term" type="text" placeholder="24 months" class="input-compact"></div>
+                        </div>
+                        <div class="mt-2"><label class="label-text">Credit Consent</label><input id="sa-el-consent" type="text" placeholder="on email / NA" class="input-compact"></div>
+                    </div>
+
+                    <!-- Note -->
+                    <div>
+                        <label class="label-text">Note (Pitched lenders & terms)</label>
+                        <textarea id="sa-note" rows="2" placeholder="e.g. Pitched Funding Circle for 72 months and Iwoca for 24 months." class="input-compact resize-none"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="pt-2 flex gap-2">
+                        <button onclick="previewSendApp()" class="flex-1 py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                            <i class="fa-solid fa-eye mr-1.5"></i>Preview
+                        </button>
+                        <button onclick="copySendApp()" class="flex-1 py-2.5 bg-amber-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-amber-700 transition-all">
+                            <i class="fa-solid fa-paper-plane mr-1.5"></i>Send
+                        </button>
+                    </div>
+
+                    <!-- Preview output -->
+                    <div id="sa-preview-box" style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                            <span style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;">Application Preview</span>
+                            <button onclick="document.getElementById('sa-preview-box').style.display='none'" style="border:none;background:none;cursor:pointer;color:#94a3b8;font-size:10px;"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <pre id="sa-preview-text" style="font-size:9px;font-family:'Inter',sans-serif;color:#1e293b;white-space:pre-wrap;line-height:1.7;margin:0;"></pre>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -639,7 +919,11 @@
                 tradingYears: 185, rateMin: 5.74, rateMax: 9.49, loanMin: 20000, loanMax: 5000000,
                 categories: ["Secured", "Commercial", "Refinance"],
                 notes: "One of Australia's Big Four banks. Strong digital platform. Good for first home buyers.",
-                added: "2026-01-10"
+                added: "2026-01-10",
+                promotions: [
+                    { name: "Q1 Cashback", commission: "0.25%", offer: "$2000 Cashback for first home owners", expiry: "2026-06-30", document: "TC_ANZ_Q1.pdf" },
+                    { name: "Loyalty Bonus", commission: "0.15%", offer: "Reduced interest rate for existing ANZ customers", expiry: "2026-12-31", document: "Loyalty_Terms.jpg" }
+                ]
             },
             {
                 id: 2, name: "Commonwealth Bank", trading: "CommBank", type: "Bank", status: "Active",
@@ -648,7 +932,10 @@
                 tradingYears: 112, rateMin: 5.69, rateMax: 9.99, loanMin: 10000, loanMax: 10000000,
                 categories: ["Secured", "Commercial", "Unsecured", "Refinance"],
                 notes: "Australia's largest bank by market cap. Excellent branch network. NetBank is market-leading.",
-                added: "2026-01-10"
+                added: "2026-01-10",
+                promotions: [
+                    { name: "SME Boost", commission: "0.50%", offer: "Reduced rates for logistics industry", expiry: "2026-05-15", document: "CommBank_SME.pdf" }
+                ]
             },
             {
                 id: 3, name: "Macquarie Bank", trading: "Macquarie", type: "Bank", status: "Active",
@@ -657,7 +944,10 @@
                 tradingYears: 55, rateMin: 5.59, rateMax: 8.75, loanMin: 50000, loanMax: 20000000,
                 categories: ["Secured", "Commercial"],
                 notes: "Highly competitive rates for investment and SMSF lending. Tech-forward platform. No physical branches.",
-                added: "2026-01-15"
+                added: "2026-01-15",
+                promotions: [
+                    { name: "Investor Special", commission: "0.40%", offer: "LVR up to 90% for investment properties", expiry: "2026-08-20", document: "Macq_Investor.pdf" }
+                ]
             },
             {
                 id: 4, name: "Westpac", trading: "Westpac", type: "Bank", status: "Active",
@@ -666,7 +956,10 @@
                 tradingYears: 207, rateMin: 5.89, rateMax: 10.49, loanMin: 20000, loanMax: 5000000,
                 categories: ["Secured", "Commercial", "Unsecured", "Refinance"],
                 notes: "Australia's oldest bank. Strong in construction loans and family guarantee products.",
-                added: "2026-01-20"
+                added: "2026-01-20",
+                promotions: [
+                    { name: "Build-A-Home", commission: "0.60%", offer: "Incentives for green construction projects", expiry: "2026-07-01", document: "Westpac_Green.png" }
+                ]
             },
             {
                 id: 5, name: "NAB", trading: "NAB", type: "Bank", status: "Active",
@@ -675,7 +968,10 @@
                 tradingYears: 163, rateMin: 5.79, rateMax: 9.89, loanMin: 20000, loanMax: 8000000,
                 categories: ["Secured", "Commercial", "Refinance"],
                 notes: "Strong SME lending focus. Good for self-employed applicants. UBank is digital subsidiary.",
-                added: "2026-02-01"
+                added: "2026-02-01",
+                promotions: [
+                    { name: "SME Recovery", commission: "0.75%", offer: "Special rates for post-disaster business loans", expiry: "2026-04-30", document: "NAB_SME_Recovery.pdf" }
+                ]
             },
             {
                 id: 6, name: "Suncorp", trading: "Suncorp Bank", type: "Non-Bank", status: "Inactive",
@@ -684,7 +980,10 @@
                 tradingYears: 31, rateMin: 6.19, rateMax: 11.25, loanMin: 15000, loanMax: 3000000,
                 categories: ["Secured", "Unsecured", "Refinance"],
                 notes: "Regional bank focus. Good for QLD and NSW clients. Limited to certain postcodes for investment.",
-                added: "2026-02-10"
+                added: "2026-02-10",
+                promotions: [
+                    { name: "Sun State Special", commission: "0.30%", offer: "QLD first home owner bonus grant", expiry: "2024-12-31", document: "Suncorp_QLD.pdf" }
+                ]
             }
         ];
 
@@ -783,7 +1082,15 @@
                 <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[9px] font-black flex-shrink-0" style="background:${iconColor(l.type)}">${getInitials(l.name)}</div>
                     <div>
-                        <p class="text-[10px] font-bold text-gray-900">${l.name}</p>
+                        <div class="flex items-center gap-1.5">
+                            <p class="text-[10px] font-bold text-gray-900">${l.name}</p>
+                            ${l.promotions && l.promotions.length > 0 ? `
+                                <span class="bg-indigo-50 text-indigo-600 text-[7px] font-black px-1 py-0.5 rounded border border-indigo-100 uppercase tracking-tighter">
+                                    <i class="fa-solid fa-bullhorn mr-0.5"></i>${l.promotions.length} Promo
+                                </span>
+                            ` : ''}
+                        </div>
+                        <p class="text-[7px] text-gray-400 uppercase tracking-tighter">${l.trading || ''}</p>
                     </div>
                 </div>
             </td>
@@ -846,16 +1153,33 @@
                     ${l.notes ? `<p class="text-[8px] text-gray-400 mt-2 leading-relaxed">${l.notes}</p>` : ''}
                   </div>
                   <div class="flex gap-2 mt-3">
-                    <button onclick="event.stopPropagation();loadEditForm(${l.id})"
-                      class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 text-white text-[8px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
-                      <i class="fa-solid fa-pen text-[7px]"></i>Edit
+                    <button onclick="event.stopPropagation();loadEditForm(${l.id})" id="btn-edit-${l.id}"
+                      style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#111827;color:#fff;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border:none;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.background='#000'" onmouseout="this.style.background='#111827'">
+                      <i class="fa-solid fa-pen" style="font-size:7px;"></i>Edit
                     </button>
-                    <button onclick="event.stopPropagation();deleteLender(${l.id})"
-                      class="flex items-center gap-1.5 px-3 py-1.5 border border-red-100 text-red-400 text-[8px] font-bold uppercase tracking-widest rounded-lg hover:border-red-300 hover:text-red-600 transition-all">
-                      <i class="fa-solid fa-trash text-[7px]"></i>Delete
+                    <button onclick="event.stopPropagation();deleteLender(${l.id})" id="btn-del-${l.id}"
+                      style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#fff;color:#f87171;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border:1px solid #fecaca;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.borderColor='#fca5a5';this.style.color='#dc2626'" onmouseout="this.style.borderColor='#fecaca';this.style.color='#f87171'">
+                      <i class="fa-solid fa-trash" style="font-size:7px;"></i>Delete
+                    </button>
+                    <button onclick="event.stopPropagation();openSendApp(${l.id})"
+                      style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#d97706;color:#fff;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border:none;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.background='#b45309'" onmouseout="this.style.background='#d97706'">
+                      <i class="fa-solid fa-paper-plane" style="font-size:7px;"></i>Send App
                     </button>
                   </div>
                   <p class="text-[7px] text-gray-300 font-mono mt-1">Added ${l.added} · ID #${String(l.id).padStart(3, '0')}</p>
+                </div>
+
+                <!-- Promotions -->
+                <div class="col-span-1">
+                  <p class="label-text mb-2"><i class="fa-solid fa-bullhorn mr-1"></i>Active Promotions</p>
+                  <div class="space-y-1.5">
+                    ${(l.promotions && l.promotions.length) ? l.promotions.map(p => `
+                      <div class="p-2 border border-gray-100 bg-white rounded-lg">
+                        <p class="text-[9px] font-bold text-gray-900">${p.name}</p>
+                        <p class="text-[7px] text-gray-400">Exp: ${p.expiry}</p>
+                      </div>
+                    `).join('') : '<p class="text-[9px] text-gray-300 italic">No active promos</p>'}
+                  </div>
                 </div>
 
               </div>
@@ -879,10 +1203,148 @@
             expandedId = expandedId === id ? null : id;
             renderTable();
             if (expandedId !== null) {
+                renderPromotions(expandedId); // Update promo tab content if open
                 setTimeout(() => {
                     const el = document.getElementById('detail-' + id);
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 50);
+            }
+        }
+
+        function switchLeftTab(tab) {
+            document.getElementById('lender-info-tab').classList.toggle('hidden', tab !== 'lender');
+            document.getElementById('promotions-tab').classList.toggle('hidden', tab !== 'promotions');
+            document.getElementById('sendapp-tab').classList.toggle('hidden', tab !== 'sendapp');
+            document.getElementById('tab-lender').classList.toggle('active', tab === 'lender');
+            document.getElementById('tab-promotions').classList.toggle('active', tab === 'promotions');
+            document.getElementById('tab-sendapp').classList.toggle('active', tab === 'sendapp');
+            document.getElementById('tab-promotions').classList.toggle('active', tab === 'promotions');
+            if (tab === 'promotions') {
+                const editId = document.getElementById('edit-id').value;
+                renderPromotions(editId ? parseInt(editId) : null);
+            }
+        }
+
+        function renderPromotions(lenderId = null) {
+            const container = document.getElementById('promo-list-container');
+            const titleEl = document.querySelector('#active-promos-list .form-section-title');
+            if (!container) return;
+
+            const today = new Date().toISOString().split('T')[0];
+            let list = [];
+
+            if (lenderId) {
+                const l = lenders.find(x => x.id === lenderId);
+                if (l && l.promotions) {
+                    list = l.promotions.map(p => ({ ...p, lenderName: l.name, lenderId: l.id }));
+                }
+                titleEl.innerHTML = `<i class="fa-solid fa-clock-rotate-left text-[8px]"></i> Promotions: ${l ? l.name : ''}`;
+            } else {
+                lenders.forEach(l => {
+                    if (l.promotions) {
+                        l.promotions.forEach(p => {
+                            list.push({ ...p, lenderName: l.name, lenderId: l.id });
+                        });
+                    }
+                });
+                titleEl.innerHTML = `<i class="fa-solid fa-earth-americas text-[8px]"></i> All Active Promotions`;
+            }
+
+            container.innerHTML = list.map((p, idx) => {
+                const isExpired = p.expiry && p.expiry < today;
+                return `
+                    <div class="promo-card ${isExpired ? 'opacity-70 border-red-100 bg-red-50/30' : ''}">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="promo-title">${p.name}</p>
+                                ${!lenderId ? `<p class="text-[7px] font-bold text-indigo-500 uppercase">${p.lenderName}</p>` : ''}
+                            </div>
+                            <span class="promo-badge ${isExpired ? 'bg-red-500' : 'bg-indigo-600'}">${isExpired ? 'EXPIRED' : p.commission || 'N/A'}</span>
+                        </div>
+                        <p class="promo-detail mt-1">${p.offer}</p>
+                        <div class="promo-meta">
+                            <span class="${isExpired ? 'text-red-500' : ''}"><i class="fa-solid fa-calendar-days mr-1"></i>${p.expiry || 'No Expiry'}</span>
+                            <span><i class="fa-solid fa-file-pdf mr-1"></i>${p.document || 'No doc'}</span>
+                            <button onclick="removePromotion(${p.lenderId}, ${idx})" class="ml-auto text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('') || '<div class="text-center py-6 text-gray-300 italic text-[9px]">No promotions found.</div>';
+        }
+
+        function addPromotion() {
+            const editId = document.getElementById('edit-id').value;
+            if (!editId) { alert("Please select a lender first to add a promotion."); return; }
+            
+            const name = document.getElementById('p-name').value;
+            const comm = document.getElementById('p-comm').value;
+            const offer = document.getElementById('p-offer').value;
+            const expiry = document.getElementById('p-expiry').value;
+            const doc = document.getElementById('p-doc').value;
+
+            if (!name || !offer) { alert("Name and Offer details are required."); return; }
+
+            const l = lenders.find(x => x.id === parseInt(editId));
+            if (l) {
+                if (!l.promotions) l.promotions = [];
+                l.promotions.push({ name, commission: comm, offer, expiry, document: doc });
+                renderPromotions(l.id);
+                renderTable(); // Update counts in table
+                // Clear inputs
+                ['p-name', 'p-comm', 'p-offer', 'p-expiry', 'p-doc'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                document.getElementById('p-doc-display').classList.add('hidden');
+                document.querySelector('.drop-zone-text').classList.remove('hidden');
+            }
+        }
+
+        // ── FILE UPLOAD LOGIC ────────────────────────────────────────────────────────
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length) processFile(files[0]);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length) processFile(files[0]);
+        }
+
+        function processFile(file) {
+            const fileName = file.name;
+            document.getElementById('p-doc').value = fileName;
+            document.getElementById('p-doc-name').textContent = fileName;
+            document.getElementById('p-doc-display').classList.remove('hidden');
+            document.querySelector('.drop-zone-text').classList.add('hidden');
+        }
+
+        function clearSelectedFile(e) {
+            e.stopPropagation();
+            document.getElementById('p-doc').value = '';
+            document.getElementById('p-doc-display').classList.add('hidden');
+            document.querySelector('.drop-zone-text').classList.remove('hidden');
+            document.getElementById('p-file-input').value = '';
+        }
+
+        function removePromotion(lenderId, idx) {
+            const l = lenders.find(x => x.id === lenderId);
+            if (l && l.promotions) {
+                l.promotions.splice(idx, 1);
+                renderPromotions(lenderId);
+                renderTable();
             }
         }
 
@@ -923,12 +1385,19 @@
             document.getElementById('submit-btn').style.background = '#d97706';
 
             document.querySelector('#left-panel .flex-1').scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Sync promotions tab
+            renderPromotions(id);
         }
 
         function cancelEditMode() {
             document.getElementById('edit-id').value = '';
             resetFormPanel();
             clearFormFields();
+            // Show all promos in the tab if it's open
+            if (!document.getElementById('promotions-tab').classList.contains('hidden')) {
+                renderPromotions(null);
+            }
         }
 
         function resetFormPanel() {
@@ -1078,6 +1547,81 @@
         updateFilterChips();
         renderTable();
     </script>
-</body>
 
+
+<script>
+// Role-aware: hide add/edit tabs for Accounts Manager
+(function(){
+    const s = JSON.parse(sessionStorage.getItem('crm_session')||'null');
+    if(s && s.role === 'Accounts Manager'){
+        document.addEventListener('DOMContentLoaded', function(){
+            document.getElementById('tab-lender').style.display = 'none';
+            document.getElementById('tab-promotions').style.display = 'none';
+            switchLeftTab('sendapp');
+            document.getElementById('panel-title').textContent = 'Send Application';
+            document.getElementById('panel-dot').style.background = '#d97706';
+        });
+        const _orig = window.renderTable;
+        window.renderTable = function(){ _orig && _orig(); document.querySelectorAll('[id^="btn-edit-"],[id^="btn-del-"]').forEach(b=>b.style.display='none'); };
+    }
+})();
+
+function openSendApp(lenderId){
+    const l = lenders.find(x => x.id === lenderId);
+    if(!l) return;
+    switchLeftTab('sendapp');
+    document.getElementById('sendapp-lender-badge').style.display = 'flex';
+    document.getElementById('sendapp-lender-name').textContent = l.name;
+    document.querySelector('#left-panel .flex-1').scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('panel-title').textContent = 'Send Application';
+    document.getElementById('panel-subtitle').textContent = l.name;
+    document.getElementById('panel-subtitle').style.display = 'block';
+}
+
+function buildSendAppText(){
+    const f = {
+        amName:   document.getElementById('sa-am-name').value    || '[LENDER ACCOUNT MANAGER NAME]',
+        name:     document.getElementById('sa-name').value       || '[CLIENT NAME]',
+        business: document.getElementById('sa-business').value   || '[CLIENT COMPANY NAME]',
+        dob:      document.getElementById('sa-dob').value        || 'NA',
+        phone:    document.getElementById('sa-phone').value      || 'NA',
+        email:    document.getElementById('sa-email').value      || 'NA',
+        address:  document.getElementById('sa-address').value    || 'NA',
+        timeAddr: document.getElementById('sa-time-addr').value  || 'NA',
+        prevAddr: document.getElementById('sa-prev-addr').value  || 'NA',
+        homeowner:document.getElementById('sa-homeowner').value,
+        amount:   document.getElementById('sa-amount').value     || 'NA',
+        purpose:  document.getElementById('sa-purpose').value    || 'NA',
+        overdraft:document.getElementById('sa-overdraft').value  || 'NA',
+        biz:      document.getElementById('sa-biz').value        || 'NA',
+        docs:     document.getElementById('sa-docs').value       || 'NA',
+        elLender: document.getElementById('sa-el-lender').value  || 'NA',
+        elAmount: document.getElementById('sa-el-amount').value  || 'NA',
+        elRate:   document.getElementById('sa-el-rate').value    || 'NA',
+        elTerm:   document.getElementById('sa-el-term').value    || 'NA',
+        elConsent:document.getElementById('sa-el-consent').value || 'NA',
+        note:     document.getElementById('sa-note').value       || '',
+    };
+    return `Hi ${f.amName},\n\nSubmission details for ${f.business}\n\nPlease find the attached documents. Client details are as follows:\n\nClient Details\nName: ${f.name}\nBusiness Name: ${f.business}\nDOB: ${f.dob}\nContact Number: ${f.phone}\nEmail Address: ${f.email}\nResidential Address: ${f.address}\nTime at Current Address: ${f.timeAddr}\nPrevious Address: ${f.prevAddr}\nHomeowner: ${f.homeowner}\n\nLoan Details\nAmount Requested: ${f.amount}\nLoan Purpose: ${f.purpose}\nOverdraft: ${f.overdraft}\nBusiness Overview: ${f.biz}\n\nDocuments Attached\n${f.docs}\n\nExisting Loans\nLender Name: ${f.elLender}\nAmount Taken: ${f.elAmount}\nInterest Rate: ${f.elRate}\nTerm: ${f.elTerm}\nCredit Consent: ${f.elConsent}${f.note ? '\n\nNote: ' + f.note : ''}`;
+}
+
+function previewSendApp(){
+    const text = buildSendAppText();
+    document.getElementById('sa-preview-text').textContent = text;
+    document.getElementById('sa-preview-box').style.display = 'block';
+    document.querySelector('#left-panel .flex-1').scrollTo({ top: 99999, behavior: 'smooth' });
+}
+
+function copySendApp(){
+    const text = buildSendAppText();
+    navigator.clipboard.writeText(text).then(()=>{
+        const btn = event.currentTarget;
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check mr-1.5"></i>Sent!';
+        btn.style.background = '#15803d';
+        setTimeout(()=>{ btn.innerHTML = orig; btn.style.background = ''; }, 2000);
+    });
+}
+</script>
+</body>
 </html>

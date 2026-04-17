@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -96,9 +96,9 @@
             flex-direction: column;
             align-items: center;
             padding: 15px 0;
-            gap: 20px;
+            gap: 8px;
             border-right: 1px solid #1e293b;
-            flex-shrink: 0;
+            flex-shrink: 0; overflow:hidden;
         }
 
         .nav-item {
@@ -368,42 +368,73 @@
             </div>
         </div>
 
-        <a href="../task_and_followups/task_management.html" class="nav-item">
+        <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
+            <i class="fa-solid fa-gauge-high"></i>
+            <span class="nav-text">Dashboard</span>
+        </a>
+
+        <a href="../task_and_followups/task_management.html" id="nav-tasks" class="nav-item">
             <i class="fa-solid fa-tasks"></i>
             <span class="nav-text">Tasks & Followups</span>
         </a>
 
-        <a href="../lead_management/lead_management.html" class="nav-item active">
+        <a href="../lead_management/lead_management.html" id="nav-leads" class="nav-item active">
             <i class="fa-solid fa-user-group"></i>
             <span class="nav-text">Leads</span>
         </a>
 
-        <a href="../loan_pipeline/loan_pipeline.html" class="nav-item">
+        <a href="../loan_pipeline/loan_pipeline.html" id="nav-pipeline" class="nav-item">
             <i class="fa-solid fa-diagram-project"></i>
             <span class="nav-text">Loan Pipeline</span>
         </a>
 
-        <a href="../lenders/lender_management.html" class="nav-item">
+        <a href="../lenders/lender_management.html" id="nav-lenders" class="nav-item">
             <i class="fa-solid fa-hand-holding-dollar"></i>
             <span class="nav-text">Lenders</span>
         </a>
 
-        <a href="../documents/document_vault.html" class="nav-item">
+        <a href="../documents/document_vault.html" id="nav-docs" class="nav-item">
             <i class="fa-solid fa-folder-open"></i>
             <span class="nav-text">Documents Vault</span>
         </a>
 
-        <a href="../user_management/user_management.html" class="nav-item">
+        <a href="../user_management/user_management.html" id="nav-users" class="nav-item">
             <i class="fa-solid fa-user-gear"></i>
             <span class="nav-text">User Management</span>
         </a>
 
-        <a href="../reporting/reporting_logs.html" class="nav-item">
+        <a href="../reporting/reporting_logs.html" id="nav-reports" class="nav-item">
             <i class="fa-solid fa-chart-line"></i>
             <span class="nav-text">Reporting Logs</span>
         </a>
-
+        <div style="flex:1;"></div>
+        <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="nav-text">Logout</span>
+        </div>
     </nav>
+<script>
+(function(){
+    const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
+    if(!s){window.location.replace('../login/login.html');return;}
+    // Dashboard link
+    const el=document.getElementById('nav-dashboard');
+    if(el&&s.landing){el.href='../dashboard/'+s.landing.split('/').pop();}
+    // Role-based nav visibility
+    const ROLE_NAV={
+        'Admin':         ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'],
+        'Team Leader':   ['nav-tasks','nav-leads','nav-pipeline','nav-docs','nav-reports'],
+        'Tele Agent':    ['nav-tasks','nav-leads','nav-pipeline','nav-docs'],
+        'Accounts Manager':['nav-tasks','nav-leads','nav-lenders','nav-docs','nav-reports'],
+    };
+    const allowed=ROLE_NAV[s.role]||ROLE_NAV['Admin'];
+    ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'].forEach(id=>{
+        const node=document.getElementById(id);
+        if(node&&!allowed.includes(id)) node.style.display='none';
+    });
+})();
+function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}
+</script>
 
     <main class="dashboard-container">
         <section class="panel-card" id="lead-database-panel">
@@ -477,17 +508,25 @@
             <!-- PANEL HEADER: Ultra Compact -->
             <div class="px-3 py-2 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10">
                 <div class="flex items-center gap-3">
-                    <button id="detail-back-btn" onclick="exitCreateMode()" class="hidden flex items-center gap-2 group">
-                        <div class="w-6 h-6 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 group-hover:bg-[#2447d7] group-hover:border-[#2447d7] transition-all">
+                    <button id="detail-back-btn" onclick="exitCreateMode()"
+                        class="hidden flex items-center gap-2 group">
+                        <div
+                            class="w-6 h-6 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 group-hover:bg-[#2447d7] group-hover:border-[#2447d7] transition-all">
                             <i class="fa-solid fa-arrow-left text-[9px] text-gray-400 group-hover:text-white"></i>
                         </div>
-                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-[#2447d7]">Dashboard</span>
+                        <span
+                            class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-[#2447d7]">Dashboard</span>
                     </button>
                     <div>
-                        <h2 id="creation-header-title" class="hidden text-[11px] font-black text-gray-900 uppercase tracking-widest">Register New Lead</h2>
+                        <h2 id="creation-header-title"
+                            class="hidden text-[11px] font-black text-gray-900 uppercase tracking-widest">Register New
+                            Lead</h2>
                         <div class="detail-header-info">
-                            <h2 id="panel-title" class="text-[12px] font-black text-gray-900 leading-none">SELECT A LEAD</h2>
-                            <p id="panel-subtitle" class="text-[9px] text-[#2447d7] font-extrabold mt-0.5 tracking-wider">CHOOSE FROM THE LIST</p>
+                            <h2 id="panel-title" class="text-[12px] font-black text-gray-900 leading-none">SELECT A LEAD
+                            </h2>
+                            <p id="panel-subtitle"
+                                class="text-[9px] text-[#2447d7] font-extrabold mt-0.5 tracking-wider">CHOOSE FROM THE
+                                LIST</p>
                         </div>
                     </div>
                 </div>
@@ -497,7 +536,8 @@
                     <div id="status-id-layer" class="flex items-center gap-3 pr-4 border-r border-gray-100">
                         <div class="flex items-center gap-2">
                             <label class="text-[8px] font-bold text-gray-400 uppercase tracking-tight">Status</label>
-                            <select id="field-leadStatus" class="w-16 h-6 px-1.5 text-[9px] font-bold border rounded bg-gray-50/50 outline-none">
+                            <select id="field-leadStatus"
+                                class="w-16 h-6 px-1.5 text-[9px] font-bold border rounded bg-gray-50/50 outline-none">
                                 <option value="Hot">Hot</option>
                                 <option value="Warm">Warm</option>
                                 <option value="Cool">Cool</option>
@@ -505,12 +545,18 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <label class="text-[8px] font-bold text-gray-400 uppercase tracking-tight">ID</label>
-                            <input type="text" id="field-id" class="w-20 h-6 px-1.5 text-[9px] font-mono font-bold border rounded bg-gray-50/50 outline-none text-blue-600" disabled>
+                            <input type="text" id="field-id"
+                                class="w-20 h-6 px-1.5 text-[9px] font-mono font-bold border rounded bg-gray-50/50 outline-none text-blue-600"
+                                disabled>
                         </div>
                     </div>
-                    
-                    <button id="edit-toggle-btn" onclick="toggleEditMode()" class="h-7 px-3 bg-gray-900 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-black transition-all">Edit Lead</button>
-                    <button id="save-btn" onclick="saveLead()" class="h-7 px-3 bg-amber-600 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-amber-700 transition-all">Save Changes</button>
+
+                    <button id="edit-toggle-btn" onclick="toggleEditMode()"
+                        class="h-7 px-3 bg-gray-900 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-black transition-all">Edit
+                        Lead</button>
+                    <button id="save-btn" onclick="saveLead()"
+                        class="h-7 px-3 bg-amber-600 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-amber-700 transition-all">Save
+                        Changes</button>
                     <div id="panel-dot" class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                 </div>
             </div>
@@ -724,8 +770,10 @@
                                 Documents</h3>
                             <div onclick="document.getElementById('doc-upload-input').click()"
                                 class="p-2 border-2 border-dashed border-gray-100 rounded-lg bg-gray-50/10 text-center mb-1 cursor-pointer hover:bg-blue-50/20 transition-all">
-                                <p class="text-[7.5px] font-black text-gray-300 uppercase tracking-tighter">Drop Docs</p>
-                                <input type="file" id="doc-upload-input" class="hidden" multiple onchange="handleDocUpload(this)">
+                                <p class="text-[7.5px] font-black text-gray-300 uppercase tracking-tighter">Drop Docs
+                                </p>
+                                <input type="file" id="doc-upload-input" class="hidden" multiple
+                                    onchange="handleDocUpload(this)">
                             </div>
                             <div id="doc-list-container" class="space-y-1"></div>
                         </section>
@@ -814,7 +862,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+            </section>
     </main>
     <script>
         const leadsDB = {
@@ -947,7 +995,7 @@
             if (backBtn) backBtn.classList.remove('hidden');
             if (createTitle) createTitle.classList.remove('hidden');
             if (detailTitle) detailTitle.classList.add('hidden');
-            if (dot) dot.classList.add('bg-amber-500'); 
+            if (dot) dot.classList.add('bg-amber-500');
             if (dot) dot.classList.remove('bg-blue-500');
 
             const inputs = document.querySelectorAll('#lead-form-container input, #lead-form-container select, #lead-form-container textarea');
@@ -1031,7 +1079,7 @@
             if (backBtn) backBtn.classList.add('hidden');
             if (createTitle) createTitle.classList.add('hidden');
             if (detailTitle) detailTitle.classList.remove('hidden');
-            if (dot) dot.classList.remove('bg-amber-500'); 
+            if (dot) dot.classList.remove('bg-amber-500');
             if (dot) dot.classList.add('bg-blue-500');
 
             selectLead(currentLeadKey);
@@ -1108,3 +1156,18 @@
 </body>
 
 </html>
+
+<script>
+(function(){
+    const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
+    if(!s){window.location.replace('../login/login.html');return;}
+    const el=document.getElementById('nav-dashboard');
+    if(el&&s.landing) el.href=s.landing.replace('../','../').replace('dashboard/','../dashboard/');
+    // fix relative path: landing is like '../dashboard/xxx.html', we're in a subfolder
+    if(el&&s.landing){
+        // landing stored as '../dashboard/xxx.html' relative to login, we need it relative to current page
+        const parts=s.landing.split('/');
+        el.href='../dashboard/'+parts[parts.length-1];
+    }
+})();
+</script>

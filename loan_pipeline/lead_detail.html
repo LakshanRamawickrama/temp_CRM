@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -27,7 +27,7 @@
         .side-nav {
             width: 70px; background: #0f172a; height: 100vh;
             display: flex; flex-direction: column; align-items: center;
-            padding: 15px 0; gap: 20px; border-right: 1px solid #1e293b; flex-shrink: 0;
+            padding: 15px 0; gap: 8px; border-right: 1px solid #1e293b; flex-shrink: 0; overflow:hidden;
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; gap: 6px;
@@ -199,7 +199,17 @@
         const prioStyle    = { High:'background:#fee2e2;color:#b91c1c;border:1px solid #fecaca', Medium:'background:#fffbeb;color:#92400e;border:1px solid #fde68a', Low:'background:#f0fdf4;color:#166534;border:1px solid #bbf7d0' };
 
         const params = new URLSearchParams(window.location.search);
-        const lead   = leads.find(l => l.id === params.get('id')) || leads[0];
+        // Try sessionStorage first (passed from dashboard), then fall back to local data
+        const stored = sessionStorage.getItem('crm_lead_detail');
+        let lead;
+        if(stored){
+            const parsed = JSON.parse(stored);
+            if(parsed.id === params.get('id')){
+                lead = parsed;
+                sessionStorage.removeItem('crm_lead_detail');
+            }
+        }
+        if(!lead) lead = leads.find(l => l.id === params.get('id')) || leads[0];
         document.title = lead.name + ' — Whiterock CRM';
 
         const stageIdx = STAGE_ORDER.indexOf(lead.stage);
