@@ -808,20 +808,6 @@
                     </section>
 
                     <div id="panel-footer-metrics" class="pt-6 border-t border-gray-100 mt-6">
-                        <div class="grid grid-cols-3 gap-4 mb-4">
-                            <div class="metric-card">
-                                <div class="metric-value text-[16px]" id="metric-total-leads">2</div>
-                                <div class="metric-label">Total Leads</div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="metric-value text-[16px] text-red-500" id="metric-hot-leads">1</div>
-                                <div class="metric-label">Hot Leads</div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="metric-value text-[16px] text-amber-500" id="metric-warm-leads">1</div>
-                                <div class="metric-label">Warm Leads</div>
-                            </div>
-                        </div>
                         <button
                             class="w-full py-2.5 border border-red-100 text-red-400 text-[8px] font-bold uppercase tracking-widest rounded-lg hover:border-red-300 hover:text-red-600 transition-all"><i
                                 class="fa-solid fa-trash text-[7px] mr-1.5"></i>Delete Lead</button>
@@ -862,9 +848,6 @@
             document.getElementById('stat-total').textContent = total;
             document.getElementById('stat-hot').textContent = hot;
             document.getElementById('stat-warm').textContent = warm;
-            document.getElementById('metric-total-leads').textContent = total;
-            document.getElementById('metric-hot-leads').textContent = hot;
-            document.getElementById('metric-warm-leads').textContent = warm;
         }
 
         function renderLeadTable() {
