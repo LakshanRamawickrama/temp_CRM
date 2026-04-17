@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,27 +9,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            background: #fff;
-            margin: 0;
-            display: flex;
-        }
+        body { font-family: 'Inter', system-ui, sans-serif; overflow: hidden; height: 100vh; background: #fff; margin: 0; display: flex; }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
         .dashboard-container {
             display: grid;
@@ -42,544 +25,181 @@
             min-width: 0;
         }
 
-        .side-nav {
-            width: 70px;
-            background: #0f172a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px 0;
-            gap: 20px;
-            border-right: 1px solid #1e293b;
-            flex-shrink: 0;
-        }
+        .side-nav { width: 70px; background: #0f172a; height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px 0; gap: 20px; border-right: 1px solid #1e293b; flex-shrink: 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #94a3b8; transition: all .2s; cursor: pointer; text-decoration: none; padding: 8px; border-radius: 8px; width: 50px; }
+        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(255,255,255,.08); }
+        .nav-item i { font-size: 16px; }
+        .nav-text { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            color: #94a3b8;
-            transition: all .2s;
-            cursor: pointer;
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 8px;
-            width: 50px;
-        }
+        .panel-card { background: #fff; border-radius: 12px; border: 1px solid #f1f5f9; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
 
-        .nav-item:hover,
-        .nav-item.active {
-            color: #fff;
-            background: rgba(255, 255, 255, .08);
-        }
+        .label-text { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; margin-bottom: 2px; display: block; }
 
-        .nav-item i {
-            font-size: 16px;
-        }
+        .input-compact { width: 100%; background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8px; padding: 5px 9px; font-size: 10px; font-weight: 500; outline: none; transition: border-color .15s; color: #1e293b; box-sizing: border-box; }
+        .input-compact:focus { border-color: #94a3b8; background: #fff; }
 
-        .nav-text {
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            text-align: center;
-        }
-
-        .panel-card {
-            background: #fff;
-            border-radius: 12px;
-            border: 1px solid #f1f5f9;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-        }
-
-        .label-text {
-            font-size: 8px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: #94a3b8;
-            margin-bottom: 2px;
-            display: block;
-        }
-
-        .input-compact {
-            width: 100%;
-            background: #f8fafc;
-            border: 1px solid #f1f5f9;
-            border-radius: 8px;
-            padding: 5px 9px;
-            font-size: 10px;
-            font-weight: 500;
-            outline: none;
-            transition: border-color .15s;
-            color: #1e293b;
-            box-sizing: border-box;
-        }
-
-        .input-compact:focus {
-            border-color: #94a3b8;
-            background: #fff;
-        }
-
-        .form-section {
-            border-top: 1px solid #f1f5f9;
-            padding-top: 7px;
-            margin-top: 7px;
-        }
-
-        .form-section-title {
-            font-size: 8px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .06em;
-            color: #cbd5e1;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .form-section { border-top: 1px solid #f1f5f9; padding-top: 7px; margin-top: 7px; }
+        .form-section-title { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #cbd5e1; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
 
         /* Role Badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 7px;
-            border-radius: 99px;
-            font-size: 8px;
-            font-weight: 800;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .badge-superadmin {
-            background: #f3e8ff;
-            color: #7c3aed;
-        }
-
-        .badge-admin {
-            background: #dbeafe;
-            color: #1d4ed8;
-        }
-
-        .badge-teamleader {
-            background: #fef3c7;
-            color: #b45309;
-        }
-
-        .badge-teleagent {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .badge-accounts {
-            background: #fce7f3;
-            color: #9d174d;
-        }
-
-        .badge-active {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        .badge-inactive {
-            background: #f1f5f9;
-            color: #94a3b8;
-        }
+        .badge { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 99px; font-size: 8px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+        .badge-active  { background: #dcfce7; color: #15803d; }
+        .badge-inactive{ background: #f1f5f9; color: #94a3b8; }
 
         /* Toggle Switch */
-        .toggle-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 4px 0;
-        }
+        .toggle { position: relative; display: inline-block; width: 28px; height: 15px; flex-shrink: 0; }
+        .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #e2e8f0; border-radius: 99px; transition: .2s; }
+        .toggle-slider:before { position: absolute; content: ""; height: 11px; width: 11px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .2s; box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+        input:checked + .toggle-slider { background: #0f172a; }
+        input:checked + .toggle-slider:before { transform: translateX(13px); }
+        .toggle-sm { width: 22px; height: 12px; }
+        .toggle-sm .toggle-slider:before { height: 8px; width: 8px; }
+        .toggle-sm input:checked + .toggle-slider:before { transform: translateX(10px); }
 
-        .toggle-label {
-            font-size: 9px;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .toggle-sublabel {
-            font-size: 7px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        .toggle {
-            position: relative;
-            display: inline-block;
-            width: 28px;
-            height: 15px;
-            flex-shrink: 0;
-        }
-
-        .toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #e2e8f0;
-            border-radius: 99px;
-            transition: .2s;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 11px;
-            width: 11px;
-            left: 2px;
-            bottom: 2px;
-            background: white;
-            border-radius: 50%;
-            transition: .2s;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
-        }
-
-        input:checked+.toggle-slider {
-            background: #0f172a;
-        }
-
-        input:checked+.toggle-slider:before {
-            transform: translateX(13px);
-        }
-
-        .toggle-sm {
-            width: 22px;
-            height: 12px;
-        }
-
-        .toggle-sm .toggle-slider:before {
-            height: 8px;
-            width: 8px;
-        }
-
-        input:checked+.toggle-slider.sm-slider:before {
-            transform: translateX(10px);
-        }
-
-        /* Perm group sub-options */
-        .perm-group {
-            background: #f8fafc;
-            border: 1px solid #f1f5f9;
-            border-radius: 8px;
-            padding: 6px 8px;
-            margin-bottom: 4px;
-        }
-
-        .perm-group-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0;
-        }
-
-        .perm-group-body {
-            display: none;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 5px;
-            padding-top: 5px;
-            gap: 3px;
-            flex-direction: column;
-        }
-
-        .perm-group-body.open {
-            display: flex;
-        }
-
-        .sub-perm-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 2px 0;
-        }
-
-        .sub-perm-label {
-            font-size: 8px;
-            font-weight: 600;
-            color: #64748b;
-        }
-
-        .section-divider {
-            border: none;
-            border-top: 1px solid #f1f5f9;
-            margin: 7px 0;
-        }
-
-        /* Password eye toggle */
-        .pw-wrap {
-            position: relative;
-        }
-
-        .pw-wrap input {
-            padding-right: 28px;
-        }
-
-        .pw-eye {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #94a3b8;
-            font-size: 10px;
-        }
-
-        .pw-eye:hover {
-            color: #475569;
-        }
-
-        /* Table */
-        .user-row {
-            cursor: pointer;
-            transition: background .1s;
-        }
-
-        .user-row:hover {
-            background: #f8fafc;
-        }
-
-        .user-row.expanded {
-            background: #f8fafc;
-        }
-
-        .row-chevron {
-            transition: transform .2s ease;
-        }
-
-        .row-chevron.open {
-            transform: rotate(90deg);
-        }
-
-        .detail-expand-row td {
-            padding: 0;
-        }
-
-        .detail-expand-inner {
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 2px solid #e2e8f0;
-            animation: expandDown .18s ease;
-        }
-
-        @keyframes expandDown {
-            from {
-                opacity: 0;
-                transform: translateY(-4px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .category-chip {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 7px;
-            background: #f1f5f9;
-            border-radius: 6px;
-            font-size: 8px;
-            font-weight: 700;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: .03em;
-        }
-
-        /* Dark header search */
-        .dark-select {
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 7px;
-            padding: 5px 22px 5px 9px;
-            font-size: 9px;
-            font-weight: 700;
-            color: #d1d5db;
-            outline: none;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23ffffff60' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 6px center;
-            flex-shrink: 0;
-        }
-
-        .dark-select option {
-            background: #1e293b;
-            color: #fff;
-        }
-
-        /* Avatar circle */
-        .avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            font-weight: 900;
-            color: #fff;
-            flex-shrink: 0;
-        }
-
-        /* Password strength bar */
-        .pw-strength {
-            height: 2px;
-            border-radius: 99px;
-            margin-top: 3px;
-            transition: all .3s;
-        }
-
-        /* Perm section inside expand */
-        .mini-perm-group {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 7px;
-            padding: 5px 8px;
-        }
-
-        .mini-perm-label {
-            font-size: 7px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: #94a3b8;
-            margin-bottom: 4px;
-        }
+        /* Perm groups */
+        .perm-group { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8px; padding: 6px 8px; margin-bottom: 4px; }
+        .perm-group-header { display: flex; align-items: center; justify-content: space-between; }
+        .perm-group-body { display: flex; border-top: 1px solid #e2e8f0; margin-top: 5px; padding-top: 5px; flex-direction: column; gap: 2px; }
+        .perm-group-body.open { display: flex; }
+        .sub-perm-row { display: flex; align-items: center; justify-content: space-between; padding: 2px 0; }
+        .sub-perm-label { font-size: 8px; font-weight: 600; color: #64748b; }
+        .sub-group-hdr { font-size: 7px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #7c3aed; margin-top: 5px; margin-bottom: 2px; padding: 2px 5px; background: #f5f3ff; border-radius: 4px; border-left: 2px solid #7c3aed; }
+        .sub-group-indent { padding-left: 10px; }
+        .toggle-label { font-size: 9px; font-weight: 600; color: #374151; }
 
         /* "All" master toggle row */
-        .master-toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 3px 0 4px;
-            border-bottom: 1px solid #f1f5f9;
-            margin-bottom: 3px;
-        }
+        .master-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 3px 0 4px; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
 
-        /* User count bubbles */
-        .count-bubble {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 16px;
-            height: 16px;
-            padding: 0 4px;
-            background: rgba(255, 255, 255, .1);
-            border-radius: 99px;
-            font-size: 8px;
-            font-weight: 800;
-            color: #fff;
-        }
+        /* Password */
+        .pw-wrap { position: relative; }
+        .pw-wrap input { padding-right: 28px; }
+        .pw-eye { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; font-size: 10px; }
+        .pw-eye:hover { color: #475569; }
+        .pw-strength { height: 2px; border-radius: 99px; margin-top: 3px; transition: all .3s; }
 
-        mark {
-            background: #fef9c3;
-            border-radius: 2px;
-        }
+        /* Table */
+        .user-row { cursor: pointer; transition: background .1s; }
+        .user-row:hover { background: #f8fafc; }
+        .user-row.expanded { background: #f8fafc; }
+        .row-chevron { transition: transform .2s ease; }
+        .row-chevron.open { transform: rotate(90deg); }
+        .detail-expand-row td { padding: 0; }
+        .detail-expand-inner { background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 2px solid #e2e8f0; animation: expandDown .18s ease; }
+        @keyframes expandDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        .category-chip { display: inline-flex; align-items: center; padding: 2px 7px; background: #f1f5f9; border-radius: 6px; font-size: 8px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .03em; }
 
-        #left-panel .scroll-inner {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
+        /* Dark header search */
+        .dark-select { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 7px; padding: 5px 22px 5px 9px; font-size: 9px; font-weight: 700; color: #d1d5db; outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23ffffff60' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; flex-shrink: 0; }
+        .dark-select option { background: #1e293b; color: #fff; }
 
-        #left-panel .scroll-inner::-webkit-scrollbar {
-            display: none;
-        }
+        /* Avatar */
+        .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900; color: #fff; flex-shrink: 0; }
+
+        mark { background: #fef9c3; border-radius: 2px; }
+
+        #left-panel .scroll-inner { scrollbar-width: none; -ms-overflow-style: none; }
+        #left-panel .scroll-inner::-webkit-scrollbar { display: none; }
+
+        /* ── TAB STYLES ── */
+        .tab-bar { display: flex; border-bottom: 1px solid #e2e8f0; background: #f8fafc; flex-shrink: 0; padding: 0 8px; gap: 2px; }
+        .tab-btn { flex: 1; padding: 7px 4px 6px; font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 4px; border-radius: 0; }
+        .tab-btn:hover { color: #374151; }
+        .tab-btn.active { color: #0f172a; border-bottom-color: #0f172a; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Perm mini inside expand row */
+        .exp-mod-row { display: flex; align-items: flex-start; gap: 5px; padding: 3px 0; border-bottom: 1px solid #f1f5f9; }
+        .exp-mod-row:last-child { border-bottom: none; }
     </style>
 </head>
-
 <body>
 
-    <!-- Slim Sidebar -->
-    <nav class="side-nav">
-        <div class="mb-6">
-            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-bolt text-sm"></i>
+<!-- Slim Sidebar -->
+<nav class="side-nav">
+    <div class="mb-6">
+        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
+            <i class="fa-solid fa-bolt text-sm"></i>
+        </div>
+    </div>
+
+    <a href="../task_and_followups/task_management.html" class="nav-item">
+        <i class="fa-solid fa-tasks"></i>
+        <span class="nav-text">Tasks & Followups</span>
+    </a>
+
+    <a href="../lead_management/lead_management.html" class="nav-item">
+        <i class="fa-solid fa-user-group"></i>
+        <span class="nav-text">Leads</span>
+    </a>
+
+    <a href="../loan_pipeline/loan_pipeline.html" class="nav-item">
+        <i class="fa-solid fa-diagram-project"></i>
+        <span class="nav-text">Loan Pipeline</span>
+    </a>
+
+    <a href="../lenders/lender_management.html" class="nav-item">
+        <i class="fa-solid fa-hand-holding-dollar"></i>
+        <span class="nav-text">Lenders</span>
+    </a>
+
+    <a href="../documents/document_vault.html" class="nav-item">
+        <i class="fa-solid fa-folder-open"></i>
+        <span class="nav-text">Documents Vault</span>
+    </a>
+
+    <a href="../user_management/user_management.html" class="nav-item active">
+        <i class="fa-solid fa-user-gear"></i>
+        <span class="nav-text">User Management</span>
+    </a>
+
+    <a href="../reporting/reporting_logs.html" class="nav-item">
+        <i class="fa-solid fa-chart-line"></i>
+        <span class="nav-text">Reporting Logs</span>
+    </a>
+</nav>
+
+<!-- Dashboard -->
+<main class="dashboard-container">
+
+    <!-- LEFT PANEL: Add New User Form -->
+    <section class="panel-card" id="left-panel" style="display:flex;flex-direction:column;overflow:hidden;">
+
+        <!-- Panel header -->
+        <div id="panel-header" class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 transition-all duration-200" style="flex-shrink:0;">
+            <div class="flex flex-col gap-0.5">
+                <h2 id="panel-title" class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Add New User</h2>
+                <p id="panel-subtitle" class="hidden text-[8px] text-amber-600 font-semibold"></p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="cancel-edit-btn" onclick="cancelEditMode()"
+                    style="display:none;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;border:1px solid #e2e8f0;font-size:8px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;background:white;transition:all .15s;">
+                    <i class="fa-solid fa-xmark" style="font-size:7px;"></i> Cancel
+                </button>
+                <div id="panel-dot" style="width:6px;height:6px;border-radius:50%;background:#7c3aed;"></div>
             </div>
         </div>
 
-        <a href="../task_and_followups/task_management.html" class="nav-item">
-            <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">Tasks & Followups</span>
-        </a>
+        <!-- 3 Tab Togglers -->
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="details" onclick="switchTab('details')">
+                <i class="fa-solid fa-id-card" style="font-size:8px;"></i> User Details
+            </button>
+            <button class="tab-btn" data-tab="modules" onclick="switchTab('modules')">
+                <i class="fa-solid fa-shield-halved" style="font-size:8px;"></i> Modules
+            </button>
+            <button class="tab-btn" data-tab="features" onclick="switchTab('features')">
+                <i class="fa-solid fa-stars" style="font-size:8px;"></i> Features
+            </button>
+        </div>
 
-        <a href="../lead_management/lead_management.html" class="nav-item">
-            <i class="fa-solid fa-user-group"></i>
-            <span class="nav-text">Leads</span>
-        </a>
+        <!-- Scrollable body -->
+        <div class="flex-1 overflow-y-auto scroll-inner" style="min-height:0;">
+            <input type="hidden" id="edit-id" value="">
 
-        <a href="../loan_pipeline/loan_pipeline.html" class="nav-item">
-            <i class="fa-solid fa-diagram-project"></i>
-            <span class="nav-text">Loan Pipeline</span>
-        </a>
-
-        <a href="../lenders/lender_management.html" class="nav-item">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-            <span class="nav-text">Lenders</span>
-        </a>
-
-        <a href="../documents/document_vault.html" class="nav-item">
-            <i class="fa-solid fa-folder-open"></i>
-            <span class="nav-text">Documents Vault</span>
-        </a>
-
-        <a href="../user_management/user_management.html" class="nav-item active">
-            <i class="fa-solid fa-user-gear"></i>
-            <span class="nav-text">User Management</span>
-        </a>
-
-        <a href="../reporting/reporting_logs.html" class="nav-item">
-            <i class="fa-solid fa-chart-line"></i>
-            <span class="nav-text">Reporting Logs</span>
-        </a>
-
-    </nav>
-
-    <!-- Dashboard -->
-    <main class="dashboard-container">
-
-        <!-- LEFT PANEL: Form -->
-        <section class="panel-card" id="left-panel">
-            <div id="panel-header"
-                class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 transition-all duration-200"
-                style="flex-shrink:0;">
-                <div class="flex flex-col gap-0.5">
-                    <h2 id="panel-title" class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Add New
-                        User</h2>
-                    <p id="panel-subtitle" class="hidden text-[8px] text-amber-600 font-semibold"></p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button id="cancel-edit-btn" onclick="cancelEditMode()"
-                        style="display:none; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; border:1px solid #e2e8f0; font-size:8px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; background:white; transition:all .15s;">
-                        <i class="fa-solid fa-xmark" style="font-size:7px;"></i> Cancel
-                    </button>
-                    <div id="panel-dot" style="width:6px;height:6px;border-radius:50%;background:#7c3aed;"></div>
-                </div>
-            </div>
-
-            <!-- Scrollable form body -->
-            <div class="flex-1 p-3 overflow-y-auto scroll-inner space-y-0">
-                <input type="hidden" id="edit-id" value="">
-
-                <!-- ── SECTION: Identity ── -->
+            <!-- ── TAB 1: User Details ── -->
+            <div id="tab-details" class="tab-content active p-3 space-y-0">
                 <div class="space-y-1.5">
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -588,8 +208,7 @@
                         </div>
                         <div>
                             <label class="label-text">Designation</label>
-                            <input id="f-designation" type="text" placeholder="e.g. Senior Broker"
-                                class="input-compact">
+                            <input id="f-designation" type="text" placeholder="e.g. Senior Broker" class="input-compact">
                         </div>
                     </div>
                     <div>
@@ -627,29 +246,23 @@
                     </div>
                 </div>
 
-                <!-- ── SECTION: Password ── -->
+                <!-- Password section -->
                 <div class="form-section">
-                    <p class="form-section-title"><i class="fa-solid fa-lock text-[8px]"></i> Password <span
-                            id="pw-optional-label"
-                            class="text-[7px] font-normal text-gray-400 normal-case tracking-normal">(optional for
-                            edit)</span></p>
+                    <p class="form-section-title"><i class="fa-solid fa-lock text-[8px]"></i> Password <span id="pw-optional-label" class="text-[7px] font-normal text-gray-400 normal-case tracking-normal">(optional for edit)</span></p>
                     <div class="space-y-1.5">
                         <div>
                             <label class="label-text">New Password</label>
                             <div class="pw-wrap">
-                                <input id="f-password" type="password" placeholder="Min. 8 characters"
-                                    class="input-compact" oninput="checkPasswordStrength(this.value)">
+                                <input id="f-password" type="password" placeholder="Min. 8 characters" class="input-compact" oninput="checkPasswordStrength(this.value)">
                                 <i class="fa-solid fa-eye pw-eye" onclick="togglePw('f-password',this)"></i>
                             </div>
                             <div id="pw-strength-bar" class="pw-strength w-0" style="background:#e2e8f0;"></div>
-                            <p id="pw-strength-label" class="text-[7px] font-bold mt-0.5"
-                                style="color:#94a3b8; display:none;"></p>
+                            <p id="pw-strength-label" class="text-[7px] font-bold mt-0.5" style="color:#94a3b8;display:none;"></p>
                         </div>
                         <div>
                             <label class="label-text">Confirm New Password</label>
                             <div class="pw-wrap">
-                                <input id="f-confirm-pw" type="password" placeholder="Re-enter password"
-                                    class="input-compact" oninput="checkConfirmPw()">
+                                <input id="f-confirm-pw" type="password" placeholder="Re-enter password" class="input-compact" oninput="checkConfirmPw()">
                                 <i class="fa-solid fa-eye pw-eye" onclick="togglePw('f-confirm-pw',this)"></i>
                             </div>
                             <p id="pw-match-label" class="text-[7px] font-bold mt-0.5" style="display:none;"></p>
@@ -657,303 +270,404 @@
                     </div>
                 </div>
 
-                <!-- ── SECTION: Module Permissions ── -->
-                <div class="form-section">
-                    <p class="form-section-title"><i class="fa-solid fa-shield-halved text-[8px]"></i> Module
-                        Permissions</p>
-
-                    <!-- Master toggle -->
-                    <div class="master-toggle-row">
-                        <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">All Modules</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="master-modules" onchange="masterToggle('modules', this.checked)">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
-                    <div id="modules-container" class="space-y-1"></div>
-                </div>
-
-                <!-- ── SECTION: Feature Access ── -->
-                <div class="form-section">
-                    <p class="form-section-title"><i class="fa-solid fa-stars text-[8px]"></i> Feature Access</p>
-
-                    <div class="master-toggle-row">
-                        <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">All Features</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="master-features"
-                                onchange="masterToggle('features', this.checked)">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
-                    <div id="features-container" class="space-y-1"></div>
-                </div>
-
-                <!-- Submit -->
-                <div class="pt-2 pb-1">
-                    <button id="submit-btn" onclick="saveForm()"
-                        class="w-full py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
-                        <i class="fa-solid fa-plus mr-1.5" id="submit-icon"></i><span id="submit-label">Add User</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- RIGHT PANEL: Table -->
-        <section class="panel-card">
-            <!-- Dark header -->
-            <div class="px-4 border-b border-white/5 bg-gray-900 flex items-center gap-3"
-                style="min-height:48px; flex-shrink:0;">
-                <h2 class="text-[9px] font-bold uppercase tracking-widest text-white flex-shrink-0">User Management</h2>
-                <span id="result-count" class="text-[8px] font-bold text-gray-500 font-mono flex-shrink-0"></span>
-
-                <div class="relative flex-1 min-w-[120px]">
-                    <input id="search-input" type="text" placeholder="Search users..."
-                        style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:5px 10px 5px 26px;font-size:9px;font-weight:600;color:#fff;outline:none;"
-                        oninput="applyFilters()" onfocus="this.style.background='rgba(255,255,255,0.12)'"
-                        onblur="this.style.background='rgba(255,255,255,0.07)'">
-                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-[8px]"
-                        style="color:rgba(255,255,255,0.3);pointer-events:none;"></i>
-                </div>
-
-                <select id="dd-role" onchange="toggleFilter('role', this.value)" class="dark-select">
-                    <option value="All">All Roles</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Team Leader">Team Leader</option>
-                    <option value="Tele Agent">Tele Agent</option>
-                    <option value="Accounts Manager">Accounts Manager</option>
-                </select>
-
-                <select id="dd-status" onchange="toggleFilter('status', this.value)" class="dark-select">
-                    <option value="All">All Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                </select>
-
-                <button onclick="clearFilters()" id="clear-btn"
-                    class="hidden flex-shrink-0 text-[8px] font-bold text-gray-400 hover:text-white uppercase tracking-widest transition-colors">
-                    <i class="fa-solid fa-xmark mr-0.5"></i>Clear
-                </button>
-
-                <!-- Stats -->
-                <div class="flex items-center gap-0 flex-shrink-0 border-l border-white/10 pl-3 ml-1">
-                    <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10">
-                        <span id="stat-total" class="text-[13px] font-black text-white">0</span>
-                        <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Total</span>
-                    </div>
-                    <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10">
-                        <span id="stat-active" class="text-[13px] font-black text-green-400">0</span>
-                        <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Active</span>
-                    </div>
-                    <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10">
-                        <span id="stat-admins" class="text-[13px] font-black text-blue-400">0</span>
-                        <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Admins</span>
-                    </div>
-                    <div class="flex items-center gap-1.5 px-2.5 py-2">
-                        <span id="stat-agents" class="text-[13px] font-black text-emerald-400">0</span>
-                        <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Agents</span>
-                    </div>
+                <!-- Role hint card -->
+                <div id="role-hint-card" class="hidden mt-2 p-2 bg-indigo-50 border border-indigo-100 rounded-lg">
+                    <p class="text-[7px] font-bold text-indigo-500 uppercase tracking-widest mb-1"><i class="fa-solid fa-circle-info mr-1"></i>Permissions Auto-Set</p>
+                    <p id="role-hint-text" class="text-[8px] text-indigo-700 font-medium"></p>
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto custom-scrollbar">
-                <table class="w-full text-left">
-                    <thead class="sticky top-0 bg-gray-50 border-b border-gray-100 z-10">
-                        <tr>
-                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">User
-                            </th>
-                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Role
-                            </th>
-                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Contact
-                            </th>
-                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">
-                                Permissions</th>
-                            <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Status
-                            </th>
-                            <th class="px-2 py-1.5 w-6"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-tbody" class="divide-y divide-gray-50"></tbody>
-                </table>
-                <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
-                    <i class="fa-solid fa-users text-3xl text-gray-200 mb-3"></i>
-                    <p class="text-[10px] font-bold text-gray-400">No users match your filters</p>
-                    <button onclick="clearFilters()" class="mt-2 text-[9px] font-bold text-gray-900 underline">Clear
-                        filters</button>
+            <!-- ── TAB 2: Modules ── -->
+            <div id="tab-modules" class="tab-content p-3">
+                <!-- Master toggle -->
+                <div class="master-toggle-row">
+                    <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">All Modules</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="master-modules" onchange="masterToggle('modules',this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div id="modules-container" class="space-y-1"></div>
+            </div>
+
+            <!-- ── TAB 3: Features ── -->
+            <div id="tab-features" class="tab-content p-3">
+                <div class="master-toggle-row">
+                    <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">All Features</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="master-features" onchange="masterToggle('features',this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div id="features-container" class="space-y-1"></div>
+            </div>
+        </div>
+
+        <!-- Submit (always visible) -->
+        <div class="px-3 py-2.5 border-t border-gray-100 bg-white" style="flex-shrink:0;">
+            <button id="submit-btn" onclick="saveForm()"
+                class="w-full py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                <i class="fa-solid fa-plus mr-1.5" id="submit-icon"></i><span id="submit-label">Add User</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- RIGHT PANEL: Table -->
+    <section class="panel-card">
+        <!-- Dark header -->
+        <div class="px-4 border-b border-white/5 bg-gray-900 flex items-center gap-3" style="min-height:48px;flex-shrink:0;">
+            <h2 class="text-[9px] font-bold uppercase tracking-widest text-white flex-shrink-0">User Management</h2>
+            <span id="result-count" class="text-[8px] font-bold text-gray-500 font-mono flex-shrink-0"></span>
+
+            <div class="relative flex-1 min-w-[120px]">
+                <input id="search-input" type="text" placeholder="Search users..."
+                    style="width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:5px 10px 5px 26px;font-size:9px;font-weight:600;color:#fff;outline:none;"
+                    oninput="applyFilters()"
+                    onfocus="this.style.background='rgba(255,255,255,0.12)'"
+                    onblur="this.style.background='rgba(255,255,255,0.07)'">
+                <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-[8px]" style="color:rgba(255,255,255,0.3);pointer-events:none;"></i>
+            </div>
+
+            <select id="dd-role" onchange="toggleFilter('role',this.value)" class="dark-select">
+                <option value="All">All Roles</option>
+                <option value="Admin">Admin</option>
+                <option value="Team Leader">Team Leader</option>
+                <option value="Tele Agent">Tele Agent</option>
+                <option value="Accounts Manager">Accounts Manager</option>
+            </select>
+
+            <select id="dd-status" onchange="toggleFilter('status',this.value)" class="dark-select">
+                <option value="All">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+
+            <button onclick="clearFilters()" id="clear-btn"
+                class="hidden flex-shrink-0 text-[8px] font-bold text-gray-400 hover:text-white uppercase tracking-widest transition-colors">
+                <i class="fa-solid fa-xmark mr-0.5"></i>Clear
+            </button>
+
+            <!-- Stats -->
+            <div class="flex items-center gap-0 flex-shrink-0 border-l border-white/10 pl-3 ml-1">
+                <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10">
+                    <span id="stat-total" class="text-[13px] font-black text-white">0</span>
+                    <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Total</span>
+                </div>
+                <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10">
+                    <span id="stat-active" class="text-[13px] font-black text-green-400">0</span>
+                    <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Active</span>
+                </div>
+                <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10">
+                    <span id="stat-admins" class="text-[13px] font-black text-blue-400">0</span>
+                    <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Admins</span>
+                </div>
+                <div class="flex items-center gap-1.5 px-2.5 py-2">
+                    <span id="stat-agents" class="text-[13px] font-black text-emerald-400">0</span>
+                    <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Agents</span>
                 </div>
             </div>
+        </div>
 
-            <div class="p-3 border-t border-gray-50 bg-gray-50/30 flex items-center justify-between"
-                style="flex-shrink:0;">
-                <span id="footer-count" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest"></span>
-                <button onclick="exportCSV()"
-                    class="text-[8px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">
-                    <i class="fa-solid fa-download mr-1"></i>Export CSV
-                </button>
+        <div class="flex-1 overflow-y-auto custom-scrollbar">
+            <table class="w-full text-left">
+                <thead class="sticky top-0 bg-gray-50 border-b border-gray-100 z-10">
+                    <tr>
+                        <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">User</th>
+                        <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Role</th>
+                        <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Contact</th>
+                        <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Permissions</th>
+                        <th class="px-3 py-1.5 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
+                        <th class="px-2 py-1.5 w-6"></th>
+                    </tr>
+                </thead>
+                <tbody id="user-tbody" class="divide-y divide-gray-50"></tbody>
+            </table>
+            <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
+                <i class="fa-solid fa-users text-3xl text-gray-200 mb-3"></i>
+                <p class="text-[10px] font-bold text-gray-400">No users match your filters</p>
+                <button onclick="clearFilters()" class="mt-2 text-[9px] font-bold text-gray-900 underline">Clear filters</button>
             </div>
-        </section>
-    </main>
+        </div>
 
-    <script>
-        // ── CONFIG ────────────────────────────────────────────────────────────────────
-        const MODULES = [
-            { key: 'tasks', label: 'Tasks & Followups', icon: 'fa-tasks', sub: null },
-            { key: 'lenders', label: 'Lender Management', icon: 'fa-building-columns', sub: null },
-            { key: 'leads', label: 'Lead Management', icon: 'fa-users-line', sub: null },
-            { key: 'users', label: 'User Management', icon: 'fa-users', sub: null },
-            { key: 'vault', label: 'Document Vault', icon: 'fa-folder-open', sub: ['Add', 'Edit', 'Delete', 'View Only'] },
-            { key: 'reports', label: 'Reports', icon: 'fa-chart-bar', sub: null, sublabel: 'Generate / View / Download' },
-            { key: 'systemlogs', label: 'System Logs', icon: 'fa-scroll', sub: null },
-        ];
+        <div class="p-3 border-t border-gray-50 bg-gray-50/30 flex items-center justify-between" style="flex-shrink:0;">
+            <span id="footer-count" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest"></span>
+            <button onclick="exportCSV()" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">
+                <i class="fa-solid fa-download mr-1"></i>Export CSV
+            </button>
+        </div>
+    </section>
+</main>
 
-        const FEATURES = [
-            { key: 'ai', label: 'AI Assistant', icon: 'fa-robot' },
-            { key: 'notes', label: 'Notes', icon: 'fa-note-sticky' },
-            { key: 'estimator', label: 'Estimator', icon: 'fa-calculator' },
-            { key: 'msteams', label: 'MS Teams', icon: 'fa-brands fa-microsoft' },
-            { key: 'whatsapp', label: 'WhatsApp', icon: 'fa-brands fa-whatsapp' },
-            { key: 'email', label: 'Email', icon: 'fa-envelope' },
-            { key: 'dial', label: 'Dial (Calling)', icon: 'fa-phone' },
-        ];
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+// sub items: { key, label, group? }
+// group: renders items indented under a named sub-heading
+const MODULES = [
+    {
+        key: 'tasks', label: 'Tasks & Followups', icon: 'fa-tasks',
+        sub: [
+            { key: 'addTasks',    label: 'Add Tasks' },
+            { key: 'viewSelf',    label: 'Self',      group: 'View' },
+            { key: 'viewTeam',    label: 'Team',      group: 'View' },
+            { key: 'viewAll',     label: 'All',       group: 'View' },
+            { key: 'calendar',    label: 'Calendar' },
+            { key: 'notes',       label: 'Notes' },
+            { key: 'reminders',   label: 'Reminders' },
+        ]
+    },
+    {
+        key: 'lenders', label: 'Lender Management', icon: 'fa-building-columns',
+        sub: [
+            { key: 'lenderAdd',    label: 'Add' },
+            { key: 'lenderEdit',   label: 'Edit' },
+            { key: 'lenderDelete', label: 'Delete' },
+            { key: 'lenderView',   label: 'View' },
+            { key: 'promoAddEdit', label: 'Add/Edit', group: 'Lender Promotions' },
+            { key: 'promoView',    label: 'View',     group: 'Lender Promotions' },
+        ]
+    },
+    {
+        key: 'leads', label: 'Lead Management', icon: 'fa-users-line',
+        sub: [
+            { key: 'leadCreate',   label: 'Create' },
+            { key: 'leadEditDel',  label: 'Edit/Delete' },
+            { key: 'leadViewSelf', label: 'Self',       group: 'View' },
+            { key: 'leadViewTeam', label: 'Team',       group: 'View' },
+            { key: 'leadViewAll',  label: 'All',        group: 'View' },
+            { key: 'docAdd',       label: 'Add',        group: 'Document Upload' },
+            { key: 'docOverwrite', label: 'Overwrite',  group: 'Document Upload' },
+            { key: 'docView',      label: 'View',       group: 'Document Upload' },
+            { key: 'docDelete',    label: 'Delete',     group: 'Document Upload' },
+            { key: 'verifyDocs',   label: 'Documents',  group: 'Verification' },
+            { key: 'verifyLender', label: 'Lender',     group: 'Verification' },
+        ]
+    },
+    { key: 'users', label: 'User Management', icon: 'fa-users', sub: null },
+];
 
-        const ROLE_COLORS = {
-            'Super Admin': '#7c3aed',
-            'Admin': '#2563eb',
-            'Team Leader': '#b45309',
-            'Tele Agent': '#065f46',
-            'Accounts Manager': '#9d174d',
-        };
-        const ROLE_BG = {
-            'Super Admin': '#f3e8ff',
-            'Admin': '#dbeafe',
-            'Team Leader': '#fef3c7',
-            'Tele Agent': '#d1fae5',
-            'Accounts Manager': '#fce7f3',
-        };
-        const AVATAR_BG = {
-            'Super Admin': '#7c3aed',
-            'Admin': '#2563eb',
-            'Team Leader': '#d97706',
-            'Tele Agent': '#059669',
-            'Accounts Manager': '#be185d',
-        };
+const FEATURES = [
+    { key: 'ai',        label: 'AI Assistant',   icon: 'fa-robot' },
+    { key: 'notes',     label: 'Notes',          icon: 'fa-note-sticky' },
+    { key: 'estimator', label: 'Estimator',      icon: 'fa-calculator' },
+    { key: 'msteams',   label: 'MS Teams',       icon: 'fa-brands fa-microsoft' },
+    { key: 'whatsapp',  label: 'WhatsApp',       icon: 'fa-brands fa-whatsapp' },
+    { key: 'email',     label: 'Email',          icon: 'fa-envelope' },
+    { key: 'dial',      label: 'Dial (Calling)', icon: 'fa-phone' },
+];
 
-        // ── DATA ──────────────────────────────────────────────────────────────────────
-        let users = [
-            {
-                id: 1, name: "Alex Morgan", designation: "CRM Super Admin", email: "alex@taskflow.com.au",
-                role: "Super Admin", status: "Active", phone: "+61 411 000 001", joined: "2024-01-01",
-                modules: { tasks: true, lenders: true, leads: true, users: true, vault: { Add: true, Edit: true, Delete: true, 'View Only': true }, reports: true, systemlogs: true },
-                features: { ai: true, notes: true, estimator: true, msteams: true, whatsapp: true, email: true, dial: true },
-                added: "2024-01-01"
-            },
-            {
-                id: 2, name: "Sarah Collins", designation: "Branch Manager", email: "sarah@taskflow.com.au",
-                role: "Admin", status: "Active", phone: "+61 412 111 222", joined: "2024-03-15",
-                modules: { tasks: true, lenders: true, leads: true, users: false, vault: { Add: true, Edit: true, Delete: false, 'View Only': true }, reports: true, systemlogs: false },
-                features: { ai: true, notes: true, estimator: true, msteams: true, whatsapp: false, email: true, dial: false },
-                added: "2024-03-15"
-            },
-            {
-                id: 3, name: "James Wu", designation: "Team Lead – East", email: "james@taskflow.com.au",
-                role: "Team Leader", status: "Active", phone: "+61 413 222 333", joined: "2024-05-20",
-                modules: { tasks: true, lenders: true, leads: true, users: false, vault: { Add: false, Edit: false, Delete: false, 'View Only': true }, reports: true, systemlogs: false },
-                features: { ai: true, notes: true, estimator: false, msteams: true, whatsapp: true, email: true, dial: true },
-                added: "2024-05-20"
-            },
-            {
-                id: 4, name: "Priya Sharma", designation: "Tele Sales Agent", email: "priya@taskflow.com.au",
-                role: "Tele Agent", status: "Active", phone: "+61 414 333 444", joined: "2025-01-10",
-                modules: { tasks: true, lenders: false, leads: true, users: false, vault: { Add: false, Edit: false, Delete: false, 'View Only': true }, reports: false, systemlogs: false },
-                features: { ai: false, notes: true, estimator: false, msteams: false, whatsapp: true, email: true, dial: true },
-                added: "2025-01-10"
-            },
-            {
-                id: 5, name: "Mark Patel", designation: "Accounts Lead", email: "mark@taskflow.com.au",
-                role: "Accounts Manager", status: "Active", phone: "+61 415 444 555", joined: "2025-02-01",
-                modules: { tasks: false, lenders: false, leads: false, users: false, vault: { Add: true, Edit: true, Delete: false, 'View Only': true }, reports: true, systemlogs: false },
-                features: { ai: false, notes: true, estimator: true, msteams: false, whatsapp: false, email: true, dial: false },
-                added: "2025-02-01"
-            },
-            {
-                id: 6, name: "Emily Tran", designation: "Tele Sales Agent", email: "emily@taskflow.com.au",
-                role: "Tele Agent", status: "Inactive", phone: "+61 416 555 666", joined: "2025-03-01",
-                modules: { tasks: true, lenders: false, leads: true, users: false, vault: { Add: false, Edit: false, Delete: false, 'View Only': true }, reports: false, systemlogs: false },
-                features: { ai: false, notes: true, estimator: false, msteams: false, whatsapp: true, email: true, dial: true },
-                added: "2025-03-01"
-            }
-        ];
+// Role-based default permission matrix
+// SA=Super Admin, A=Admin, AM=Accounts Manager, TL=Team Leader, TA=Tele Agent
+function makeModulesForRole(role) {
+    const SA = role === 'Super Admin';
+    const A  = role === 'Admin';
+    const AM = role === 'Accounts Manager';
+    const TL = role === 'Team Leader';
+    const TA = role === 'Tele Agent';
+    const all = SA || A || AM || TL || TA;
+    return {
+        tasks: {
+            addTasks:  all,
+            viewSelf:  TA,
+            viewTeam:  TL,
+            viewAll:   SA || A || AM,
+            calendar:  all,
+            notes:     all,
+            reminders: all,
+        },
+        lenders: {
+            lenderAdd:    SA || A,
+            lenderEdit:   SA || A,
+            lenderDelete: SA || A,
+            lenderView:   SA || A || AM,
+            promoAddEdit: SA || A,
+            promoView:    all,
+        },
+        leads: {
+            leadCreate:   all,
+            leadEditDel:  SA || A || AM,
+            leadViewSelf: TA,
+            leadViewTeam: TL,
+            leadViewAll:  SA || A || AM,
+            docAdd:       all,
+            docOverwrite: SA || A || AM || TL,
+            docView:      all,
+            docDelete:    SA || A || AM,
+            verifyDocs:   SA || A || AM || TL,
+            verifyLender: SA || A || AM,
+        },
+        users: SA || A,
+    };
+}
 
-        let filters = { role: 'All', status: 'All' };
-        let expandedId = null;
-        let nextId = 7;
+const ROLE_COLORS = {
+    'Super Admin':      '#7c3aed',
+    'Admin':            '#2563eb',
+    'Team Leader':      '#b45309',
+    'Tele Agent':       '#065f46',
+    'Accounts Manager': '#9d174d',
+};
+const ROLE_BG = {
+    'Super Admin':      '#f3e8ff',
+    'Admin':            '#dbeafe',
+    'Team Leader':      '#fef3c7',
+    'Tele Agent':       '#d1fae5',
+    'Accounts Manager': '#fce7f3',
+};
+const AVATAR_BG = {
+    'Super Admin':      '#7c3aed',
+    'Admin':            '#2563eb',
+    'Team Leader':      '#d97706',
+    'Tele Agent':       '#059669',
+    'Accounts Manager': '#be185d',
+};
 
-        // Current form permission state
-        let formModules = {};
-        let formFeatures = {};
+// ── SAMPLE DATA ───────────────────────────────────────────────────────────────
+let users = [
+    {
+        id: 1, name: "Alex Morgan", designation: "CRM Super Admin", email: "alex@taskflow.com.au",
+        role: "Super Admin", status: "Active", phone: "+61 411 000 001", joined: "2024-01-01",
+        modules: makeModulesForRole('Super Admin'),
+        features: { ai: true, notes: true, estimator: true, msteams: true, whatsapp: true, email: true, dial: true },
+        added: "2024-01-01"
+    },
+    {
+        id: 2, name: "Sarah Collins", designation: "Branch Manager", email: "sarah@taskflow.com.au",
+        role: "Admin", status: "Active", phone: "+61 412 111 222", joined: "2024-03-15",
+        modules: makeModulesForRole('Admin'),
+        features: { ai: true, notes: true, estimator: true, msteams: true, whatsapp: false, email: true, dial: false },
+        added: "2024-03-15"
+    },
+    {
+        id: 3, name: "James Wu", designation: "Team Lead – East", email: "james@taskflow.com.au",
+        role: "Team Leader", status: "Active", phone: "+61 413 222 333", joined: "2024-05-20",
+        modules: makeModulesForRole('Team Leader'),
+        features: { ai: true, notes: true, estimator: false, msteams: true, whatsapp: true, email: true, dial: true },
+        added: "2024-05-20"
+    },
+    {
+        id: 4, name: "Priya Sharma", designation: "Tele Sales Agent", email: "priya@taskflow.com.au",
+        role: "Tele Agent", status: "Active", phone: "+61 414 333 444", joined: "2025-01-10",
+        modules: makeModulesForRole('Tele Agent'),
+        features: { ai: false, notes: true, estimator: false, msteams: false, whatsapp: true, email: true, dial: true },
+        added: "2025-01-10"
+    },
+    {
+        id: 5, name: "Mark Patel", designation: "Accounts Lead", email: "mark@taskflow.com.au",
+        role: "Accounts Manager", status: "Active", phone: "+61 415 444 555", joined: "2025-02-01",
+        modules: makeModulesForRole('Accounts Manager'),
+        features: { ai: false, notes: true, estimator: true, msteams: false, whatsapp: false, email: true, dial: false },
+        added: "2025-02-01"
+    },
+    {
+        id: 6, name: "Emily Tran", designation: "Tele Sales Agent", email: "emily@taskflow.com.au",
+        role: "Tele Agent", status: "Inactive", phone: "+61 416 555 666", joined: "2025-03-01",
+        modules: makeModulesForRole('Tele Agent'),
+        features: { ai: false, notes: true, estimator: false, msteams: false, whatsapp: true, email: true, dial: true },
+        added: "2025-03-01"
+    }
+];
 
-        // ── HELPERS ───────────────────────────────────────────────────────────────────
-        const getInitials = n => n.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+let filters    = { role: 'All', status: 'All' };
+let expandedId = null;
+let nextId     = 7;
 
-        function defaultModules() {
-            const m = {};
-            MODULES.forEach(mod => {
-                if (mod.sub) { m[mod.key] = {}; mod.sub.forEach(s => m[mod.key][s] = false); }
-                else m[mod.key] = false;
-            });
-            return m;
-        }
-        function defaultFeatures() {
-            const f = {};
-            FEATURES.forEach(feat => f[feat.key] = false);
-            return f;
-        }
+let formModules  = {};
+let formFeatures = {};
 
-        function getModuleEnabled(modules, key) {
-            const v = modules[key];
-            if (typeof v === 'boolean') return v;
-            if (typeof v === 'object') return Object.values(v).some(x => x);
-            return false;
-        }
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const getInitials = n => n.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
 
-        function countModulePerms(u) {
-            return MODULES.filter(m => getModuleEnabled(u.modules, m.key)).length;
-        }
-        function countFeaturePerms(u) {
-            return FEATURES.filter(f => u.features[f.key]).length;
-        }
+function defaultModules() {
+    const m = {};
+    MODULES.forEach(mod => {
+        if (mod.sub) { m[mod.key] = {}; mod.sub.forEach(s => m[mod.key][s.key] = false); }
+        else m[mod.key] = false;
+    });
+    return m;
+}
+function defaultFeatures() {
+    const f = {};
+    FEATURES.forEach(feat => f[feat.key] = false);
+    return f;
+}
 
-        // ── RENDER FORM TOGGLES ───────────────────────────────────────────────────────
-        function renderModuleToggles() {
-            const c = document.getElementById('modules-container');
-            c.innerHTML = MODULES.map(mod => {
-                const enabled = typeof formModules[mod.key] === 'boolean' ? formModules[mod.key] : Object.values(formModules[mod.key] || {}).some(x => x);
-                let subHtml = '';
-                if (mod.sub) {
-                    const subVals = formModules[mod.key] || {};
-                    subHtml = `<div class="perm-group-body ${enabled ? 'open' : ''}" id="sub-${mod.key}">
-                ${mod.sub.map(s => `
-                    <div class="sub-perm-row">
-                        <span class="sub-perm-label">${s}</span>
-                        <label class="toggle toggle-sm">
-                            <input type="checkbox" ${subVals[s] ? 'checked' : ''}
-                                onchange="setSubPerm('${mod.key}','${s}',this.checked)">
-                            <span class="toggle-slider sm-slider"></span>
-                        </label>
-                    </div>`).join('')}
-            </div>`;
+function getModuleEnabled(modules, key) {
+    const v = modules[key];
+    if (typeof v === 'boolean') return v;
+    if (typeof v === 'object' && v !== null) return Object.values(v).some(x => x);
+    return false;
+}
+
+function countModulePerms(u) {
+    return MODULES.filter(m => getModuleEnabled(u.modules, m.key)).length;
+}
+function countFeaturePerms(u) {
+    return FEATURES.filter(f => u.features[f.key]).length;
+}
+
+// ── TAB SWITCHER ──────────────────────────────────────────────────────────────
+function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`.tab-btn[data-tab="${name}"]`).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ── RENDER FORM MODULE TOGGLES ────────────────────────────────────────────────
+function renderModuleToggles() {
+    const c = document.getElementById('modules-container');
+    c.innerHTML = MODULES.map(mod => {
+        const enabled = getModuleEnabled(formModules, mod.key);
+        let subHtml = '';
+        if (mod.sub) {
+            const subVals = formModules[mod.key] || {};
+            // Collect groups in order of first appearance
+            const groupOrder = [];
+            const grouped = {};
+            const ungrouped = [];
+            mod.sub.forEach(s => {
+                if (s.group) {
+                    if (!grouped[s.group]) { grouped[s.group] = []; groupOrder.push(s.group); }
+                    grouped[s.group].push(s);
+                } else {
+                    ungrouped.push(s);
                 }
-                return `
+            });
+            let rows = '';
+            ungrouped.forEach(s => {
+                rows += `<div class="sub-perm-row">
+                    <span class="sub-perm-label">${s.label}</span>
+                    <label class="toggle toggle-sm">
+                        <input type="checkbox" id="sub-${mod.key}-${s.key}" ${subVals[s.key] ? 'checked' : ''}
+                            onchange="setSubPerm('${mod.key}','${s.key}',this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>`;
+            });
+            groupOrder.forEach(grp => {
+                rows += `<div class="sub-group-hdr"><i class="fa-solid fa-chevron-right" style="font-size:6px;margin-right:3px;"></i>${grp}</div>`;
+                grouped[grp].forEach(s => {
+                    rows += `<div class="sub-perm-row sub-group-indent">
+                        <span class="sub-perm-label">↳ ${s.label}</span>
+                        <label class="toggle toggle-sm">
+                            <input type="checkbox" id="sub-${mod.key}-${s.key}" ${subVals[s.key] ? 'checked' : ''}
+                                onchange="setSubPerm('${mod.key}','${s.key}',this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>`;
+                });
+            });
+            subHtml = `<div class="perm-group-body ${enabled ? 'open' : ''}" id="sub-${mod.key}">${rows}</div>`;
+        }
+        return `
         <div class="perm-group">
             <div class="perm-group-header">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid ${mod.icon} text-[9px] text-gray-400" style="width:12px;text-align:center;"></i>
-                    <div>
-                        <span class="toggle-label">${mod.label}</span>
-                        ${mod.sublabel ? `<p class="toggle-sublabel">${mod.sublabel}</p>` : ''}
-                    </div>
-                    ${mod.sub ? `<button onclick="toggleSubPanel('${mod.key}')" class="text-[7px] text-gray-400 hover:text-gray-700 ml-1"><i class="fa-solid fa-chevron-down" id="chevron-${mod.key}" style="transition:transform .2s;${enabled ? 'transform:rotate(180deg)' : ''}"></i></button>` : ''}
+                    <span class="toggle-label">${mod.label}</span>
+                    ${mod.sub ? `<button type="button" onclick="toggleSubPanel('${mod.key}')" class="text-[7px] text-gray-400 hover:text-gray-700 ml-1">
+                        <i class="fa-solid fa-chevron-down" id="chevron-${mod.key}" style="transition:transform .2s;${enabled?'transform:rotate(180deg)':''}"></i>
+                    </button>` : ''}
                 </div>
                 <label class="toggle">
                     <input type="checkbox" id="mod-${mod.key}" ${enabled ? 'checked' : ''}
@@ -963,13 +677,13 @@
             </div>
             ${subHtml}
         </div>`;
-            }).join('');
-            syncMasterCheckbox('modules');
-        }
+    }).join('');
+    syncMasterCheckbox('modules');
+}
 
-        function renderFeatureToggles() {
-            const c = document.getElementById('features-container');
-            c.innerHTML = FEATURES.map(feat => `
+function renderFeatureToggles() {
+    const c = document.getElementById('features-container');
+    c.innerHTML = FEATURES.map(feat => `
         <div class="perm-group">
             <div class="perm-group-header">
                 <div class="flex items-center gap-2">
@@ -983,117 +697,145 @@
                 </label>
             </div>
         </div>`).join('');
-            syncMasterCheckbox('features');
-        }
+    syncMasterCheckbox('features');
+}
 
-        function toggleSubPanel(key) {
-            const body = document.getElementById('sub-' + key);
-            const chevron = document.getElementById('chevron-' + key);
-            const open = body.classList.toggle('open');
-            chevron.style.transform = open ? 'rotate(180deg)' : '';
-        }
+function toggleSubPanel(key) {
+    const body    = document.getElementById('sub-' + key);
+    const chevron = document.getElementById('chevron-' + key);
+    const open    = body.classList.toggle('open');
+    if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
+}
 
-        function setModulePerm(key, val) {
-            const mod = MODULES.find(m => m.key === key);
-            if (mod && mod.sub) {
-                if (!formModules[key] || typeof formModules[key] !== 'object') formModules[key] = {};
-                mod.sub.forEach(s => formModules[key][s] = val);
-                const body = document.getElementById('sub-' + key);
-                const chevron = document.getElementById('chevron-' + key);
-                if (body) { body.classList.toggle('open', val); if (chevron) chevron.style.transform = val ? 'rotate(180deg)' : ''; }
-                // update sub checkboxes
-                mod.sub.forEach(s => {
-                    const cb = body ? body.querySelector(`input[onchange*="'${s}'"]`) : null;
-                    if (cb) cb.checked = val;
-                });
+function setModulePerm(key, val) {
+    const mod = MODULES.find(m => m.key === key);
+    if (mod && mod.sub) {
+        if (typeof formModules[key] !== 'object') formModules[key] = {};
+        mod.sub.forEach(s => formModules[key][s.key] = val);
+        const body    = document.getElementById('sub-' + key);
+        const chevron = document.getElementById('chevron-' + key);
+        if (body) { body.classList.toggle('open', val); if (chevron) chevron.style.transform = val ? 'rotate(180deg)' : ''; }
+        mod.sub.forEach(s => {
+            const cb = document.getElementById(`sub-${key}-${s.key}`);
+            if (cb) cb.checked = val;
+        });
+    } else {
+        formModules[key] = val;
+    }
+    syncMasterCheckbox('modules');
+}
+
+function setSubPerm(key, sub, val) {
+    if (typeof formModules[key] !== 'object') formModules[key] = {};
+    formModules[key][sub] = val;
+    const anyOn = Object.values(formModules[key]).some(x => x);
+    const cb = document.getElementById('mod-' + key);
+    if (cb) cb.checked = anyOn;
+    syncMasterCheckbox('modules');
+}
+
+function setFeaturePerm(key, val) {
+    formFeatures[key] = val;
+    syncMasterCheckbox('features');
+}
+
+function masterToggle(type, val) {
+    if (type === 'modules') {
+        MODULES.forEach(mod => {
+            if (mod.sub) {
+                if (typeof formModules[mod.key] !== 'object') formModules[mod.key] = {};
+                mod.sub.forEach(s => formModules[mod.key][s.key] = val);
             } else {
-                formModules[key] = val;
+                formModules[mod.key] = val;
             }
-            syncMasterCheckbox('modules');
+        });
+        renderModuleToggles();
+    } else {
+        FEATURES.forEach(f => formFeatures[f.key] = val);
+        renderFeatureToggles();
+    }
+}
+
+function syncMasterCheckbox(type) {
+    if (type === 'modules') {
+        const allOn = MODULES.every(m => getModuleEnabled(formModules, m.key));
+        const masterCb = document.getElementById('master-modules');
+        if (masterCb) masterCb.checked = allOn;
+    } else {
+        const allOn = FEATURES.every(f => formFeatures[f.key]);
+        const masterCb = document.getElementById('master-features');
+        if (masterCb) masterCb.checked = allOn;
+    }
+}
+
+// ── ROLE CHANGE → AUTO-POPULATE PERMISSIONS ───────────────────────────────────
+function onRoleChange(role) {
+    if (!role) {
+        formModules  = defaultModules();
+        formFeatures = defaultFeatures();
+        document.getElementById('role-hint-card').classList.add('hidden');
+        renderModuleToggles();
+        renderFeatureToggles();
+        return;
+    }
+    // auto-set permissions
+    formModules = makeModulesForRole(role);
+    renderModuleToggles();
+    renderFeatureToggles();
+    syncMasterCheckbox('modules');
+
+    // Show hint card
+    const roleLabels = {
+        'Super Admin':      'Super Admin — All permissions enabled.',
+        'Admin':            'Admin — Full access except certain lead view/delete restrictions.',
+        'Accounts Manager': 'Accounts Manager — View & financial permissions; no user/lender add.',
+        'Team Leader':      'Team Leader — Team-scoped view permissions; limited lender access.',
+        'Tele Agent':       'Tele Agent — Self-scoped permissions; basic task & lead access.',
+    };
+    document.getElementById('role-hint-text').textContent = roleLabels[role] || '';
+    document.getElementById('role-hint-card').classList.remove('hidden');
+}
+
+// ── RENDER TABLE ──────────────────────────────────────────────────────────────
+function getFiltered() {
+    const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
+    return users.filter(u => {
+        if (filters.role   !== 'All' && u.role   !== filters.role)   return false;
+        if (filters.status !== 'All' && u.status !== filters.status) return false;
+        if (q) {
+            const hay = [u.name, u.email, u.role, u.designation, u.phone].join(' ').toLowerCase();
+            if (!hay.includes(q)) return false;
         }
+        return true;
+    });
+}
 
-        function setSubPerm(key, sub, val) {
-            if (typeof formModules[key] !== 'object') formModules[key] = {};
-            formModules[key][sub] = val;
-            const anyOn = Object.values(formModules[key]).some(x => x);
-            const cb = document.getElementById('mod-' + key);
-            if (cb) cb.checked = anyOn;
-            syncMasterCheckbox('modules');
-        }
+function renderTable() {
+    const filtered = getFiltered();
+    const tbody = document.getElementById('user-tbody');
+    const empty  = document.getElementById('empty-state');
 
-        function setFeaturePerm(key, val) {
-            formFeatures[key] = val;
-            syncMasterCheckbox('features');
-        }
+    document.getElementById('result-count').textContent = filtered.length === users.length ? '' : `(${filtered.length} of ${users.length})`;
+    document.getElementById('footer-count').textContent = `Showing ${filtered.length} user${filtered.length !== 1 ? 's' : ''}`;
 
-        function masterToggle(type, val) {
-            if (type === 'modules') {
-                MODULES.forEach(mod => {
-                    if (mod.sub) { if (typeof formModules[mod.key] !== 'object') formModules[mod.key] = {}; mod.sub.forEach(s => formModules[mod.key][s] = val); }
-                    else formModules[mod.key] = val;
-                });
-                renderModuleToggles();
-            } else {
-                FEATURES.forEach(f => formFeatures[f.key] = val);
-                renderFeatureToggles();
-            }
-        }
+    if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden'); empty.classList.add('flex'); return;
+    }
+    empty.classList.add('hidden'); empty.classList.remove('flex');
 
-        function syncMasterCheckbox(type) {
-            if (type === 'modules') {
-                const allOn = MODULES.every(m => getModuleEnabled(formModules, m.key));
-                const masterCb = document.getElementById('master-modules');
-                if (masterCb) masterCb.checked = allOn;
-            } else {
-                const allOn = FEATURES.every(f => formFeatures[f.key]);
-                const masterCb = document.getElementById('master-features');
-                if (masterCb) masterCb.checked = allOn;
-            }
-        }
+    let html = '';
+    filtered.forEach(u => {
+        const open      = expandedId === u.id;
+        const initials  = getInitials(u.name);
+        const avatarBg  = AVATAR_BG[u.role] || '#64748b';
+        const roleColor = ROLE_COLORS[u.role] || '#64748b';
+        const roleBg    = ROLE_BG[u.role] || '#f1f5f9';
+        const modCount  = countModulePerms(u);
+        const featCount = countFeaturePerms(u);
+        const isSA      = u.role === 'Super Admin';
 
-        // ── ROLE CHANGE ───────────────────────────────────────────────────────────────
-        function onRoleChange(role) { /* no-op for now; role restrictions applied on submit */ }
-
-        // ── RENDER TABLE ──────────────────────────────────────────────────────────────
-        function getFiltered() {
-            const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
-            return users.filter(u => {
-                if (filters.role !== 'All' && u.role !== filters.role) return false;
-                if (filters.status !== 'All' && u.status !== filters.status) return false;
-                if (q) {
-                    const hay = [u.name, u.email, u.role, u.designation, u.phone].join(' ').toLowerCase();
-                    if (!hay.includes(q)) return false;
-                }
-                return true;
-            });
-        }
-
-        function renderTable() {
-            const filtered = getFiltered();
-            const tbody = document.getElementById('user-tbody');
-            const empty = document.getElementById('empty-state');
-
-            document.getElementById('result-count').textContent = filtered.length === users.length ? '' : `(${filtered.length} of ${users.length})`;
-            document.getElementById('footer-count').textContent = `Showing ${filtered.length} user${filtered.length !== 1 ? 's' : ''}`;
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = '';
-                empty.classList.remove('hidden'); empty.classList.add('flex'); return;
-            }
-            empty.classList.add('hidden'); empty.classList.remove('flex');
-
-            let html = '';
-            filtered.forEach(u => {
-                const open = expandedId === u.id;
-                const initials = getInitials(u.name);
-                const avatarBg = AVATAR_BG[u.role] || '#64748b';
-                const roleColor = ROLE_COLORS[u.role] || '#64748b';
-                const roleBg = ROLE_BG[u.role] || '#f1f5f9';
-                const modCount = countModulePerms(u);
-                const featCount = countFeaturePerms(u);
-                const isSA = u.role === 'Super Admin';
-
-                html += `
+        html += `
         <tr id="row-${u.id}" class="user-row ${open ? 'expanded' : ''}" onclick="toggleRow(${u.id})">
             <td class="px-3 py-2">
                 <div class="flex items-center gap-2.5">
@@ -1128,50 +870,56 @@
             </td>
         </tr>`;
 
-                if (open) {
-                    html += buildExpandRow(u);
-                }
-            });
-            tbody.innerHTML = html;
-            updateStats();
+        if (open) html += buildExpandRow(u);
+    });
+    tbody.innerHTML = html;
+    updateStats();
+}
+
+function buildExpandRow(u) {
+    const isSA = u.role === 'Super Admin';
+
+    // Module permissions display
+    const modHtml = MODULES.map(mod => {
+        const enabled = getModuleEnabled(u.modules, mod.key);
+        let subChips = '';
+        if (mod.sub && typeof u.modules[mod.key] === 'object') {
+            const activeKeys = mod.sub.filter(s => u.modules[mod.key][s.key]);
+            if (activeKeys.length) {
+                subChips = `<div class="flex flex-wrap gap-0.5 mt-0.5">${activeKeys.map(s =>
+                    `<span style="font-size:6.5px;color:#475569;background:#e2e8f0;padding:1px 4px;border-radius:3px;">${s.label}</span>`
+                ).join('')}</div>`;
+            }
         }
-
-        function buildExpandRow(u) {
-            const isSA = u.role === 'Super Admin';
-
-            // Build module perm grid
-            const modHtml = MODULES.map(mod => {
-                const enabled = getModuleEnabled(u.modules, mod.key);
-                const hasSub = mod.sub && typeof u.modules[mod.key] === 'object';
-                const subParts = hasSub ? mod.sub.filter(s => u.modules[mod.key][s]).map(s => `<span style="font-size:7px;color:#64748b;background:#f1f5f9;padding:1px 5px;border-radius:4px;">${s}</span>`).join(' ') : '';
-                return `<div class="flex items-start gap-1.5 py-1 border-b border-gray-100">
-            <i class="fa-solid ${mod.icon} text-[8px] mt-0.5 flex-shrink-0" style="color:${enabled ? '#0f172a' : '#cbd5e1'};width:11px;text-align:center;"></i>
+        return `<div class="exp-mod-row">
+            <i class="fa-solid ${mod.icon} text-[8px] mt-0.5 flex-shrink-0" style="color:${enabled?'#0f172a':'#cbd5e1'};width:11px;text-align:center;"></i>
             <div class="flex-1">
-                <span class="text-[8px] font-bold" style="color:${enabled ? '#1e293b' : '#94a3b8'}">${mod.label}</span>
-                ${subParts ? `<div class="flex flex-wrap gap-0.5 mt-0.5">${subParts}</div>` : ''}
+                <span class="text-[8px] font-bold" style="color:${enabled?'#1e293b':'#94a3b8'}">${mod.label}</span>
+                ${subChips}
             </div>
-            <span style="font-size:7px;font-weight:800;color:${enabled ? '#15803d' : '#94a3b8'}">${enabled ? 'ON' : 'OFF'}</span>
+            <span style="font-size:7px;font-weight:800;color:${enabled?'#15803d':'#94a3b8'}">${enabled?'ON':'OFF'}</span>
         </div>`;
-            }).join('');
+    }).join('');
 
-            const featHtml = FEATURES.map(feat => {
-                const on = u.features[feat.key];
-                return `<div class="flex items-center justify-between py-0.5">
+    // Feature access display
+    const featHtml = FEATURES.map(feat => {
+        const on = u.features[feat.key];
+        return `<div class="flex items-center justify-between py-0.5">
             <div class="flex items-center gap-1.5">
-                <i class="fa-solid ${feat.icon} text-[8px]" style="color:${on ? '#0f172a' : '#cbd5e1'};width:11px;text-align:center;"></i>
-                <span class="text-[8px] font-semibold" style="color:${on ? '#1e293b' : '#94a3b8'}">${feat.label}</span>
+                <i class="fa-solid ${feat.icon} text-[8px]" style="color:${on?'#0f172a':'#cbd5e1'};width:11px;text-align:center;"></i>
+                <span class="text-[8px] font-semibold" style="color:${on?'#1e293b':'#94a3b8'}">${feat.label}</span>
             </div>
-            <span style="font-size:7px;font-weight:800;color:${on ? '#15803d' : '#94a3b8'}">${on ? 'ON' : 'OFF'}</span>
+            <span style="font-size:7px;font-weight:800;color:${on?'#15803d':'#94a3b8'}">${on?'ON':'OFF'}</span>
         </div>`;
-            }).join('');
+    }).join('');
 
-            return `
+    return `
     <tr class="detail-expand-row" id="detail-${u.id}">
       <td colspan="6">
         <div class="detail-expand-inner px-6 py-4">
-          <div class="grid gap-4" style="grid-template-columns: 1fr 1.6fr 1fr;">
+          <div class="grid gap-4" style="grid-template-columns:1fr 1.6fr 1fr;">
 
-            <!-- Identity card -->
+            <!-- Identity -->
             <div>
               <p class="label-text mb-2"><i class="fa-solid fa-id-card mr-1"></i>User Details</p>
               <div class="space-y-1.5">
@@ -1181,7 +929,8 @@
                 ${u.phone ? `<div><p class="text-[7px] text-gray-400 uppercase font-bold">Contact</p><p class="text-[10px] font-semibold text-gray-800">${u.phone}</p></div>` : ''}
                 <div><p class="text-[7px] text-gray-400 uppercase font-bold">Joined</p><p class="text-[10px] font-semibold text-gray-800">${u.joined}</p></div>
                 <div class="pt-1 flex gap-2 mt-2">
-                    ${!isSA ? `<button onclick="event.stopPropagation();loadEditForm(${u.id})"
+                    ${!isSA ? `
+                    <button onclick="event.stopPropagation();loadEditForm(${u.id})"
                         class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 text-white text-[8px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
                         <i class="fa-solid fa-pen text-[7px]"></i>Edit
                     </button>
@@ -1190,7 +939,7 @@
                         <i class="fa-solid fa-trash text-[7px]"></i>Delete
                     </button>` : `<span class="text-[7px] font-bold text-purple-400 uppercase tracking-widest flex items-center gap-1"><i class="fa-solid fa-shield-halved"></i> Super Admin — Protected</span>`}
                 </div>
-                <p class="text-[7px] text-gray-300 font-mono">ID #${String(u.id).padStart(3, '0')} · Added ${u.added}</p>
+                <p class="text-[7px] text-gray-300 font-mono">ID #${String(u.id).padStart(3,'0')} · Added ${u.added}</p>
               </div>
             </div>
 
@@ -1210,262 +959,254 @@
         </div>
       </td>
     </tr>`;
-        }
+}
 
-        function updateStats() {
-            document.getElementById('stat-total').textContent = users.length;
-            document.getElementById('stat-active').textContent = users.filter(u => u.status === 'Active').length;
-            document.getElementById('stat-admins').textContent = users.filter(u => u.role === 'Admin' || u.role === 'Super Admin').length;
-            document.getElementById('stat-agents').textContent = users.filter(u => u.role === 'Tele Agent' || u.role === 'Accounts Manager').length;
-        }
+function updateStats() {
+    document.getElementById('stat-total').textContent  = users.length;
+    document.getElementById('stat-active').textContent = users.filter(u => u.status === 'Active').length;
+    document.getElementById('stat-admins').textContent = users.filter(u => u.role === 'Admin' || u.role === 'Super Admin').length;
+    document.getElementById('stat-agents').textContent = users.filter(u => u.role === 'Tele Agent' || u.role === 'Accounts Manager').length;
+}
 
-        // ── ROW ACCORDION ─────────────────────────────────────────────────────────────
-        function toggleRow(id) {
-            expandedId = expandedId === id ? null : id;
-            renderTable();
-            if (expandedId !== null) {
-                setTimeout(() => {
-                    const el = document.getElementById('detail-' + id);
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 50);
-            }
-        }
+// ── ROW ACCORDION ─────────────────────────────────────────────────────────────
+function toggleRow(id) {
+    expandedId = expandedId === id ? null : id;
+    renderTable();
+    if (expandedId !== null) {
+        setTimeout(() => {
+            const el = document.getElementById('detail-' + id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 50);
+    }
+}
 
-        // ── LOAD EDIT FORM ────────────────────────────────────────────────────────────
-        function loadEditForm(id) {
-            const u = users.find(x => x.id === id);
-            if (!u) return;
+// ── LOAD EDIT FORM ────────────────────────────────────────────────────────────
+function loadEditForm(id) {
+    const u = users.find(x => x.id === id);
+    if (!u) return;
 
-            document.getElementById('edit-id').value = id;
-            document.getElementById('f-name').value = u.name || '';
-            document.getElementById('f-designation').value = u.designation || '';
-            document.getElementById('f-email').value = u.email || '';
-            document.getElementById('f-role').value = u.role || '';
-            document.getElementById('f-status').value = u.status || 'Active';
-            document.getElementById('f-phone').value = u.phone || '';
-            document.getElementById('f-joined').value = u.joined || '';
-            document.getElementById('f-password').value = '';
-            document.getElementById('f-confirm-pw').value = '';
-            document.getElementById('pw-optional-label').style.display = '';
+    document.getElementById('edit-id').value        = id;
+    document.getElementById('f-name').value         = u.name || '';
+    document.getElementById('f-designation').value  = u.designation || '';
+    document.getElementById('f-email').value        = u.email || '';
+    document.getElementById('f-role').value         = u.role || '';
+    document.getElementById('f-status').value       = u.status || 'Active';
+    document.getElementById('f-phone').value        = u.phone || '';
+    document.getElementById('f-joined').value       = u.joined || '';
+    document.getElementById('f-password').value     = '';
+    document.getElementById('f-confirm-pw').value   = '';
+    document.getElementById('pw-optional-label').style.display = '';
+    document.getElementById('role-hint-card').classList.add('hidden');
 
-            // Deep-copy permissions
-            formModules = JSON.parse(JSON.stringify(u.modules));
-            formFeatures = JSON.parse(JSON.stringify(u.features));
-            renderModuleToggles();
-            renderFeatureToggles();
+    formModules  = JSON.parse(JSON.stringify(u.modules));
+    formFeatures = JSON.parse(JSON.stringify(u.features));
+    renderModuleToggles();
+    renderFeatureToggles();
 
-            document.getElementById('panel-title').textContent = 'Edit User';
-            document.getElementById('panel-subtitle').textContent = u.name;
-            document.getElementById('panel-subtitle').style.display = 'block';
-            document.getElementById('cancel-edit-btn').style.display = 'flex';
-            document.getElementById('panel-dot').style.display = 'none';
-            document.getElementById('panel-header').style.background = '#fffbeb';
-            document.getElementById('panel-header').style.borderBottomColor = '#fde68a';
-            document.getElementById('submit-icon').className = 'fa-solid fa-floppy-disk mr-1.5';
-            document.getElementById('submit-label').textContent = 'Save Changes';
-            document.getElementById('submit-btn').style.background = '#d97706';
+    document.getElementById('panel-title').textContent       = 'Edit User';
+    document.getElementById('panel-subtitle').textContent    = u.name;
+    document.getElementById('panel-subtitle').style.display  = 'block';
+    document.getElementById('cancel-edit-btn').style.display = 'flex';
+    document.getElementById('panel-dot').style.display       = 'none';
+    document.getElementById('panel-header').style.background = '#fffbeb';
+    document.getElementById('panel-header').style.borderBottomColor = '#fde68a';
+    document.getElementById('submit-icon').className         = 'fa-solid fa-floppy-disk mr-1.5';
+    document.getElementById('submit-label').textContent      = 'Save Changes';
+    document.getElementById('submit-btn').style.background   = '#d97706';
 
-            document.querySelector('#left-panel .scroll-inner').scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    switchTab('details');
+    document.querySelector('#left-panel .scroll-inner').scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-        function cancelEditMode() {
-            document.getElementById('edit-id').value = '';
-            resetFormPanel();
-            clearFormFields();
-        }
+function cancelEditMode() {
+    document.getElementById('edit-id').value = '';
+    resetFormPanel();
+    clearFormFields();
+}
 
-        function resetFormPanel() {
-            document.getElementById('panel-title').textContent = 'Add New User';
-            document.getElementById('panel-subtitle').textContent = '';
-            document.getElementById('panel-subtitle').style.display = 'none';
-            document.getElementById('cancel-edit-btn').style.display = 'none';
-            document.getElementById('panel-dot').style.display = '';
-            document.getElementById('panel-header').style.background = '';
-            document.getElementById('panel-header').style.borderBottomColor = '';
-            document.getElementById('submit-icon').className = 'fa-solid fa-plus mr-1.5';
-            document.getElementById('submit-label').textContent = 'Add User';
-            document.getElementById('submit-btn').style.background = '#111827';
-        }
+function resetFormPanel() {
+    document.getElementById('panel-title').textContent       = 'Add New User';
+    document.getElementById('panel-subtitle').textContent    = '';
+    document.getElementById('panel-subtitle').style.display  = 'none';
+    document.getElementById('cancel-edit-btn').style.display = 'none';
+    document.getElementById('panel-dot').style.display       = '';
+    document.getElementById('panel-header').style.background = '';
+    document.getElementById('panel-header').style.borderBottomColor = '';
+    document.getElementById('submit-icon').className         = 'fa-solid fa-plus mr-1.5';
+    document.getElementById('submit-label').textContent      = 'Add User';
+    document.getElementById('submit-btn').style.background   = '#111827';
+}
 
-        function clearFormFields() {
-            ['f-name', 'f-designation', 'f-email', 'f-phone', 'f-password', 'f-confirm-pw'].forEach(id => {
-                const el = document.getElementById(id); if (el) el.value = '';
-            });
-            document.getElementById('f-role').value = '';
-            document.getElementById('f-status').value = 'Active';
-            document.getElementById('f-joined').value = '';
-            document.getElementById('pw-strength-bar').style.width = '0';
-            document.getElementById('pw-strength-label').style.display = 'none';
-            document.getElementById('pw-match-label').style.display = 'none';
-            document.getElementById('pw-optional-label').style.display = '';
-            formModules = defaultModules();
-            formFeatures = defaultFeatures();
-            renderModuleToggles();
-            renderFeatureToggles();
-        }
+function clearFormFields() {
+    ['f-name','f-designation','f-email','f-phone','f-password','f-confirm-pw'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('f-role').value   = '';
+    document.getElementById('f-status').value = 'Active';
+    document.getElementById('f-joined').value = '';
+    document.getElementById('pw-strength-bar').style.width = '0';
+    document.getElementById('pw-strength-label').style.display = 'none';
+    document.getElementById('pw-match-label').style.display    = 'none';
+    document.getElementById('pw-optional-label').style.display = '';
+    document.getElementById('role-hint-card').classList.add('hidden');
+    formModules  = defaultModules();
+    formFeatures = defaultFeatures();
+    renderModuleToggles();
+    renderFeatureToggles();
+}
 
-        // ── SAVE FORM ─────────────────────────────────────────────────────────────────
-        function saveForm() {
-            const name = document.getElementById('f-name').value.trim();
-            const email = document.getElementById('f-email').value.trim();
-            const role = document.getElementById('f-role').value;
+// ── SAVE FORM ─────────────────────────────────────────────────────────────────
+function saveForm() {
+    const name  = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const role  = document.getElementById('f-role').value;
 
-            if (!name) { document.getElementById('f-name').focus(); return; }
-            if (!email) { document.getElementById('f-email').focus(); return; }
-            if (!role) { document.getElementById('f-role').focus(); return; }
+    if (!name)  { switchTab('details'); document.getElementById('f-name').focus();  return; }
+    if (!email) { switchTab('details'); document.getElementById('f-email').focus(); return; }
+    if (!role)  { switchTab('details'); document.getElementById('f-role').focus();  return; }
 
-            // Super Admin guard
-            if (role === 'Super Admin') {
-                alert('Super Admin role cannot be assigned from this interface.');
-                return;
-            }
+    if (role === 'Super Admin') {
+        alert('Super Admin role cannot be assigned from this interface.');
+        return;
+    }
 
-            // Password validation (only if filled)
-            const pw = document.getElementById('f-password').value;
-            const cpw = document.getElementById('f-confirm-pw').value;
-            const editId = document.getElementById('edit-id').value;
-            if (pw || (!editId && pw !== undefined)) {
-                if (pw && pw.length < 8) { alert('Password must be at least 8 characters.'); return; }
-                if (pw && pw !== cpw) { alert('Passwords do not match.'); return; }
-            }
+    const pw  = document.getElementById('f-password').value;
+    const cpw = document.getElementById('f-confirm-pw').value;
+    const editId = document.getElementById('edit-id').value;
+    if (pw || (!editId && pw !== undefined)) {
+        if (pw && pw.length < 8) { switchTab('details'); alert('Password must be at least 8 characters.'); return; }
+        if (pw && pw !== cpw)    { switchTab('details'); alert('Passwords do not match.'); return; }
+    }
 
-            const data = {
-                name,
-                designation: document.getElementById('f-designation').value.trim(),
-                email,
-                role,
-                status: document.getElementById('f-status').value,
-                phone: document.getElementById('f-phone').value.trim(),
-                joined: document.getElementById('f-joined').value || new Date().toISOString().slice(0, 10),
-                modules: JSON.parse(JSON.stringify(formModules)),
-                features: JSON.parse(JSON.stringify(formFeatures)),
-            };
+    const data = {
+        name,
+        designation: document.getElementById('f-designation').value.trim(),
+        email,
+        role,
+        status:  document.getElementById('f-status').value,
+        phone:   document.getElementById('f-phone').value.trim(),
+        joined:  document.getElementById('f-joined').value || new Date().toISOString().slice(0,10),
+        modules: JSON.parse(JSON.stringify(formModules)),
+        features:JSON.parse(JSON.stringify(formFeatures)),
+    };
 
-            if (editId) {
-                const u = users.find(x => x.id === parseInt(editId));
-                if (u) Object.assign(u, data);
-                expandedId = parseInt(editId);
-                document.getElementById('edit-id').value = '';
-                resetFormPanel();
-                clearFormFields();
-                renderTable();
-                flashBtn('Saved!', '#15803d');
-            } else {
-                users.push({ id: nextId++, added: new Date().toISOString().slice(0, 10), ...data });
-                clearFormFields();
-                renderTable();
-                flashBtn('Added!', '#15803d');
-            }
-        }
-
-        function flashBtn(label, color) {
-            const btn = document.getElementById('submit-btn');
-            const lbl = document.getElementById('submit-label');
-            btn.style.background = color;
-            lbl.textContent = label;
-            setTimeout(() => { btn.style.background = '#111827'; lbl.textContent = 'Add User'; }, 1500);
-        }
-
-        // ── DELETE ────────────────────────────────────────────────────────────────────
-        function deleteUser(id) {
-            const u = users.find(x => x.id === id);
-            if (!u) return;
-            if (u.role === 'Super Admin') { alert('Super Admin cannot be deleted.'); return; }
-            if (!confirm(`Delete ${u.name}? This cannot be undone.`)) return;
-            users = users.filter(x => x.id !== id);
-            if (expandedId === id) expandedId = null;
-            if (document.getElementById('edit-id').value === String(id)) cancelEditMode();
-            renderTable();
-        }
-
-        // ── FILTERS ───────────────────────────────────────────────────────────────────
-        function toggleFilter(dim, value) {
-            filters[dim] = value;
-            const dd = document.getElementById('dd-' + dim);
-            if (dd) dd.value = value;
-            renderTable();
-            updateClearBtn();
-        }
-
-        function clearFilters() {
-            filters = { role: 'All', status: 'All' };
-            document.getElementById('search-input').value = '';
-            ['role', 'status'].forEach(d => { const dd = document.getElementById('dd-' + d); if (dd) dd.value = 'All'; });
-            updateClearBtn();
-            renderTable();
-        }
-
-        function applyFilters() { updateClearBtn(); renderTable(); }
-
-        function updateClearBtn() {
-            const q = (document.getElementById('search-input').value || '').trim();
-            const active = filters.role !== 'All' || filters.status !== 'All' || q;
-            document.getElementById('clear-btn').classList.toggle('hidden', !active);
-        }
-
-        // ── PASSWORD UX ───────────────────────────────────────────────────────────────
-        function togglePw(id, icon) {
-            const input = document.getElementById(id);
-            if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); }
-            else { input.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
-        }
-
-        function checkPasswordStrength(val) {
-            const bar = document.getElementById('pw-strength-bar');
-            const label = document.getElementById('pw-strength-label');
-            if (!val) { bar.style.width = '0'; label.style.display = 'none'; return; }
-            label.style.display = 'block';
-            let score = 0;
-            if (val.length >= 8) score++;
-            if (/[A-Z]/.test(val)) score++;
-            if (/[0-9]/.test(val)) score++;
-            if (/[^A-Za-z0-9]/.test(val)) score++;
-            const levels = [
-                { w: '25%', color: '#ef4444', text: 'Weak' },
-                { w: '50%', color: '#f97316', text: 'Fair' },
-                { w: '75%', color: '#eab308', text: 'Good' },
-                { w: '100%', color: '#22c55e', text: 'Strong' },
-            ];
-            const lvl = levels[Math.max(0, score - 1)];
-            bar.style.width = lvl.w; bar.style.background = lvl.color;
-            label.textContent = lvl.text; label.style.color = lvl.color;
-        }
-
-        function checkConfirmPw() {
-            const pw = document.getElementById('f-password').value;
-            const cpw = document.getElementById('f-confirm-pw').value;
-            const lbl = document.getElementById('pw-match-label');
-            if (!cpw) { lbl.style.display = 'none'; return; }
-            lbl.style.display = 'block';
-            if (pw === cpw) { lbl.textContent = '✓ Passwords match'; lbl.style.color = '#15803d'; }
-            else { lbl.textContent = '✗ Passwords do not match'; lbl.style.color = '#dc2626'; }
-        }
-
-        // ── EXPORT CSV ────────────────────────────────────────────────────────────────
-        function exportCSV() {
-            const filtered = getFiltered();
-            const headers = ['ID', 'Name', 'Designation', 'Email', 'Role', 'Status', 'Phone', 'Joined', 'Modules Enabled', 'Features Enabled', 'Added'];
-            const rows = filtered.map(u => [
-                u.id, `"${u.name}"`, `"${u.designation || ''}"`, `"${u.email}"`, u.role, u.status,
-                `"${u.phone || ''}"`, u.joined,
-                MODULES.filter(m => getModuleEnabled(u.modules, m.key)).map(m => m.label).join('; '),
-                FEATURES.filter(f => u.features[f.key]).map(f => f.label).join('; '),
-                u.added
-            ]);
-            const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
-            const a = document.createElement('a');
-            a.href = 'data:text/csv,' + encodeURIComponent(csv);
-            a.download = 'users_export.csv';
-            a.click();
-        }
-
-        // ── INIT ──────────────────────────────────────────────────────────────────────
-        formModules = defaultModules();
-        formFeatures = defaultFeatures();
-        renderModuleToggles();
-        renderFeatureToggles();
+    if (editId) {
+        const u = users.find(x => x.id === parseInt(editId));
+        if (u) Object.assign(u, data);
+        expandedId = parseInt(editId);
+        document.getElementById('edit-id').value = '';
+        resetFormPanel();
+        clearFormFields();
         renderTable();
-    </script>
-</body>
+        flashBtn('Saved!', '#15803d');
+    } else {
+        users.push({ id: nextId++, added: new Date().toISOString().slice(0,10), ...data });
+        clearFormFields();
+        renderTable();
+        flashBtn('Added!', '#15803d');
+    }
+}
 
+function flashBtn(label, color) {
+    const btn = document.getElementById('submit-btn');
+    const lbl = document.getElementById('submit-label');
+    btn.style.background = color;
+    lbl.textContent = label;
+    setTimeout(() => { btn.style.background = '#111827'; lbl.textContent = 'Add User'; }, 1500);
+}
+
+// ── DELETE ────────────────────────────────────────────────────────────────────
+function deleteUser(id) {
+    const u = users.find(x => x.id === id);
+    if (!u) return;
+    if (u.role === 'Super Admin') { alert('Super Admin cannot be deleted.'); return; }
+    if (!confirm(`Delete ${u.name}? This cannot be undone.`)) return;
+    users = users.filter(x => x.id !== id);
+    if (expandedId === id) expandedId = null;
+    if (document.getElementById('edit-id').value === String(id)) cancelEditMode();
+    renderTable();
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+function toggleFilter(dim, value) {
+    filters[dim] = value;
+    renderTable();
+    updateClearBtn();
+}
+function clearFilters() {
+    filters = { role: 'All', status: 'All' };
+    document.getElementById('search-input').value = '';
+    ['role','status'].forEach(d => { const dd = document.getElementById('dd-'+d); if (dd) dd.value = 'All'; });
+    updateClearBtn();
+    renderTable();
+}
+function applyFilters() { updateClearBtn(); renderTable(); }
+function updateClearBtn() {
+    const q = (document.getElementById('search-input').value || '').trim();
+    const active = filters.role !== 'All' || filters.status !== 'All' || q;
+    document.getElementById('clear-btn').classList.toggle('hidden', !active);
+}
+
+// ── PASSWORD UX ───────────────────────────────────────────────────────────────
+function togglePw(id, icon) {
+    const input = document.getElementById(id);
+    if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye','fa-eye-slash'); }
+    else                           { input.type = 'password'; icon.classList.replace('fa-eye-slash','fa-eye'); }
+}
+function checkPasswordStrength(val) {
+    const bar   = document.getElementById('pw-strength-bar');
+    const label = document.getElementById('pw-strength-label');
+    if (!val) { bar.style.width = '0'; label.style.display = 'none'; return; }
+    label.style.display = 'block';
+    let score = 0;
+    if (val.length >= 8)         score++;
+    if (/[A-Z]/.test(val))       score++;
+    if (/[0-9]/.test(val))       score++;
+    if (/[^A-Za-z0-9]/.test(val))score++;
+    const levels = [
+        { w:'25%', color:'#ef4444', text:'Weak' },
+        { w:'50%', color:'#f97316', text:'Fair' },
+        { w:'75%', color:'#eab308', text:'Good' },
+        { w:'100%', color:'#22c55e', text:'Strong' },
+    ];
+    const lvl = levels[Math.max(0, score-1)];
+    bar.style.width = lvl.w; bar.style.background = lvl.color;
+    label.textContent = lvl.text; label.style.color = lvl.color;
+}
+function checkConfirmPw() {
+    const pw  = document.getElementById('f-password').value;
+    const cpw = document.getElementById('f-confirm-pw').value;
+    const lbl = document.getElementById('pw-match-label');
+    if (!cpw) { lbl.style.display = 'none'; return; }
+    lbl.style.display = 'block';
+    if (pw === cpw) { lbl.textContent = '✓ Passwords match'; lbl.style.color = '#15803d'; }
+    else            { lbl.textContent = '✗ Passwords do not match'; lbl.style.color = '#dc2626'; }
+}
+
+// ── EXPORT CSV ────────────────────────────────────────────────────────────────
+function exportCSV() {
+    const filtered = getFiltered();
+    const headers  = ['ID','Name','Designation','Email','Role','Status','Phone','Joined','Modules Enabled','Features Enabled','Added'];
+    const rows = filtered.map(u => [
+        u.id, `"${u.name}"`, `"${u.designation||''}"`, `"${u.email}"`, u.role, u.status,
+        `"${u.phone||''}"`, u.joined,
+        MODULES.filter(m => getModuleEnabled(u.modules, m.key)).map(m => m.label).join('; '),
+        FEATURES.filter(f => u.features[f.key]).map(f => f.label).join('; '),
+        u.added
+    ]);
+    const csv = [headers,...rows].map(r => r.join(',')).join('\n');
+    const a   = document.createElement('a');
+    a.href    = 'data:text/csv,' + encodeURIComponent(csv);
+    a.download = 'users_export.csv';
+    a.click();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+formModules  = defaultModules();
+formFeatures = defaultFeatures();
+renderModuleToggles();
+renderFeatureToggles();
+renderTable();
+</script>
+</body>
 </html>
