@@ -421,6 +421,43 @@
             border-radius: 4px;
             font-size: 7px;
         }
+
+        /* Drop Zone */
+        .drop-zone {
+            border: 1px dashed #cbd5e1;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .drop-zone.dragover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            transform: scale(1.01);
+        }
+
+        .drop-zone-text {
+            font-size: 8px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        #p-doc-name {
+            font-size: 8px;
+            font-family: monospace;
+            color: #0f172a;
+            background: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
+        }
     </style>
 </head>
 
@@ -530,8 +567,26 @@
                                 <input id="p-expiry" type="date" class="input-compact bg-white">
                             </div>
                             <div>
-                                <label class="label-text">Document Info</label>
-                                <input id="p-doc" type="text" placeholder="e.g. T&C PDF link" class="input-compact bg-white">
+                                <label class="label-text">Supporting Document</label>
+                                <div id="promo-drop-zone" class="drop-zone"
+                                     onclick="document.getElementById('p-file-input').click()"
+                                     ondragover="handleDragOver(event)"
+                                     ondragleave="handleDragLeave(event)"
+                                     ondrop="handleDrop(event)">
+                                    <div class="drop-zone-text">
+                                        <i class="fa-solid fa-cloud-arrow-up mb-1 block text-[10px]"></i>
+                                        Drop PDF/JPG or Click
+                                    </div>
+                                    <input type="file" id="p-file-input" class="hidden" accept=".pdf,.jpg,.jpeg,.png" 
+                                           onchange="handleFileSelect(event)">
+                                    <div id="p-doc-display" class="hidden">
+                                        <span id="p-doc-name"></span>
+                                        <button onclick="clearSelectedFile(event)" class="ml-1 text-red-500 hover:text-red-700">
+                                            <i class="fa-solid fa-circle-xmark"></i>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="p-doc" value="">
+                                </div>
                             </div>
                         </div>
                         <button onclick="addPromotion()" class="w-full py-2.5 bg-indigo-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-indigo-700 transition-all shadow-sm">
@@ -748,7 +803,10 @@
                 categories: ["Secured", "Commercial", "Refinance"],
                 notes: "One of Australia's Big Four banks. Strong digital platform. Good for first home buyers.",
                 added: "2026-01-10",
-                promotions: [{ name: "Q1 Cashback", commission: "0.25%", offer: "$2000 Cashback for first home owners", expiry: "2026-06-30", document: "TC_ANZ_Q1.pdf" }]
+                promotions: [
+                    { name: "Q1 Cashback", commission: "0.25%", offer: "$2000 Cashback for first home owners", expiry: "2026-06-30", document: "TC_ANZ_Q1.pdf" },
+                    { name: "Loyalty Bonus", commission: "0.15%", offer: "Reduced interest rate for existing ANZ customers", expiry: "2026-12-31", document: "Loyalty_Terms.jpg" }
+                ]
             },
             {
                 id: 2, name: "Commonwealth Bank", trading: "CommBank", type: "Bank", status: "Active",
@@ -758,7 +816,9 @@
                 categories: ["Secured", "Commercial", "Unsecured", "Refinance"],
                 notes: "Australia's largest bank by market cap. Excellent branch network. NetBank is market-leading.",
                 added: "2026-01-10",
-                promotions: [{ name: "SME Boost", commission: "0.50%", offer: "Reduced rates for logistics industry", expiry: "2026-05-15", document: "CommBank_SME.pdf" }]
+                promotions: [
+                    { name: "SME Boost", commission: "0.50%", offer: "Reduced rates for logistics industry", expiry: "2026-05-15", document: "CommBank_SME.pdf" }
+                ]
             },
             {
                 id: 3, name: "Macquarie Bank", trading: "Macquarie", type: "Bank", status: "Active",
@@ -768,7 +828,9 @@
                 categories: ["Secured", "Commercial"],
                 notes: "Highly competitive rates for investment and SMSF lending. Tech-forward platform. No physical branches.",
                 added: "2026-01-15",
-                promotions: []
+                promotions: [
+                    { name: "Investor Special", commission: "0.40%", offer: "LVR up to 90% for investment properties", expiry: "2026-08-20", document: "Macq_Investor.pdf" }
+                ]
             },
             {
                 id: 4, name: "Westpac", trading: "Westpac", type: "Bank", status: "Active",
@@ -778,7 +840,9 @@
                 categories: ["Secured", "Commercial", "Unsecured", "Refinance"],
                 notes: "Australia's oldest bank. Strong in construction loans and family guarantee products.",
                 added: "2026-01-20",
-                promotions: []
+                promotions: [
+                    { name: "Build-A-Home", commission: "0.60%", offer: "Incentives for green construction projects", expiry: "2026-07-01", document: "Westpac_Green.png" }
+                ]
             },
             {
                 id: 5, name: "NAB", trading: "NAB", type: "Bank", status: "Active",
@@ -788,7 +852,9 @@
                 categories: ["Secured", "Commercial", "Refinance"],
                 notes: "Strong SME lending focus. Good for self-employed applicants. UBank is digital subsidiary.",
                 added: "2026-02-01",
-                promotions: []
+                promotions: [
+                    { name: "SME Recovery", commission: "0.75%", offer: "Special rates for post-disaster business loans", expiry: "2026-04-30", document: "NAB_SME_Recovery.pdf" }
+                ]
             },
             {
                 id: 6, name: "Suncorp", trading: "Suncorp Bank", type: "Non-Bank", status: "Inactive",
@@ -798,7 +864,9 @@
                 categories: ["Secured", "Unsecured", "Refinance"],
                 notes: "Regional bank focus. Good for QLD and NSW clients. Limited to certain postcodes for investment.",
                 added: "2026-02-10",
-                promotions: []
+                promotions: [
+                    { name: "Sun State Special", commission: "0.30%", offer: "QLD first home owner bonus grant", expiry: "2024-12-31", document: "Suncorp_QLD.pdf" }
+                ]
             }
         ];
 
@@ -897,7 +965,15 @@
                 <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[9px] font-black flex-shrink-0" style="background:${iconColor(l.type)}">${getInitials(l.name)}</div>
                     <div>
-                        <p class="text-[10px] font-bold text-gray-900">${l.name}</p>
+                        <div class="flex items-center gap-1.5">
+                            <p class="text-[10px] font-bold text-gray-900">${l.name}</p>
+                            ${l.promotions && l.promotions.length > 0 ? `
+                                <span class="bg-indigo-50 text-indigo-600 text-[7px] font-black px-1 py-0.5 rounded border border-indigo-100 uppercase tracking-tighter">
+                                    <i class="fa-solid fa-bullhorn mr-0.5"></i>${l.promotions.length} Promo
+                                </span>
+                            ` : ''}
+                        </div>
+                        <p class="text-[7px] text-gray-400 uppercase tracking-tighter">${l.trading || ''}</p>
                     </div>
                 </div>
             </td>
@@ -1019,35 +1095,57 @@
             document.getElementById('promotions-tab').classList.toggle('hidden', tab !== 'promotions');
             document.getElementById('tab-lender').classList.toggle('active', tab === 'lender');
             document.getElementById('tab-promotions').classList.toggle('active', tab === 'promotions');
-            if (tab === 'promotions' && document.getElementById('edit-id').value) {
-                renderPromotions(parseInt(document.getElementById('edit-id').value));
+            if (tab === 'promotions') {
+                const editId = document.getElementById('edit-id').value;
+                renderPromotions(editId ? parseInt(editId) : null);
             }
         }
 
-        function renderPromotions(lenderId) {
-            const l = lenders.find(x => x.id === lenderId);
+        function renderPromotions(lenderId = null) {
             const container = document.getElementById('promo-list-container');
-            if (!l || !container) return;
+            const titleEl = document.querySelector('#active-promos-list .form-section-title');
+            if (!container) return;
 
             const today = new Date().toISOString().split('T')[0];
+            let list = [];
 
-            container.innerHTML = (l.promotions || []).map((p, idx) => {
+            if (lenderId) {
+                const l = lenders.find(x => x.id === lenderId);
+                if (l && l.promotions) {
+                    list = l.promotions.map(p => ({ ...p, lenderName: l.name, lenderId: l.id }));
+                }
+                titleEl.innerHTML = `<i class="fa-solid fa-clock-rotate-left text-[8px]"></i> Promotions: ${l ? l.name : ''}`;
+            } else {
+                lenders.forEach(l => {
+                    if (l.promotions) {
+                        l.promotions.forEach(p => {
+                            list.push({ ...p, lenderName: l.name, lenderId: l.id });
+                        });
+                    }
+                });
+                titleEl.innerHTML = `<i class="fa-solid fa-earth-americas text-[8px]"></i> All Active Promotions`;
+            }
+
+            container.innerHTML = list.map((p, idx) => {
                 const isExpired = p.expiry && p.expiry < today;
                 return `
                     <div class="promo-card ${isExpired ? 'opacity-70 border-red-100 bg-red-50/30' : ''}">
                         <div class="flex justify-between items-start">
-                            <p class="promo-title">${p.name}</p>
+                            <div>
+                                <p class="promo-title">${p.name}</p>
+                                ${!lenderId ? `<p class="text-[7px] font-bold text-indigo-500 uppercase">${p.lenderName}</p>` : ''}
+                            </div>
                             <span class="promo-badge ${isExpired ? 'bg-red-500' : 'bg-indigo-600'}">${isExpired ? 'EXPIRED' : p.commission || 'N/A'}</span>
                         </div>
-                        <p class="promo-detail">${p.offer}</p>
+                        <p class="promo-detail mt-1">${p.offer}</p>
                         <div class="promo-meta">
                             <span class="${isExpired ? 'text-red-500' : ''}"><i class="fa-solid fa-calendar-days mr-1"></i>${p.expiry || 'No Expiry'}</span>
                             <span><i class="fa-solid fa-file-pdf mr-1"></i>${p.document || 'No doc'}</span>
-                            <button onclick="removePromotion(${lenderId}, ${idx})" class="ml-auto text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="removePromotion(${p.lenderId}, ${idx})" class="ml-auto text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 `;
-            }).join('') || '<div class="text-center py-6 text-gray-300 italic text-[9px]">No promotions found for this lender.</div>';
+            }).join('') || '<div class="text-center py-6 text-gray-300 italic text-[9px]">No promotions found.</div>';
         }
 
         function addPromotion() {
@@ -1069,8 +1167,52 @@
                 renderPromotions(l.id);
                 renderTable(); // Update counts in table
                 // Clear inputs
-                ['p-name', 'p-comm', 'p-offer', 'p-expiry', 'p-doc'].forEach(id => document.getElementById(id).value = '');
+                ['p-name', 'p-comm', 'p-offer', 'p-expiry', 'p-doc'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                document.getElementById('p-doc-display').classList.add('hidden');
+                document.querySelector('.drop-zone-text').classList.remove('hidden');
             }
+        }
+
+        // ── FILE UPLOAD LOGIC ────────────────────────────────────────────────────────
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length) processFile(files[0]);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length) processFile(files[0]);
+        }
+
+        function processFile(file) {
+            const fileName = file.name;
+            document.getElementById('p-doc').value = fileName;
+            document.getElementById('p-doc-name').textContent = fileName;
+            document.getElementById('p-doc-display').classList.remove('hidden');
+            document.querySelector('.drop-zone-text').classList.add('hidden');
+        }
+
+        function clearSelectedFile(e) {
+            e.stopPropagation();
+            document.getElementById('p-doc').value = '';
+            document.getElementById('p-doc-display').classList.add('hidden');
+            document.querySelector('.drop-zone-text').classList.remove('hidden');
+            document.getElementById('p-file-input').value = '';
         }
 
         function removePromotion(lenderId, idx) {
@@ -1119,12 +1261,19 @@
             document.getElementById('submit-btn').style.background = '#d97706';
 
             document.querySelector('#left-panel .flex-1').scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Sync promotions tab
+            renderPromotions(id);
         }
 
         function cancelEditMode() {
             document.getElementById('edit-id').value = '';
             resetFormPanel();
             clearFormFields();
+            // Show all promos in the tab if it's open
+            if (!document.getElementById('promotions-tab').classList.contains('hidden')) {
+                renderPromotions(null);
+            }
         }
 
         function resetFormPanel() {
