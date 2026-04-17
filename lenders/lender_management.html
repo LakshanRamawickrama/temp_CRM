@@ -360,6 +360,67 @@
             background: #1e293b;
             color: #fff;
         }
+
+        /* Tabs */
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #94a3b8;
+            border-bottom: 2px solid transparent;
+            transition: all .2s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            color: #0f172a;
+            border-bottom-color: #0f172a;
+        }
+
+        .promo-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .promo-title {
+            font-size: 10px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .promo-detail {
+            font-size: 9px;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .promo-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 8px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .promo-badge {
+            background: #0f172a;
+            color: #fff;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 7px;
+        }
     </style>
 </head>
 
@@ -432,14 +493,61 @@
                 </div>
             </div>
 
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-gray-100 bg-gray-50/30">
+                <div id="tab-lender" class="tab-btn active" onclick="switchLeftTab('lender')">Lender Info</div>
+                <div id="tab-promotions" class="tab-btn" onclick="switchLeftTab('promotions')">Promotions</div>
+            </div>
+
             <div class="flex-1 overflow-y-auto" style="scrollbar-width:none;-ms-overflow-style:none;">
                 <style>
                     #left-panel .flex-1::-webkit-scrollbar {
-                        display: none
+                        display: none;
                     }
                 </style>
 
-                <div class="p-4">
+                <!-- Promotions Tab -->
+                <div id="promotions-tab" class="hidden">
+                    <div id="promo-form" class="p-4 space-y-3 mb-4 bg-gray-50/50 border-b border-gray-100">
+                        <p class="form-section-title"><i class="fa-solid fa-bullhorn text-[8px]"></i> Add New Promotion</p>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="label-text">Promotion Name</label>
+                                <input id="p-name" type="text" placeholder="e.g. Q3 Cashback" class="input-compact bg-white">
+                            </div>
+                            <div>
+                                <label class="label-text">Commission %</label>
+                                <input id="p-comm" type="text" placeholder="e.g. 0.5%" class="input-compact bg-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="label-text">Offer Details</label>
+                            <textarea id="p-offer" rows="2" placeholder="Describe the offer..." class="input-compact bg-white resize-none"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="label-text">Expiry Date</label>
+                                <input id="p-expiry" type="date" class="input-compact bg-white">
+                            </div>
+                            <div>
+                                <label class="label-text">Document Info</label>
+                                <input id="p-doc" type="text" placeholder="e.g. T&C PDF link" class="input-compact bg-white">
+                            </div>
+                        </div>
+                        <button onclick="addPromotion()" class="w-full py-2.5 bg-indigo-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-indigo-700 transition-all shadow-sm">
+                            Add Promotion
+                        </button>
+                    </div>
+
+                    <div id="active-promos-list" class="p-4">
+                        <p class="form-section-title mb-3"><i class="fa-solid fa-clock-rotate-left text-[8px]"></i> Current Promotions</p>
+                        <div id="promo-list-container" class="space-y-2">
+                            <!-- Promotions will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="lender-info-tab" class="p-4">
                     <input type="hidden" id="edit-id" value="">
                     <input type="hidden" id="f-type" value="Bank">
 
@@ -639,7 +747,8 @@
                 tradingYears: 185, rateMin: 5.74, rateMax: 9.49, loanMin: 20000, loanMax: 5000000,
                 categories: ["Secured", "Commercial", "Refinance"],
                 notes: "One of Australia's Big Four banks. Strong digital platform. Good for first home buyers.",
-                added: "2026-01-10"
+                added: "2026-01-10",
+                promotions: [{ name: "Q1 Cashback", commission: "0.25%", offer: "$2000 Cashback for first home owners", expiry: "2026-06-30", document: "TC_ANZ_Q1.pdf" }]
             },
             {
                 id: 2, name: "Commonwealth Bank", trading: "CommBank", type: "Bank", status: "Active",
@@ -648,7 +757,8 @@
                 tradingYears: 112, rateMin: 5.69, rateMax: 9.99, loanMin: 10000, loanMax: 10000000,
                 categories: ["Secured", "Commercial", "Unsecured", "Refinance"],
                 notes: "Australia's largest bank by market cap. Excellent branch network. NetBank is market-leading.",
-                added: "2026-01-10"
+                added: "2026-01-10",
+                promotions: [{ name: "SME Boost", commission: "0.50%", offer: "Reduced rates for logistics industry", expiry: "2026-05-15", document: "CommBank_SME.pdf" }]
             },
             {
                 id: 3, name: "Macquarie Bank", trading: "Macquarie", type: "Bank", status: "Active",
@@ -657,7 +767,8 @@
                 tradingYears: 55, rateMin: 5.59, rateMax: 8.75, loanMin: 50000, loanMax: 20000000,
                 categories: ["Secured", "Commercial"],
                 notes: "Highly competitive rates for investment and SMSF lending. Tech-forward platform. No physical branches.",
-                added: "2026-01-15"
+                added: "2026-01-15",
+                promotions: []
             },
             {
                 id: 4, name: "Westpac", trading: "Westpac", type: "Bank", status: "Active",
@@ -666,7 +777,8 @@
                 tradingYears: 207, rateMin: 5.89, rateMax: 10.49, loanMin: 20000, loanMax: 5000000,
                 categories: ["Secured", "Commercial", "Unsecured", "Refinance"],
                 notes: "Australia's oldest bank. Strong in construction loans and family guarantee products.",
-                added: "2026-01-20"
+                added: "2026-01-20",
+                promotions: []
             },
             {
                 id: 5, name: "NAB", trading: "NAB", type: "Bank", status: "Active",
@@ -675,7 +787,8 @@
                 tradingYears: 163, rateMin: 5.79, rateMax: 9.89, loanMin: 20000, loanMax: 8000000,
                 categories: ["Secured", "Commercial", "Refinance"],
                 notes: "Strong SME lending focus. Good for self-employed applicants. UBank is digital subsidiary.",
-                added: "2026-02-01"
+                added: "2026-02-01",
+                promotions: []
             },
             {
                 id: 6, name: "Suncorp", trading: "Suncorp Bank", type: "Non-Bank", status: "Inactive",
@@ -684,7 +797,8 @@
                 tradingYears: 31, rateMin: 6.19, rateMax: 11.25, loanMin: 15000, loanMax: 3000000,
                 categories: ["Secured", "Unsecured", "Refinance"],
                 notes: "Regional bank focus. Good for QLD and NSW clients. Limited to certain postcodes for investment.",
-                added: "2026-02-10"
+                added: "2026-02-10",
+                promotions: []
             }
         ];
 
@@ -858,6 +972,19 @@
                   <p class="text-[7px] text-gray-300 font-mono mt-1">Added ${l.added} · ID #${String(l.id).padStart(3, '0')}</p>
                 </div>
 
+                <!-- Promotions -->
+                <div class="col-span-1">
+                  <p class="label-text mb-2"><i class="fa-solid fa-bullhorn mr-1"></i>Active Promotions</p>
+                  <div class="space-y-1.5">
+                    ${(l.promotions && l.promotions.length) ? l.promotions.map(p => `
+                      <div class="p-2 border border-gray-100 bg-white rounded-lg">
+                        <p class="text-[9px] font-bold text-gray-900">${p.name}</p>
+                        <p class="text-[7px] text-gray-400">Exp: ${p.expiry}</p>
+                      </div>
+                    `).join('') : '<p class="text-[9px] text-gray-300 italic">No active promos</p>'}
+                  </div>
+                </div>
+
               </div>
             </div>
           </td>
@@ -879,10 +1006,79 @@
             expandedId = expandedId === id ? null : id;
             renderTable();
             if (expandedId !== null) {
+                renderPromotions(expandedId); // Update promo tab content if open
                 setTimeout(() => {
                     const el = document.getElementById('detail-' + id);
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 50);
+            }
+        }
+
+        function switchLeftTab(tab) {
+            document.getElementById('lender-info-tab').classList.toggle('hidden', tab !== 'lender');
+            document.getElementById('promotions-tab').classList.toggle('hidden', tab !== 'promotions');
+            document.getElementById('tab-lender').classList.toggle('active', tab === 'lender');
+            document.getElementById('tab-promotions').classList.toggle('active', tab === 'promotions');
+            if (tab === 'promotions' && document.getElementById('edit-id').value) {
+                renderPromotions(parseInt(document.getElementById('edit-id').value));
+            }
+        }
+
+        function renderPromotions(lenderId) {
+            const l = lenders.find(x => x.id === lenderId);
+            const container = document.getElementById('promo-list-container');
+            if (!l || !container) return;
+
+            const today = new Date().toISOString().split('T')[0];
+
+            container.innerHTML = (l.promotions || []).map((p, idx) => {
+                const isExpired = p.expiry && p.expiry < today;
+                return `
+                    <div class="promo-card ${isExpired ? 'opacity-70 border-red-100 bg-red-50/30' : ''}">
+                        <div class="flex justify-between items-start">
+                            <p class="promo-title">${p.name}</p>
+                            <span class="promo-badge ${isExpired ? 'bg-red-500' : 'bg-indigo-600'}">${isExpired ? 'EXPIRED' : p.commission || 'N/A'}</span>
+                        </div>
+                        <p class="promo-detail">${p.offer}</p>
+                        <div class="promo-meta">
+                            <span class="${isExpired ? 'text-red-500' : ''}"><i class="fa-solid fa-calendar-days mr-1"></i>${p.expiry || 'No Expiry'}</span>
+                            <span><i class="fa-solid fa-file-pdf mr-1"></i>${p.document || 'No doc'}</span>
+                            <button onclick="removePromotion(${lenderId}, ${idx})" class="ml-auto text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('') || '<div class="text-center py-6 text-gray-300 italic text-[9px]">No promotions found for this lender.</div>';
+        }
+
+        function addPromotion() {
+            const editId = document.getElementById('edit-id').value;
+            if (!editId) { alert("Please select a lender first to add a promotion."); return; }
+            
+            const name = document.getElementById('p-name').value;
+            const comm = document.getElementById('p-comm').value;
+            const offer = document.getElementById('p-offer').value;
+            const expiry = document.getElementById('p-expiry').value;
+            const doc = document.getElementById('p-doc').value;
+
+            if (!name || !offer) { alert("Name and Offer details are required."); return; }
+
+            const l = lenders.find(x => x.id === parseInt(editId));
+            if (l) {
+                if (!l.promotions) l.promotions = [];
+                l.promotions.push({ name, commission: comm, offer, expiry, document: doc });
+                renderPromotions(l.id);
+                renderTable(); // Update counts in table
+                // Clear inputs
+                ['p-name', 'p-comm', 'p-offer', 'p-expiry', 'p-doc'].forEach(id => document.getElementById(id).value = '');
+            }
+        }
+
+        function removePromotion(lenderId, idx) {
+            const l = lenders.find(x => x.id === lenderId);
+            if (l && l.promotions) {
+                l.promotions.splice(idx, 1);
+                renderPromotions(lenderId);
+                renderTable();
             }
         }
 
