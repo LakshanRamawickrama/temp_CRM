@@ -42,7 +42,6 @@
             min-width: 0;
         }
 
-<<<<<<< Updated upstream
         .side-nav {
             width: 70px;
             background: #0f172a;
@@ -55,13 +54,6 @@
             border-right: 1px solid #1e293b;
             flex-shrink: 0;
         }
-=======
-        .side-nav { width: 70px; background: #0f172a; height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px 0; gap: 8px; border-right: 1px solid #1e293b; flex-shrink: 0; overflow:hidden; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #94a3b8; transition: all .2s; cursor: pointer; text-decoration: none; padding: 8px; border-radius: 8px; width: 50px; }
-        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(255,255,255,.08); }
-        .nav-item i { font-size: 16px; }
-        .nav-text { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
->>>>>>> Stashed changes
 
         .nav-item {
             display: flex;
@@ -518,7 +510,6 @@
 
 <body>
 
-<<<<<<< Updated upstream
 <!-- Slim Sidebar -->
 <nav class="side-nav">
     <div class="mb-6">
@@ -596,80 +587,14 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             <div class="flex flex-col gap-0.5">
                 <h2 id="panel-title" class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Add New User</h2>
                 <p id="panel-subtitle" class="hidden text-[8px] text-amber-600 font-semibold"></p>
-=======
-    <!-- Slim Sidebar -->
-    <nav class="side-nav">
-        <div class="mb-6">
-            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-bolt text-sm"></i>
->>>>>>> Stashed changes
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="cancel-edit-btn" onclick="cancelEditMode()" style="display:none;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;border:1px solid #e2e8f0;font-size:8px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;background:white;transition:all .15s;">
+                    <i class="fa-solid fa-xmark" style="font-size:7px;"></i> Cancel
+                </button>
+                <div id="panel-dot" style="width:6px;height:6px;border-radius:50%;background:#7c3aed;"></div>
             </div>
         </div>
-
-        <a href="../dashboards/super_admindashboard.html" class="nav-item">
-            <i class="fa-solid fa-gauge-high"></i>
-            <span class="nav-text">Dashboard</span>
-        </a>
-
-        <a href="../task_and_followups/task_management.html" class="nav-item">
-            <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">Tasks & Followups</span>
-        </a>
-
-        <a href="../lead_management/lead_management.html" class="nav-item">
-            <i class="fa-solid fa-user-group"></i>
-            <span class="nav-text">Leads</span>
-        </a>
-
-        <a href="../loan_pipeline/loan_pipeline.html" class="nav-item">
-            <i class="fa-solid fa-diagram-project"></i>
-            <span class="nav-text">Loan Pipeline</span>
-        </a>
-
-        <a href="../lenders/lender_management.html" class="nav-item">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-            <span class="nav-text">Lenders</span>
-        </a>
-
-        <a href="../documents/document_vault.html" class="nav-item">
-            <i class="fa-solid fa-folder-open"></i>
-            <span class="nav-text">Documents Vault</span>
-        </a>
-
-        <a href="../user_management/user_management.html" class="nav-item active">
-            <i class="fa-solid fa-user-gear"></i>
-            <span class="nav-text">User Management</span>
-        </a>
-
-        <a href="../reporting/reporting_logs.html" class="nav-item">
-            <i class="fa-solid fa-chart-line"></i>
-            <span class="nav-text">Reporting Logs</span>
-        </a>
-    </nav>
-
-    <!-- Dashboard -->
-    <main class="dashboard-container">
-
-        <!-- LEFT PANEL: Add New User Form -->
-        <section class="panel-card" id="left-panel" style="display:flex;flex-direction:column;overflow:hidden;">
-
-            <!-- Panel header -->
-            <div id="panel-header"
-                class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 transition-all duration-200"
-                style="flex-shrink:0;">
-                <div class="flex flex-col gap-0.5">
-                    <h2 id="panel-title" class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Add New
-                        User</h2>
-                    <p id="panel-subtitle" class="hidden text-[8px] text-amber-600 font-semibold"></p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button id="cancel-edit-btn" onclick="cancelEditMode()"
-                        style="display:none;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;border:1px solid #e2e8f0;font-size:8px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;background:white;transition:all .15s;">
-                        <i class="fa-solid fa-xmark" style="font-size:7px;"></i> Cancel
-                    </button>
-                    <div id="panel-dot" style="width:6px;height:6px;border-radius:50%;background:#7c3aed;"></div>
-                </div>
-            </div>
 
             <!-- 3 Tab Togglers -->
             <div class="tab-bar">
@@ -688,67 +613,8 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             <div class="flex-1 overflow-y-auto scroll-inner" style="min-height:0;">
                 <input type="hidden" id="edit-id" value="">
 
-<<<<<<< Updated upstream
                 <!-- ── TAB 1: User Details ── -->
                 <div id="tab-details" class="tab-content active p-3 space-y-0">
-=======
-        <!-- Scrollable body -->
-        <div class="flex-1 overflow-y-auto scroll-inner" style="min-height:0;">
-            <input type="hidden" id="edit-id" value="">
-
-            <!-- ── TAB 1: User Details ── -->
-            <div id="tab-details" class="tab-content active p-3 space-y-0">
-                <div class="space-y-1.5">
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Full Name *</label>
-                            <input id="f-name" type="text" placeholder="e.g. Sarah Collins" class="input-compact">
-                        </div>
-                        <div>
-                            <label class="label-text">Designation</label>
-                            <input id="f-designation" type="text" placeholder="e.g. Senior Broker" class="input-compact">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="label-text">Email Address *</label>
-                        <input id="f-email" type="email" placeholder="user@company.com.au" class="input-compact">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Role *</label>
-                            <select id="f-role" class="input-compact" onchange="onRoleChange(this.value)">
-                                <option value="">— Select Role —</option>
-                                <option value="Super Admin">Super Admin</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Team Leader">Team Leader</option>
-                                <option value="Tele Agent">Tele Agent</option>
-                                <option value="Accounts Manager">Accounts Manager</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="label-text">Status</label>
-                            <select id="f-status" class="input-compact">
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="label-text">Contact Number</label>
-                            <input id="f-phone" type="tel" placeholder="+61 4xx xxx xxx" class="input-compact">
-                        </div>
-                        <div>
-                            <label class="label-text">Joined Date</label>
-                            <input id="f-joined" type="date" class="input-compact">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Password section -->
-                <div class="form-section">
-                    <p class="form-section-title"><i class="fa-solid fa-lock text-[8px]"></i> Password <span id="pw-optional-label" class="text-[7px] font-normal text-gray-400 normal-case tracking-normal">(optional for edit)</span></p>
->>>>>>> Stashed changes
                     <div class="space-y-1.5">
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -861,7 +727,6 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                 </div>
             </div>
 
-<<<<<<< Updated upstream
             <!-- Submit (always visible) -->
             <div class="px-3 py-2.5 border-t border-gray-100 bg-white" style="flex-shrink:0;">
                 <button id="submit-btn" onclick="saveForm()"
@@ -925,27 +790,6 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         <span id="stat-agents" class="text-[13px] font-black text-emerald-400">0</span>
                         <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Agents</span>
                     </div>
-=======
-            <!-- ── TAB 2: Modules ── -->
-            <div id="tab-modules" class="tab-content p-3">
-                <!-- Role permission summary card -->
-                <div id="role-summary-card" style="display:none;margin-bottom:10px;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0;">
-                    <div id="role-summary-header" style="padding:8px 12px;display:flex;align-items:center;gap:8px;">
-                        <i id="role-summary-icon" class="fa-solid fa-shield-halved" style="font-size:12px;"></i>
-                        <span id="role-summary-title" style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;"></span>
-                        <div style="flex:1;"></div>
-                        <span id="role-summary-badge" style="font-size:7px;font-weight:800;padding:2px 8px;border-radius:99px;"></span>
-                    </div>
-                    <div id="role-summary-modules" style="padding:8px 12px;background:#fafbfc;display:flex;flex-wrap:wrap;gap:5px;"></div>
-                </div>
-                <!-- Master toggle -->
-                <div class="master-toggle-row">
-                    <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">All Modules</span>
-                    <label class="toggle">
-                        <input type="checkbox" id="master-modules" onchange="masterToggle('modules',this.checked)">
-                        <span class="toggle-slider"></span>
-                    </label>
->>>>>>> Stashed changes
                 </div>
             </div>
 
@@ -1286,165 +1130,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                 </label>
             </div>
         </div>`).join('');
-<<<<<<< Updated upstream
             syncMasterCheckbox('features');
-=======
-    syncMasterCheckbox('features');
-}
-
-function toggleSubPanel(key) {
-    const body    = document.getElementById('sub-' + key);
-    const chevron = document.getElementById('chevron-' + key);
-    const open    = body.classList.toggle('open');
-    if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
-}
-
-function setModulePerm(key, val) {
-    const mod = MODULES.find(m => m.key === key);
-    if (mod && mod.sub) {
-        if (typeof formModules[key] !== 'object') formModules[key] = {};
-        mod.sub.forEach(s => formModules[key][s.key] = val);
-        const body    = document.getElementById('sub-' + key);
-        const chevron = document.getElementById('chevron-' + key);
-        if (body) { body.classList.toggle('open', val); if (chevron) chevron.style.transform = val ? 'rotate(180deg)' : ''; }
-        mod.sub.forEach(s => {
-            const cb = document.getElementById(`sub-${key}-${s.key}`);
-            if (cb) cb.checked = val;
-        });
-    } else {
-        formModules[key] = val;
-    }
-    syncMasterCheckbox('modules');
-}
-
-function setSubPerm(key, sub, val) {
-    if (typeof formModules[key] !== 'object') formModules[key] = {};
-    formModules[key][sub] = val;
-    const anyOn = Object.values(formModules[key]).some(x => x);
-    const cb = document.getElementById('mod-' + key);
-    if (cb) cb.checked = anyOn;
-    syncMasterCheckbox('modules');
-}
-
-function setFeaturePerm(key, val) {
-    formFeatures[key] = val;
-    syncMasterCheckbox('features');
-}
-
-function masterToggle(type, val) {
-    if (type === 'modules') {
-        MODULES.forEach(mod => {
-            if (mod.sub) {
-                if (typeof formModules[mod.key] !== 'object') formModules[mod.key] = {};
-                mod.sub.forEach(s => formModules[mod.key][s.key] = val);
-            } else {
-                formModules[mod.key] = val;
-            }
-        });
-        renderModuleToggles();
-    } else {
-        FEATURES.forEach(f => formFeatures[f.key] = val);
-        renderFeatureToggles();
-    }
-}
-
-function syncMasterCheckbox(type) {
-    if (type === 'modules') {
-        const allOn = MODULES.every(m => getModuleEnabled(formModules, m.key));
-        const masterCb = document.getElementById('master-modules');
-        if (masterCb) masterCb.checked = allOn;
-    } else {
-        const allOn = FEATURES.every(f => formFeatures[f.key]);
-        const masterCb = document.getElementById('master-features');
-        if (masterCb) masterCb.checked = allOn;
-    }
-}
-
-// ── ROLE CHANGE → AUTO-POPULATE PERMISSIONS ───────────────────────────────────
-function onRoleChange(role) {
-    if (!role) {
-        formModules  = defaultModules();
-        formFeatures = defaultFeatures();
-        document.getElementById('role-hint-card').classList.add('hidden');
-        document.getElementById('role-summary-card').style.display = 'none';
-        renderModuleToggles();
-        renderFeatureToggles();
-        return;
-    }
-    // auto-set permissions
-    formModules = makeModulesForRole(role);
-    renderModuleToggles();
-    renderFeatureToggles();
-    syncMasterCheckbox('modules');
-
-    // Show hint card
-    const roleLabels = {
-        'Super Admin':      'Super Admin — All permissions enabled.',
-        'Admin':            'Admin — Full access except certain lead view/delete restrictions.',
-        'Accounts Manager': 'Accounts Manager — View & financial permissions; no user/lender add.',
-        'Team Leader':      'Team Leader — Team-scoped view permissions; limited lender access.',
-        'Tele Agent':       'Tele Agent — Self-scoped permissions; basic task & lead access.',
-    };
-    document.getElementById('role-hint-text').textContent = roleLabels[role] || '';
-    document.getElementById('role-hint-card').classList.remove('hidden');
-
-    // Render role summary card in modules tab
-    renderRoleSummaryCard(role);
-
-    // Auto-switch to modules tab to show what was set
-    switchTab('modules');
-}
-
-function renderRoleSummaryCard(role) {
-    const card = document.getElementById('role-summary-card');
-    const header = document.getElementById('role-summary-header');
-    const icon = document.getElementById('role-summary-icon');
-    const title = document.getElementById('role-summary-title');
-    const badge = document.getElementById('role-summary-badge');
-    const modulesEl = document.getElementById('role-summary-modules');
-
-    const color = ROLE_COLORS[role] || '#6366f1';
-    const bg = ROLE_BG[role] || '#eef2ff';
-
-    header.style.background = bg;
-    icon.style.color = color;
-    title.textContent = role;
-    title.style.color = color;
-    badge.textContent = 'Auto-configured';
-    badge.style.background = color + '18';
-    badge.style.color = color;
-
-    // Module access summary
-    const ROLE_MODULES = {
-        'Super Admin':      ['Dashboard','Tasks','Leads','Pipeline','Lenders','Documents','Users','Reports'],
-        'Admin':            ['Dashboard','Tasks','Leads','Pipeline','Lenders','Documents','Users','Reports'],
-        'Team Leader':      ['Dashboard','Tasks','Leads','Pipeline','Documents','Reports'],
-        'Tele Agent':       ['Dashboard','Tasks','Leads','Pipeline','Documents'],
-        'Accounts Manager': ['Dashboard','Tasks','Leads','Lenders','Documents','Reports'],
-    };
-    const allowed = ROLE_MODULES[role] || [];
-    const all = ['Dashboard','Tasks','Leads','Pipeline','Lenders','Documents','Users','Reports'];
-
-    modulesEl.innerHTML = all.map(m => {
-        const has = allowed.includes(m);
-        return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:99px;font-size:7.5px;font-weight:800;background:${has ? '#dcfce7' : '#f1f5f9'};color:${has ? '#15803d' : '#94a3b8'};">
-            <i class="fa-solid ${has ? 'fa-check' : 'fa-xmark'}" style="font-size:7px;"></i>${m}
-        </span>`;
-    }).join('');
-
-    card.style.display = 'block';
-}
-
-// ── RENDER TABLE ──────────────────────────────────────────────────────────────
-function getFiltered() {
-    const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
-    return users.filter(u => {
-        if (filters.role   !== 'All' && u.role   !== filters.role)   return false;
-        if (filters.status !== 'All' && u.status !== filters.status) return false;
-        if (q) {
-            const hay = [u.name, u.email, u.role, u.designation, u.phone].join(' ').toLowerCase();
-            if (!hay.includes(q)) return false;
->>>>>>> Stashed changes
         }
 
         function toggleSubPanel(key) {
@@ -1757,22 +1443,10 @@ function getFiltered() {
             document.getElementById('pw-optional-label').style.display = '';
             document.getElementById('role-hint-card').classList.add('hidden');
 
-<<<<<<< Updated upstream
             formModules = JSON.parse(JSON.stringify(u.modules));
             formFeatures = JSON.parse(JSON.stringify(u.features));
             renderModuleToggles();
             renderFeatureToggles();
-=======
-    // Show role summary card for the user's role
-    if (u.role) renderRoleSummaryCard(u.role);
-
-    formModules  = JSON.parse(JSON.stringify(u.modules));
-    formFeatures = JSON.parse(JSON.stringify(u.features));
-    renderModuleToggles();
-    renderFeatureToggles();
-    renderModuleToggles();
-    renderFeatureToggles();
->>>>>>> Stashed changes
 
             document.getElementById('panel-title').textContent = 'Edit User';
             document.getElementById('panel-subtitle').textContent = u.name;
@@ -1808,7 +1482,6 @@ function getFiltered() {
             document.getElementById('submit-btn').style.background = '#111827';
         }
 
-<<<<<<< Updated upstream
         function clearFormFields() {
             ['f-name', 'f-designation', 'f-email', 'f-phone', 'f-password', 'f-confirm-pw'].forEach(id => {
                 const el = document.getElementById(id); if (el) el.value = '';
@@ -1826,26 +1499,6 @@ function getFiltered() {
             renderModuleToggles();
             renderFeatureToggles();
         }
-=======
-function clearFormFields() {
-    ['f-name','f-designation','f-email','f-phone','f-password','f-confirm-pw'].forEach(id => {
-        const el = document.getElementById(id); if (el) el.value = '';
-    });
-    document.getElementById('f-role').value   = '';
-    document.getElementById('f-status').value = 'Active';
-    document.getElementById('f-joined').value = '';
-    document.getElementById('pw-strength-bar').style.width = '0';
-    document.getElementById('pw-strength-label').style.display = 'none';
-    document.getElementById('pw-match-label').style.display    = 'none';
-    document.getElementById('pw-optional-label').style.display = '';
-    document.getElementById('role-hint-card').classList.add('hidden');
-    document.getElementById('role-summary-card').style.display = 'none';
-    formModules  = defaultModules();
-    formFeatures = defaultFeatures();
-    renderModuleToggles();
-    renderFeatureToggles();
-}
->>>>>>> Stashed changes
 
         // ── SAVE FORM ─────────────────────────────────────────────────────────────────
         function saveForm() {
@@ -2001,10 +1654,5 @@ function clearFormFields() {
         renderTable();
     </script>
 </body>
-<<<<<<< Updated upstream
 
 </html>
-=======
-</html>
-
->>>>>>> Stashed changes
