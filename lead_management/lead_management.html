@@ -369,13 +369,9 @@
         </div>
 
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
         <a href="../dashboard/super_admin_dashboard.html" class="nav-item">
 =======
         <a href="../dashboards/super_admindashboard.html" class="nav-item">
->>>>>>> Stashed changes
-=======
-        <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
 >>>>>>> Stashed changes
             <i class="fa-solid fa-gauge-high"></i>
             <span class="nav-text">Dashboard</span>
@@ -516,25 +512,17 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             <!-- PANEL HEADER: Ultra Compact -->
             <div class="px-3 py-2 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10">
                 <div class="flex items-center gap-3">
-                    <button id="detail-back-btn" onclick="exitCreateMode()"
-                        class="hidden flex items-center gap-2 group">
-                        <div
-                            class="w-6 h-6 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 group-hover:bg-[#2447d7] group-hover:border-[#2447d7] transition-all">
+                    <button id="detail-back-btn" onclick="exitCreateMode()" class="hidden flex items-center gap-2 group">
+                        <div class="w-6 h-6 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 group-hover:bg-[#2447d7] group-hover:border-[#2447d7] transition-all">
                             <i class="fa-solid fa-arrow-left text-[9px] text-gray-400 group-hover:text-white"></i>
                         </div>
-                        <span
-                            class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-[#2447d7]">Dashboard</span>
+                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-[#2447d7]">Dashboard</span>
                     </button>
                     <div>
-                        <h2 id="creation-header-title"
-                            class="hidden text-[11px] font-black text-gray-900 uppercase tracking-widest">Register New
-                            Lead</h2>
+                        <h2 id="creation-header-title" class="hidden text-[11px] font-black text-gray-900 uppercase tracking-widest">Register New Lead</h2>
                         <div class="detail-header-info">
-                            <h2 id="panel-title" class="text-[12px] font-black text-gray-900 leading-none">SELECT A LEAD
-                            </h2>
-                            <p id="panel-subtitle"
-                                class="text-[9px] text-[#2447d7] font-extrabold mt-0.5 tracking-wider">CHOOSE FROM THE
-                                LIST</p>
+                            <h2 id="panel-title" class="text-[12px] font-black text-gray-900 leading-none">SELECT A LEAD</h2>
+                            <p id="panel-subtitle" class="text-[9px] text-[#2447d7] font-extrabold mt-0.5 tracking-wider">CHOOSE FROM THE LIST</p>
                         </div>
                     </div>
                 </div>
@@ -544,8 +532,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     <div id="status-id-layer" class="flex items-center gap-3 pr-4 border-r border-gray-100">
                         <div class="flex items-center gap-2">
                             <label class="text-[8px] font-bold text-gray-400 uppercase tracking-tight">Status</label>
-                            <select id="field-leadStatus"
-                                class="w-16 h-6 px-1.5 text-[9px] font-bold border rounded bg-gray-50/50 outline-none">
+                            <select id="field-leadStatus" class="w-16 h-6 px-1.5 text-[9px] font-bold border rounded bg-gray-50/50 outline-none">
                                 <option value="Hot">Hot</option>
                                 <option value="Warm">Warm</option>
                                 <option value="Cool">Cool</option>
@@ -553,18 +540,12 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         </div>
                         <div class="flex items-center gap-2">
                             <label class="text-[8px] font-bold text-gray-400 uppercase tracking-tight">ID</label>
-                            <input type="text" id="field-id"
-                                class="w-20 h-6 px-1.5 text-[9px] font-mono font-bold border rounded bg-gray-50/50 outline-none text-blue-600"
-                                disabled>
+                            <input type="text" id="field-id" class="w-20 h-6 px-1.5 text-[9px] font-mono font-bold border rounded bg-gray-50/50 outline-none text-blue-600" disabled>
                         </div>
                     </div>
-
-                    <button id="edit-toggle-btn" onclick="toggleEditMode()"
-                        class="h-7 px-3 bg-gray-900 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-black transition-all">Edit
-                        Lead</button>
-                    <button id="save-btn" onclick="saveLead()"
-                        class="h-7 px-3 bg-amber-600 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-amber-700 transition-all">Save
-                        Changes</button>
+                    
+                    <button id="edit-toggle-btn" onclick="toggleEditMode()" class="h-7 px-3 bg-gray-900 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-black transition-all">Edit Lead</button>
+                    <button id="save-btn" onclick="saveLead()" class="h-7 px-3 bg-amber-600 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-amber-700 transition-all">Save Changes</button>
                     <div id="panel-dot" class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                 </div>
             </div>
@@ -778,10 +759,8 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 Documents</h3>
                             <div onclick="document.getElementById('doc-upload-input').click()"
                                 class="p-2 border-2 border-dashed border-gray-100 rounded-lg bg-gray-50/10 text-center mb-1 cursor-pointer hover:bg-blue-50/20 transition-all">
-                                <p class="text-[7.5px] font-black text-gray-300 uppercase tracking-tighter">Drop Docs
-                                </p>
-                                <input type="file" id="doc-upload-input" class="hidden" multiple
-                                    onchange="handleDocUpload(this)">
+                                <p class="text-[7.5px] font-black text-gray-300 uppercase tracking-tighter">Drop Docs</p>
+                                <input type="file" id="doc-upload-input" class="hidden" multiple onchange="handleDocUpload(this)">
                             </div>
                             <div id="doc-list-container" class="space-y-1"></div>
                         </section>
@@ -870,7 +849,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     </div>
                 </div>
             </div>
-            </section>
+        </section>
     </main>
     <script>
         const leadsDB = {
@@ -1003,7 +982,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             if (backBtn) backBtn.classList.remove('hidden');
             if (createTitle) createTitle.classList.remove('hidden');
             if (detailTitle) detailTitle.classList.add('hidden');
-            if (dot) dot.classList.add('bg-amber-500');
+            if (dot) dot.classList.add('bg-amber-500'); 
             if (dot) dot.classList.remove('bg-blue-500');
 
             const inputs = document.querySelectorAll('#lead-form-container input, #lead-form-container select, #lead-form-container textarea');
@@ -1087,7 +1066,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             if (backBtn) backBtn.classList.add('hidden');
             if (createTitle) createTitle.classList.add('hidden');
             if (detailTitle) detailTitle.classList.remove('hidden');
-            if (dot) dot.classList.remove('bg-amber-500');
+            if (dot) dot.classList.remove('bg-amber-500'); 
             if (dot) dot.classList.add('bg-blue-500');
 
             selectLead(currentLeadKey);
