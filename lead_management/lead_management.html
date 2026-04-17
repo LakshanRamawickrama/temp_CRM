@@ -53,11 +53,11 @@
             transition: all 0.3s ease;
         }
 
-        .dashboard-container.create-mode > #lead-database-panel {
+        .dashboard-container.create-mode>#lead-database-panel {
             display: none !important;
         }
 
-        .dashboard-container.create-mode > #lead-detail-panel {
+        .dashboard-container.create-mode>#lead-detail-panel {
             flex: 1;
             width: 100% !important;
             max-width: none !important;
@@ -418,7 +418,8 @@
                     <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-[8px]"
                         style="color:rgba(255,255,255,.3);"></i>
                 </div>
-                <button onclick="createNewLead()" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[9px] font-bold uppercase tracking-widest transition-all">
+                <button onclick="createNewLead()"
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[9px] font-bold uppercase tracking-widest transition-all">
                     <i class="fa-solid fa-plus text-[7px]"></i>
                     Add Lead
                 </button>
@@ -472,54 +473,58 @@
             </div>
         </section>
 
-        <section class="panel-card" id="lead-detail-panel">
-            <div id="panel-header"
-                class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 transition-all duration-200">
-                <div class="flex items-center gap-2">
-                    <button id="back-to-dash" onclick="exitCreateMode()"
-                        class="hidden mr-2 w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center"><i
-                            class="fa-solid fa-arrow-left text-gray-600"></i></button>
-                    <div class="detail-header-info">
-                        <h2 id="panel-title" class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Lead
-                            Specification</h2>
-                        <p id="panel-subtitle" class="text-[8px] text-blue-600 font-semibold">AF-CASE-1004</p>
-                    </div>
-                    <div id="creation-header-title" class="hidden">
-                        <h2 class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Register New Lead</h2>
-                        <p class="text-[8px] text-amber-600 font-semibold">Entry Panel</p>
+        <div id="lead-detail-panel" class="flex flex-col border-l border-gray-100 bg-white">
+            <!-- PANEL HEADER: Ultra Compact -->
+            <div class="px-3 py-2 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10">
+                <div class="flex items-center gap-3">
+                    <button id="detail-back-btn" onclick="exitCreateMode()" class="hidden flex items-center gap-2 group">
+                        <div class="w-6 h-6 flex items-center justify-center rounded-full bg-gray-50 border border-gray-100 group-hover:bg-[#2447d7] group-hover:border-[#2447d7] transition-all">
+                            <i class="fa-solid fa-arrow-left text-[9px] text-gray-400 group-hover:text-white"></i>
+                        </div>
+                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-[#2447d7]">Dashboard</span>
+                    </button>
+                    <div>
+                        <h2 id="creation-header-title" class="hidden text-[11px] font-black text-gray-900 uppercase tracking-widest">Register New Lead</h2>
+                        <div class="detail-header-info">
+                            <h2 id="panel-title" class="text-[12px] font-black text-gray-900 leading-none">SELECT A LEAD</h2>
+                            <p id="panel-subtitle" class="text-[9px] text-[#2447d7] font-extrabold mt-0.5 tracking-wider">CHOOSE FROM THE LIST</p>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button id="edit-toggle-btn" onclick="toggleEditMode()"
-                        class="px-3 py-1.5 bg-gray-900 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest">Edit
-                        Lead</button>
-                    <button id="save-btn" onclick="saveLead()"
-                        class="px-3 py-1.5 bg-amber-600 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest">Save
-                        Changes</button>
-                    <div id="panel-dot" style="width:6px;height:6px;border-radius:50%;background:#3b82f6;"></div>
-                </div>
-            </div>
 
-            <div id="lead-form-scroll-outer" class="flex-1 overflow-y-auto custom-scrollbar" style="scrollbar-width:none;-ms-overflow-style:none;background:#fcfcfd;">
-                <style>
-                    #lead-form-scroll-outer::-webkit-scrollbar { display: none; }
-                </style>
-                <div id="lead-form-container" class="p-4 space-y-6">
-                    
-                    <div class="flex items-center justify-between gap-8 mb-6">
-                        <div class="flex-1">
-                            <label class="label-premium">Lead Status</label>
-                            <select id="field-leadStatus" class="form-input-premium appearance-none cursor-pointer pr-10 bg-[url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2364748b\' stroke-width=\'2\'%3E%3Cpath d=\'M6 9l6 6 6-6\'/%3E%3C/svg%3E')] bg-no-repeat bg-[right_12px_center]" disabled>
+                <div class="flex items-center gap-4">
+                    <!-- Status & ID: Single Line / Packed -->
+                    <div id="status-id-layer" class="flex items-center gap-3 pr-4 border-r border-gray-100">
+                        <div class="flex items-center gap-2">
+                            <label class="text-[8px] font-bold text-gray-400 uppercase tracking-tight">Status</label>
+                            <select id="field-leadStatus" class="w-16 h-6 px-1.5 text-[9px] font-bold border rounded bg-gray-50/50 outline-none">
                                 <option value="Hot">Hot</option>
                                 <option value="Warm">Warm</option>
                                 <option value="Cool">Cool</option>
                             </select>
                         </div>
-                        <div class="flex-1">
-                            <label class="label-premium">Case ID</label>
-                            <input type="text" id="field-id" class="form-input-premium font-mono text-blue-600" disabled>
+                        <div class="flex items-center gap-2">
+                            <label class="text-[8px] font-bold text-gray-400 uppercase tracking-tight">ID</label>
+                            <input type="text" id="field-id" class="w-20 h-6 px-1.5 text-[9px] font-mono font-bold border rounded bg-gray-50/50 outline-none text-blue-600" disabled>
                         </div>
                     </div>
+                    
+                    <button id="edit-toggle-btn" onclick="toggleEditMode()" class="h-7 px-3 bg-gray-900 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-black transition-all">Edit Lead</button>
+                    <button id="save-btn" onclick="saveLead()" class="h-7 px-3 bg-amber-600 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-amber-700 transition-all">Save Changes</button>
+                    <div id="panel-dot" class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                </div>
+            </div>
+
+            <div id="lead-form-scroll-outer" class="flex-1 overflow-y-auto custom-scrollbar"
+                style="scrollbar-width:none;-ms-overflow-style:none;background:#fcfcfd;">
+                <style>
+                    #lead-form-scroll-outer::-webkit-scrollbar {
+                        display: none;
+                    }
+                </style>
+                <div id="lead-form-container" class="p-4 space-y-6">
+
+
 
                     <!-- 1. CONTACT INFORMATION -->
                     <section>
@@ -527,11 +532,13 @@
                         <div class="grid grid-cols-2 registration-grid">
                             <div>
                                 <label class="label-premium">Title <span class="text-red-500">*</span></label>
-                                <input type="text" id="field-title" placeholder="e.g. Mr, Mrs, Dr..." class="form-input-premium" disabled>
+                                <input type="text" id="field-title" placeholder="e.g. Mr, Mrs, Dr..."
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
                                 <label class="label-premium">Full Name <span class="text-red-500">*</span></label>
-                                <input type="text" id="field-fullName" placeholder="e.g. Jonathan Doe" class="form-input-premium" disabled>
+                                <input type="text" id="field-fullName" placeholder="e.g. Jonathan Doe"
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
                                 <label class="label-premium">Date of Birth <span class="text-red-500">*</span></label>
@@ -539,34 +546,46 @@
                             </div>
                             <div>
                                 <label class="label-premium">Company Name <span class="text-red-500">*</span></label>
-                                <input type="text" id="field-companyName" placeholder="Registered name..." class="form-input-premium" disabled>
+                                <input type="text" id="field-companyName" placeholder="Registered name..."
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
-                                <label class="label-premium">Company House Number <span class="text-red-500">*</span></label>
-                                <input type="text" id="field-companyHouseNumber" placeholder="e.g. 12345678" class="form-input-premium" disabled>
+                                <label class="label-premium">Company House Number <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="field-companyHouseNumber" placeholder="e.g. 12345678"
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
-                                <label class="label-premium">Business Annual Turnover <span class="text-red-500">*</span></label>
-                                <input type="text" id="field-businessAnnualTurnover" placeholder="£0.00" class="form-input-premium" disabled>
+                                <label class="label-premium">Business Annual Turnover <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="field-businessAnnualTurnover" placeholder="£0.00"
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
                                 <label class="label-premium">Job Title / Position</label>
-                                <input type="text" id="field-jobTitle" placeholder="Managing Director" class="form-input-premium" disabled>
+                                <input type="text" id="field-jobTitle" placeholder="Managing Director"
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
                                 <label class="label-premium">Industry</label>
                                 <select id="field-industry" class="form-input-premium" disabled>
                                     <option value="">Select industry...</option>
-                                    <option>Software</option><option>Retail</option><option>Health</option><option>Construction</option><option>Logistics</option>
+                                    <option>Software</option>
+                                    <option>Retail</option>
+                                    <option>Health</option>
+                                    <option>Construction</option>
+                                    <option>Logistics</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="label-premium">Email Address <span class="text-red-500">*</span></label>
-                                <input type="email" id="field-emailAddress" placeholder="client@example.com" class="form-input-premium" disabled>
+                                <input type="email" id="field-emailAddress" placeholder="client@example.com"
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
                                 <label class="label-premium">Phone Number <span class="text-red-500">*</span></label>
-                                <input type="tel" id="field-phoneNumber" placeholder="+44 77..." class="form-input-premium" disabled>
+                                <input type="tel" id="field-phoneNumber" placeholder="+44 77..."
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
                                 <label class="label-premium">Preferred Method</label>
@@ -585,15 +604,19 @@
                             </div>
                             <div>
                                 <label class="label-premium">Time at Address</label>
-                                <input type="text" id="field-timeAtCurrentAddress" placeholder="e.g. 3 years" class="form-input-premium" disabled>
+                                <input type="text" id="field-timeAtCurrentAddress" placeholder="e.g. 3 years"
+                                    class="form-input-premium" disabled>
                             </div>
                             <div class="col-span-2">
-                                <label class="label-premium">Residential Address <span class="text-red-500">*</span></label>
-                                <input type="text" id="field-residentialAddress" placeholder="Full address..." class="form-input-premium" disabled>
+                                <label class="label-premium">Residential Address <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text" id="field-residentialAddress" placeholder="Full address..."
+                                    class="form-input-premium" disabled>
                             </div>
                             <div class="col-span-2">
                                 <label class="label-premium">Previous Address</label>
-                                <input type="text" id="field-previousAddress" placeholder="Previous if < 3 years..." class="form-input-premium" disabled>
+                                <input type="text" id="field-previousAddress" placeholder="Previous if < 3 years..."
+                                    class="form-input-premium" disabled>
                             </div>
                         </div>
                     </section>
@@ -604,29 +627,39 @@
                         <div class="registration-grid">
                             <div>
                                 <label class="label-premium">Amount Needed <span class="text-red-500">*</span></label>
-                                <input type="text" id="field-loanAmount" placeholder="£0.00" class="form-input-premium" disabled>
+                                <input type="text" id="field-loanAmount" placeholder="£0.00" class="form-input-premium"
+                                    disabled>
                             </div>
                             <div>
                                 <label class="label-premium">Loan Purpose</label>
-                                <input type="text" id="field-loanPurpose" placeholder="Business expansion..." class="form-input-premium" disabled>
+                                <input type="text" id="field-loanPurpose" placeholder="Business expansion..."
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
                                 <label class="label-premium">Existing Loan</label>
-                                <select id="field-existingLoan" class="form-input-premium" disabled onchange="toggleExistingLoanSection(this.value)">
+                                <select id="field-existingLoan" class="form-input-premium" disabled
+                                    onchange="toggleExistingLoanSection(this.value)">
                                     <option value="No">No</option>
                                     <option value="Yes">Yes</option>
                                 </select>
                             </div>
-                            
+
                             <!-- Conditional Existing Loan Section -->
-                            <div id="existing-loan-details" class="hidden col-span-full-create bg-gray-50/50 p-6 rounded-[20px] border border-gray-100">
-                                <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4">Existing Indebtedness</p>
+                            <div id="existing-loan-details"
+                                class="hidden col-span-full-create bg-gray-50/50 p-6 rounded-[20px] border border-gray-100">
+                                <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4">Existing
+                                    Indebtedness</p>
                                 <div class="grid grid-cols-3 gap-4">
-                                    <input type="text" id="field-existingLender" placeholder="Lender Name" class="form-input-premium bg-white" disabled>
-                                    <input type="text" id="field-existingAmount" placeholder="Amount (£)" class="form-input-premium bg-white" disabled>
-                                    <input type="text" id="field-existingRate" placeholder="Rate (%)" class="form-input-premium bg-white" disabled>
-                                    <input type="text" id="field-existingRepayment" placeholder="Monthly (£)" class="form-input-premium bg-white" disabled>
-                                    <input type="text" id="field-existingTerm" placeholder="Loan Term" class="form-input-premium bg-white col-span-2" disabled>
+                                    <input type="text" id="field-existingLender" placeholder="Lender Name"
+                                        class="form-input-premium bg-white" disabled>
+                                    <input type="text" id="field-existingAmount" placeholder="Amount (£)"
+                                        class="form-input-premium bg-white" disabled>
+                                    <input type="text" id="field-existingRate" placeholder="Rate (%)"
+                                        class="form-input-premium bg-white" disabled>
+                                    <input type="text" id="field-existingRepayment" placeholder="Monthly (£)"
+                                        class="form-input-premium bg-white" disabled>
+                                    <input type="text" id="field-existingTerm" placeholder="Loan Term"
+                                        class="form-input-premium bg-white col-span-2" disabled>
                                 </div>
                             </div>
 
@@ -641,22 +674,34 @@
                                 <label class="label-premium">Company Bank</label>
                                 <select id="field-companyBank" class="form-input-premium" disabled>
                                     <option value="">Select a bank...</option>
-                                    <option>Santander</option><option>HSBC</option><option>Lloyds</option><option>Starling</option><option>NatWest</option><option>Barclays</option>
+                                    <option>Santander</option>
+                                    <option>HSBC</option>
+                                    <option>Lloyds</option>
+                                    <option>Starling</option>
+                                    <option>NatWest</option>
+                                    <option>Barclays</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="label-premium">Lead Source</label>
                                 <select id="field-leadSource" class="form-input-premium" disabled>
                                     <option value="">Select source...</option>
-                                    <option>Advertisement</option><option>Cold Call</option><option>Web</option><option>Referral</option><option>Instagram</option><option>Organic Search</option>
+                                    <option>Advertisement</option>
+                                    <option>Cold Call</option>
+                                    <option>Web</option>
+                                    <option>Referral</option>
+                                    <option>Instagram</option>
+                                    <option>Organic Search</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="label-premium">Funding Timeline</label>
-                                <input type="text" id="field-fundingTimeline" placeholder="e.g. Within 2 weeks" class="form-input-premium" disabled>
+                                <input type="text" id="field-fundingTimeline" placeholder="e.g. Within 2 weeks"
+                                    class="form-input-premium" disabled>
                             </div>
                             <div>
-                                <label class="label-premium">Prev Alpha Loan? <span class="text-red-500">*</span></label>
+                                <label class="label-premium">Prev Alpha Loan? <span
+                                        class="text-red-500">*</span></label>
                                 <select id="field-previousAlphaFundingLoan" class="form-input-premium" disabled>
                                     <option>No</option>
                                     <option>Yes</option>
@@ -675,30 +720,38 @@
                     <!-- PACKED BOTTOM: DOCS & COMMENTS -->
                     <div class="registration-grid">
                         <section class="col-span-1">
-                            <h3 class="section-header" style="margin-bottom:6px; padding-bottom:4px;">Supporting Documents</h3>
-                            <div class="p-2 border-2 border-dashed border-gray-100 rounded-lg bg-gray-50/10 text-center mb-1">
+                            <h3 class="section-header" style="margin-bottom:6px; padding-bottom:4px;">Supporting
+                                Documents</h3>
+                            <div onclick="document.getElementById('doc-upload-input').click()"
+                                class="p-2 border-2 border-dashed border-gray-100 rounded-lg bg-gray-50/10 text-center mb-1 cursor-pointer hover:bg-blue-50/20 transition-all">
                                 <p class="text-[7.5px] font-black text-gray-300 uppercase tracking-tighter">Drop Docs</p>
+                                <input type="file" id="doc-upload-input" class="hidden" multiple onchange="handleDocUpload(this)">
                             </div>
                             <div id="doc-list-container" class="space-y-1"></div>
                         </section>
 
                         <section class="col-span-2">
-                            <h3 class="section-header" style="margin-bottom:6px; padding-bottom:4px;">Additional Comments</h3>
-                            <textarea id="field-additionalComments" rows="2" placeholder="Enter context/notes..." class="form-input-premium resize-none h-20" disabled></textarea>
+                            <h3 class="section-header" style="margin-bottom:6px; padding-bottom:4px;">Additional
+                                Comments</h3>
+                            <textarea id="field-additionalComments" rows="2" placeholder="Enter context/notes..."
+                                class="form-input-premium resize-none h-20" disabled></textarea>
                         </section>
                     </div>
 
                     <!-- 6. TASK & REMINDERS -->
-                    <section id="followup-section" class="hidden bg-[#f0f4ff] rounded-xl border border-[#dbeafe] p-4 shadow-sm">
+                    <section id="followup-section"
+                        class="hidden bg-[#f0f4ff] rounded-xl border border-[#dbeafe] p-4 shadow-sm">
                         <div class="flex items-center justify-between mb-4 border-b border-blue-100 pb-2">
-                            <h4 class="text-[10px] font-black text-[#2447d7] uppercase tracking-widest">Schedule Follow-up</h4>
+                            <h4 class="text-[10px] font-black text-[#2447d7] uppercase tracking-widest">Schedule
+                                Follow-up</h4>
                             <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
                         </div>
-                        
+
                         <div class="registration-grid">
                             <div class="col-span-2">
                                 <label class="label-premium">Task Description</label>
-                                <input type="text" id="task-desc" placeholder="Title..." class="form-input-premium bg-white">
+                                <input type="text" id="task-desc" placeholder="Title..."
+                                    class="form-input-premium bg-white">
                             </div>
                             <div>
                                 <label class="label-premium">Assignee</label>
@@ -709,11 +762,13 @@
                             </div>
                             <div>
                                 <label class="label-premium">Client</label>
-                                <input type="text" id="task-client" placeholder="Client Name" class="form-input-premium bg-white">
+                                <input type="text" id="task-client" placeholder="Client Name"
+                                    class="form-input-premium bg-white">
                             </div>
                             <div>
                                 <label class="label-premium">Phone</label>
-                                <input type="tel" id="task-phone" placeholder="077..." class="form-input-premium bg-white">
+                                <input type="tel" id="task-phone" placeholder="077..."
+                                    class="form-input-premium bg-white">
                             </div>
                             <div>
                                 <label class="label-premium">Task Status</label>
@@ -725,7 +780,8 @@
                             </div>
                             <div class="col-span-2">
                                 <label class="label-premium">Email Address</label>
-                                <input type="email" id="task-email" placeholder="mail@lead.com" class="form-input-premium bg-white">
+                                <input type="email" id="task-email" placeholder="mail@lead.com"
+                                    class="form-input-premium bg-white">
                             </div>
                             <div class="flex gap-2 col-span-1">
                                 <div class="flex-1">
@@ -739,10 +795,12 @@
                             </div>
                             <div class="col-span-2">
                                 <label class="label-premium">Notes / Instructions</label>
-                                <textarea id="task-notes" rows="1" placeholder="..." class="form-input-premium resize-none bg-white"></textarea>
+                                <textarea id="task-notes" rows="1" placeholder="..."
+                                    class="form-input-premium resize-none bg-white"></textarea>
                             </div>
                             <div class="flex items-end">
-                                <button type="button" class="w-full py-2 bg-[#2447d7] text-white text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-[#1a38b1] transition-all">
+                                <button type="button"
+                                    class="w-full py-2 bg-[#2447d7] text-white text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-[#1a38b1] transition-all">
                                     Create Task
                                 </button>
                             </div>
@@ -847,7 +905,7 @@
             document.getElementById('panel-title').innerText = lead.fullName.toUpperCase();
             document.getElementById('panel-subtitle').innerText = lead.id;
             ['title', 'fullName', 'dob', 'companyName', 'jobTitle', 'companyHouseNumber', 'businessAnnualTurnover', 'emailAddress', 'phoneNumber', 'homeOwner', 'timeAtCurrentAddress', 'residentialAddress', 'previousAddress', 'loanAmount', 'fundingTimeline', 'loanPurpose', 'leadSource', 'creditConsent', 'existingLoan', 'overdraftFacility', 'previousAlphaFundingLoan', 'companyBank', 'industry', 'additionalComments', 'leadStatus', 'id'].forEach(key => { const el = document.getElementById('field-' + key); if (el) el.value = lead[key] !== undefined ? lead[key] : ''; });
-            
+
             // Handle Radio Buttons
             document.querySelectorAll('.radio-btn').forEach(btn => btn.classList.remove('active'));
             if (lead.preferredContactMethod) {
@@ -868,7 +926,7 @@
             }
             document.getElementById('doc-list-container').innerHTML = (lead.documents || []).map(doc => `<div class="doc-item"><div class="flex items-center gap-3"><i class="fa-solid fa-file-lines text-blue-500"></i><span class="text-[10px] font-bold text-gray-700">${doc}</span></div></div>`).join('');
             document.getElementById('task-feed-container').innerHTML = (lead.tasks || []).map(task => `<div class="followup-card"><p class="text-[8px] font-extrabold text-blue-600 uppercase">${task.time} • ${task.type}</p><p class="text-[10px] font-bold text-gray-800">${task.desc}</p></div>`).join('');
-            
+
             // Auto-populate reminder client
             const reminderClient = document.getElementById('reminder-client');
             if (reminderClient) reminderClient.value = lead.fullName || '';
@@ -882,9 +940,9 @@
             const inputs = document.querySelectorAll('#lead-form-container input, #lead-form-container select, #lead-form-container textarea');
             const btn = document.getElementById('edit-toggle-btn');
             const followup = document.getElementById('followup-section');
-            inputs.forEach(input => { 
-                input.disabled = !isEditMode; 
-                input.classList.toggle('bg-white', isEditMode); 
+            inputs.forEach(input => {
+                input.disabled = !isEditMode;
+                input.classList.toggle('bg-white', isEditMode);
             });
             btn.innerText = isEditMode ? 'Cancel Edit' : 'Edit Lead';
             btn.classList.toggle('bg-red-500', isEditMode);
@@ -898,47 +956,75 @@
         }
         function createNewLead() {
             document.querySelector('.dashboard-container').classList.add('create-mode');
-            const backBtn = document.getElementById('back-to-dash');
+            const backBtn = document.getElementById('detail-back-btn');
             const createTitle = document.getElementById('creation-header-title');
             const detailTitle = document.querySelector('.detail-header-info');
             const dot = document.getElementById('panel-dot');
-            
-            if(backBtn) backBtn.classList.remove('hidden');
-            if(createTitle) createTitle.classList.remove('hidden');
-            if(detailTitle) detailTitle.classList.add('hidden');
-            if(dot) dot.style.background = '#f59e0b'; // Amber for create
+
+            if (backBtn) backBtn.classList.remove('hidden');
+            if (createTitle) createTitle.classList.remove('hidden');
+            if (detailTitle) detailTitle.classList.add('hidden');
+            if (dot) dot.classList.add('bg-amber-500'); 
+            if (dot) dot.classList.remove('bg-blue-500');
 
             const inputs = document.querySelectorAll('#lead-form-container input, #lead-form-container select, #lead-form-container textarea');
-            inputs.forEach(input => { 
-                input.value = ''; 
-                input.disabled = false; 
-                input.classList.add('bg-white'); 
+            inputs.forEach(input => {
+                input.value = '';
+                input.disabled = false;
+                input.classList.add('bg-white');
             });
-            
+
+            // Auto-generate Case ID
+            const randomID = 'AF-CASE-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('field-id').value = randomID;
+
             // Reset Radio Buttons
             document.querySelectorAll('.radio-btn').forEach(btn => btn.classList.remove('active'));
             const emailBtn = document.getElementById('contact-email');
-            if(emailBtn) emailBtn.classList.add('active');
+            if (emailBtn) emailBtn.classList.add('active');
 
             const loanDetails = document.getElementById('existing-loan-details');
-            if(loanDetails) loanDetails.classList.add('hidden');
-            
+            if (loanDetails) loanDetails.classList.add('hidden');
+
             isEditMode = true;
             const editBtn = document.getElementById('edit-toggle-btn');
-            if(editBtn) editBtn.innerText = 'Discard';
-            
+            if (editBtn) editBtn.innerText = 'Discard';
+
             const followup = document.getElementById('followup-section');
-            if(followup) followup.classList.remove('hidden');
+            if (followup) followup.classList.remove('hidden');
 
             const metrics = document.getElementById('panel-footer-metrics');
-            if(metrics) metrics.classList.add('hidden');
+            if (metrics) metrics.classList.add('hidden');
 
             document.getElementById('doc-list-container').innerHTML = '';
             document.getElementById('task-feed-container').innerHTML = '';
-            
+
             initSyncListeners();
         }
 
+        // Supporting Documents Handler
+        function handleDocUpload(input) {
+            const container = document.getElementById('doc-list-container');
+            if (!input.files || input.files.length === 0) return;
+
+            Array.from(input.files).forEach(file => {
+                const docItem = document.createElement('div');
+                docItem.className = 'flex items-center justify-between p-1.5 bg-white border border-gray-50 rounded-lg shadow-sm';
+                docItem.innerHTML = `
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <i class="fa-solid fa-file-pdf text-[10px] text-red-500"></i>
+                        <span class="text-[9px] font-bold text-gray-700 truncate">${file.name}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-gray-300 hover:text-red-500 transition-colors">
+                        <i class="fa-solid fa-xmark text-[9px]"></i>
+                    </button>
+                `;
+                container.appendChild(docItem);
+            });
+            input.value = ''; // Reset for next selection
+        }
+
+        // Initialize synchronization listeners
         function initSyncListeners() {
             const sync = () => {
                 if (isEditMode) {
@@ -954,17 +1040,16 @@
 
         function exitCreateMode() {
             document.querySelector('.dashboard-container').classList.remove('create-mode');
-            const backBtn = document.getElementById('back-to-dash');
+            const backBtn = document.getElementById('detail-back-btn');
             const createTitle = document.getElementById('creation-header-title');
             const detailTitle = document.querySelector('.detail-header-info');
             const dot = document.getElementById('panel-dot');
-            const metrics = document.getElementById('panel-footer-metrics');
-            
-            if(backBtn) backBtn.classList.add('hidden');
-            if(createTitle) createTitle.classList.add('hidden');
-            if(detailTitle) detailTitle.classList.remove('hidden');
-            if(metrics) metrics.classList.remove('hidden');
-            if(dot) dot.style.background = '#3b82f6'; // Blue for view
+
+            if (backBtn) backBtn.classList.add('hidden');
+            if (createTitle) createTitle.classList.add('hidden');
+            if (detailTitle) detailTitle.classList.remove('hidden');
+            if (dot) dot.classList.remove('bg-amber-500'); 
+            if (dot) dot.classList.add('bg-blue-500');
 
             selectLead(currentLeadKey);
         }
@@ -1027,7 +1112,7 @@
 
         // Add event listeners to radio buttons
         document.querySelectorAll('.radio-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 // If they are not disabled (check parent or global flag)
                 if (isEditMode) {
                     const parent = this.parentElement;
