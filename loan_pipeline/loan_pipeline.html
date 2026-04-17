@@ -421,6 +421,275 @@
             flex-shrink: 0;
             margin-top: 3px;
         }
+
+        /* Confirm Move Modal */
+        .confirm-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            backdrop-filter: blur(3px);
+            animation: fadeIn .15s ease;
+        }
+
+        .confirm-backdrop.hidden { display: none; }
+
+        .confirm-box {
+            background: #fff;
+            border-radius: 16px;
+            width: 420px;
+            box-shadow: 0 24px 64px rgba(0,0,0,.2);
+            animation: slideUp .18s ease;
+            overflow: hidden;
+        }
+
+        .confirm-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .confirm-body {
+            padding: 20px;
+        }
+
+        .confirm-lead-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .confirm-arrow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .confirm-stage-pill {
+            flex: 1;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            text-align: center;
+        }
+
+        .confirm-footer {
+            padding: 14px 20px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel-move {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .15s;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .btn-cancel-move:hover { background: #f8fafc; color: #0f172a; }
+
+        .btn-confirm-move {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #0f172a;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all .15s;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-confirm-move:hover { background: #1e293b; }
+
+        /* Update Lead Modal */
+        .update-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            backdrop-filter: blur(3px);
+            animation: fadeIn .15s ease;
+        }
+
+        .update-backdrop.hidden { display: none; }
+
+        .update-box {
+            background: #fff;
+            border-radius: 16px;
+            width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22);
+            animation: slideUp .18s ease;
+        }
+
+        .update-header {
+            padding: 16px 20px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .update-section {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .update-section-title {
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        .update-field { margin-bottom: 12px; }
+        .update-field:last-child { margin-bottom: 0; }
+
+        .update-label {
+            display: block;
+            font-size: 9px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: 4px;
+        }
+
+        .update-input {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 11px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #0f172a;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            transition: border-color .15s;
+        }
+
+        .update-input:focus {
+            border-color: #6366f1;
+            background: #fff;
+            box-shadow: 0 0 0 2px #e0e7ff;
+        }
+
+        .update-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all .15s;
+            margin-bottom: 6px;
+        }
+
+        .checklist-item:last-child { margin-bottom: 0; }
+
+        .checklist-item:hover { background: #f1f5f9; border-color: #cbd5e1; }
+
+        .checklist-item input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: #4f46e5;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checklist-item label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .update-footer {
+            padding: 14px 20px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+        }
+
+        .btn-save-move {
+            padding: 9px 22px;
+            border-radius: 8px;
+            border: none;
+            background: #4f46e5;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all .15s;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-save-move:hover { background: #4338ca; }
+
+        .stage-badge-inline {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 9px;
+            border-radius: 20px;
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
     </style>
 </head>
 
@@ -599,6 +868,82 @@
         </div>
     </div>
 
+    <!-- Stage Move Confirmation Modal -->
+    <div class="confirm-backdrop hidden" id="confirm-backdrop">
+        <div class="confirm-box">
+            <div class="confirm-header">
+                <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-arrows-rotate text-white text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Stage Move</p>
+                    <h3 class="text-sm font-black text-white mt-0.5">Confirm Lead Move</h3>
+                </div>
+            </div>
+            <div class="confirm-body">
+                <!-- Lead info -->
+                <div class="confirm-lead-card">
+                    <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest" id="confirm-lead-id"></p>
+                    <p class="text-sm font-black text-gray-900 mt-0.5" id="confirm-lead-name"></p>
+                    <div class="flex items-center gap-3 mt-2">
+                        <span class="text-[9px] font-bold text-gray-500"><i class="fa-solid fa-sterling-sign mr-1"></i><span id="confirm-lead-amount"></span></span>
+                        <span class="text-[9px] font-bold text-gray-500"><i class="fa-solid fa-user mr-1"></i><span id="confirm-lead-agent"></span></span>
+                    </div>
+                </div>
+                <!-- Move arrow -->
+                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-2">Moving From → To</p>
+                <div class="confirm-arrow">
+                    <div class="confirm-stage-pill" id="confirm-from-pill"></div>
+                    <i class="fa-solid fa-arrow-right text-gray-400 text-xs flex-shrink-0"></i>
+                    <div class="confirm-stage-pill" id="confirm-to-pill"></div>
+                </div>
+                <!-- Confirmation message -->
+                <div class="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2.5 flex items-start gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xs mt-0.5 flex-shrink-0"></i>
+                    <p class="text-[10px] font-semibold text-amber-800" id="confirm-message"></p>
+                </div>
+            </div>
+            <div class="confirm-footer">
+                <button class="btn-cancel-move" onclick="cancelMove()">
+                    <i class="fa-solid fa-xmark mr-1"></i> Cancel
+                </button>
+                <button class="btn-confirm-move" onclick="confirmMove()">
+                    <i class="fa-solid fa-check"></i> Yes, Move Lead
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Lead Modal (shown after confirming move) -->
+    <div class="update-backdrop hidden" id="update-backdrop">
+        <div class="update-box">
+            <div class="update-header">
+                <div>
+                    <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Update Lead Details</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <h3 class="text-sm font-black text-gray-900" id="update-lead-name-title"></h3>
+                        <span class="stage-badge-inline" id="update-to-badge"></span>
+                    </div>
+                </div>
+                <button onclick="closeUpdateModal()" style="width:28px;height:28px;border-radius:7px;border:none;background:#f1f5f9;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Dynamic form content injected here -->
+            <div id="update-form-body"></div>
+
+            <div class="update-footer">
+                <button class="btn-cancel-move" onclick="closeUpdateModal()">
+                    <i class="fa-solid fa-xmark mr-1"></i> Cancel
+                </button>
+                <button class="btn-save-move" onclick="saveAndMove()">
+                    <i class="fa-solid fa-floppy-disk"></i> Save &amp; Move Lead
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Lead detail now opens as a full page (lead_detail.html?id=...) -->
     <div class="modal-backdrop hidden" id="modal-backdrop">
         <div class="modal-box">
@@ -747,17 +1092,363 @@
             e.currentTarget.classList.remove('drag-over');
         }
 
+        // ── Pending move state ───────────────────────────────────────────────
+        let pendingMoveId    = null;
+        let pendingMoveStage = null;
+
         function onDrop(e, stage) {
             e.preventDefault();
             e.currentTarget.classList.remove('drag-over');
             if (!dragId) return;
             const lead = leads.find(l => l.id === dragId);
             if (lead && lead.stage !== stage) {
-                lead.stage = stage;
-                lead.days  = 0;
-                renderBoard();
+                pendingMoveId    = dragId;
+                pendingMoveStage = stage;
+                showConfirmMove(lead, stage);
             }
             dragId = null;
+        }
+
+        // Stage pill styles
+        const STAGE_PILL_STYLE = {
+            collecting: 'background:#f1f5f9;color:#475569',
+            verified:   'background:#eff6ff;color:#1d4ed8',
+            lender:     'background:#f5f3ff;color:#6d28d9',
+            approved:   'background:#f0fdf4;color:#166534',
+            completed:  'background:#0f172a;color:#e2e8f0',
+            rejected:   'background:#fef2f2;color:#b91c1c',
+        };
+
+        const STAGE_MSG = {
+            verified:  'Are you sure all documents have been collected and are ready for verification?',
+            lender:    'Are you sure documents are fully verified and this lead is ready for lender selection?',
+            approved:  'Are you sure a lender has been selected and the loan is ready for approval?',
+            completed: 'Are you sure the loan has been approved and the case is ready to close?',
+            rejected:  'Are you sure you want to mark this lead as Rejected? This cannot be undone easily.',
+            collecting:'Are you sure you want to move this lead back to Doc Collection?',
+        };
+
+        function showConfirmMove(lead, toStage) {
+            document.getElementById('confirm-lead-id').textContent     = '#' + lead.id;
+            document.getElementById('confirm-lead-name').textContent   = lead.name;
+            document.getElementById('confirm-lead-amount').textContent = lead.amount;
+            document.getElementById('confirm-lead-agent').textContent  = lead.agent;
+
+            const fromPill = document.getElementById('confirm-from-pill');
+            fromPill.textContent = STAGE_LABELS[lead.stage];
+            fromPill.style.cssText = (STAGE_PILL_STYLE[lead.stage] || '') + ';flex:1;padding:6px 10px;border-radius:8px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;text-align:center';
+
+            const toPill = document.getElementById('confirm-to-pill');
+            toPill.textContent = STAGE_LABELS[toStage];
+            toPill.style.cssText = (STAGE_PILL_STYLE[toStage] || '') + ';flex:1;padding:6px 10px;border-radius:8px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;text-align:center';
+
+            document.getElementById('confirm-message').textContent = STAGE_MSG[toStage] || 'Are you sure you want to move this lead?';
+
+            document.getElementById('confirm-backdrop').classList.remove('hidden');
+        }
+
+        function cancelMove() {
+            pendingMoveId    = null;
+            pendingMoveStage = null;
+            document.getElementById('confirm-backdrop').classList.add('hidden');
+        }
+
+        function confirmMove() {
+            // Hide confirm modal and open update form
+            document.getElementById('confirm-backdrop').classList.add('hidden');
+            openUpdateModal();
+        }
+
+        // ── Update Lead Modal ────────────────────────────────────────────────
+        function openUpdateModal() {
+            const lead    = leads.find(l => l.id === pendingMoveId);
+            const toStage = pendingMoveStage;
+            if (!lead || !toStage) return;
+
+            // Header
+            document.getElementById('update-lead-name-title').textContent = lead.name + ' · ' + lead.id;
+            const badge = document.getElementById('update-to-badge');
+            badge.textContent = STAGE_LABELS[toStage];
+            badge.style.cssText = (STAGE_PILL_STYLE[toStage] || '') + ';display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.04em';
+
+            // Build form based on target stage
+            document.getElementById('update-form-body').innerHTML = buildUpdateForm(lead, toStage);
+
+            document.getElementById('update-backdrop').classList.remove('hidden');
+        }
+
+        function closeUpdateModal() {
+            pendingMoveId    = null;
+            pendingMoveStage = null;
+            document.getElementById('update-backdrop').classList.add('hidden');
+        }
+
+        // ── Stage-specific forms ─────────────────────────────────────────────
+        function buildUpdateForm(lead, toStage) {
+            const agents = ['Sarah White','Cody Lane','Jane Doe','Leo Kumar','Priya Sharma'];
+            const agentOpts = agents.map(a => `<option ${a===lead.agent?'selected':''}>${a}</option>`).join('');
+
+            if (toStage === 'verified') {
+                return `
+                <div class="update-section">
+                    <p class="update-section-title"><i class="fa-solid fa-file-circle-check mr-1 text-blue-500"></i> Document Verification</p>
+                    <p class="text-[9px] text-gray-400 mb-3 -mt-1">Confirm which documents have been collected and verified.</p>
+                    <div class="checklist-item"><input type="checkbox" id="chk-id" checked><label for="chk-id">Government-issued ID / Passport</label><i class="fa-solid fa-id-card text-[9px] text-gray-300"></i></div>
+                    <div class="checklist-item"><input type="checkbox" id="chk-payslip" checked><label for="chk-payslip">Payslips (last 3 months)</label><i class="fa-solid fa-file-invoice-dollar text-[9px] text-gray-300"></i></div>
+                    <div class="checklist-item"><input type="checkbox" id="chk-bank"><label for="chk-bank">Bank Statements (last 6 months)</label><i class="fa-solid fa-building-columns text-[9px] text-gray-300"></i></div>
+                    <div class="checklist-item"><input type="checkbox" id="chk-tax"><label for="chk-tax">Tax Returns / Financials</label><i class="fa-solid fa-file-lines text-[9px] text-gray-300"></i></div>
+                    <div class="checklist-item"><input type="checkbox" id="chk-other"><label for="chk-other">Other Supporting Documents</label><i class="fa-solid fa-folder text-[9px] text-gray-300"></i></div>
+                </div>
+                <div class="update-section">
+                    <p class="update-section-title"><i class="fa-solid fa-user-check mr-1 text-indigo-500"></i> Verification Details</p>
+                    <div class="update-grid-2">
+                        <div class="update-field">
+                            <label class="update-label">Verified By</label>
+                            <select class="update-input" id="upd-verified-by">${agentOpts}</select>
+                        </div>
+                        <div class="update-field">
+                            <label class="update-label">Verification Date</label>
+                            <input type="date" class="update-input" id="upd-verified-date" value="2026-04-17">
+                        </div>
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Verification Notes</label>
+                        <textarea rows="2" class="update-input resize-none" id="upd-verified-notes" placeholder="Any notes about the verification...">${lead.notes||''}</textarea>
+                    </div>
+                </div>`;
+            }
+
+            if (toStage === 'lender') {
+                return `
+                <div class="update-section">
+                    <p class="update-section-title"><i class="fa-solid fa-building-columns mr-1 text-purple-500"></i> Lender Selection</p>
+                    <div class="update-grid-2">
+                        <div class="update-field">
+                            <label class="update-label">Selected Lender</label>
+                            <select class="update-input" id="upd-lender">
+                                <option value="">-- Select Lender --</option>
+                                <option ${lead.lender==='ANZ'?'selected':''}>ANZ</option>
+                                <option ${lead.lender==='NAB'?'selected':''}>NAB</option>
+                                <option ${lead.lender==='Commonwealth Bank'?'selected':''}>Commonwealth Bank</option>
+                                <option ${lead.lender==='Westpac'?'selected':''}>Westpac</option>
+                                <option ${lead.lender==='Barclays'?'selected':''}>Barclays</option>
+                                <option ${lead.lender==='HSBC'?'selected':''}>HSBC</option>
+                                <option ${lead.lender==='Starling'?'selected':''}>Starling</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="update-field">
+                            <label class="update-label">Loan Type</label>
+                            <select class="update-input" id="upd-loan-type">
+                                <option>Business Loan</option>
+                                <option>Asset Finance</option>
+                                <option>Commercial Mortgage</option>
+                                <option>Invoice Finance</option>
+                                <option>Bridging Loan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="update-grid-2">
+                        <div class="update-field">
+                            <label class="update-label">Interest Rate (%)</label>
+                            <input type="number" step="0.01" class="update-input" id="upd-interest-rate" placeholder="e.g. 5.25">
+                        </div>
+                        <div class="update-field">
+                            <label class="update-label">Loan Term</label>
+                            <select class="update-input" id="upd-loan-term">
+                                <option>12 months</option>
+                                <option>24 months</option>
+                                <option>36 months</option>
+                                <option>48 months</option>
+                                <option>60 months</option>
+                                <option>84 months</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Submission Date</label>
+                        <input type="date" class="update-input" id="upd-lender-date" value="2026-04-17">
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Notes</label>
+                        <textarea rows="2" class="update-input resize-none" id="upd-lender-notes" placeholder="Lender preferences, conditions, notes...">${lead.notes||''}</textarea>
+                    </div>
+                </div>`;
+            }
+
+            if (toStage === 'approved') {
+                return `
+                <div class="update-section">
+                    <p class="update-section-title"><i class="fa-solid fa-circle-check mr-1 text-green-500"></i> Loan Approval Details</p>
+                    <div class="update-grid-2">
+                        <div class="update-field">
+                            <label class="update-label">Approving Lender</label>
+                            <input type="text" class="update-input" id="upd-approving-lender" value="${lead.lender !== '—' ? lead.lender : ''}" placeholder="Lender name">
+                        </div>
+                        <div class="update-field">
+                            <label class="update-label">Approval Reference #</label>
+                            <input type="text" class="update-input" id="upd-approval-ref" placeholder="e.g. APV-20260417-001">
+                        </div>
+                    </div>
+                    <div class="update-grid-2">
+                        <div class="update-field">
+                            <label class="update-label">Approved Amount</label>
+                            <input type="text" class="update-input" id="upd-approved-amount" value="${lead.amount}" placeholder="e.g. £250,000">
+                        </div>
+                        <div class="update-field">
+                            <label class="update-label">Approval Date</label>
+                            <input type="date" class="update-input" id="upd-approval-date" value="2026-04-17">
+                        </div>
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Expected Drawdown Date</label>
+                        <input type="date" class="update-input" id="upd-drawdown-date">
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Approval Notes</label>
+                        <textarea rows="2" class="update-input resize-none" id="upd-approval-notes" placeholder="Conditions of approval, special terms...">${lead.notes||''}</textarea>
+                    </div>
+                </div>`;
+            }
+
+            if (toStage === 'completed') {
+                return `
+                <div class="update-section">
+                    <p class="update-section-title"><i class="fa-solid fa-flag-checkered mr-1 text-gray-700"></i> Completion Details</p>
+                    <div class="update-grid-2">
+                        <div class="update-field">
+                            <label class="update-label">Completion Date</label>
+                            <input type="date" class="update-input" id="upd-completion-date" value="2026-04-17">
+                        </div>
+                        <div class="update-field">
+                            <label class="update-label">Disbursement Date</label>
+                            <input type="date" class="update-input" id="upd-disbursement-date">
+                        </div>
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Final Loan Amount Disbursed</label>
+                        <input type="text" class="update-input" id="upd-final-amount" value="${lead.amount}" placeholder="e.g. £250,000">
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Account Manager</label>
+                        <select class="update-input" id="upd-account-mgr">${agentOpts}</select>
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Closing Notes</label>
+                        <textarea rows="2" class="update-input resize-none" id="upd-completion-notes" placeholder="Summary of case, any follow-up actions...">${lead.notes||''}</textarea>
+                    </div>
+                </div>`;
+            }
+
+            if (toStage === 'rejected') {
+                return `
+                <div class="update-section">
+                    <p class="update-section-title"><i class="fa-solid fa-circle-xmark mr-1 text-red-500"></i> Rejection Details</p>
+                    <div class="update-field">
+                        <label class="update-label">Rejection Reason</label>
+                        <select class="update-input" id="upd-reject-reason">
+                            <option>Credit Score Insufficient</option>
+                            <option>Incomplete Documentation</option>
+                            <option>Income Verification Failed</option>
+                            <option>Lender Declined</option>
+                            <option>Affordability Assessment Failed</option>
+                            <option>Client Withdrew Application</option>
+                            <option>Regulatory / Compliance Issue</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="update-grid-2">
+                        <div class="update-field">
+                            <label class="update-label">Rejected By</label>
+                            <select class="update-input" id="upd-rejected-by">${agentOpts}</select>
+                        </div>
+                        <div class="update-field">
+                            <label class="update-label">Rejection Date</label>
+                            <input type="date" class="update-input" id="upd-reject-date" value="2026-04-17">
+                        </div>
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Additional Notes</label>
+                        <textarea rows="3" class="update-input resize-none" id="upd-reject-notes" placeholder="Detailed reason, what was communicated to client...">${lead.notes||''}</textarea>
+                    </div>
+                </div>`;
+            }
+
+            if (toStage === 'collecting') {
+                return `
+                <div class="update-section">
+                    <p class="update-section-title"><i class="fa-solid fa-rotate-left mr-1 text-slate-500"></i> Return to Doc Collection</p>
+                    <div class="update-field">
+                        <label class="update-label">Reason for Returning</label>
+                        <select class="update-input" id="upd-return-reason">
+                            <option>Missing Documents</option>
+                            <option>Documents Expired</option>
+                            <option>Documents Rejected by Lender</option>
+                            <option>Client Provided Wrong Documents</option>
+                            <option>Additional Documents Required</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="update-field">
+                        <label class="update-label">Notes</label>
+                        <textarea rows="2" class="update-input resize-none" id="upd-return-notes" placeholder="What documents are needed or why returning..."></textarea>
+                    </div>
+                </div>`;
+            }
+
+            return `<div class="update-section"><p class="text-xs text-gray-400">No additional details required.</p></div>`;
+        }
+
+        // ── Save & apply move ────────────────────────────────────────────────
+        function saveAndMove() {
+            const lead    = leads.find(l => l.id === pendingMoveId);
+            const toStage = pendingMoveStage;
+            if (!lead || !toStage) return;
+
+            // Harvest fields per stage and update lead data
+            if (toStage === 'verified') {
+                const notes = document.getElementById('upd-verified-notes')?.value;
+                if (notes) lead.notes = notes;
+                lead.verifiedBy   = document.getElementById('upd-verified-by')?.value;
+                lead.verifiedDate = document.getElementById('upd-verified-date')?.value;
+            } else if (toStage === 'lender') {
+                const lender = document.getElementById('upd-lender')?.value;
+                const notes  = document.getElementById('upd-lender-notes')?.value;
+                if (lender) lead.lender = lender;
+                if (notes)  lead.notes  = notes;
+                lead.loanType    = document.getElementById('upd-loan-type')?.value;
+                lead.loanTerm    = document.getElementById('upd-loan-term')?.value;
+                lead.interestRate= document.getElementById('upd-interest-rate')?.value;
+            } else if (toStage === 'approved') {
+                const amt   = document.getElementById('upd-approved-amount')?.value;
+                const notes = document.getElementById('upd-approval-notes')?.value;
+                if (amt)   lead.amount = amt;
+                if (notes) lead.notes  = notes;
+                lead.approvalRef     = document.getElementById('upd-approval-ref')?.value;
+                lead.approvingLender = document.getElementById('upd-approving-lender')?.value;
+            } else if (toStage === 'completed') {
+                const amt   = document.getElementById('upd-final-amount')?.value;
+                const notes = document.getElementById('upd-completion-notes')?.value;
+                if (amt)   lead.amount = amt;
+                if (notes) lead.notes  = notes;
+            } else if (toStage === 'rejected') {
+                const reason = document.getElementById('upd-reject-reason')?.value;
+                const notes  = document.getElementById('upd-reject-notes')?.value;
+                if (reason) lead.rejectReason = reason;
+                if (notes)  lead.notes        = notes;
+            } else if (toStage === 'collecting') {
+                const notes = document.getElementById('upd-return-notes')?.value;
+                if (notes) lead.notes = notes;
+            }
+
+            // Apply the stage move
+            lead.stage = toStage;
+            lead.days  = 0;
+            renderBoard();
+
+            pendingMoveId    = null;
+            pendingMoveStage = null;
+            document.getElementById('update-backdrop').classList.add('hidden');
         }
 
         // ── Modal ────────────────────────────────────────────────────────────
