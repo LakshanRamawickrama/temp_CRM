@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -96,9 +96,9 @@
             flex-direction: column;
             align-items: center;
             padding: 15px 0;
-            gap: 20px;
+            gap: 8px;
             border-right: 1px solid #1e293b;
-            flex-shrink: 0;
+            flex-shrink: 0; overflow:hidden;
         }
 
         .nav-item {
@@ -369,50 +369,80 @@
         </div>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <a href="../dashboard/super_admin_dashboard.html" class="nav-item">
 =======
         <a href="../dashboards/super_admindashboard.html" class="nav-item">
+>>>>>>> Stashed changes
+=======
+        <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
 >>>>>>> Stashed changes
             <i class="fa-solid fa-gauge-high"></i>
             <span class="nav-text">Dashboard</span>
         </a>
 
-        <a href="../task_and_followups/task_management.html" class="nav-item">
+        <a href="../task_and_followups/task_management.html" id="nav-tasks" class="nav-item">
             <i class="fa-solid fa-tasks"></i>
             <span class="nav-text">Tasks & Followups</span>
         </a>
 
-        <a href="../lead_management/lead_management.html" class="nav-item active">
+        <a href="../lead_management/lead_management.html" id="nav-leads" class="nav-item active">
             <i class="fa-solid fa-user-group"></i>
             <span class="nav-text">Leads</span>
         </a>
 
-        <a href="../loan_pipeline/loan_pipeline.html" class="nav-item">
+        <a href="../loan_pipeline/loan_pipeline.html" id="nav-pipeline" class="nav-item">
             <i class="fa-solid fa-diagram-project"></i>
             <span class="nav-text">Loan Pipeline</span>
         </a>
 
-        <a href="../lenders/lender_management.html" class="nav-item">
+        <a href="../lenders/lender_management.html" id="nav-lenders" class="nav-item">
             <i class="fa-solid fa-hand-holding-dollar"></i>
             <span class="nav-text">Lenders</span>
         </a>
 
-        <a href="../documents/document_vault.html" class="nav-item">
+        <a href="../documents/document_vault.html" id="nav-docs" class="nav-item">
             <i class="fa-solid fa-folder-open"></i>
             <span class="nav-text">Documents Vault</span>
         </a>
 
-        <a href="../user_management/user_management.html" class="nav-item">
+        <a href="../user_management/user_management.html" id="nav-users" class="nav-item">
             <i class="fa-solid fa-user-gear"></i>
             <span class="nav-text">User Management</span>
         </a>
 
-        <a href="../reporting/reporting_logs.html" class="nav-item">
+        <a href="../reporting/reporting_logs.html" id="nav-reports" class="nav-item">
             <i class="fa-solid fa-chart-line"></i>
             <span class="nav-text">Reporting Logs</span>
         </a>
-
+        <div style="flex:1;"></div>
+        <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="nav-text">Logout</span>
+        </div>
     </nav>
+<script>
+(function(){
+    const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
+    if(!s){window.location.replace('../login/login.html');return;}
+    // Dashboard link
+    const el=document.getElementById('nav-dashboard');
+    if(el&&s.landing){el.href='../dashboard/'+s.landing.split('/').pop();}
+    // Role-based nav visibility
+    const ROLE_NAV={
+        'Admin':         ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'],
+        'Team Leader':   ['nav-tasks','nav-leads','nav-pipeline','nav-docs','nav-reports'],
+        'Tele Agent':    ['nav-tasks','nav-leads','nav-pipeline','nav-docs'],
+        'Accounts Manager':['nav-tasks','nav-leads','nav-lenders','nav-docs','nav-reports'],
+    };
+    const allowed=ROLE_NAV[s.role]||ROLE_NAV['Admin'];
+    ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'].forEach(id=>{
+        const node=document.getElementById(id);
+        if(node&&!allowed.includes(id)) node.style.display='none';
+    });
+})();
+function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}
+</script>
 
     <main class="dashboard-container">
         <section class="panel-card" id="lead-database-panel">
@@ -1134,3 +1164,18 @@
 </body>
 
 </html>
+
+<script>
+(function(){
+    const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
+    if(!s){window.location.replace('../login/login.html');return;}
+    const el=document.getElementById('nav-dashboard');
+    if(el&&s.landing) el.href=s.landing.replace('../','../').replace('dashboard/','../dashboard/');
+    // fix relative path: landing is like '../dashboard/xxx.html', we're in a subfolder
+    if(el&&s.landing){
+        // landing stored as '../dashboard/xxx.html' relative to login, we need it relative to current page
+        const parts=s.landing.split('/');
+        el.href='../dashboard/'+parts[parts.length-1];
+    }
+})();
+</script>

@@ -17,7 +17,7 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:10px; }
 
         /* ── Sidebar ── */
-        .side-nav { width:70px; background:#0f172a; height:100vh; display:flex; flex-direction:column; align-items:center; padding:15px 0; gap:20px; border-right:1px solid #1e293b; flex-shrink:0; }
+        .side-nav { width:70px; background:#0f172a; height:100vh; display:flex; flex-direction:column; align-items:center; padding:15px 0; gap:8px; border-right:1px solid #1e293b; flex-shrink:0; overflow:hidden; }
         .nav-item { display:flex; flex-direction:column; align-items:center; gap:6px; color:#94a3b8; transition:all .2s; cursor:pointer; text-decoration:none; padding:8px; border-radius:8px; width:50px; }
         .nav-item:hover,.nav-item.active { color:#fff; background:rgba(255,255,255,.08); }
         .nav-item i { font-size:16px; }
@@ -198,6 +198,11 @@
         <i class="fa-solid fa-chart-line"></i>
         <span class="nav-text">Reports</span>
     </a>
+    <div style="flex:1;"></div>
+    <div class="nav-item" onclick="logout()" title="Logout" style="margin-bottom:8px;">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span class="nav-text">Logout</span>
+    </div>
 </nav>
 
 <!-- ════════ MAIN ════════ -->
@@ -864,6 +869,10 @@ updateClock();
 /* ═══════════════════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════════════════ */
+// Session guard
+(function(){ const s=sessionStorage.getItem('crm_session'); if(!s){ window.location.replace('../login/login.html'); } })();
+function logout(){ sessionStorage.removeItem('crm_session'); window.location.replace('../login/login.html'); }
+
 document.addEventListener('DOMContentLoaded',()=>{
     populateAgentFilter();
     renderLeadTable();
