@@ -1,6 +1,5 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,397 +7,255 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            background-color: #ffffff;
-            margin: 0;
-            display: flex;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-
-        .dashboard-container {
-            display: grid;
-            grid-template-columns: 280px 300px 1fr;
-            gap: 0.75rem;
-            height: 100vh;
-            padding: 0.75rem;
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        .side-nav {
-            width: 70px;
-            background: #0f172a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px 0;
-            gap: 8px;
-            border-right: 1px solid #1e293b;
-            flex-shrink: 0; overflow:hidden;
-        }
-
-        .nav-item i {
-            font-size: 16px;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            color: #94a3b8;
-            transition: all .2s;
-            cursor: pointer;
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 8px;
-            width: 50px;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            color: #fff;
-            background: rgba(255, 255, 255, .08);
-        }
-
-        .nav-text {
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            text-align: center;
-        }
-
-        .panel-card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #f1f5f9;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-
-        .calendar-mini {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-        }
-
-        .cal-day {
-            aspect-ratio: 1.2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            font-weight: 500;
-            color: #64748b;
-        }
-
-        .cal-day.today {
-            background-color: #111827;
-            color: white;
-            border-radius: 8px;
-        }
-
-        .label-text {
-            font-size: 8px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #94a3b8;
-            margin-bottom: 4px;
-        }
-
-        .input-compact {
-            width: 100%;
-            background: #f8fafc;
-            border: 1px solid #f1f5f9;
-            border-radius: 8px;
-            padding: 7px 10px;
-            font-size: 10px;
-            font-weight: 500;
-        }
-
-        .task-item:hover {
-            background-color: #f1f5f9;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family:'Inter',system-ui,sans-serif; overflow:hidden; height:100vh; background:#f8fafc; margin:0; display:flex; }
+        .custom-scrollbar::-webkit-scrollbar { width:3px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background:transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:10px; }
+        .dashboard-container { display:grid; grid-template-columns:240px 220px 1fr 240px; gap:0.75rem; height:100vh; padding:0.75rem; flex-grow:1; min-width:0; }
+        .panel-card { background:white; border-radius:16px; border:1px solid #f1f5f9; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+        .card-header { padding:10px 14px; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+        .card-header-dark { background:#0f172a; padding:10px 14px; border-bottom:none; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+        .card-title { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#0f172a; }
+        .card-title-light { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#fff; }
+        .calendar-mini { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; }
+        .cal-day { aspect-ratio:1.2; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:500; color:#64748b; }
+        .cal-day.today { background:#111827; color:white; border-radius:8px; }
+        .label-text { font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; margin-bottom:4px; display:block; }
+        .input-compact { width:100%; background:#f8fafc; border:1px solid #f1f5f9; border-radius:8px; padding:6px 10px; font-size:10px; font-weight:500; outline:none; transition:border .15s; }
+        .input-compact:focus { border-color:#6366f1; background:#fff; }
+        .promo-item { padding:10px 14px; border-bottom:1px solid #f8fafc; transition:background .15s; cursor:pointer; }
+        .promo-item:hover { background:#fafbff; }
+        .promo-item:last-child { border-bottom:none; }
+        .promo-badge { font-size:7px; font-weight:800; padding:2px 6px; border-radius:99px; text-transform:uppercase; color:#fff; }
+        .side-nav { width:70px; background:#0f172a; height:100vh; display:flex; flex-direction:column; align-items:center; padding:12px 0; gap:4px; border-right:1px solid #1e293b; flex-shrink:0; overflow:hidden; }
+        .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; color:#94a3b8; transition:all .2s; cursor:pointer; text-decoration:none; padding:6px 4px; border-radius:8px; width:54px; }
+        .nav-item:hover,.nav-item.active { color:#fff; background:rgba(255,255,255,.08); }
+        .nav-item i { font-size:14px; }
+        .nav-text { font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; text-align:center; line-height:1; }
     </style>
 </head>
-
 <body>
-
-    <!-- Slim Sidebar -->
     <nav class="side-nav">
-        <div class="mb-6">
-            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-bolt text-sm"></i>
-            </div>
-        </div>
-
-        <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
-            <i class="fa-solid fa-gauge-high"></i>
-            <span class="nav-text">Dashboard</span>
-        </a>
-
-        <a href="../task_and_followups/task_management.html" id="nav-tasks" class="nav-item active">
-            <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">Tasks & Followups</span>
-        </a>
-
-        <a href="../lead_management/lead_management.html" id="nav-leads" class="nav-item">
-            <i class="fa-solid fa-user-group"></i>
-            <span class="nav-text">Leads</span>
-        </a>
-
-        <a href="../loan_pipeline/loan_pipeline.html" id="nav-pipeline" class="nav-item">
-            <i class="fa-solid fa-diagram-project"></i>
-            <span class="nav-text">Loan Pipeline</span>
-        </a>
-
-        <a href="../lenders/lender_management.html" id="nav-lenders" class="nav-item">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-            <span class="nav-text">Lenders</span>
-        </a>
-
-        <a href="../documents/document_vault.html" id="nav-docs" class="nav-item">
-            <i class="fa-solid fa-folder-open"></i>
-            <span class="nav-text">Documents Vault</span>
-        </a>
-
-        <a href="../user_management/user_management.html" id="nav-users" class="nav-item">
-            <i class="fa-solid fa-user-gear"></i>
-            <span class="nav-text">User Management</span>
-        </a>
-
-        <a href="../reporting/reporting_logs.html" id="nav-reports" class="nav-item">
-            <i class="fa-solid fa-chart-line"></i>
-            <span class="nav-text">Reporting Logs</span>
-        </a>
+        <div class="mb-6"><div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white"><i class="fa-solid fa-bolt text-sm"></i></div></div>
+        <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item"><i class="fa-solid fa-gauge-high"></i><span class="nav-text">Dashboard</span></a>
+        <a href="../task_and_followups/task_management.html" id="nav-tasks" class="nav-item active"><i class="fa-solid fa-tasks"></i><span class="nav-text">Tasks</span></a>
+        <a href="../lead_management/lead_management.html" id="nav-leads" class="nav-item"><i class="fa-solid fa-user-group"></i><span class="nav-text">Leads</span></a>
+        <a href="../loan_pipeline/loan_pipeline.html" id="nav-pipeline" class="nav-item"><i class="fa-solid fa-diagram-project"></i><span class="nav-text">Pipeline</span></a>
+        <a href="../lenders/lender_management.html" id="nav-lenders" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span class="nav-text">Lenders</span></a>
+        <a href="../documents/document_vault.html" id="nav-docs" class="nav-item"><i class="fa-solid fa-folder-open"></i><span class="nav-text">Docs</span></a>
+        <a href="../user_management/user_management.html" id="nav-users" class="nav-item"><i class="fa-solid fa-user-gear"></i><span class="nav-text">Users</span></a>
+        <a href="../reporting/reporting_logs.html" id="nav-reports" class="nav-item"><i class="fa-solid fa-chart-line"></i><span class="nav-text">Reports</span></a>
         <div style="flex:1;"></div>
-        <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span class="nav-text">Logout</span>
-        </div>
+        <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout"><i class="fa-solid fa-right-from-bracket"></i><span class="nav-text">Logout</span></div>
     </nav>
-<script>
-(function(){
-    const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
-    if(!s){window.location.replace('../login/login.html');return;}
-    const el=document.getElementById('nav-dashboard');
-    if(el&&s.landing){el.href='../dashboard/'+s.landing.split('/').pop();}
-    const ROLE_NAV={'Admin':['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'],'Team Leader':['nav-tasks','nav-leads','nav-pipeline','nav-docs','nav-reports'],'Tele Agent':['nav-tasks','nav-leads','nav-pipeline','nav-docs'],'Accounts Manager':['nav-tasks','nav-leads','nav-lenders','nav-docs','nav-reports']};
-    const allowed=ROLE_NAV[s.role]||ROLE_NAV['Admin'];
-    ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'].forEach(id=>{const n=document.getElementById(id);if(n&&!allowed.includes(id))n.style.display='none';});
-})();
-function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}
-</script>
 
-    <!-- Unified Dashboard -->
+    <script>
+    (function(){
+        const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
+        if(!s){window.location.replace('../login/login.html');return;}
+        const el=document.getElementById('nav-dashboard');
+        if(el&&s.landing){el.href='../dashboard/'+s.landing.split('/').pop();}
+        const ROLE_NAV={
+            'Admin':['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'],
+            'Team Leader':['nav-tasks','nav-leads'],
+            'Tele Agent':['nav-tasks','nav-leads'],
+            'Accounts Manager':['nav-tasks','nav-leads','nav-lenders']
+        };
+        const allowed=ROLE_NAV[s.role]||ROLE_NAV['Admin'];
+        ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'].forEach(id=>{const n=document.getElementById(id);if(n&&!allowed.includes(id))n.style.display='none';});
+    })();
+    function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}
+    </script>
+
     <main class="dashboard-container">
 
-        <!-- COLUMN 1: CREATE TASK -->
+        <!-- CARD 1: CREATE TASK -->
         <section class="panel-card">
-            <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                <h2 class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Create New Task</h2>
-                <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            <div class="card-header">
+                <span class="card-title">Create New Task</span>
+                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
             </div>
-            <div class="flex-1 p-4 space-y-2.5 overflow-y-auto custom-scrollbar">
-                <div>
-                    <label class="label-text">Task Description</label>
-                    <input type="text" placeholder="Title..." class="input-compact">
+            <div class="flex-1 p-3 space-y-2 overflow-y-auto custom-scrollbar">
+                <div><label class="label-text">Task Description</label><input type="text" placeholder="Title..." class="input-compact"></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="label-text">Assignee</label><select class="input-compact"><option>Thanushika</option><option>Ravindu</option><option>Priya</option><option>Amal</option></select></div>
+                    <div><label class="label-text">Client</label><select class="input-compact"><option>ABC Corp</option><option>XYZ Ltd</option><option>Brown Family</option></select></div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="label-text">Assignee</label>
-                        <select class="input-compact">
-                            <option>Thanushika</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="label-text">Client</label>
-                        <select class="input-compact">
-                            <option>ABC Corp</option>
-                        </select>
-                    </div>
+                    <div><label class="label-text">Phone</label><input type="tel" placeholder="077..." class="input-compact"></div>
+                    <div><label class="label-text">Status</label><select class="input-compact"><option>Warm</option><option>Hot</option><option>Cold</option></select></div>
                 </div>
+                <div><label class="label-text">Email</label><input type="email" placeholder="mail@lead.com" class="input-compact"></div>
                 <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="label-text">Phone</label>
-                        <input type="tel" placeholder="077..." class="input-compact">
-                    </div>
-                    <div>
-                        <label class="label-text">Status</label>
-                        <select class="input-compact">
-                            <option>Warm</option>
-                            <option>Hot</option>
-                            <option>Cold</option>
-                        </select>
-                    </div>
+                    <div><label class="label-text">Date</label><input type="date" class="input-compact" value="2026-04-18"></div>
+                    <div><label class="label-text">Time</label><input type="time" class="input-compact" value="14:30"></div>
                 </div>
-                <div>
-                    <label class="label-text">Email</label>
-                    <input type="email" placeholder="mail@lead.com" class="input-compact">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="label-text">Date</label>
-                        <input type="date" class="input-compact" value="2026-04-16">
-                    </div>
-                    <div>
-                        <label class="label-text">Time</label>
-                        <input type="time" class="input-compact" value="14:30">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="label-text">Notes</label>
-                    <textarea rows="2" placeholder="..." class="input-compact resize-none"></textarea>
-                </div>
-                <button
-                    class="w-full py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
-                    Create Task
-                </button>
+                <div><label class="label-text">Notes</label><textarea rows="2" placeholder="..." class="input-compact resize-none"></textarea></div>
+                <button class="w-full py-2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">Create Task</button>
             </div>
         </section>
 
-        <!-- COLUMN 2: SCHEDULE FEED -->
+        <!-- CARD 2: CALENDAR VIEW -->
         <section class="panel-card">
-            <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                <h2 class="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Calender View</h2>
-                <span class="text-[9px] font-bold text-gray-400 font-mono">2026</span>
+            <div class="card-header">
+                <span class="card-title">Calendar View</span>
+                <span style="font-size:9px;font-weight:700;color:#94a3b8;font-family:monospace;">2026</span>
             </div>
-            <div class="flex-1 p-4 flex flex-col">
-                <div class="calendar-mini mb-4">
-                    <div class="cal-day font-bold">S</div>
-                    <div class="cal-day font-bold">M</div>
-                    <div class="cal-day font-bold">T</div>
-                    <div class="cal-day font-bold">W</div>
-                    <div class="cal-day font-bold">T</div>
-                    <div class="cal-day font-bold">F</div>
-                    <div class="cal-day font-bold">S</div>
-                    <div class="cal-day opacity-20">29</div>
-                    <div class="cal-day opacity-20">30</div>
-                    <div class="cal-day">1</div>
-                    <div class="cal-day">2</div>
-                    <div class="cal-day">3</div>
-                    <div class="cal-day">4</div>
-                    <div class="cal-day">5</div>
-                    <div class="cal-day">6</div>
-                    <div class="cal-day">7</div>
-                    <div class="cal-day">8</div>
-                    <div class="cal-day">9</div>
-                    <div class="cal-day">10</div>
-                    <div class="cal-day">11</div>
-                    <div class="cal-day">12</div>
-                    <div class="cal-day">13</div>
-                    <div class="cal-day">14</div>
-                    <div class="cal-day">15</div>
-                    <div class="cal-day today font-bold">16</div>
-                    <div class="cal-day">17</div>
-                    <div class="cal-day">18</div>
-                    <div class="cal-day">19</div>
+            <div class="flex-1 p-3 flex flex-col overflow-hidden">
+                <div class="calendar-mini mb-3">
+                    <div class="cal-day font-bold text-slate-400">S</div><div class="cal-day font-bold text-slate-400">M</div><div class="cal-day font-bold text-slate-400">T</div><div class="cal-day font-bold text-slate-400">W</div><div class="cal-day font-bold text-slate-400">T</div><div class="cal-day font-bold text-slate-400">F</div><div class="cal-day font-bold text-slate-400">S</div>
+                    <div class="cal-day opacity-20">29</div><div class="cal-day opacity-20">30</div>
+                    <div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div>
+                    <div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div>
+                    <div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day today font-bold">18</div><div class="cal-day">19</div>
+                    <div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div>
+                    <div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div>
                 </div>
-
-                <div class="flex-1 overflow-y-auto custom-scrollbar pr-1">
-                    <label class="label-text block mb-2">Today's Priority</label>
+                <div class="flex-1 overflow-y-auto custom-scrollbar">
+                    <label class="label-text mb-2">Today's Priority</label>
                     <div class="space-y-2">
-                        <div class="p-2.5 bg-blue-50/40 border border-blue-100 rounded-lg">
-                            <p class="text-[8px] font-bold text-blue-600 uppercase">14:30 • CALL</p>
-                            <p class="text-[10px] font-bold text-gray-800">ABC Followup</p>
+                        <div class="p-2.5 bg-blue-50 border border-blue-100 rounded-xl">
+                            <p class="text-[8px] font-bold text-blue-600 uppercase">14:30 • Call</p>
+                            <p class="text-[10px] font-bold text-slate-800">ABC Followup</p>
                         </div>
-                        <div class="p-2.5 bg-purple-50/40 border border-purple-100 rounded-lg">
-                            <p class="text-[8px] font-bold text-purple-600 uppercase">16:00 • MEETING</p>
-                            <p class="text-[10px] font-bold text-gray-800">Review XYZ</p>
+                        <div class="p-2.5 bg-purple-50 border border-purple-100 rounded-xl">
+                            <p class="text-[8px] font-bold text-purple-600 uppercase">16:00 • Meeting</p>
+                            <p class="text-[10px] font-bold text-slate-800">Review XYZ</p>
+                        </div>
+                        <div class="p-2.5 bg-amber-50 border border-amber-100 rounded-xl">
+                            <p class="text-[8px] font-bold text-amber-600 uppercase">17:00 • Follow-up</p>
+                            <p class="text-[10px] font-bold text-slate-800">Brown Family Docs</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- COLUMN 3: TASK INVENTORY -->
+        <!-- CARD 3: ALL TASKS -->
         <section class="panel-card">
-            <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-900 text-white">
-                <h2 class="text-[9px] font-bold uppercase tracking-widest">All Tasks</h2>
-
+            <div class="card-header-dark">
+                <span class="card-title-light">All Tasks</span>
+                <span style="font-size:8px;font-weight:700;color:#64748b;text-transform:uppercase;">2 active</span>
             </div>
             <div class="flex-1 overflow-y-auto custom-scrollbar">
                 <table class="w-full text-left">
                     <thead class="sticky top-0 bg-gray-50 border-b border-gray-100">
                         <tr>
-                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Task
-                                Details</th>
-                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Client
-                            </th>
-                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Schedule
-                            </th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Task Details</th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Client</th>
+                            <th class="px-4 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-widest">Schedule</th>
                             <th class="px-4 py-2"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-2.5">
-                                <p class="text-[10px] font-bold text-gray-900 line-clamp-1">ABC Quotation Review</p>
-                                <p class="text-[7px] text-blue-500 font-bold uppercase mt-0.5">📞 Outbound</p>
-                            </td>
-                            <td class="px-4 py-2.5">
-                                <p class="text-[10px] font-bold text-gray-700">John P.</p>
-                            </td>
-                            <td class="px-4 py-2.5">
-                                <p class="text-[9px] font-bold text-gray-400">Tdy, 14:30</p>
-                            </td>
-                            <td class="px-4 py-2.5 text-center">
-                                <i
-                                    class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer"></i>
-                            </td>
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-900">ABC Quotation Review</p><p class="text-[7px] text-blue-500 font-bold uppercase mt-0.5">📞 Outbound</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-700">John P.</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[9px] font-bold text-gray-400">Today, 14:30</p></td>
+                            <td class="px-4 py-2.5 text-center"><i class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer text-sm"></i></td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-2.5">
-                                <p class="text-[10px] font-bold text-gray-900 line-clamp-1">Contract Negotiation</p>
-                                <p class="text-[7px] text-purple-500 font-bold uppercase mt-0.5">🤝 Meeting</p>
-                            </td>
-                            <td class="px-4 py-2.5">
-                                <p class="text-[10px] font-bold text-gray-700">Sarah S.</p>
-                            </td>
-                            <td class="px-4 py-2.5">
-                                <p class="text-[9px] font-bold text-gray-400">Tmr, 09:00</p>
-                            </td>
-                            <td class="px-4 py-2.5 text-center">
-                                <i
-                                    class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer"></i>
-                            </td>
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-900">Contract Negotiation</p><p class="text-[7px] text-purple-500 font-bold uppercase mt-0.5">🤝 Meeting</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-700">Sarah S.</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[9px] font-bold text-gray-400">Tmr, 09:00</p></td>
+                            <td class="px-4 py-2.5 text-center"><i class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer text-sm"></i></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-900">KYC Document Upload</p><p class="text-[7px] text-amber-500 font-bold uppercase mt-0.5">📄 Document</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-700">Brown Family</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[9px] font-bold text-gray-400">Today, 17:00</p></td>
+                            <td class="px-4 py-2.5 text-center"><i class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer text-sm"></i></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-900">Lender Rate Comparison</p><p class="text-[7px] text-emerald-500 font-bold uppercase mt-0.5">📊 Research</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-700">XYZ Ltd</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[9px] font-bold text-gray-400">Tmr, 11:00</p></td>
+                            <td class="px-4 py-2.5 text-center"><i class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer text-sm"></i></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-900">Proposal Submission</p><p class="text-[7px] text-rose-500 font-bold uppercase mt-0.5">📨 Email</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[10px] font-bold text-gray-700">Patel Finance</p></td>
+                            <td class="px-4 py-2.5"><p class="text-[9px] font-bold text-gray-400">22 Apr, 10:00</p></td>
+                            <td class="px-4 py-2.5 text-center"><i class="fa-solid fa-check-circle text-gray-200 hover:text-green-500 cursor-pointer text-sm"></i></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="p-3 border-t border-gray-50 bg-gray-50/30 text-center">
-                <button
-                    class="text-[8px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">Refresh
-                    Database</button>
+            <div class="px-4 py-2 border-t border-gray-100 bg-gray-50/30 text-center flex-shrink-0">
+                <button class="text-[8px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-all">Refresh Database</button>
+            </div>
+        </section>
+
+        <!-- CARD 4: LENDER PROMOTIONS -->
+        <section class="panel-card">
+            <div class="card-header" style="background:#fffbeb;border-bottom:1px solid #fde68a;">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-lg bg-amber-500 flex items-center justify-center"><i class="fa-solid fa-tags text-white" style="font-size:10px;"></i></div>
+                    <span class="card-title" style="color:#92400e;">Lender Promotions</span>
+                </div>
+                <div style="width:7px;height:7px;border-radius:50%;background:#f59e0b;animation:pulse 1.5s infinite;"></div>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <!-- Promo 1 -->
+                <div class="promo-item">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                        <span class="promo-badge" style="background:#6366f1;">Exclusive</span>
+                        <span style="font-size:7px;font-weight:700;color:#94a3b8;">Exp: 30 Apr</span>
+                    </div>
+                    <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:3px;">Lloyds Bank: 0.25% Rate Cut</div>
+                    <div style="font-size:8px;color:#64748b;line-height:1.5;">All new business expansion loans over £250k.</div>
+                    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:8px;font-weight:700;color:#6366f1;">Code: LLOYDS25</span>
+                        <button onclick="navigator.clipboard.writeText('LLOYDS25')" style="background:#eef2ff;border:none;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:8px;font-weight:700;color:#6366f1;display:flex;align-items:center;gap:3px;"><i class="fa-solid fa-copy"></i> Copy</button>
+                    </div>
+                </div>
+                <!-- Promo 2 -->
+                <div class="promo-item">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                        <span class="promo-badge" style="background:#10b981;">Bonus</span>
+                        <span style="font-size:7px;font-weight:700;color:#94a3b8;">Exp: 15 May</span>
+                    </div>
+                    <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:3px;">Funding Circle: 1% Fee Rebate</div>
+                    <div style="font-size:8px;color:#64748b;line-height:1.5;">Bonus commission on all asset finance deals this month.</div>
+                    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:8px;font-weight:700;color:#10b981;font-style:italic;">Auto-Applied</span>
+                        <i class="fa-solid fa-arrow-right-long" style="color:#94a3b8;font-size:9px;"></i>
+                    </div>
+                </div>
+                <!-- Promo 3 -->
+                <div class="promo-item">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                        <span class="promo-badge" style="background:#f59e0b;">Limited</span>
+                        <span style="font-size:7px;font-weight:700;color:#94a3b8;">Exp: 22 Apr</span>
+                    </div>
+                    <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:3px;">Allica: Fast-Track Processing</div>
+                    <div style="font-size:8px;color:#64748b;line-height:1.5;">Guaranteed 24-hour turnaround on commercial mortgage apps.</div>
+                    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:8px;font-weight:700;color:#94a3b8;text-transform:uppercase;">Standard T&Cs</span>
+                        <i class="fa-solid fa-arrow-right-long" style="color:#94a3b8;font-size:9px;"></i>
+                    </div>
+                </div>
+                <!-- Promo 4 -->
+                <div class="promo-item">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                        <span class="promo-badge" style="background:#ef4444;">Hot Deal</span>
+                        <span style="font-size:7px;font-weight:700;color:#94a3b8;">Exp: 28 Apr</span>
+                    </div>
+                    <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:3px;">Westpac: Zero Arrangement Fee</div>
+                    <div style="font-size:8px;color:#64748b;line-height:1.5;">No arrangement fee on SME loans £100k–£500k this month.</div>
+                    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:8px;font-weight:700;color:#ef4444;">Code: WPZERO</span>
+                        <button onclick="navigator.clipboard.writeText('WPZERO')" style="background:#fef2f2;border:none;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:8px;font-weight:700;color:#ef4444;display:flex;align-items:center;gap:3px;"><i class="fa-solid fa-copy"></i> Copy</button>
+                    </div>
+                </div>
             </div>
         </section>
 
     </main>
 
+    <style>
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.2)} }
+    </style>
 </body>
-
 </html>
-

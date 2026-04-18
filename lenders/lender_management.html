@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -70,51 +70,6 @@
             color: #fff;
             border-color: #0f172a;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-        }
-
-        .side-nav {
-            width: 70px;
-            background: #0f172a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px 0;
-            gap: 8px;
-            border-right: 1px solid #1e293b;
-            flex-shrink: 0; overflow:hidden;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            color: #94a3b8;
-            transition: all .2s;
-            cursor: pointer;
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 8px;
-            width: 50px;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            color: #fff;
-            background: rgba(255, 255, 255, .08);
-        }
-
-        .nav-item i {
-            font-size: 16px;
-        }
-
-        .nav-text {
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            text-align: center;
         }
 
         .panel-card {
@@ -458,6 +413,53 @@
             margin-top: 4px;
             display: inline-block;
         }
+
+        .side-nav {
+            width: 70px;
+            background: #0f172a;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 4px;
+            border-right: 1px solid #1e293b;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #94a3b8;
+            transition: all .2s;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 6px 4px;
+            border-radius: 8px;
+            width: 54px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: #fff;
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .nav-item i {
+            font-size: 14px;
+        }
+
+        .nav-text {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            text-align: center;
+            line-height: 1;
+        }
     </style>
 </head>
 
@@ -478,7 +480,7 @@
 
         <a href="../task_and_followups/task_management.html" id="nav-tasks" class="nav-item">
             <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">Tasks & Followups</span>
+            <span class="nav-text">Tasks</span>
         </a>
 
         <a href="../lead_management/lead_management.html" id="nav-leads" class="nav-item">
@@ -488,7 +490,7 @@
 
         <a href="../loan_pipeline/loan_pipeline.html" id="nav-pipeline" class="nav-item">
             <i class="fa-solid fa-diagram-project"></i>
-            <span class="nav-text">Loan Pipeline</span>
+            <span class="nav-text">Pipeline</span>
         </a>
 
         <a href="../lenders/lender_management.html" class="nav-item active">
@@ -498,17 +500,17 @@
 
         <a href="../documents/document_vault.html" id="nav-docs" class="nav-item">
             <i class="fa-solid fa-folder-open"></i>
-            <span class="nav-text">Documents Vault</span>
+            <span class="nav-text">Docs</span>
         </a>
 
         <a href="../user_management/user_management.html" id="nav-users" class="nav-item">
             <i class="fa-solid fa-user-gear"></i>
-            <span class="nav-text">User Management</span>
+            <span class="nav-text">Users</span>
         </a>
 
         <a href="../reporting/reporting_logs.html" id="nav-reports" class="nav-item">
             <i class="fa-solid fa-chart-line"></i>
-            <span class="nav-text">Reporting Logs</span>
+            <span class="nav-text">Reports</span>
         </a>
         <div style="flex:1;"></div>
         <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
@@ -520,23 +522,33 @@
 (function(){
     const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
     if(!s){window.location.replace('../login/login.html');return;}
+    // Dashboard link
     const el=document.getElementById('nav-dashboard');
     if(el&&s.landing){el.href='../dashboard/'+s.landing.split('/').pop();}
-    const ROLE_NAV={'Admin':['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'],'Team Leader':['nav-tasks','nav-leads','nav-pipeline','nav-docs','nav-reports'],'Tele Agent':['nav-tasks','nav-leads','nav-pipeline','nav-docs'],'Accounts Manager':['nav-tasks','nav-leads','nav-lenders','nav-docs','nav-reports']};
-    const allowed=ROLE_NAV[s.role]||ROLE_NAV['Admin'];
-    ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'].forEach(id=>{const n=document.getElementById(id);if(n&&!allowed.includes(id))n.style.display='none';});
+    // Role-based nav visibility
+    const ROLE_NAV = {
+        'Admin':         ['nav-tasks', 'nav-leads', 'nav-pipeline', 'nav-lenders', 'nav-docs', 'nav-users', 'nav-reports'],
+        'Team Leader':   ['nav-tasks', 'nav-leads'],
+        'Tele Agent':    ['nav-tasks', 'nav-leads'],
+        'Accounts Manager': ['nav-tasks', 'nav-leads', 'nav-lenders']
+    };
+    const allowed = ROLE_NAV[s.role] || ROLE_NAV['Admin'];
+    ['nav-tasks', 'nav-leads', 'nav-pipeline', 'nav-lenders', 'nav-docs', 'nav-users', 'nav-reports'].forEach(id => {
+        const node = document.getElementById(id);
+        if (node && !allowed.includes(id)) node.style.display = 'none';
+    });
 })();
 function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}
 </script>
 
-    <!-- Dashboard -->
     <main class="dashboard-container">
 
-        <!-- LEFT PANEL: Overview + Form -->
+        <!-- LEFT PANEL: Lender Form & Actions -->
         <section class="panel-card" id="left-panel">
-            <div id="panel-header"
-                class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 transition-all duration-200">
-                <div class="flex flex-col gap-0.5">
+            <!-- Form Header -->
+            <div id="panel-header" class="px-4 border-b border-gray-100 flex items-center justify-between"
+                style="min-height:48px;">
+                <div class="flex flex-col">
                     <h2 id="panel-title"
                         class="text-[9px] font-bold text-gray-900 uppercase tracking-widest transition-all">Add New
                         Lender</h2>
@@ -568,11 +580,13 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                 <!-- Promotions Tab -->
                 <div id="promotions-tab" class="hidden">
                     <div id="promo-form" class="p-4 space-y-3 mb-4 bg-gray-50/50 border-b border-gray-100">
-                        <p class="form-section-title"><i class="fa-solid fa-bullhorn text-[8px]"></i> Add New Promotion</p>
+                        <p class="form-section-title"><i class="fa-solid fa-bullhorn text-[8px]"></i> Add New Promotion
+                        </p>
                         <div class="grid grid-cols-2 gap-2.5">
                             <div>
                                 <label class="label-text">Promotion Name</label>
-                                <input id="p-name" type="text" placeholder="e.g. Q3 Cashback" class="input-compact bg-white">
+                                <input id="p-name" type="text" placeholder="e.g. Q3 Cashback"
+                                    class="input-compact bg-white">
                             </div>
                             <div>
                                 <label class="label-text">Commission %</label>
@@ -581,7 +595,8 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         </div>
                         <div>
                             <label class="label-text">Offer Details</label>
-                            <textarea id="p-offer" rows="2" placeholder="Describe the offer..." class="input-compact bg-white resize-none"></textarea>
+                            <textarea id="p-offer" rows="2" placeholder="Describe the offer..."
+                                class="input-compact bg-white resize-none"></textarea>
                         </div>
                         <div class="grid grid-cols-2 gap-2.5">
                             <div>
@@ -591,19 +606,19 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                             <div>
                                 <label class="label-text">Supporting Document</label>
                                 <div id="promo-drop-zone" class="drop-zone"
-                                     onclick="document.getElementById('p-file-input').click()"
-                                     ondragover="handleDragOver(event)"
-                                     ondragleave="handleDragLeave(event)"
-                                     ondrop="handleDrop(event)">
+                                    onclick="document.getElementById('p-file-input').click()"
+                                    ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)"
+                                    ondrop="handleDrop(event)">
                                     <div class="drop-zone-text">
                                         <i class="fa-solid fa-cloud-arrow-up mb-1 block text-[10px]"></i>
                                         Drop PDF/JPG or Click
                                     </div>
-                                    <input type="file" id="p-file-input" class="hidden" accept=".pdf,.jpg,.jpeg,.png" 
-                                           onchange="handleFileSelect(event)">
+                                    <input type="file" id="p-file-input" class="hidden" accept=".pdf,.jpg,.jpeg,.png"
+                                        onchange="handleFileSelect(event)">
                                     <div id="p-doc-display" class="hidden">
                                         <span id="p-doc-name"></span>
-                                        <button onclick="clearSelectedFile(event)" class="ml-1 text-red-500 hover:text-red-700">
+                                        <button onclick="clearSelectedFile(event)"
+                                            class="ml-1 text-red-500 hover:text-red-700">
                                             <i class="fa-solid fa-circle-xmark"></i>
                                         </button>
                                     </div>
@@ -611,13 +626,15 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 </div>
                             </div>
                         </div>
-                        <button onclick="addPromotion()" class="w-full py-2.5 bg-indigo-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-indigo-700 transition-all shadow-sm">
+                        <button onclick="addPromotion()"
+                            class="w-full py-2.5 bg-indigo-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-indigo-700 transition-all shadow-sm">
                             Add Promotion
                         </button>
                     </div>
 
                     <div id="active-promos-list" class="p-4">
-                        <p class="form-section-title mb-3"><i class="fa-solid fa-clock-rotate-left text-[8px]"></i> Current Promotions</p>
+                        <p class="form-section-title mb-3"><i class="fa-solid fa-clock-rotate-left text-[8px]"></i>
+                            Current Promotions</p>
                         <div id="promo-list-container" class="space-y-2">
                             <!-- Promotions will be rendered here -->
                         </div>
@@ -730,95 +747,141 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
 
                 <!-- ══ SEND APPLICATION TAB ══ -->
                 <div id="sendapp-tab" class="hidden p-4 space-y-3">
-                    <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;font-size:8px;font-weight:700;color:#b45309;margin-bottom:4px;">
-                        <i class="fa-solid fa-paper-plane" style="margin-right:5px;"></i>Select a lender from the table, then fill in client details to generate the application.
+                    <div
+                        style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;font-size:8px;font-weight:700;color:#b45309;margin-bottom:4px;">
+                        <i class="fa-solid fa-paper-plane" style="margin-right:5px;"></i>Select a lender from the table,
+                        then fill in client details to generate the application.
                     </div>
-                    <div id="sendapp-lender-badge" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:7px 12px;display:flex;align-items:center;gap:8px;">
+                    <div id="sendapp-lender-badge"
+                        style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:7px 12px;display:flex;align-items:center;gap:8px;">
                         <i class="fa-solid fa-building-columns" style="font-size:11px;color:#15803d;"></i>
                         <span style="font-size:10px;font-weight:700;color:#15803d;" id="sendapp-lender-name">—</span>
-                        <span style="font-size:7px;font-weight:700;color:#94a3b8;margin-left:auto;">Selected Lender</span>
+                        <span style="font-size:7px;font-weight:700;color:#94a3b8;margin-left:auto;">Selected
+                            Lender</span>
                     </div>
 
                     <!-- Lender Contact -->
                     <div>
-                        <p style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">Lender Contact</p>
+                        <p
+                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">
+                            Lender Contact</p>
                         <label class="label-text">Account Manager Name *</label>
                         <input id="sa-am-name" type="text" placeholder="e.g. Shifat" class="input-compact">
                     </div>
 
                     <!-- Client Details -->
                     <div>
-                        <p style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">Client Details</p>
+                        <p
+                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">
+                            Client Details</p>
                         <div class="space-y-2">
                             <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Full Name *</label><input id="sa-name" type="text" placeholder="Eduard Ceban" class="input-compact"></div>
-                                <div><label class="label-text">Business Name *</label><input id="sa-business" type="text" placeholder="CES COMMUNICATIONS LTD" class="input-compact"></div>
+                                <div><label class="label-text">Full Name *</label><input id="sa-name" type="text"
+                                        placeholder="Eduard Ceban" class="input-compact"></div>
+                                <div><label class="label-text">Business Name *</label><input id="sa-business"
+                                        type="text" placeholder="CES COMMUNICATIONS LTD" class="input-compact"></div>
                             </div>
                             <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Date of Birth</label><input id="sa-dob" type="text" placeholder="DD/MM/YYYY" class="input-compact"></div>
-                                <div><label class="label-text">Contact Number</label><input id="sa-phone" type="text" placeholder="07546516898" class="input-compact"></div>
+                                <div><label class="label-text">Date of Birth</label><input id="sa-dob" type="text"
+                                        placeholder="DD/MM/YYYY" class="input-compact"></div>
+                                <div><label class="label-text">Contact Number</label><input id="sa-phone" type="text"
+                                        placeholder="07546516898" class="input-compact"></div>
                             </div>
-                            <div><label class="label-text">Email Address</label><input id="sa-email" type="email" placeholder="client@company.co.uk" class="input-compact"></div>
-                            <div><label class="label-text">Residential Address</label><input id="sa-address" type="text" placeholder="99 Halbutt Street, Dagenham, RM9 5AR" class="input-compact"></div>
+                            <div><label class="label-text">Email Address</label><input id="sa-email" type="email"
+                                    placeholder="client@company.co.uk" class="input-compact"></div>
+                            <div><label class="label-text">Residential Address</label><input id="sa-address" type="text"
+                                    placeholder="99 Halbutt Street, Dagenham, RM9 5AR" class="input-compact"></div>
                             <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Time at Current Address</label><input id="sa-time-addr" type="text" placeholder="e.g. 2 years / NA" class="input-compact"></div>
-                                <div><label class="label-text">Homeowner</label><select id="sa-homeowner" class="input-compact"><option>NO</option><option>YES</option></select></div>
+                                <div><label class="label-text">Time at Current Address</label><input id="sa-time-addr"
+                                        type="text" placeholder="e.g. 2 years / NA" class="input-compact"></div>
+                                <div><label class="label-text">Homeowner</label><select id="sa-homeowner"
+                                        class="input-compact">
+                                        <option>NO</option>
+                                        <option>YES</option>
+                                    </select></div>
                             </div>
-                            <div><label class="label-text">Previous Address</label><input id="sa-prev-addr" type="text" placeholder="37 Lechmere Ave, IG8 8QF (05/2020–07/2025)" class="input-compact"></div>
+                            <div><label class="label-text">Previous Address</label><input id="sa-prev-addr" type="text"
+                                    placeholder="37 Lechmere Ave, IG8 8QF (05/2020–07/2025)" class="input-compact">
+                            </div>
                         </div>
                     </div>
 
                     <!-- Loan Details -->
                     <div>
-                        <p style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">Loan Details</p>
+                        <p
+                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">
+                            Loan Details</p>
                         <div class="space-y-2">
                             <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Amount Requested *</label><input id="sa-amount" type="text" placeholder="25K" class="input-compact"></div>
-                                <div><label class="label-text">Loan Purpose</label><input id="sa-purpose" type="text" placeholder="Working Capital" class="input-compact"></div>
+                                <div><label class="label-text">Amount Requested *</label><input id="sa-amount"
+                                        type="text" placeholder="25K" class="input-compact"></div>
+                                <div><label class="label-text">Loan Purpose</label><input id="sa-purpose" type="text"
+                                        placeholder="Working Capital" class="input-compact"></div>
                             </div>
                             <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Overdraft</label><input id="sa-overdraft" type="text" placeholder="2K / NA" class="input-compact"></div>
-                                <div><label class="label-text">Documents Attached</label><input id="sa-docs" type="text" placeholder="6 months bank statements…" class="input-compact"></div>
+                                <div><label class="label-text">Overdraft</label><input id="sa-overdraft" type="text"
+                                        placeholder="2K / NA" class="input-compact"></div>
+                                <div><label class="label-text">Documents Attached</label><input id="sa-docs" type="text"
+                                        placeholder="6 months bank statements…" class="input-compact"></div>
                             </div>
-                            <div><label class="label-text">Business Overview</label><textarea id="sa-biz" rows="2" placeholder="Construction of utility projects…" class="input-compact resize-none"></textarea></div>
+                            <div><label class="label-text">Business Overview</label><textarea id="sa-biz" rows="2"
+                                    placeholder="Construction of utility projects…"
+                                    class="input-compact resize-none"></textarea></div>
                         </div>
                     </div>
 
                     <!-- Existing Loans -->
                     <div>
-                        <p style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">Existing Loans</p>
+                        <p
+                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">
+                            Existing Loans</p>
                         <div class="grid grid-cols-2 gap-2">
-                            <div><label class="label-text">Lender Name</label><input id="sa-el-lender" type="text" placeholder="Iwoca / NA" class="input-compact"></div>
-                            <div><label class="label-text">Amount Taken</label><input id="sa-el-amount" type="text" placeholder="12K" class="input-compact"></div>
-                            <div><label class="label-text">Interest Rate</label><input id="sa-el-rate" type="text" placeholder="5.7%" class="input-compact"></div>
-                            <div><label class="label-text">Term</label><input id="sa-el-term" type="text" placeholder="24 months" class="input-compact"></div>
+                            <div><label class="label-text">Lender Name</label><input id="sa-el-lender" type="text"
+                                    placeholder="Iwoca / NA" class="input-compact"></div>
+                            <div><label class="label-text">Amount Taken</label><input id="sa-el-amount" type="text"
+                                    placeholder="12K" class="input-compact"></div>
+                            <div><label class="label-text">Interest Rate</label><input id="sa-el-rate" type="text"
+                                    placeholder="5.7%" class="input-compact"></div>
+                            <div><label class="label-text">Term</label><input id="sa-el-term" type="text"
+                                    placeholder="24 months" class="input-compact"></div>
                         </div>
-                        <div class="mt-2"><label class="label-text">Credit Consent</label><input id="sa-el-consent" type="text" placeholder="on email / NA" class="input-compact"></div>
+                        <div class="mt-2"><label class="label-text">Credit Consent</label><input id="sa-el-consent"
+                                type="text" placeholder="on email / NA" class="input-compact"></div>
                     </div>
 
                     <!-- Note -->
                     <div>
                         <label class="label-text">Note (Pitched lenders & terms)</label>
-                        <textarea id="sa-note" rows="2" placeholder="e.g. Pitched Funding Circle for 72 months and Iwoca for 24 months." class="input-compact resize-none"></textarea>
+                        <textarea id="sa-note" rows="2"
+                            placeholder="e.g. Pitched Funding Circle for 72 months and Iwoca for 24 months."
+                            class="input-compact resize-none"></textarea>
                     </div>
 
                     <!-- Actions -->
                     <div class="pt-2 flex gap-2">
-                        <button onclick="previewSendApp()" class="flex-1 py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                        <button onclick="previewSendApp()"
+                            class="flex-1 py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
                             <i class="fa-solid fa-eye mr-1.5"></i>Preview
                         </button>
-                        <button onclick="copySendApp()" class="flex-1 py-2.5 bg-amber-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-amber-700 transition-all">
+                        <button onclick="copySendApp()"
+                            class="flex-1 py-2.5 bg-amber-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-amber-700 transition-all">
                             <i class="fa-solid fa-paper-plane mr-1.5"></i>Send
                         </button>
                     </div>
 
                     <!-- Preview output -->
-                    <div id="sa-preview-box" style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;">
+                    <div id="sa-preview-box"
+                        style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                            <span style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;">Application Preview</span>
-                            <button onclick="document.getElementById('sa-preview-box').style.display='none'" style="border:none;background:none;cursor:pointer;color:#94a3b8;font-size:10px;"><i class="fa-solid fa-xmark"></i></button>
+                            <span
+                                style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;">Application
+                                Preview</span>
+                            <button onclick="document.getElementById('sa-preview-box').style.display='none'"
+                                style="border:none;background:none;cursor:pointer;color:#94a3b8;font-size:10px;"><i
+                                    class="fa-solid fa-xmark"></i></button>
                         </div>
-                        <pre id="sa-preview-text" style="font-size:9px;font-family:'Inter',sans-serif;color:#1e293b;white-space:pre-wrap;line-height:1.7;margin:0;"></pre>
+                        <pre id="sa-preview-text"
+                            style="font-size:9px;font-family:'Inter',sans-serif;color:#1e293b;white-space:pre-wrap;line-height:1.7;margin:0;"></pre>
                     </div>
                 </div>
 
@@ -1218,7 +1281,6 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             document.getElementById('tab-lender').classList.toggle('active', tab === 'lender');
             document.getElementById('tab-promotions').classList.toggle('active', tab === 'promotions');
             document.getElementById('tab-sendapp').classList.toggle('active', tab === 'sendapp');
-            document.getElementById('tab-promotions').classList.toggle('active', tab === 'promotions');
             if (tab === 'promotions') {
                 const editId = document.getElementById('edit-id').value;
                 renderPromotions(editId ? parseInt(editId) : null);
@@ -1275,7 +1337,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         function addPromotion() {
             const editId = document.getElementById('edit-id').value;
             if (!editId) { alert("Please select a lender first to add a promotion."); return; }
-            
+
             const name = document.getElementById('p-name').value;
             const comm = document.getElementById('p-comm').value;
             const offer = document.getElementById('p-offer').value;
@@ -1385,7 +1447,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             document.getElementById('submit-btn').style.background = '#d97706';
 
             document.querySelector('#left-panel .flex-1').scrollTo({ top: 0, behavior: 'smooth' });
-            
+
             // Sync promotions tab
             renderPromotions(id);
         }
@@ -1414,7 +1476,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         }
 
         function clearFormFields() {
-            ['f-name', 'f-trading', 'f-email', 'f-manager', 'f-manager-email', 'f-address', 'f-reg-address', 'f-rate-min', 'f-rate-max', 'f-loan-min', 'f-loan-max', 'f-notes', 'f-trading-years'].forEach(id => {
+            ['f-name', 'f-trading', 'f-email', 'f-manager', 'f-manager-email', 'f-address', 'f-reg-address', 'f-notes', 'f-trading-years'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.value = '';
             });
@@ -1459,7 +1521,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                 document.getElementById('submit-label').textContent = 'Saved!';
                 setTimeout(() => { btn.style.background = '#111827'; document.getElementById('submit-label').textContent = 'Add Lender'; }, 1400);
             } else {
-                lenders.push({ id: nextId++, added: new Date().toISOString().slice(0, 10), ...data });
+                lenders.push({ id: nextId++, added: new Date().toISOString().slice(0, 10), ...data, promotions: [] });
                 clearFormFields();
                 renderTable();
                 const btn = document.getElementById('submit-btn');
@@ -1527,12 +1589,11 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         // ── EXPORT CSV ────────────────────────────────────────────────────────────────
         function exportCSV() {
             const filtered = getFiltered();
-            const headers = ['ID', 'Name', 'Trading', 'Type', 'Status', 'Trading Years', 'Email', 'Account Manager', 'Manager Email', 'Address', 'Registered Address', 'Rate Min', 'Rate Max', 'Loan Min', 'Loan Max', 'Categories', 'Notes', 'Added'];
+            const headers = ['ID', 'Name', 'Trading', 'Type', 'Status', 'Trading Years', 'Email', 'Account Manager', 'Manager Email', 'Address', 'Registered Address', 'Categories', 'Notes', 'Added'];
             const rows = filtered.map(l => [
                 l.id, `"${l.name}"`, `"${l.trading || ''}"`, l.type, l.status, l.tradingYears || '',
                 `"${l.email || ''}"`, `"${l.manager || ''}"`, `"${l.managerEmail || ''}"`,
                 `"${(l.address || '').replace(/"/g, '""')}"`, `"${(l.regAddress || '').replace(/"/g, '""')}"`,
-                l.rateMin || '', l.rateMax || '', l.loanMin || '', l.loanMax || '',
                 `"${(l.categories || []).join(', ')}"`, `"${(l.notes || '').replace(/"/g, '""')}"`, l.added
             ]);
             const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
@@ -1546,82 +1607,83 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         renderCatTags();
         updateFilterChips();
         renderTable();
-    </script>
 
+        // Role-aware logic for Accounts Manager
+        (function () {
+            const s = JSON.parse(sessionStorage.getItem('crm_session') || 'null');
+            if (s && s.role === 'Accounts Manager') {
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById('tab-lender').style.display = 'none';
+                    document.getElementById('tab-promotions').style.display = 'none';
+                    switchLeftTab('sendapp');
+                    document.getElementById('panel-title').textContent = 'Send Application';
+                    document.getElementById('panel-dot').style.background = '#d97706';
+                });
+                const _orig = window.renderTable;
+                window.renderTable = function () {
+                    _orig && _orig();
+                    document.querySelectorAll('[id^="btn-edit-"],[id^="btn-del-"]').forEach(b => b.style.display = 'none');
+                };
+            }
+        })();
 
-<script>
-// Role-aware: hide add/edit tabs for Accounts Manager
-(function(){
-    const s = JSON.parse(sessionStorage.getItem('crm_session')||'null');
-    if(s && s.role === 'Accounts Manager'){
-        document.addEventListener('DOMContentLoaded', function(){
-            document.getElementById('tab-lender').style.display = 'none';
-            document.getElementById('tab-promotions').style.display = 'none';
+        function openSendApp(lenderId) {
+            const l = lenders.find(x => x.id === lenderId);
+            if (!l) return;
             switchLeftTab('sendapp');
+            document.getElementById('sendapp-lender-badge').style.display = 'flex';
+            document.getElementById('sendapp-lender-name').textContent = l.name;
+            document.querySelector('#left-panel .flex-1').scrollTo({ top: 0, behavior: 'smooth' });
             document.getElementById('panel-title').textContent = 'Send Application';
-            document.getElementById('panel-dot').style.background = '#d97706';
-        });
-        const _orig = window.renderTable;
-        window.renderTable = function(){ _orig && _orig(); document.querySelectorAll('[id^="btn-edit-"],[id^="btn-del-"]').forEach(b=>b.style.display='none'); };
-    }
-})();
+            document.getElementById('panel-subtitle').textContent = l.name;
+            document.getElementById('panel-subtitle').style.display = 'block';
+        }
 
-function openSendApp(lenderId){
-    const l = lenders.find(x => x.id === lenderId);
-    if(!l) return;
-    switchLeftTab('sendapp');
-    document.getElementById('sendapp-lender-badge').style.display = 'flex';
-    document.getElementById('sendapp-lender-name').textContent = l.name;
-    document.querySelector('#left-panel .flex-1').scrollTo({ top: 0, behavior: 'smooth' });
-    document.getElementById('panel-title').textContent = 'Send Application';
-    document.getElementById('panel-subtitle').textContent = l.name;
-    document.getElementById('panel-subtitle').style.display = 'block';
-}
+        function buildSendAppText() {
+            const f = {
+                amName: document.getElementById('sa-am-name').value || '[LENDER ACCOUNT MANAGER NAME]',
+                name: document.getElementById('sa-name').value || '[CLIENT NAME]',
+                business: document.getElementById('sa-business').value || '[CLIENT COMPANY NAME]',
+                dob: document.getElementById('sa-dob').value || 'NA',
+                phone: document.getElementById('sa-phone').value || 'NA',
+                email: document.getElementById('sa-email').value || 'NA',
+                address: document.getElementById('sa-address').value || 'NA',
+                timeAddr: document.getElementById('sa-time-addr').value || 'NA',
+                prevAddr: document.getElementById('sa-prev-addr').value || 'NA',
+                homeowner: document.getElementById('sa-homeowner').value,
+                amount: document.getElementById('sa-amount').value || 'NA',
+                purpose: document.getElementById('sa-purpose').value || 'NA',
+                overdraft: document.getElementById('sa-overdraft').value || 'NA',
+                biz: document.getElementById('sa-biz').value || 'NA',
+                docs: document.getElementById('sa-docs').value || 'NA',
+                elLender: document.getElementById('sa-el-lender').value || 'NA',
+                elAmount: document.getElementById('sa-el-amount').value || 'NA',
+                elRate: document.getElementById('sa-el-rate').value || 'NA',
+                elTerm: document.getElementById('sa-el-term').value || 'NA',
+                elConsent: document.getElementById('sa-el-consent').value || 'NA',
+                note: document.getElementById('sa-note').value || '',
+            };
+            return `Hi ${f.amName},\n\nSubmission details for ${f.business}\n\nPlease find the attached documents. Client details are as follows:\n\nClient Details\nName: ${f.name}\nBusiness Name: ${f.business}\nDOB: ${f.dob}\nContact Number: ${f.phone}\nEmail Address: ${f.email}\nResidential Address: ${f.address}\nTime at Current Address: ${f.timeAddr}\nPrevious Address: ${f.prevAddr}\nHomeowner: ${f.homeowner}\n\nLoan Details\nAmount Requested: ${f.amount}\nLoan Purpose: ${f.purpose}\nOverdraft: ${f.overdraft}\nBusiness Overview: ${f.biz}\n\nDocuments Attached\n${f.docs}\n\nExisting Loans\nLender Name: ${f.elLender}\nAmount Taken: ${f.elAmount}\nInterest Rate: ${f.elRate}\nTerm: ${f.elTerm}\nCredit Consent: ${f.elConsent}${f.note ? '\n\nNote: ' + f.note : ''}`;
+        }
 
-function buildSendAppText(){
-    const f = {
-        amName:   document.getElementById('sa-am-name').value    || '[LENDER ACCOUNT MANAGER NAME]',
-        name:     document.getElementById('sa-name').value       || '[CLIENT NAME]',
-        business: document.getElementById('sa-business').value   || '[CLIENT COMPANY NAME]',
-        dob:      document.getElementById('sa-dob').value        || 'NA',
-        phone:    document.getElementById('sa-phone').value      || 'NA',
-        email:    document.getElementById('sa-email').value      || 'NA',
-        address:  document.getElementById('sa-address').value    || 'NA',
-        timeAddr: document.getElementById('sa-time-addr').value  || 'NA',
-        prevAddr: document.getElementById('sa-prev-addr').value  || 'NA',
-        homeowner:document.getElementById('sa-homeowner').value,
-        amount:   document.getElementById('sa-amount').value     || 'NA',
-        purpose:  document.getElementById('sa-purpose').value    || 'NA',
-        overdraft:document.getElementById('sa-overdraft').value  || 'NA',
-        biz:      document.getElementById('sa-biz').value        || 'NA',
-        docs:     document.getElementById('sa-docs').value       || 'NA',
-        elLender: document.getElementById('sa-el-lender').value  || 'NA',
-        elAmount: document.getElementById('sa-el-amount').value  || 'NA',
-        elRate:   document.getElementById('sa-el-rate').value    || 'NA',
-        elTerm:   document.getElementById('sa-el-term').value    || 'NA',
-        elConsent:document.getElementById('sa-el-consent').value || 'NA',
-        note:     document.getElementById('sa-note').value       || '',
-    };
-    return `Hi ${f.amName},\n\nSubmission details for ${f.business}\n\nPlease find the attached documents. Client details are as follows:\n\nClient Details\nName: ${f.name}\nBusiness Name: ${f.business}\nDOB: ${f.dob}\nContact Number: ${f.phone}\nEmail Address: ${f.email}\nResidential Address: ${f.address}\nTime at Current Address: ${f.timeAddr}\nPrevious Address: ${f.prevAddr}\nHomeowner: ${f.homeowner}\n\nLoan Details\nAmount Requested: ${f.amount}\nLoan Purpose: ${f.purpose}\nOverdraft: ${f.overdraft}\nBusiness Overview: ${f.biz}\n\nDocuments Attached\n${f.docs}\n\nExisting Loans\nLender Name: ${f.elLender}\nAmount Taken: ${f.elAmount}\nInterest Rate: ${f.elRate}\nTerm: ${f.elTerm}\nCredit Consent: ${f.elConsent}${f.note ? '\n\nNote: ' + f.note : ''}`;
-}
+        function previewSendApp() {
+            const text = buildSendAppText();
+            document.getElementById('sa-preview-text').textContent = text;
+            document.getElementById('sa-preview-box').style.display = 'block';
+            document.querySelector('#left-panel .flex-1').scrollTo({ top: 99999, behavior: 'smooth' });
+        }
 
-function previewSendApp(){
-    const text = buildSendAppText();
-    document.getElementById('sa-preview-text').textContent = text;
-    document.getElementById('sa-preview-box').style.display = 'block';
-    document.querySelector('#left-panel .flex-1').scrollTo({ top: 99999, behavior: 'smooth' });
-}
-
-function copySendApp(){
-    const text = buildSendAppText();
-    navigator.clipboard.writeText(text).then(()=>{
-        const btn = event.currentTarget;
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-check mr-1.5"></i>Sent!';
-        btn.style.background = '#15803d';
-        setTimeout(()=>{ btn.innerHTML = orig; btn.style.background = ''; }, 2000);
-    });
-}
-</script>
+        function copySendApp() {
+            const text = buildSendAppText();
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.currentTarget;
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check mr-1.5"></i>Sent!';
+                btn.style.background = '#15803d';
+                setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 2000);
+            });
+        }
+    </script>
 </body>
+
 </html>
