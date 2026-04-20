@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Vault - Whiterock CRM</title>
+    <title>Document Vault - Alpha Funding CRM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -259,9 +259,7 @@
 
     <nav class="side-nav">
         <div class="mb-6">
-            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-bolt text-sm"></i>
-            </div>
+            <img src="../logo/alpha.png" alt="Alpha Funding" style="width:38px;height:38px;object-fit:contain;border-radius:8px;">
         </div>
 
         <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
@@ -304,7 +302,11 @@
             <span class="nav-text">Reports</span>
         </a>
         <div style="flex:1;"></div>
-        <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
+                    <div class="nav-item" onclick="openProfileDrawer()" title="Profile" style="cursor:pointer;">
+                <i class="fa-solid fa-circle-user"></i>
+                <span class="nav-text">Profile</span>
+            </div>
+<div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span class="nav-text">Logout</span>
         </div>
@@ -496,10 +498,10 @@
         let documents = [
             { id: 1, title: "Home Loan Product Guide 2026", category: "Products", status: "New", version: "v2.1", filename: "home_loan_guide_2026.pdf", fileType: "pdf", fileSize: "3.4 MB", desc: "Comprehensive guide covering all home loan products, rates, and eligibility criteria for 2026.", uploaded: "2026-04-10" },
             { id: 2, title: "AML & KYC Compliance Policy", category: "Policies", status: "Updated", version: "v4.0", filename: "aml_kyc_policy.pdf", fileType: "pdf", fileSize: "1.2 MB", desc: "Updated anti-money laundering and know-your-customer policy document aligned with AUSTRAC 2026 guidelines.", uploaded: "2026-04-08" },
-            { id: 3, title: "Broker Onboarding FAQ", category: "FAQs", status: "New", version: "v1.3", filename: "broker_onboarding_faq.docx", fileType: "docx", fileSize: "420 KB", desc: "Frequently asked questions for new brokers joining the Whiterock panel.", uploaded: "2026-04-12" },
+            { id: 3, title: "Broker Onboarding FAQ", category: "FAQs", status: "New", version: "v1.3", filename: "broker_onboarding_faq.docx", fileType: "docx", fileSize: "420 KB", desc: "Frequently asked questions for new brokers joining the Alpha Funding panel.", uploaded: "2026-04-12" },
             { id: 4, title: "Cold Call Script — Refinance", category: "Scripts", status: "New", version: "v1.0", filename: "cold_call_refi_script.docx", fileType: "docx", fileSize: "190 KB", desc: "Structured outbound call script for refinance lead conversations.", uploaded: "2026-04-14" },
-            { id: 5, title: "Lender Panel Overview Guide", category: "Guides", status: "Updated", version: "v3.2", filename: "lender_panel_guide.pdf", fileType: "pdf", fileSize: "5.1 MB", desc: "Full overview of all lenders on the Whiterock panel including products, BDMs, and turnaround times.", uploaded: "2026-04-05" },
-            { id: 6, title: "CRM Usage Knowledge Base", category: "Knowledge Base", status: "New", version: "v1.1", filename: "crm_knowledge_base.pdf", fileType: "pdf", fileSize: "2.8 MB", desc: "Internal knowledge base for using the Whiterock CRM platform.", uploaded: "2026-04-15" },
+            { id: 5, title: "Lender Panel Overview Guide", category: "Guides", status: "Updated", version: "v3.2", filename: "lender_panel_guide.pdf", fileType: "pdf", fileSize: "5.1 MB", desc: "Full overview of all lenders on the Alpha Funding panel including products, BDMs, and turnaround times.", uploaded: "2026-04-05" },
+            { id: 6, title: "CRM Usage Knowledge Base", category: "Knowledge Base", status: "New", version: "v1.1", filename: "crm_knowledge_base.pdf", fileType: "pdf", fileSize: "2.8 MB", desc: "Internal knowledge base for using the Alpha Funding CRM platform.", uploaded: "2026-04-15" },
             { id: 7, title: "Commercial Loan Product Sheet", category: "Products", status: "New", version: "v1.0", filename: "commercial_loan_sheet.xlsx", fileType: "xlsx", fileSize: "680 KB", desc: "Rate and product comparison sheet for commercial lending solutions.", uploaded: "2026-04-13" },
             { id: 8, title: "Privacy Policy 2026", category: "Policies", status: "Archived", version: "v2.9", filename: "privacy_policy_2026.pdf", fileType: "pdf", fileSize: "890 KB", desc: "Client privacy and data handling policy. Superseded by v3.0.", uploaded: "2026-03-01" },
             { id: 9, title: "Settlement Checklist Guide", category: "Guides", status: "Updated", version: "v2.0", filename: "settlement_checklist.docx", fileType: "docx", fileSize: "310 KB", desc: "Step-by-step settlement checklist for brokers to share with clients.", uploaded: "2026-04-07" },
@@ -809,5 +811,6 @@
 
         renderCatTags(); rebuildCatFilter(); renderVault();
     </script>
+<script src="../profile/profile_drawer.js"></script>
 </body>
 </html>

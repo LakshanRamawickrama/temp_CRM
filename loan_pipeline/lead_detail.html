@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,7 +7,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lead Detail - Whiterock CRM</title>
+    <title>Lead Detail - Alpha Funding CRM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -285,9 +285,7 @@
 
     <nav class="side-nav">
         <div class="mb-6">
-            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-bolt text-sm"></i>
-            </div>
+            <img src="../logo/alpha.png" alt="Alpha Funding" style="width:38px;height:38px;object-fit:contain;border-radius:8px;">
         </div>
         <a href="../task_and_followups/task_management.html" class="nav-item"><i class="fa-solid fa-tasks"></i><span
                 class="nav-text">Tasks</span></a>
@@ -305,7 +303,11 @@
                 class="nav-text">Reports</span></a>
 
         <div style="flex:1;"></div>
-        <div class="nav-item" onclick="logout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i><span
+                <div class="nav-item" onclick="openProfileDrawer()" title="Profile" style="cursor:pointer;">
+            <i class="fa-solid fa-circle-user"></i>
+            <span class="nav-text">Profile</span>
+        </div>
+<div class="nav-item" onclick="logout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i><span
                 class="nav-text">Logout</span></div>
     </nav>
 
@@ -376,7 +378,7 @@
             }
         }
         if (!lead) lead = leads.find(l => l.id === params.get('id')) || leads[0];
-        document.title = lead.name + ' — Whiterock CRM';
+        document.title = lead.name + ' — Alpha Funding CRM';
 
         let isEditing = false;
 
@@ -758,5 +760,6 @@
             </div>
         </div>
     </div>
+<script src="../profile/profile_drawer.js"></script>
 </body>
 </html>

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lender Database - TaskFlow CRM</title>
+    <title>Lender Database - Alpha Funding CRM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -468,9 +468,7 @@
     <!-- Slim Sidebar -->
     <nav class="side-nav">
         <div class="mb-6">
-            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-bolt text-sm"></i>
-            </div>
+            <img src="../logo/alpha.png" alt="Alpha Funding" style="width:36px;height:36px;object-fit:contain;border-radius:8px;">
         </div>
 
         <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
@@ -513,6 +511,10 @@
             <span class="nav-text">Reports</span>
         </a>
         <div style="flex:1;"></div>
+        <div class="nav-item" onclick="openProfileDrawer()" title="Profile" style="cursor:pointer;">
+            <i class="fa-solid fa-circle-user"></i>
+            <span class="nav-text">Profile</span>
+        </div>
         <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span class="nav-text">Logout</span>
@@ -747,17 +749,26 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
 
                 <!-- ══ SEND APPLICATION TAB ══ -->
                 <div id="sendapp-tab" class="hidden p-4 space-y-3">
-                    <div
-                        style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;font-size:8px;font-weight:700;color:#b45309;margin-bottom:4px;">
-                        <i class="fa-solid fa-paper-plane" style="margin-right:5px;"></i>Select a lender from the table,
-                        then fill in client details to generate the application.
+                    <!-- Multi-select drop zone -->
+                    <div id="sendapp-dropzone"
+                        ondragover="event.preventDefault();this.classList.add('drag-over')"
+                        ondragleave="this.classList.remove('drag-over')"
+                        ondrop="onLenderDrop(event)"
+                        style="border:2px dashed #e2e8f0;border-radius:12px;padding:16px 12px;text-align:center;transition:all .2s;background:#fafafa;margin-bottom:8px;">
+                        <i class="fa-solid fa-building-columns" style="font-size:20px;color:#cbd5e1;display:block;margin-bottom:6px;"></i>
+                        <p style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;">Drag lenders here</p>
+                        <p style="font-size:8px;color:#cbd5e1;margin-top:2px;">Up to 4 lenders · <span id="sendapp-count" style="color:#6366f1;font-weight:800;">0 / 4</span> selected</p>
                     </div>
-                    <div id="sendapp-lender-badge"
-                        style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:7px 12px;display:flex;align-items:center;gap:8px;">
-                        <i class="fa-solid fa-building-columns" style="font-size:11px;color:#15803d;"></i>
-                        <span style="font-size:10px;font-weight:700;color:#15803d;" id="sendapp-lender-name">—</span>
-                        <span style="font-size:7px;font-weight:700;color:#94a3b8;margin-left:auto;">Selected
-                            Lender</span>
+                    <!-- Selected lenders list -->
+                    <div id="sendapp-selected-list" style="display:none;margin-bottom:8px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                            <p style="font-size:8px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.06em;"><span id="sendapp-count2">0</span> / 4 Lenders Selected</p>
+                            <button onclick="clearAllLenders()" style="font-size:7px;font-weight:800;color:#ef4444;background:none;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;">Clear All</button>
+                        </div>
+                        <div id="sendapp-lender-cards" style="display:flex;flex-direction:column;gap:6px;"></div>
+                    </div>
+                        <div style="flex:1;"><p style="font-size:11px;font-weight:800;color:#15803d;" id="sendapp-lender-name">—</p><p style="font-size:8px;color:#86efac;font-weight:600;" id="sendapp-lender-type">—</p></div>
+                        <button onclick="clearSelectedLender()" style="background:none;border:none;cursor:pointer;color:#86efac;font-size:12px;"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
                     <!-- Lender Contact -->
@@ -1140,7 +1151,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             filtered.forEach(l => {
                 const open = expandedId === l.id;
                 html += `
-        <tr id="row-${l.id}" class="lender-row ${open ? 'expanded' : ''}" onclick="toggleRow(${l.id})">
+        <tr id="row-${l.id}" class="lender-row ${open ? 'expanded' : ''}" onclick="toggleRow(${l.id})" draggable="true" ondragstart="onLenderDragStart(event,${l.id})" ondragend="document.getElementById('sendapp-dropzone').style.borderColor=''" style="cursor:grab;">
             <td class="px-3 py-2">
                 <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[9px] font-black flex-shrink-0" style="background:${iconColor(l.type)}">${getInitials(l.name)}</div>
@@ -1683,7 +1694,87 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                 setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 2000);
             });
         }
+
+        // Drag & Drop - Multi Select (max 4)
+        let draggedLenderId = null;
+        let selectedLendersForApp = [];
+        const MAX_LENDERS = 4;
+
+        function onLenderDragStart(e, id) {
+            draggedLenderId = id;
+            e.dataTransfer.effectAllowed = 'copy';
+            // Highlight the drop zone to guide user
+            setTimeout(() => {
+                const dz = document.getElementById('sendapp-dropzone');
+                if (dz) dz.style.borderColor = '#6366f1';
+            }, 0);
+        }
+
+        function onLenderDrop(e) {
+            e.preventDefault();
+            const dz = document.getElementById('sendapp-dropzone');
+            dz.classList.remove('drag-over');
+            dz.style.borderColor = '';
+            if (draggedLenderId === null) return;
+            const l = lenders.find(x => x.id === draggedLenderId);
+            if (l) {
+                addLenderToSelection(l);
+                switchLeftTab('sendapp');
+            }
+            draggedLenderId = null;
+        }
+
+        function addLenderToSelection(l) {
+            if (selectedLendersForApp.length >= MAX_LENDERS) {
+                // Flash the count red to indicate max reached
+                const cnt = document.getElementById('sendapp-count');
+                cnt.style.color = '#ef4444';
+                setTimeout(() => cnt.style.color = '#6366f1', 1000);
+                return;
+            }
+            if (selectedLendersForApp.find(x => x.id === l.id)) return; // already added
+            selectedLendersForApp.push(l);
+            renderSelectedLenders();
+        }
+
+        function removeLenderFromSelection(id) {
+            selectedLendersForApp = selectedLendersForApp.filter(x => x.id !== id);
+            renderSelectedLenders();
+        }
+
+        function clearAllLenders() {
+            selectedLendersForApp = [];
+            renderSelectedLenders();
+        }
+
+        function renderSelectedLenders() {
+            var count = selectedLendersForApp.length;
+            var cntEl = document.getElementById('sendapp-count');
+            var cnt2El = document.getElementById('sendapp-count2');
+            var dz = document.getElementById('sendapp-dropzone');
+            var list = document.getElementById('sendapp-selected-list');
+            var cards = document.getElementById('sendapp-lender-cards');
+            if (cntEl) cntEl.textContent = count + ' / ' + MAX_LENDERS;
+            if (cnt2El) cnt2El.textContent = count;
+            if (dz) dz.style.borderColor = count >= MAX_LENDERS ? '#6366f1' : '#e2e8f0';
+            if (list) list.style.display = count > 0 ? 'block' : 'none';
+            if (!cards) return;
+            var html = '';
+            for (var i = 0; i < selectedLendersForApp.length; i++) {
+                var l = selectedLendersForApp[i];
+                html += '<div style="display:flex;align-items:center;gap:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:9px 12px;margin-bottom:4px;">';
+                html += '<div style="width:26px;height:26px;border-radius:7px;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:900;color:#15803d;">' + (i + 1) + '</div>';
+                html += '<div style="flex:1;min-width:0;">';
+                html += '<p style="font-size:10px;font-weight:800;color:#15803d;margin:0;">' + l.name + '</p>';
+                html += '<p style="font-size:8px;color:#86efac;font-weight:600;margin:0;">' + (l.type || 'Lender') + '</p>';
+                html += '</div>';
+                html += '<button onclick="removeLenderFromSelection(' + l.id + ')" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:13px;flex-shrink:0;"><i class="fa-solid fa-xmark"></i></button>';
+                html += '</div>';
+            }
+            cards.innerHTML = html;
+        }
     </script>
+<script src="../profile/profile_drawer.js"></script>
 </body>
 
 </html>

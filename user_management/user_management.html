@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management - Whiterock CRM</title>
+    <title>User Management - Alpha Funding CRM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -182,9 +182,7 @@
     <!-- Slim Sidebar -->
     <nav class="side-nav">
         <div class="mb-6">
-            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i class="fa-solid fa-bolt text-sm"></i>
-            </div>
+            <img src="../logo/alpha.png" alt="Alpha Funding" style="width:38px;height:38px;object-fit:contain;border-radius:8px;">
         </div>
 
         <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
@@ -228,7 +226,11 @@
         </a>
 
         <div class="mt-auto">
-            <a href="javascript:void(0)" onclick="logout()" class="nav-item">
+                            <div class="nav-item" onclick="openProfileDrawer()" title="Profile" style="cursor:pointer;">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span class="nav-text">Profile</span>
+                </div>
+<a href="javascript:void(0)" onclick="logout()" class="nav-item">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span class="nav-text">Logout</span>
             </a>
@@ -593,5 +595,6 @@
 
         init();
     </script>
+<script src="../profile/profile_drawer.js"></script>
 </body>
 </html>
