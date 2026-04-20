@@ -1241,10 +1241,10 @@
                                     class="fa-solid fa-chevron-right text-[8px]"></i></button>
                         </div>
                     </div>
-                    <div class="flex-1 p-4">
+                    <div class="flex-1 px-3 pt-2 pb-1">
                         <!-- Calendar Container -->
                         <div id="calendarContainer">
-                            <div class="grid grid-cols-7 gap-1 mb-2">
+                            <div class="grid grid-cols-7 gap-0.5 mb-1">
                                 <div class="text-center text-[7px] font-black text-slate-400 uppercase">S</div>
                                 <div class="text-center text-[7px] font-black text-slate-400 uppercase">M</div>
                                 <div class="text-center text-[7px] font-black text-slate-400 uppercase">T</div>
@@ -1253,7 +1253,7 @@
                                 <div class="text-center text-[7px] font-black text-slate-400 uppercase">F</div>
                                 <div class="text-center text-[7px] font-black text-slate-400 uppercase">S</div>
                             </div>
-                            <div id="calendarGrid" class="grid grid-cols-7 gap-1">
+                            <div id="calendarGrid" class="grid grid-cols-7 gap-0.5">
                                 <!-- Days injected by JS -->
                             </div>
                         </div>
@@ -1288,7 +1288,7 @@
                     // Previous month padding
                     for (let i = firstDay; i > 0; i--) {
                         const dayDiv = document.createElement('div');
-                        dayDiv.className = 'h-8 flex items-center justify-center text-[10px] font-bold text-slate-200 cursor-not-allowed';
+                        dayDiv.className = 'h-6 flex items-center justify-center text-[11px] font-bold text-slate-200 cursor-not-allowed';
                         dayDiv.innerText = prevMonthDays - i + 1;
                         calendarGrid.appendChild(dayDiv);
                     }
@@ -1299,7 +1299,7 @@
                         const isToday = i === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
                         const isSelected = selectedDate && i === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear();
 
-                        dayDiv.className = `h-8 flex items-center justify-center text-[10px] font-black rounded-lg relative cursor-pointer transition-all ${isToday ? 'bg-slate-900 text-white' : isSelected ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-900 hover:bg-slate-50'}`;
+                        dayDiv.className = `h-7 flex items-center justify-center text-[11px] font-black rounded relative cursor-pointer transition-all ${isToday ? 'bg-slate-900 text-white' : isSelected ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-900 hover:bg-slate-50'}`;
                         dayDiv.innerText = i;
 
                         dayDiv.onclick = () => {
