@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -86,51 +86,6 @@
 
         .dashboard-container.create-mode #edit-toggle-btn {
             display: none;
-        }
-
-        .side-nav {
-            width: 70px;
-            background: #0f172a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px 0;
-            gap: 8px;
-            border-right: 1px solid #1e293b;
-            flex-shrink: 0; overflow:hidden;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            color: #94a3b8;
-            transition: all .2s;
-            cursor: pointer;
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 8px;
-            width: 50px;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            color: #fff;
-            background: rgba(255, 255, 255, .08);
-        }
-
-        .nav-item i {
-            font-size: 16px;
-        }
-
-        .nav-text {
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            text-align: center;
         }
 
         .panel-card {
@@ -356,6 +311,53 @@
             background: #1e293b;
             color: #fff;
         }
+
+        .side-nav {
+            width: 70px;
+            background: #0f172a;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 4px;
+            border-right: 1px solid #1e293b;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #94a3b8;
+            transition: all .2s;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 6px 4px;
+            border-radius: 8px;
+            width: 54px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: #fff;
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .nav-item i {
+            font-size: 14px;
+        }
+
+        .nav-text {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            text-align: center;
+            line-height: 1;
+        }
     </style>
 </head>
 
@@ -375,7 +377,7 @@
 
         <a href="../task_and_followups/task_management.html" id="nav-tasks" class="nav-item">
             <i class="fa-solid fa-tasks"></i>
-            <span class="nav-text">Tasks & Followups</span>
+            <span class="nav-text">Tasks</span>
         </a>
 
         <a href="../lead_management/lead_management.html" id="nav-leads" class="nav-item active">
@@ -385,7 +387,7 @@
 
         <a href="../loan_pipeline/loan_pipeline.html" id="nav-pipeline" class="nav-item">
             <i class="fa-solid fa-diagram-project"></i>
-            <span class="nav-text">Loan Pipeline</span>
+            <span class="nav-text">Pipeline</span>
         </a>
 
         <a href="../lenders/lender_management.html" id="nav-lenders" class="nav-item">
@@ -395,17 +397,17 @@
 
         <a href="../documents/document_vault.html" id="nav-docs" class="nav-item">
             <i class="fa-solid fa-folder-open"></i>
-            <span class="nav-text">Documents Vault</span>
+            <span class="nav-text">Docs</span>
         </a>
 
         <a href="../user_management/user_management.html" id="nav-users" class="nav-item">
             <i class="fa-solid fa-user-gear"></i>
-            <span class="nav-text">User Management</span>
+            <span class="nav-text">Users</span>
         </a>
 
         <a href="../reporting/reporting_logs.html" id="nav-reports" class="nav-item">
             <i class="fa-solid fa-chart-line"></i>
-            <span class="nav-text">Reporting Logs</span>
+            <span class="nav-text">Reports</span>
         </a>
         <div style="flex:1;"></div>
         <div class="nav-item" onclick="logout()" style="margin-bottom:8px;" title="Logout">
@@ -421,16 +423,16 @@
     const el=document.getElementById('nav-dashboard');
     if(el&&s.landing){el.href='../dashboard/'+s.landing.split('/').pop();}
     // Role-based nav visibility
-    const ROLE_NAV={
-        'Admin':         ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'],
-        'Team Leader':   ['nav-tasks','nav-leads','nav-pipeline','nav-docs','nav-reports'],
-        'Tele Agent':    ['nav-tasks','nav-leads','nav-pipeline','nav-docs'],
-        'Accounts Manager':['nav-tasks','nav-leads','nav-lenders','nav-docs','nav-reports'],
+    const ROLE_NAV = {
+        'Admin':         ['nav-tasks', 'nav-leads', 'nav-pipeline', 'nav-lenders', 'nav-docs', 'nav-users', 'nav-reports'],
+        'Team Leader':   ['nav-tasks', 'nav-leads'],
+        'Tele Agent':    ['nav-tasks', 'nav-leads'],
+        'Accounts Manager': ['nav-tasks', 'nav-leads', 'nav-lenders']
     };
-    const allowed=ROLE_NAV[s.role]||ROLE_NAV['Admin'];
-    ['nav-tasks','nav-leads','nav-pipeline','nav-lenders','nav-docs','nav-users','nav-reports'].forEach(id=>{
-        const node=document.getElementById(id);
-        if(node&&!allowed.includes(id)) node.style.display='none';
+    const allowed = ROLE_NAV[s.role] || ROLE_NAV['Admin'];
+    ['nav-tasks', 'nav-leads', 'nav-pipeline', 'nav-lenders', 'nav-docs', 'nav-users', 'nav-reports'].forEach(id => {
+        const node = document.getElementById(id);
+        if (node && !allowed.includes(id)) node.style.display = 'none';
     });
 })();
 function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}
@@ -465,10 +467,10 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                             class="text-[13px] font-black text-white">2</span><span
                             class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Total</span></div>
                     <div class="flex items-center gap-1.5 px-2.5 py-2 border-r border-white/10"><span id="stat-hot"
-                            class="text-[13px] font-black text-red-400">1</span><span
+                            class="text-[13px] font-black text-red-100">1</span><span
                             class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Hot</span></div>
                     <div class="flex items-center gap-1.5 px-2.5 py-2"><span id="stat-warm"
-                            class="text-[13px] font-black text-amber-400">1</span><span
+                            class="text-[13px] font-black text-amber-100">1</span><span
                             class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Warm</span></div>
                 </div>
             </div>
@@ -570,8 +572,6 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                 </style>
                 <div id="lead-form-container" class="p-4 space-y-6">
 
-
-
                     <!-- 1. CONTACT INFORMATION -->
                     <section>
                         <h3 class="section-header">Contact Information</h3>
@@ -621,6 +621,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                     <option>Health</option>
                                     <option>Construction</option>
                                     <option>Logistics</option>
+                                    <option>Others</option>
                                 </select>
                             </div>
                             <div>
@@ -726,6 +727,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                     <option>Starling</option>
                                     <option>NatWest</option>
                                     <option>Barclays</option>
+                                    <option>Others</option>
                                 </select>
                             </div>
                             <div>
@@ -736,8 +738,8 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                     <option>Cold Call</option>
                                     <option>Web</option>
                                     <option>Referral</option>
-                                    <option>Instagram</option>
-                                    <option>Organic Search</option>
+                                    <option>Social Media</option>
+                                    <option>Others</option>
                                 </select>
                             </div>
                             <div>
@@ -763,7 +765,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         </div>
                     </section>
 
-                    <!-- PACKED BOTTOM: DOCS & COMMENTS -->
+                    <!-- PACKED BOTTOM: DOCS & REMINDERS -->
                     <div class="registration-grid">
                         <section class="col-span-1">
                             <h3 class="section-header" style="margin-bottom:6px; padding-bottom:4px;">Supporting
@@ -786,7 +788,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         </section>
                     </div>
 
-                    <!-- 6. TASK & REMINDERS -->
+                    <!-- 6. TASK & FOLLOW-UP -->
                     <section id="followup-section"
                         class="hidden bg-[#f0f4ff] rounded-xl border border-[#dbeafe] p-4 shadow-sm">
                         <div class="flex items-center justify-between mb-4 border-b border-blue-100 pb-2">
@@ -861,15 +863,21 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 class="fa-solid fa-trash text-[7px] mr-1.5"></i>Delete Lead</button>
                     </div>
                 </div>
+                <!-- Task Feed Integration -->
+                <div class="p-4 border-t border-gray-50 bg-gray-50/20">
+                    <h3 class="section-header" style="margin-bottom:10px;">Activity Log</h3>
+                    <div id="task-feed-container" class="space-y-2"></div>
+                </div>
             </div>
-            </section>
+        </div>
     </main>
+
     <script>
         const leadsDB = {
             'L-1004': { id: 'AF-CASE-1004', fullName: 'John Perera', title: 'Mr', dob: '1985-06-12', companyName: 'ABC Solutions Ltd', jobTitle: 'Managing Director', companyHouseNumber: '12345678', businessAnnualTurnover: '£250,000', emailAddress: 'john@abc.com', phoneNumber: '+44 7700 900000', residentialAddress: '99 Halbutt Street, Dagenham, RM9 5AR', previousAddress: '', timeAtCurrentAddress: '3 Years', homeOwner: 'Yes', preferredContactMethod: 'Email', loanAmount: '£45,000', fundingTimeline: 'Within 2 weeks', loanPurpose: 'Business Expansion', companyBank: 'Santander', industry: 'Software', leadSource: 'Web', creditConsent: 'Yes', existingLoan: 'No', overdraftFacility: 'No', previousAlphaFundingLoan: 'No', additionalComments: 'Client interested in quick repayment terms.', leadStatus: 'Warm', createdAt: '14 Apr 2026', documents: ['Bank Statement Jan.pdf', 'ID Verification.jpg'], tasks: [{ time: '14:30', type: 'Initial Call', desc: 'Discuss loan purpose' }] },
             'L-1005': { id: 'AF-CASE-1005', fullName: 'Sarah Silva', title: 'Ms', dob: '1992-11-20', companyName: 'XYZ Logistics', jobTitle: 'CFO', companyHouseNumber: '87654321', businessAnnualTurnover: '£1,200,000', emailAddress: 'sarah@xyz.com', phoneNumber: '+44 7700 111222', residentialAddress: '24 Riverside Gardens, Reading, RG1 2AB', previousAddress: '', timeAtCurrentAddress: '5 Years', homeOwner: 'No', preferredContactMethod: 'Phone', loanAmount: '£120,000', fundingTimeline: 'ASAP', loanPurpose: 'Warehouse Scaling', companyBank: 'HSBC', industry: 'Logistics', leadSource: 'Referral', creditConsent: 'Yes', existingLoan: 'Yes', existingLender: 'MarketFinance', existingAmount: '50000', existingRate: '8.5', existingRepayment: '1200', existingTerm: '12 Months', overdraftFacility: 'Yes', previousAlphaFundingLoan: 'Yes', additionalComments: 'Urgent funding needed for peak season.', leadStatus: 'Hot', createdAt: '15 Apr 2026', documents: ['Incorporation Cert.pdf', 'VAT Returns.xlsx'], tasks: [{ time: '10:00', type: 'Site Visit', desc: 'Inspect Reading warehouse' }] },
             'L-1006': { id: 'AF-CASE-1006', fullName: 'David Thompson', title: 'Mr', dob: '1978-03-05', companyName: 'Thompson Construction', jobTitle: 'Director', companyHouseNumber: '44556677', businessAnnualTurnover: '£850,000', emailAddress: 'david@thompson-build.co.uk', phoneNumber: '+44 7888 222333', residentialAddress: '12 Bluebell Lane, Bromley, BR1 3EF', previousAddress: '5 Oak Road, Kent', timeAtCurrentAddress: '8 Years', homeOwner: 'Yes', preferredContactMethod: 'Phone', loanAmount: '£75,000', fundingTimeline: '1 Month', loanPurpose: 'Equipment Purchase', companyBank: 'Barclays', industry: 'Construction', leadSource: 'PPC', creditConsent: 'Yes', existingLoan: 'No', overdraftFacility: 'Yes', previousAlphaFundingLoan: 'No', additionalComments: 'Looking for a competitive rate for heavy machinery lease.', leadStatus: 'Warm', createdAt: '16 Apr 2026', documents: ['Plant Quote.pdf'], tasks: [{ time: '09:00', type: 'Follow-up', desc: 'Check quote status' }] },
-            'L-1007': { id: 'AF-CASE-1007', fullName: 'Elena Rodriguez', title: 'Mrs', dob: '1989-09-14', companyName: 'Sol Coffee Roasters', jobTitle: 'Owner', companyHouseNumber: '11223344', businessAnnualTurnover: '£400,000', emailAddress: 'elena@solroasters.com', phoneNumber: '+44 7444 555666', residentialAddress: 'Apartment 4, Skyline Plaza, Manchester, M1 5BD', previousAddress: '', timeAtCurrentAddress: '2 Years', homeOwner: 'No', preferredContactMethod: 'WhatsApp', loanAmount: '£25,000', fundingTimeline: 'Next week', loanPurpose: 'Stock Purchase', companyBank: 'NatWest', industry: 'Retail', leadSource: 'Instagram', creditConsent: 'Yes', existingLoan: 'No', overdraftFacility: 'No', previousAlphaFundingLoan: 'No', additionalComments: 'Buying green coffee beans in bulk.', leadStatus: 'Hot', createdAt: '16 Apr 2026', documents: ['Supplier Invoice.pdf'], tasks: [{ time: '11:15', type: 'Doc Request', desc: 'Request 3 months bank statements' }] },
+            'L-1007': { id: 'AF-CASE-1007', fullName: 'Elena Rodriguez', title: 'Mrs', dob: '1989-09-14', companyName: 'Sol Coffee Roasters', jobTitle: 'Owner', companyHouseNumber: '11223344', businessAnnualTurnover: '£400,000', emailAddress: 'elena@solroasters.com', phoneNumber: '+44 7444 555666', residentialAddress: 'Apartment 4, Skyline Plaza, Manchester, M1 5BD', previousAddress: '', timeAtCurrentAddress: '2 Years', homeOwner: 'No', preferredContactMethod: 'WhatsApp', loanAmount: '£25,000', fundingTimeline: 'Next week', loanPurpose: 'Stock Purchase', companyBank: 'NatWest', industry: 'Retail', leadSource: 'Social Media', creditConsent: 'Yes', existingLoan: 'No', overdraftFacility: 'No', previousAlphaFundingLoan: 'No', additionalComments: 'Buying green coffee beans in bulk.', leadStatus: 'Hot', createdAt: '16 Apr 2026', documents: ['Supplier Invoice.pdf'], tasks: [{ time: '11:15', type: 'Doc Request', desc: 'Request 3 months bank statements' }] },
             'L-1008': { id: 'AF-CASE-1008', fullName: 'Mark Walberg', title: 'Mr', dob: '1982-01-30', companyName: 'Prime Fitness Hub', jobTitle: 'Gym Manager', companyHouseNumber: '99887766', businessAnnualTurnover: '£150,000', emailAddress: 'mark@primefit.com', phoneNumber: '+44 7111 222333', residentialAddress: '77 Gym Lane, London, SE1 0AA', previousAddress: '', timeAtCurrentAddress: '4 Years', homeOwner: 'No', preferredContactMethod: 'Email', loanAmount: '£15,000', fundingTimeline: 'Flexible', loanPurpose: 'Marketing', companyBank: 'Lloyds', industry: 'Leisure', leadSource: 'Organic Search', creditConsent: 'No', existingLoan: 'No', overdraftFacility: 'No', previousAlphaFundingLoan: 'No', additionalComments: 'Client very cautious about credit search.', leadStatus: 'Cool', createdAt: '17 Apr 2026', documents: [], tasks: [] }
         };
 
@@ -958,10 +966,6 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             document.getElementById('doc-list-container').innerHTML = (lead.documents || []).map(doc => `<div class="doc-item"><div class="flex items-center gap-3"><i class="fa-solid fa-file-lines text-blue-500"></i><span class="text-[10px] font-bold text-gray-700">${doc}</span></div></div>`).join('');
             document.getElementById('task-feed-container').innerHTML = (lead.tasks || []).map(task => `<div class="followup-card"><p class="text-[8px] font-extrabold text-blue-600 uppercase">${task.time} • ${task.type}</p><p class="text-[10px] font-bold text-gray-800">${task.desc}</p></div>`).join('');
 
-            // Auto-populate reminder client
-            const reminderClient = document.getElementById('reminder-client');
-            if (reminderClient) reminderClient.value = lead.fullName || '';
-
             isEditMode = startInEditMode;
             applyEditModeUI();
             renderLeadTable();
@@ -985,6 +989,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             isEditMode = !isEditMode;
             applyEditModeUI();
         }
+
         function createNewLead() {
             document.querySelector('.dashboard-container').classList.add('create-mode');
             const backBtn = document.getElementById('detail-back-btn');
@@ -1084,6 +1089,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
 
             selectLead(currentLeadKey);
         }
+
         function saveLead() {
             const fullName = document.getElementById('field-fullName').value;
             if (!fullName) { alert('Full Name is required'); return; }
@@ -1131,7 +1137,9 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             exitCreateMode();
             alert('Lead Saved Successfully');
         }
+
         window.onload = () => { updateLeadStats(); renderLeadTable(); selectLead('L-1004'); };
+
         function toggleExistingLoanSection(value) {
             const section = document.getElementById('existing-loan-details');
             if (value === 'Yes') {
@@ -1144,7 +1152,6 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         // Add event listeners to radio buttons
         document.querySelectorAll('.radio-btn').forEach(btn => {
             btn.addEventListener('click', function () {
-                // If they are not disabled (check parent or global flag)
                 if (isEditMode) {
                     const parent = this.parentElement;
                     parent.querySelectorAll('.radio-btn').forEach(b => b.classList.remove('active'));
@@ -1156,18 +1163,3 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
 </body>
 
 </html>
-
-<script>
-(function(){
-    const s=JSON.parse(sessionStorage.getItem('crm_session')||'null');
-    if(!s){window.location.replace('../login/login.html');return;}
-    const el=document.getElementById('nav-dashboard');
-    if(el&&s.landing) el.href=s.landing.replace('../','../').replace('dashboard/','../dashboard/');
-    // fix relative path: landing is like '../dashboard/xxx.html', we're in a subfolder
-    if(el&&s.landing){
-        // landing stored as '../dashboard/xxx.html' relative to login, we need it relative to current page
-        const parts=s.landing.split('/');
-        el.href='../dashboard/'+parts[parts.length-1];
-    }
-})();
-</script>

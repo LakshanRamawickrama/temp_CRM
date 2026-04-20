@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+<script>
+function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}(function(){const s=sessionStorage.getItem('crm_session');if(!s){window.location.replace('../login/login.html');}})();</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lead Detail - Whiterock CRM</title>
@@ -24,19 +27,11 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        .side-nav {
-            width: 70px; background: #0f172a; height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 15px 0; gap: 8px; border-right: 1px solid #1e293b; flex-shrink: 0; overflow:hidden;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 6px;
-            color: #94a3b8; transition: all .2s; cursor: pointer; text-decoration: none;
-            padding: 8px; border-radius: 8px; width: 50px;
-        }
-        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(255,255,255,.08); }
-        .nav-item i { font-size: 16px; }
-        .nav-text { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+
+
+
+
+
 
         .main-wrap { display: flex; flex-direction: column; flex: 1; min-width: 0; background: #fafafa; overflow: hidden; }
 
@@ -125,7 +120,49 @@
         .btn-dark:hover { background:#000; }
         .btn-red    { background:#fef2f2; color:#b91c1c; }
         .btn-red:hover { background:#fee2e2; }
-    </style>
+            .side-nav {
+            width: 70px;
+            background: #0f172a;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 4px;
+            border-right: 1px solid #1e293b;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #94a3b8;
+            transition: all .2s;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 6px 4px;
+            border-radius: 8px;
+            width: 54px;
+        }
+        .nav-item:hover,
+        .nav-item.active {
+            color: #fff;
+            background: rgba(255,255,255,.08);
+        }
+        .nav-item i {
+            font-size: 14px;
+        }
+        .nav-text {
+            font-size: 7px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            text-align: center;
+            line-height: 1;
+        }
+        </style>
 </head>
 
 <body>
@@ -143,6 +180,9 @@
         <a href="../documents/document_vault.html" class="nav-item"><i class="fa-solid fa-folder-open"></i><span class="nav-text">Documents</span></a>
         <a href="../user_management/user_management.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span class="nav-text">Users</span></a>
         <a href="../reporting/reporting_logs.html" class="nav-item"><i class="fa-solid fa-chart-line"></i><span class="nav-text">Reports</span></a>
+    
+        <div style="flex:1;"></div>
+        <div class="nav-item" onclick="logout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i><span class="nav-text">Logout</span></div>
     </nav>
 
     <div class="main-wrap">
@@ -177,6 +217,7 @@
     </div>
 
     <script>
+function logout(){sessionStorage.removeItem('crm_session');window.location.replace('../login/login.html');}
         const leads = [
             { id:'AF-028', name:'Minosh Example', business:'ex ABC',           amount:'£3,456',      agent:'Sarah White',  bank:'Starling', stage:'verified',   priority:'High',   days:3,  lender:'NAB',               notes:'Awaiting final sign-off.' },
             { id:'AF-027', name:'ABC Corp',       business:'ABCD Ltd',         amount:'£2,345',      agent:'Cody Lane',    bank:'—',        stage:'verified',   priority:'Medium', days:5,  lender:'Commonwealth Bank', notes:'Docs reviewed, all clear.' },
@@ -477,3 +518,9 @@
 
 </body>
 </html>
+
+
+
+
+
+

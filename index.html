@@ -1,6 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function(){
+    const s = sessionStorage.getItem('crm_session');
+    if (!s) { window.location.replace('login/login.html'); return; }
+    try {
+        const sess = JSON.parse(s);
+        if (sess && sess.landing) window.location.replace(sess.landing);
+        else window.location.replace('login/login.html');
+    } catch(e) { window.location.replace('login/login.html'); }
+})();
+</script>
   <meta charset="UTF-8">
   <meta http-equiv="refresh" content="0; url=/login/login.html">
   <title>TaskFlow CRM</title>
