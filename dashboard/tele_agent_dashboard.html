@@ -1078,7 +1078,7 @@ function taRenderCalendar(){
         d.textContent=i;
         const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(i).padStart(2,'0');
         if(CAL_EVENTS[key]&&CAL_EVENTS[key].length){const dot=document.createElement('div');dot.className='evt-dot';d.appendChild(dot);}
-        d.onclick=()=>{_taSelDate=new Date(y,m,i);taRenderCalendar();openDayDrawer(y,m,i);};
+        d.onclick=(ev)=>{ev.stopPropagation();_taSelDate=new Date(y,m,i);taRenderCalendar();openDayDrawer(y,m,i);};
         grid.appendChild(d);
     }
 }
@@ -1092,8 +1092,10 @@ function openDayDrawer(year,month,day){
     const evts=CAL_EVENTS[_ddKey]||[];
     const tC=evts.filter(e=>e.type==='task').length,fC=evts.filter(e=>e.type==='followup').length;
     document.getElementById('ddMeta').textContent=tC+' task'+(tC!==1?'s':'')+' · '+fC+' follow-up'+(fC!==1?'s':'');
-    _ddFilter='todo';
-    ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f==='todo'?' active':'');});
+    const _clickedDate=new Date(year,month,day);_clickedDate.setHours(0,0,0,0);
+    const _todayMid=new Date();_todayMid.setHours(0,0,0,0);
+    _ddFilter=_clickedDate<_todayMid?'overdue':_clickedDate.getTime()===_todayMid.getTime()?'inprogress':'todo';
+    ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===_ddFilter?' active':'');});
     renderDayEvents();document.getElementById('dayDrawer').classList.add('open');
 }
 function closeDayDrawer(){document.getElementById('dayDrawer').classList.remove('open');}
