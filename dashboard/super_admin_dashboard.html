@@ -347,34 +347,259 @@
                 grid-column: span 1;
             }
         }
+
         /* Notification Bell */
-        .notif-bell-wrap { position:relative; display:flex; align-items:center; }
-        .notif-bell-btn { width:40px; height:40px; border-radius:12px; background:#fff; border:1px solid #f1f5f9; box-shadow:0 4px 20px rgba(0,0,0,0.03); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; position:relative; flex-shrink:0; }
-        .notif-bell-btn:hover { background:#f8fafc; box-shadow:0 10px 30px rgba(0,0,0,0.06); transform:translateY(-2px); }
-        .notif-badge { position:absolute; top:-4px; right:-4px; min-width:16px; height:16px; background:#ef4444; border-radius:99px; font-size:8px; font-weight:900; color:#fff; display:flex; align-items:center; justify-content:center; padding:0 4px; border:2px solid #f8fafc; animation:badgePop .3s cubic-bezier(.175,.885,.32,1.275); }
-        @keyframes badgePop { from{transform:scale(0)} to{transform:scale(1)} }
-        .notif-panel { position:fixed; top:70px; right:20px; width:340px; background:#fff; border:1px solid #f1f5f9; border-radius:20px; box-shadow:0 20px 50px rgba(0,0,0,0.12); z-index:500; display:none; flex-direction:column; overflow:hidden; transform-origin:top right; }
-        .notif-panel.open { display:flex; animation:panelReveal .25s cubic-bezier(.175,.885,.32,1.275); }
-        @keyframes panelReveal { from{opacity:0;transform:scale(.95) translateY(-8px)} to{opacity:1;transform:scale(1) translateY(0)} }
-        .notif-header { padding:14px 16px 10px; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between; }
-        .notif-item { display:flex; align-items:flex-start; gap:10px; padding:10px 16px; border-bottom:1px solid #f8fafc; cursor:pointer; transition:background .15s; }
-        .notif-item:hover { background:#f8fafc; }
-        .notif-item.unread { background:#fafbff; }
-        .notif-item:last-child { border-bottom:none; }
-        .notif-icon { width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; }
-        .notif-dot { width:6px; height:6px; border-radius:50%; background:#6366f1; flex-shrink:0; margin-top:5px; }        /* Docs Drawer */
-        .docs-modal { position:fixed; inset:0; z-index:100; display:none; justify-content:flex-end; overflow:hidden; pointer-events:none; }
-        .docs-modal.open { pointer-events:all; display:flex; }
-        .docs-modal-backdrop { position:absolute; inset:0; background:rgba(15,23,42,0.2); backdrop-filter:blur(2px); opacity:0; transition:opacity .3s; }
-        .docs-modal.open .docs-modal-backdrop { opacity:1; }
-        .docs-panel { position:relative; width:100%; max-width:500px; background:#fff; height:100%; box-shadow:-20px 0 50px rgba(0,0,0,0.1); border-left:1px solid #f1f5f9; display:flex; flex-direction:column; transform:translateX(100%); transition:transform .4s cubic-bezier(0.16,1,0.3,1); }
-        .docs-modal.open .docs-panel { transform:translateX(0); }
-        .docs-upload-zone { border:2px dashed #e2e8f0; border-radius:10px; padding:28px 16px; text-align:center; cursor:pointer; transition:all .2s; background:#f8fafc; position:relative; }
-        .docs-upload-zone:hover { border-color:#6366f1; background:#eef2ff; }
-        .docs-upload-zone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-        .docs-input { width:100%; background:#f8fafc; border:1px solid #f1f5f9; border-radius:8px; padding:7px 10px; font-size:10px; font-weight:500; outline:none; transition:border .15s; color:#1e293b; }
-        .docs-input:focus { border-color:#6366f1; background:#fff; }
-        .docs-label { font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; margin-bottom:3px; display:block; }    @keyframes expandDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+        .notif-bell-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .notif-bell-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .2s;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .notif-bell-btn:hover {
+            background: #f8fafc;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            min-width: 16px;
+            height: 16px;
+            background: #ef4444;
+            border-radius: 99px;
+            font-size: 8px;
+            font-weight: 900;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid #f8fafc;
+            animation: badgePop .3s cubic-bezier(.175, .885, .32, 1.275);
+        }
+
+        @keyframes badgePop {
+            from {
+                transform: scale(0)
+            }
+
+            to {
+                transform: scale(1)
+            }
+        }
+
+        .notif-panel {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            width: 340px;
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+            z-index: 500;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transform-origin: top right;
+        }
+
+        .notif-panel.open {
+            display: flex;
+            animation: panelReveal .25s cubic-bezier(.175, .885, .32, 1.275);
+        }
+
+        @keyframes panelReveal {
+            from {
+                opacity: 0;
+                transform: scale(.95) translateY(-8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0)
+            }
+        }
+
+        .notif-header {
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notif-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 16px;
+            border-bottom: 1px solid #f8fafc;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        .notif-item:hover {
+            background: #f8fafc;
+        }
+
+        .notif-item.unread {
+            background: #fafbff;
+        }
+
+        .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+
+        .notif-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #6366f1;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        /* Docs Drawer */
+        .docs-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: none;
+            justify-content: flex-end;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .docs-modal.open {
+            pointer-events: all;
+            display: flex;
+        }
+
+        .docs-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.2);
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .docs-modal.open .docs-modal-backdrop {
+            opacity: 1;
+        }
+
+        .docs-panel {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            height: 100%;
+            box-shadow: -20px 0 50px rgba(0, 0, 0, 0.1);
+            border-left: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform .4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .docs-modal.open .docs-panel {
+            transform: translateX(0);
+        }
+
+        .docs-upload-zone {
+            border: 2px dashed #e2e8f0;
+            border-radius: 10px;
+            padding: 28px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .docs-upload-zone:hover {
+            border-color: #6366f1;
+            background: #eef2ff;
+        }
+
+        .docs-upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .docs-input {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 10px;
+            font-weight: 500;
+            outline: none;
+            transition: border .15s;
+            color: #1e293b;
+        }
+
+        .docs-input:focus {
+            border-color: #6366f1;
+            background: #fff;
+        }
+
+        .docs-label {
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #94a3b8;
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                transform: translateY(-4px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
     </style>
 </head>
 
@@ -437,87 +662,101 @@
 
     <main class="dashboard-container">
         <!-- Top Action Row: Left-aligned Compact Cards -->
-        <div class="flex items-center gap-2 px-6 pt-4 w-full" style="flex-shrink:0;overflow-x:auto;min-height:60px;"><div class="flex items-center gap-2 flex-nowrap flex-1 min-w-0">
-            <a href="../lead_management/lead_management.html"
-                class="glass-card p-2.5 flex items-center gap-3 hover:border-indigo-500/50 group transition-all w-[140px]">
-                <div
-                    class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all shrink-0">
-                    <i class="fa-solid fa-users text-sm"></i>
-                </div>
-                <div class="truncate">
-                    <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Leads</h4>
-                    <p class="text-[10px] font-black text-slate-900 mt-1">1,284 <span
-                            class="text-[7px] text-emerald-500 ml-0.5">+12%</span></p>
-                </div>
-            </a>
+        <div class="flex items-center gap-2 px-6 pt-4 w-full" style="flex-shrink:0;overflow-x:auto;min-height:60px;">
+            <div class="flex items-center gap-2 flex-nowrap flex-1 min-w-0">
+                <a href="../lead_management/lead_management.html"
+                    class="glass-card p-2.5 flex items-center gap-3 hover:border-indigo-500/50 group transition-all w-[140px]">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all shrink-0">
+                        <i class="fa-solid fa-users text-sm"></i>
+                    </div>
+                    <div class="truncate">
+                        <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Leads
+                        </h4>
+                        <p class="text-[10px] font-black text-slate-900 mt-1">1,284 <span
+                                class="text-[7px] text-emerald-500 ml-0.5">+12%</span></p>
+                    </div>
+                </a>
 
-            <a href="https://teams.microsoft.com" target="_blank"
-                class="glass-card p-2.5 flex items-center gap-3 hover:border-indigo-400/50 group transition-all w-[130px]">
-                <div
-                    class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-indigo-500 group-hover:bg-[#464EB8] group-hover:text-white transition-all shrink-0">
-                    <i class="fa-brands fa-microsoft text-sm"></i>
-                </div>
-                <div class="truncate">
-                    <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Connect</h4>
-                    <p class="text-[10px] font-black text-slate-900 mt-1">TEAMS</p>
-                </div>
-            </a>
+                <a href="https://teams.microsoft.com" target="_blank"
+                    class="glass-card p-2.5 flex items-center gap-3 hover:border-indigo-400/50 group transition-all w-[130px]">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-indigo-500 group-hover:bg-[#464EB8] group-hover:text-white transition-all shrink-0">
+                        <i class="fa-brands fa-microsoft text-sm"></i>
+                    </div>
+                    <div class="truncate">
+                        <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Connect
+                        </h4>
+                        <p class="text-[10px] font-black text-slate-900 mt-1">TEAMS</p>
+                    </div>
+                </a>
 
-            <a href="https://web.whatsapp.com" target="_blank"
-                class="glass-card p-2.5 flex items-center gap-3 hover:border-emerald-400/50 group transition-all w-[130px]">
-                <div
-                    class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-emerald-500 group-hover:bg-[#25D366] group-hover:text-white transition-all shrink-0">
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                </div>
-                <div class="truncate">
-                    <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Chat</h4>
-                    <p class="text-[10px] font-black text-slate-900 mt-1">WHATSAPP</p>
-                </div>
-            </a>
+                <a href="https://web.whatsapp.com" target="_blank"
+                    class="glass-card p-2.5 flex items-center gap-3 hover:border-emerald-400/50 group transition-all w-[130px]">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-emerald-500 group-hover:bg-[#25D366] group-hover:text-white transition-all shrink-0">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                    </div>
+                    <div class="truncate">
+                        <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Chat
+                        </h4>
+                        <p class="text-[10px] font-black text-slate-900 mt-1">WHATSAPP</p>
+                    </div>
+                </a>
 
-            <a href="mailto:admin@taskflow.com"
-                class="glass-card p-2.5 flex items-center gap-3 hover:border-blue-400/50 group transition-all w-[130px]">
-                <div
-                    class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-sky-500 group-hover:bg-[#0EA5E9] group-hover:text-white transition-all shrink-0">
-                    <i class="fa-solid fa-envelope text-sm"></i>
-                </div>
-                <div class="truncate">
-                    <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Official
-                    </h4>
-                    <p class="text-[10px] font-black text-slate-900 mt-1">MAIL HUB</p>
-                </div>
-            </a>
+                <a href="mailto:admin@taskflow.com"
+                    class="glass-card p-2.5 flex items-center gap-3 hover:border-blue-400/50 group transition-all w-[130px]">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-sky-500 group-hover:bg-[#0EA5E9] group-hover:text-white transition-all shrink-0">
+                        <i class="fa-solid fa-envelope text-sm"></i>
+                    </div>
+                    <div class="truncate">
+                        <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Official
+                        </h4>
+                        <p class="text-[10px] font-black text-slate-900 mt-1">MAIL HUB</p>
+                    </div>
+                </a>
 
-            <a href="javascript:void(0)" onclick="openCalculator()"
-                class="glass-card p-2.5 flex items-center gap-3 hover:border-amber-400/50 group transition-all w-[130px]">
-                <div
-                    class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-amber-500 group-hover:bg-[#fbbf24] group-hover:text-white transition-all shrink-0">
-                    <i class="fa-solid fa-calculator text-sm"></i>
-                </div>
-                <div class="truncate">
-                    <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Utility</h4>
-                    <p class="text-[10px] font-black text-slate-900 mt-1">CALCULATOR</p>
-                </div>
-            </a>
+                <a href="javascript:void(0)" onclick="openCalculator()"
+                    class="glass-card p-2.5 flex items-center gap-3 hover:border-amber-400/50 group transition-all w-[130px]">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-amber-500 group-hover:bg-[#fbbf24] group-hover:text-white transition-all shrink-0">
+                        <i class="fa-solid fa-calculator text-sm"></i>
+                    </div>
+                    <div class="truncate">
+                        <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Utility
+                        </h4>
+                        <p class="text-[10px] font-black text-slate-900 mt-1">CALCULATOR</p>
+                    </div>
+                </a>
 
-            <a href="javascript:void(0)" onclick="toggleDesignMode()" id="designModeBtn"
-                class="glass-card p-2.5 flex items-center gap-3 hover:border-indigo-400/50 group transition-all w-[130px]">
-                <div id="designIconBox"
-                    class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-indigo-500 group-hover:bg-[#4f46e5] group-hover:text-white transition-all shrink-0">
-                    <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                </div>
-                <div class="truncate">
-                    <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Layout</h4>
-                    <p id="designModeLabel" class="text-[10px] font-black text-slate-900 mt-1">DESIGN MODE</p>
-                </div>
-            </a>
+                <a href="javascript:void(0)" onclick="toggleDesignMode()" id="designModeBtn"
+                    class="glass-card p-2.5 flex items-center gap-3 hover:border-indigo-400/50 group transition-all w-[130px]">
+                    <div id="designIconBox"
+                        class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-indigo-500 group-hover:bg-[#4f46e5] group-hover:text-white transition-all shrink-0">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                    </div>
+                    <div class="truncate">
+                        <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Layout
+                        </h4>
+                        <p id="designModeLabel" class="text-[10px] font-black text-slate-900 mt-1">DESIGN MODE</p>
+                    </div>
+                </a>
 
-            <a href="javascript:void(0)" onclick="openDocsDrawer()" class="glass-card p-2.5 flex items-center gap-3 hover:border-indigo-400/50 group transition-all w-[130px]">
-            <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-all shrink-0"><i class="fa-solid fa-folder-open text-sm"></i></div>
-            <div class="truncate"><h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Docs</h4><p class="text-[10px] font-black text-slate-900 mt-1">UPLOAD</p></div>
-        </a>
-        
-        </div><!-- Notification Bell -->
+                <a href="javascript:void(0)" onclick="openDocsDrawer()"
+                    class="glass-card p-2.5 flex items-center gap-3 hover:border-indigo-400/50 group transition-all w-[130px]">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-all shrink-0">
+                        <i class="fa-solid fa-folder-open text-sm"></i>
+                    </div>
+                    <div class="truncate">
+                        <h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Docs
+                        </h4>
+                        <p class="text-[10px] font-black text-slate-900 mt-1">UPLOAD</p>
+                    </div>
+                </a>
+
+            </div><!-- Notification Bell -->
             <div class="notif-bell-wrap" style="flex-shrink:0;margin-left:8px;">
                 <div class="notif-bell-btn" onclick="toggleNotifPanel()" id="notifBellBtn">
                     <i class="fa-solid fa-bell" style="font-size:15px;color:#64748b;"></i>
@@ -531,13 +770,18 @@
             <div class="notif-header">
                 <div>
                     <div style="font-size:11px;font-weight:800;color:#0f172a;">Notifications</div>
-                    <div style="font-size:8px;font-weight:700;color:#94a3b8;margin-top:1px;" id="notif-unread-txt">3 unread</div>
+                    <div style="font-size:8px;font-weight:700;color:#94a3b8;margin-top:1px;" id="notif-unread-txt">3
+                        unread</div>
                 </div>
-                <button onclick="markAllRead()" style="font-size:8px;font-weight:800;color:#6366f1;background:none;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;">Mark all read</button>
+                <button onclick="markAllRead()"
+                    style="font-size:8px;font-weight:800;color:#6366f1;background:none;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;">Mark
+                    all read</button>
             </div>
             <div style="max-height:360px;overflow-y:auto;" id="notifList"></div>
             <div style="padding:10px 16px;border-top:1px solid #f1f5f9;text-align:center;">
-                <button onclick="clearAllNotifs()" style="font-size:8px;font-weight:800;color:#94a3b8;background:none;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;">Clear All</button>
+                <button onclick="clearAllNotifs()"
+                    style="font-size:8px;font-weight:800;color:#94a3b8;background:none;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;">Clear
+                    All</button>
             </div>
         </div>
 
@@ -606,7 +850,8 @@
                                         class="bg-[#dbeafe] text-[#1e40af] text-[7px] font-black px-1.5 py-0.5 rounded flex items-center gap-1">
                                         <i class="fa-solid fa-thumbtack text-[7px] text-rose-500"></i> PINNED
                                     </span>
-                                    <span class="text-[8px] font-bold text-amber-700/60">2026-04-09 Ãƒâ€š· 01:54 PM</span>
+                                    <span class="text-[8px] font-bold text-amber-700/60">2026-04-09 £· 01:54
+                                        PM</span>
                                 </div>
                                 <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button onclick="toggleHighlight(this)"
@@ -816,9 +1061,14 @@
                             <table class="w-full text-left" id="leadPortfolioTable">
                                 <thead>
                                     <tr class="border-b border-slate-50">
-                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest">Client</th>
-                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
-                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-right">#</th>
+                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest">
+                                            Client</th>
+                                        <th
+                                            class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-center">
+                                            Status</th>
+                                        <th
+                                            class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-right">
+                                            #</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -875,11 +1125,11 @@
                                                 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Base
                                                 Loan Amount</label>
                                             <span class="text-[10px] font-black text-amber-600"
-                                                id="valDisplayAmount">Ãƒâ€š£50,000</span>
+                                                id="valDisplayAmount">£50,000</span>
                                         </div>
                                         <div class="relative">
                                             <span
-                                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px]">Ãƒâ€š£</span>
+                                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px]">£</span>
                                             <input type="number" id="calcAmount" value="50000"
                                                 class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 pl-7 pr-3 text-[11px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
                                                 oninput="syncInput('amount')">
@@ -917,7 +1167,7 @@
                                                 <button onclick="setFeeType('percent')" id="feeTypePct"
                                                     class="px-2 py-0.5 text-[7px] font-black uppercase rounded bg-slate-900 text-white shadow-sm transition-all">%</button>
                                                 <button onclick="setFeeType('fixed')" id="feeTypeFix"
-                                                    class="px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all">Ãƒâ€š£</button>
+                                                    class="px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all">£</button>
                                             </div>
                                         </div>
                                         <div class="relative">
@@ -970,7 +1220,8 @@
                                         <p class="text-[8px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">
                                             Contractual Monthly Payment</p>
                                         <h2 id="resMonthly"
-                                            class="text-4xl lg:text-5xl font-black text-white mb-8 transition-all">Ãƒâ€š£0.00
+                                            class="text-4xl lg:text-5xl font-black text-white mb-8 transition-all">
+                                            £0.00
                                         </h2>
 
                                         <div class="grid grid-cols-2 gap-6 pt-6 border-t border-slate-800">
@@ -979,13 +1230,14 @@
                                                     class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">
                                                     Total Cost of Credit</p>
                                                 <p id="resTotalInterest" class="text-[14px] font-black text-amber-500">
-                                                    Ãƒâ€š£0.00</p>
+                                                    £0.00</p>
                                             </div>
                                             <div class="border-l border-slate-800">
                                                 <p
                                                     class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">
                                                     Total Amount Payable</p>
-                                                <p id="resTotalPayable" class="text-[14px] font-black text-white">Ãƒâ€š£0.00
+                                                <p id="resTotalPayable" class="text-[14px] font-black text-white">
+                                                    £0.00
                                                 </p>
                                             </div>
                                         </div>
@@ -1033,7 +1285,7 @@
                                                 Analysis</h4>
                                             <p class="text-[8px] font-bold text-emerald-700 uppercase">Financed
                                                 Principal: <span id="resFinancedPrincipal"
-                                                    class="font-black">Ãƒâ€š£0.00</span></p>
+                                                    class="font-black">€š£0.00</span></p>
                                         </div>
                                     </div>
 
@@ -1069,7 +1321,7 @@
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="text-[8px] font-black text-slate-400 uppercase">Total:</span>
-                            <span class="text-[10px] font-black text-emerald-600">Ãƒâ€š£124,500</span>
+                            <span class="text-[10px] font-black text-emerald-600">£124,500</span>
                         </div>
                     </div>
                     <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
@@ -1085,7 +1337,7 @@
                                     <p class="text-[8px] font-bold text-slate-400 uppercase">Lender: Lloyds Bank</p>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-[10px] font-black text-slate-900">Ãƒâ€š£4,250</div>
+                                    <div class="text-[10px] font-black text-slate-900">£4,250</div>
                                     <span class="text-[7px] font-black text-emerald-500 uppercase">Est. Payout</span>
                                 </div>
                             </div>
@@ -1109,7 +1361,7 @@
                                     <p class="text-[8px] font-bold text-slate-400 uppercase">Lender: Funding Circle</p>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-[10px] font-black text-slate-900">Ãƒâ€š£12,800</div>
+                                    <div class="text-[10px] font-black text-slate-900">£12,800</div>
                                     <span class="text-[7px] font-black text-emerald-500 uppercase">Est. Payout</span>
                                 </div>
                             </div>
@@ -1133,7 +1385,7 @@
                                     <p class="text-[8px] font-bold text-slate-400 uppercase">Lender: Allica Bank</p>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-[10px] font-black text-slate-900">Ãƒâ€š£7,400</div>
+                                    <div class="text-[10px] font-black text-slate-900">£7,400</div>
                                     <span class="text-[7px] font-black text-emerald-500 uppercase">Est. Payout</span>
                                 </div>
                             </div>
@@ -1172,7 +1424,7 @@
                             </div>
                             <h4 class="text-[10px] font-black text-slate-900">Lloyds Bank: 0.25% Rate Cut</h4>
                             <p class="text-[9px] text-slate-500 leading-tight mt-1">Applicable to all new business
-                                expansion loans over Ãƒâ€š£250k.</p>
+                                expansion loans over £250k.</p>
                             <div class="mt-2 pt-2 border-t border-indigo-100/50 flex justify-between items-center">
                                 <span class="text-[8px] font-bold text-indigo-600 uppercase">Code: LLOYDS25</span>
                                 <button class="text-indigo-600 hover:text-indigo-900"><i
@@ -1365,7 +1617,7 @@
                     <div class="grid grid-cols-2 gap-x-4 gap-y-3">
                         <div class="space-y-1">
                             <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Loan Amount
-                                (Ãƒâ€š£)</label>
+                                (£)</label>
                             <input type="number" id="mod-loanAmount" value="75000"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
                         </div>
@@ -1417,7 +1669,7 @@
                         </div>
                         <div class="space-y-1">
                             <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Fixed Amount
-                                (Ãƒâ€š£)</label>
+                                (£)</label>
                             <input type="number" id="mod-feeFixed" step="1"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-3 text-[12px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
                         </div>
@@ -1429,29 +1681,29 @@
                             <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Estimated
                                 Monthly Payment</span>
                             <span class="block text-2xl font-black text-emerald-600 mt-1"
-                                id="mod-resMonthlyDisplay">Ãƒâ€š£0.00</span>
+                                id="mod-resMonthlyDisplay">£0.00</span>
                         </div>
 
                         <div class="space-y-2">
                             <div
                                 class="flex justify-between items-center text-[10px] font-bold border-b border-dotted border-slate-200 pb-1.5">
                                 <span class="text-slate-400 uppercase tracking-tight">Loan Principal</span>
-                                <span class="text-slate-900" id="mod-resPrincipalDisplay">Ãƒâ€š£0.00</span>
+                                <span class="text-slate-900" id="mod-resPrincipalDisplay">£0.00</span>
                             </div>
                             <div
                                 class="flex justify-between items-center text-[10px] font-bold border-b border-dotted border-slate-200 pb-1.5">
                                 <span class="text-slate-400 uppercase tracking-tight">Arrangement Fees</span>
-                                <span class="text-slate-900" id="mod-resFeeDisplay">Ãƒâ€š£0.00</span>
+                                <span class="text-slate-900" id="mod-resFeeDisplay">£0.00</span>
                             </div>
                             <div
                                 class="flex justify-between items-center text-[10px] font-bold border-b border-dotted border-slate-200 pb-1.5">
                                 <span class="text-slate-400 uppercase tracking-tight">Total Interest</span>
-                                <span class="text-slate-900" id="mod-resInterestDisplay">Ãƒâ€š£0.00</span>
+                                <span class="text-slate-900" id="mod-resInterestDisplay">£0.00</span>
                             </div>
                             <div
                                 class="flex justify-between items-center text-[11px] font-black bg-indigo-50 text-indigo-700 p-2 rounded-lg">
                                 <span class="uppercase tracking-widest">Total Payable</span>
-                                <span id="mod-resTotalDisplay">Ãƒâ€š£0.00</span>
+                                <span id="mod-resTotalDisplay">£0.00</span>
                             </div>
                         </div>
 
@@ -1528,11 +1780,11 @@
 
         // Ã¢â€â‚¬Ã¢â€â‚¬ Notification Bell Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
         let NOTIFS = [
-            { id:1, unread:true,  icon:'fa-triangle-exclamation', iconBg:'#fee2e2', iconColor:'#b91c1c', title:'3 documents overdue',        body:'Action needed on pending client documents.',   time:'2 min ago' },
-            { id:2, unread:true,  icon:'fa-clock',                iconBg:'#fef3c7', iconColor:'#b45309', title:'Follow-ups due today',        body:'12 leads require follow-up before 17:00.',     time:'15 min ago' },
-            { id:3, unread:true,  icon:'fa-diagram-project',      iconBg:'#dbeafe', iconColor:'#1d4ed8', title:'Pipeline updated',            body:'Amal moved 2 leads to Negotiation stage.',     time:'1 hr ago' },
-            { id:4, unread:false, icon:'fa-user-plus',            iconBg:'#dcfce7', iconColor:'#15803d', title:'New lead assigned',           body:'James Smith has been assigned to your team.',  time:'3 hrs ago' },
-            { id:5, unread:false, icon:'fa-hand-holding-dollar',  iconBg:'#f5f3ff', iconColor:'#7c3aed', title:'Payout approved',             body:'£12,400 payout for ABC Corp approved.',        time:'Yesterday' },
+            { id: 1, unread: true, icon: 'fa-triangle-exclamation', iconBg: '#fee2e2', iconColor: '#b91c1c', title: '3 documents overdue', body: 'Action needed on pending client documents.', time: '2 min ago' },
+            { id: 2, unread: true, icon: 'fa-clock', iconBg: '#fef3c7', iconColor: '#b45309', title: 'Follow-ups due today', body: '12 leads require follow-up before 17:00.', time: '15 min ago' },
+            { id: 3, unread: true, icon: 'fa-diagram-project', iconBg: '#dbeafe', iconColor: '#1d4ed8', title: 'Pipeline updated', body: 'Amal moved 2 leads to Negotiation stage.', time: '1 hr ago' },
+            { id: 4, unread: false, icon: 'fa-user-plus', iconBg: '#dcfce7', iconColor: '#15803d', title: 'New lead assigned', body: 'James Smith has been assigned to your team.', time: '3 hrs ago' },
+            { id: 5, unread: false, icon: 'fa-hand-holding-dollar', iconBg: '#f5f3ff', iconColor: '#7c3aed', title: 'Payout approved', body: '£12,400 payout for ABC Corp approved.', time: 'Yesterday' },
         ];
 
         function renderNotifs() {
@@ -1549,7 +1801,7 @@
                 <div class="notif-item ${n.unread ? 'unread' : ''}" onclick="readNotif(${n.id})">
                     <div class="notif-icon" style="background:${n.iconBg};"><i class="fa-solid ${n.icon}" style="color:${n.iconColor};"></i></div>
                     <div style="flex:1;min-width:0;">
-                        <div style="font-size:10px;font-weight:${n.unread?'800':'600'};color:#0f172a;line-height:1.3;">${n.title}</div>
+                        <div style="font-size:10px;font-weight:${n.unread ? '800' : '600'};color:#0f172a;line-height:1.3;">${n.title}</div>
                         <div style="font-size:8px;color:#64748b;margin-top:2px;line-height:1.4;">${n.body}</div>
                         <div style="font-size:7px;color:#94a3b8;margin-top:3px;font-weight:700;">${n.time}</div>
                     </div>
@@ -1579,7 +1831,7 @@
         }
 
         // Close panel when clicking outside
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             const panel = document.getElementById('notifPanel');
             const btn = document.getElementById('notifBellBtn');
             if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
@@ -1605,7 +1857,7 @@
             if (!text) return;
 
             const now = new Date();
-            const dateStr = now.toISOString().split('T')[0] + ' Ãƒâ€š· ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toISOString().split('T')[0] + ' €· ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             const noteHtml = `
                 <div class="bg-white border border-amber-100 p-3 rounded-xl relative group">
@@ -1704,7 +1956,7 @@
             } else {
                 fixBtn.className = 'px-2 py-0.5 text-[7px] font-black uppercase rounded bg-slate-900 text-white shadow-sm transition-all';
                 pctBtn.className = 'px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all';
-                suffix.textContent = 'Ãƒâ€š£';
+                suffix.textContent = '£';
             }
             updateCalculator();
         }
@@ -1797,7 +2049,7 @@
             const feeValue = parseFloat(fElem.value) || 0;
             const rateValue = parseFloat(rElem.value) || 0;
 
-            document.getElementById('valDisplayAmount').textContent = 'Ãƒâ€š£' + principalBase.toLocaleString();
+            document.getElementById('valDisplayAmount').textContent = '£' + principalBase.toLocaleString();
             document.getElementById('valDisplayTerm').textContent = termMonths + ' Months';
 
             if (principalBase <= 0 || termMonths <= 0) return;
@@ -1838,7 +2090,7 @@
             const factorRate = totalPayable / P;
             const dailyRatePct = (monthlyRateDecimal * 12 / 365) * 100;
 
-            const fmt = (val) => 'Ãƒâ€š£' + val.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const fmt = (val) => '£' + val.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             const mapping = {
                 'resMonthly': fmt(M), 'resTotalInterest': fmt(totalInterest), 'resTotalPayable': fmt(totalPayable),
                 'metricYield': yieldPct.toFixed(2) + '%', 'metricFactor': factorRate.toFixed(4), 'metricDaily': dailyRatePct.toFixed(4) + '%',
@@ -2200,180 +2452,205 @@
         <div class="docs-modal-backdrop" onclick="closeDocsDrawer()"></div>
         <div class="docs-panel">
             <!-- Header -->
-            <div style="background:#0f172a;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+            <div
+                style="background:#0f172a;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
                 <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="width:32px;height:32px;border-radius:10px;background:#6366f1;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-vault" style="color:#fff;font-size:13px;"></i></div>
+                    <div
+                        style="width:32px;height:32px;border-radius:10px;background:#6366f1;display:flex;align-items:center;justify-content:center;">
+                        <i class="fa-solid fa-vault" style="color:#fff;font-size:13px;"></i>
+                    </div>
                     <div>
-                        <div style="font-size:11px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.08em;">Document Vault</div>
+                        <div
+                            style="font-size:11px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.08em;">
+                            Document Vault</div>
                         <div id="drawer-doc-count" style="font-size:8px;color:#64748b;margin-top:1px;">Loading...</div>
                     </div>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <a href="../documents/document_vault.html" style="font-size:8px;font-weight:800;color:#6366f1;background:rgba(99,102,241,.15);padding:4px 10px;border-radius:6px;text-decoration:none;text-transform:uppercase;">Full View</a>
-                    <button onclick="closeDocsDrawer()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;"><i class="fa-solid fa-xmark"></i></button>
+                    <a href="../documents/document_vault.html"
+                        style="font-size:8px;font-weight:800;color:#6366f1;background:rgba(99,102,241,.15);padding:4px 10px;border-radius:6px;text-decoration:none;text-transform:uppercase;">Full
+                        View</a>
+                    <button onclick="closeDocsDrawer()"
+                        style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;"><i
+                            class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             <!-- Search + Filter -->
-            <div style="padding:10px 16px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;align-items:center;flex-shrink:0;background:#f8fafc;">
+            <div
+                style="padding:10px 16px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;align-items:center;flex-shrink:0;background:#f8fafc;">
                 <div style="position:relative;flex:1;">
-                    <input type="text" id="drawer-search" placeholder="Search documents..." oninput="renderDrawerDocs()" style="width:100%;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px 6px 28px;font-size:9px;font-weight:600;color:#1e293b;outline:none;">
-                    <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:8px;color:#94a3b8;"></i>
+                    <input type="text" id="drawer-search" placeholder="Search documents..." oninput="renderDrawerDocs()"
+                        style="width:100%;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px 6px 28px;font-size:9px;font-weight:600;color:#1e293b;outline:none;">
+                    <i class="fa-solid fa-magnifying-glass"
+                        style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:8px;color:#94a3b8;"></i>
                 </div>
-                <select id="drawer-cat-filter" onchange="renderDrawerDocs()" style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;font-size:9px;font-weight:700;color:#475569;outline:none;cursor:pointer;">
+                <select id="drawer-cat-filter" onchange="renderDrawerDocs()"
+                    style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;font-size:9px;font-weight:700;color:#475569;outline:none;cursor:pointer;">
                     <option value="">All Categories</option>
-                    <option>Knowledge Base</option><option>Guides</option><option>FAQs</option><option>Products</option><option>Policies</option><option>Scripts</option>
+                    <option>Knowledge Base</option>
+                    <option>Guides</option>
+                    <option>FAQs</option>
+                    <option>Products</option>
+                    <option>Policies</option>
+                    <option>Scripts</option>
                 </select>
             </div>
             <!-- Document List -->
             <div style="flex:1;overflow-y:auto;" id="drawer-doc-list"></div>
         </div>
     </div>
-<script>
-const DRAWER_DOCS = [
-    { id:1, title:"Home Loan Product Guide 2026",    category:"Products",       fileType:"pdf",  fileSize:"3.4 MB", version:"v2.1", uploaded:"2026-04-10", desc:"Comprehensive guide covering all home loan products, rates, and eligibility criteria for 2026." },
-    { id:2, title:"AML & KYC Compliance Policy",     category:"Policies",       fileType:"pdf",  fileSize:"1.2 MB", version:"v4.0", uploaded:"2026-04-08", desc:"Updated AML and KYC policy aligned with AUSTRAC 2026 guidelines." },
-    { id:3, title:"Broker Onboarding FAQ",           category:"FAQs",           fileType:"docx", fileSize:"420 KB", version:"v1.3", uploaded:"2026-04-12", desc:"Frequently asked questions for new brokers joining the panel." },
-    { id:4, title:"Cold Call Script â€” Refinance",    category:"Scripts",        fileType:"docx", fileSize:"190 KB", version:"v1.0", uploaded:"2026-04-14", desc:"Structured outbound call script for refinance lead conversations." },
-    { id:5, title:"Lender Panel Overview Guide",     category:"Guides",         fileType:"pdf",  fileSize:"5.1 MB", version:"v3.2", uploaded:"2026-04-05", desc:"Full overview of all lenders including products, BDMs, and turnaround times." },
-    { id:6, title:"CRM Usage Knowledge Base",        category:"Knowledge Base", fileType:"pdf",  fileSize:"2.8 MB", version:"v1.1", uploaded:"2026-04-15", desc:"Internal knowledge base for using the CRM platform." },
-    { id:7, title:"Commercial Loan Product Sheet",   category:"Products",       fileType:"xlsx", fileSize:"680 KB", version:"v1.0", uploaded:"2026-04-13", desc:"Rate and product comparison sheet for commercial lending solutions." },
-    { id:8, title:"Privacy Policy 2026",             category:"Policies",       fileType:"pdf",  fileSize:"890 KB", version:"v2.9", uploaded:"2026-03-01", desc:"Client privacy and data handling policy." },
-    { id:9, title:"Settlement Checklist Guide",      category:"Guides",         fileType:"docx", fileSize:"310 KB", version:"v2.0", uploaded:"2026-04-07", desc:"Step-by-step settlement checklist for brokers to share with clients." },
-    { id:10,title:"Objection Handling Scripts",      category:"Scripts",        fileType:"docx", fileSize:"240 KB", version:"v1.2", uploaded:"2026-04-11", desc:"Common objection handling scripts for tele agents." },
-];
-const FILE_ICONS_D = {
-    pdf:  { icon:"fa-solid fa-file-pdf",        bg:"#fee2e2", color:"#dc2626" },
-    docx: { icon:"fa-solid fa-file-word",       bg:"#dbeafe", color:"#1d4ed8" },
-    xlsx: { icon:"fa-solid fa-file-excel",      bg:"#d1fae5", color:"#059669" },
-    png:  { icon:"fa-solid fa-file-image",      bg:"#f3e8ff", color:"#7e22ce" },
-    pptx: { icon:"fa-solid fa-file-powerpoint", bg:"#fff7ed", color:"#c2410c" },
-};
-const CAT_COLORS = {
-    "Knowledge Base":"#1d4ed8","Guides":"#7e22ce","FAQs":"#b45309",
-    "Products":"#065f46","Policies":"#b91c1c","Scripts":"#334155"
-};
-function openDocsDrawer(){
-    document.getElementById('docsModal').classList.add('open');
-    renderDrawerDocs();
-}
-function closeDocsDrawer(){ const m=document.getElementById('docsModal'); m.classList.remove('open'); m.style.display=''; }
-function renderDrawerDocs(){
-    const q=(document.getElementById('drawer-search').value||'').toLowerCase();
-    const cat=document.getElementById('drawer-cat-filter').value;
-    const filtered=DRAWER_DOCS.filter(d=>{
-        if(cat && d.category!==cat) return false;
-        if(q && !d.title.toLowerCase().includes(q) && !d.category.toLowerCase().includes(q)) return false;
-        return true;
-    });
-    document.getElementById('drawer-doc-count').textContent=filtered.length+' document'+(filtered.length!==1?'s':'');
-    const list=document.getElementById('drawer-doc-list');
-    if(!filtered.length){
-        list.innerHTML='<div style="padding:40px;text-align:center;"><i class="fa-solid fa-folder-open" style="font-size:28px;color:#e2e8f0;display:block;margin-bottom:10px;"></i><div style="font-size:10px;font-weight:700;color:#94a3b8;">No documents found</div></div>';
-        return;
-    }
-    list.innerHTML=filtered.map(d=>{
-        const fi=FILE_ICONS_D[d.fileType]||{icon:'fa-solid fa-file',bg:'#f1f5f9',color:'#475569'};
-        const cc=CAT_COLORS[d.category]||'#475569';
-        const date=new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
-        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid #f8fafc;transition:background .1s;cursor:default;" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'#fff\'">'
-            +'<div style="width:36px;height:36px;border-radius:10px;background:'+fi.bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="'+fi.icon+'" style="color:'+fi.color+';font-size:14px;"></i></div>'
-            +'<div style="flex:1;min-width:0;">'
-            +'<div style="font-size:10px;font-weight:800;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+d.title+'</div>'
-            +'<div style="font-size:8px;color:#64748b;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+d.desc+'</div>'
-            +'<div style="display:flex;align-items:center;gap:6px;margin-top:5px;">'
-            +'<span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:'+cc+'22;color:'+cc+';">'+d.category+'</span>'
-            +'<span style="font-size:7px;font-weight:700;color:#94a3b8;">'+d.version+'</span>'
-            +'<span style="font-size:7px;font-weight:700;color:#94a3b8;">'+d.fileSize+'</span>'
-            +'<span style="font-size:7px;font-weight:700;color:#94a3b8;margin-left:auto;">'+date+'</span>'
-            +'</div>'
-            +'</div>'
-            +'<div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">'
-            +'<button title="Download" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-download" style="font-size:9px;"></i></button>'
-            +'</div>'
-            +'</div>';
-    }).join('');
-}
+    <script>
+        const DRAWER_DOCS = [
+            { id: 1, title: "Home Loan Product Guide 2026", category: "Products", fileType: "pdf", fileSize: "3.4 MB", version: "v2.1", uploaded: "2026-04-10", desc: "Comprehensive guide covering all home loan products, rates, and eligibility criteria for 2026." },
+            { id: 2, title: "AML & KYC Compliance Policy", category: "Policies", fileType: "pdf", fileSize: "1.2 MB", version: "v4.0", uploaded: "2026-04-08", desc: "Updated AML and KYC policy aligned with AUSTRAC 2026 guidelines." },
+            { id: 3, title: "Broker Onboarding FAQ", category: "FAQs", fileType: "docx", fileSize: "420 KB", version: "v1.3", uploaded: "2026-04-12", desc: "Frequently asked questions for new brokers joining the panel." },
+            { id: 4, title: "Cold Call Script â€” Refinance", category: "Scripts", fileType: "docx", fileSize: "190 KB", version: "v1.0", uploaded: "2026-04-14", desc: "Structured outbound call script for refinance lead conversations." },
+            { id: 5, title: "Lender Panel Overview Guide", category: "Guides", fileType: "pdf", fileSize: "5.1 MB", version: "v3.2", uploaded: "2026-04-05", desc: "Full overview of all lenders including products, BDMs, and turnaround times." },
+            { id: 6, title: "CRM Usage Knowledge Base", category: "Knowledge Base", fileType: "pdf", fileSize: "2.8 MB", version: "v1.1", uploaded: "2026-04-15", desc: "Internal knowledge base for using the CRM platform." },
+            { id: 7, title: "Commercial Loan Product Sheet", category: "Products", fileType: "xlsx", fileSize: "680 KB", version: "v1.0", uploaded: "2026-04-13", desc: "Rate and product comparison sheet for commercial lending solutions." },
+            { id: 8, title: "Privacy Policy 2026", category: "Policies", fileType: "pdf", fileSize: "890 KB", version: "v2.9", uploaded: "2026-03-01", desc: "Client privacy and data handling policy." },
+            { id: 9, title: "Settlement Checklist Guide", category: "Guides", fileType: "docx", fileSize: "310 KB", version: "v2.0", uploaded: "2026-04-07", desc: "Step-by-step settlement checklist for brokers to share with clients." },
+            { id: 10, title: "Objection Handling Scripts", category: "Scripts", fileType: "docx", fileSize: "240 KB", version: "v1.2", uploaded: "2026-04-11", desc: "Common objection handling scripts for tele agents." },
+        ];
+        const FILE_ICONS_D = {
+            pdf: { icon: "fa-solid fa-file-pdf", bg: "#fee2e2", color: "#dc2626" },
+            docx: { icon: "fa-solid fa-file-word", bg: "#dbeafe", color: "#1d4ed8" },
+            xlsx: { icon: "fa-solid fa-file-excel", bg: "#d1fae5", color: "#059669" },
+            png: { icon: "fa-solid fa-file-image", bg: "#f3e8ff", color: "#7e22ce" },
+            pptx: { icon: "fa-solid fa-file-powerpoint", bg: "#fff7ed", color: "#c2410c" },
+        };
+        const CAT_COLORS = {
+            "Knowledge Base": "#1d4ed8", "Guides": "#7e22ce", "FAQs": "#b45309",
+            "Products": "#065f46", "Policies": "#b91c1c", "Scripts": "#334155"
+        };
+        function openDocsDrawer() {
+            document.getElementById('docsModal').classList.add('open');
+            renderDrawerDocs();
+        }
+        function closeDocsDrawer() { const m = document.getElementById('docsModal'); m.classList.remove('open'); m.style.display = ''; }
+        function renderDrawerDocs() {
+            const q = (document.getElementById('drawer-search').value || '').toLowerCase();
+            const cat = document.getElementById('drawer-cat-filter').value;
+            const filtered = DRAWER_DOCS.filter(d => {
+                if (cat && d.category !== cat) return false;
+                if (q && !d.title.toLowerCase().includes(q) && !d.category.toLowerCase().includes(q)) return false;
+                return true;
+            });
+            document.getElementById('drawer-doc-count').textContent = filtered.length + ' document' + (filtered.length !== 1 ? 's' : '');
+            const list = document.getElementById('drawer-doc-list');
+            if (!filtered.length) {
+                list.innerHTML = '<div style="padding:40px;text-align:center;"><i class="fa-solid fa-folder-open" style="font-size:28px;color:#e2e8f0;display:block;margin-bottom:10px;"></i><div style="font-size:10px;font-weight:700;color:#94a3b8;">No documents found</div></div>';
+                return;
+            }
+            list.innerHTML = filtered.map(d => {
+                const fi = FILE_ICONS_D[d.fileType] || { icon: 'fa-solid fa-file', bg: '#f1f5f9', color: '#475569' };
+                const cc = CAT_COLORS[d.category] || '#475569';
+                const date = new Date(d.uploaded + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' });
+                return '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid #f8fafc;transition:background .1s;cursor:default;" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'#fff\'">'
+                    + '<div style="width:36px;height:36px;border-radius:10px;background:' + fi.bg + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="' + fi.icon + '" style="color:' + fi.color + ';font-size:14px;"></i></div>'
+                    + '<div style="flex:1;min-width:0;">'
+                    + '<div style="font-size:10px;font-weight:800;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + d.title + '</div>'
+                    + '<div style="font-size:8px;color:#64748b;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + d.desc + '</div>'
+                    + '<div style="display:flex;align-items:center;gap:6px;margin-top:5px;">'
+                    + '<span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:' + cc + '22;color:' + cc + ';">' + d.category + '</span>'
+                    + '<span style="font-size:7px;font-weight:700;color:#94a3b8;">' + d.version + '</span>'
+                    + '<span style="font-size:7px;font-weight:700;color:#94a3b8;">' + d.fileSize + '</span>'
+                    + '<span style="font-size:7px;font-weight:700;color:#94a3b8;margin-left:auto;">' + date + '</span>'
+                    + '</div>'
+                    + '</div>'
+                    + '<div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">'
+                    + '<button title="Download" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-download" style="font-size:9px;"></i></button>'
+                    + '</div>'
+                    + '</div>';
+            }).join('');
+        }
 
 
 
-function openDocDetail(id){
-    const d=DRAWER_DOCS.find(x=>x.id===id);
-    if(!d)return;
-    const fi=FILE_ICONS_D[d.fileType]||{icon:'fa-solid fa-file',bg:'#f1f5f9',color:'#475569'};
-    const cc=CAT_COLORS[d.category]||'#475569';
-    const date=new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
-    document.getElementById('ddm-header').style.background=cc;
-    document.getElementById('ddm-icon').style.background='rgba(255,255,255,.15)';
-    document.getElementById('ddm-icon').innerHTML='<i class="'+fi.icon+'" style="color:#fff;font-size:18px;"></i>';
-    document.getElementById('ddm-title').textContent=d.title;
-    document.getElementById('ddm-cat').textContent=d.category;
-    document.getElementById('ddm-desc').textContent=d.desc;
-    document.getElementById('ddm-type').textContent=d.fileType.toUpperCase();
-    document.getElementById('ddm-size').textContent=d.fileSize;
-    document.getElementById('ddm-version').textContent=d.version;
-    document.getElementById('ddm-date').textContent=date;
-    const _m=document.getElementById('docDetailModal');
-    document.body.appendChild(_m);
-    _m.style.display='flex';
-}
-function closeDocDetail(){
-    document.getElementById('docDetailModal').style.display='none';
-}</script>
+        function openDocDetail(id) {
+            const d = DRAWER_DOCS.find(x => x.id === id);
+            if (!d) return;
+            const fi = FILE_ICONS_D[d.fileType] || { icon: 'fa-solid fa-file', bg: '#f1f5f9', color: '#475569' };
+            const cc = CAT_COLORS[d.category] || '#475569';
+            const date = new Date(d.uploaded + 'T00:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+            document.getElementById('ddm-header').style.background = cc;
+            document.getElementById('ddm-icon').style.background = 'rgba(255,255,255,.15)';
+            document.getElementById('ddm-icon').innerHTML = '<i class="' + fi.icon + '" style="color:#fff;font-size:18px;"></i>';
+            document.getElementById('ddm-title').textContent = d.title;
+            document.getElementById('ddm-cat').textContent = d.category;
+            document.getElementById('ddm-desc').textContent = d.desc;
+            document.getElementById('ddm-type').textContent = d.fileType.toUpperCase();
+            document.getElementById('ddm-size').textContent = d.fileSize;
+            document.getElementById('ddm-version').textContent = d.version;
+            document.getElementById('ddm-date').textContent = date;
+            const _m = document.getElementById('docDetailModal');
+            document.body.appendChild(_m);
+            _m.style.display = 'flex';
+        }
+        function closeDocDetail() {
+            document.getElementById('docDetailModal').style.display = 'none';
+        }</script>
 
 
-<!-- Doc Detail Modal -->
-<div id="docDetailModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeDocDetail();">
-    <div style="background:#fff;border-radius:24px;width:520px;max-width:95vw;box-shadow:0 25px 60px rgba(0,0,0,0.2);overflow:hidden;">
-        <div id="ddm-header" style="padding:18px 24px;display:flex;align-items:center;gap:12px;">
-            <div id="ddm-icon" style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"></div>
-            <div style="flex:1;min-width:0;">
-                <div id="ddm-title" style="font-size:13px;font-weight:800;color:#fff;line-height:1.3;"></div>
-                <div id="ddm-cat" style="font-size:9px;font-weight:700;color:rgba(255,255,255,.6);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;"></div>
+    <!-- Doc Detail Modal -->
+    <div id="docDetailModal"
+        style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;"
+        onclick="if(event.target===this)closeDocDetail();">
+        <div
+            style="background:#fff;border-radius:24px;width:520px;max-width:95vw;box-shadow:0 25px 60px rgba(0,0,0,0.2);overflow:hidden;">
+            <div id="ddm-header" style="padding:18px 24px;display:flex;align-items:center;gap:12px;">
+                <div id="ddm-icon"
+                    style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <div id="ddm-title" style="font-size:13px;font-weight:800;color:#fff;line-height:1.3;"></div>
+                    <div id="ddm-cat"
+                        style="font-size:9px;font-weight:700;color:rgba(255,255,255,.6);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;">
+                    </div>
+                </div>
+                <button onclick="closeDocDetail()"
+                    style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
-            <button onclick="closeDocDetail()" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
-            <div style="background:#f8fafc;border-radius:12px;padding:14px 16px;">
-                <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Description</div>
-                <div id="ddm-desc" style="font-size:11px;font-weight:500;color:#334155;line-height:1.6;"></div>
+            <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
+                <div style="background:#f8fafc;border-radius:12px;padding:14px 16px;">
+                    <div
+                        style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">
+                        Description</div>
+                    <div id="ddm-desc" style="font-size:11px;font-weight:500;color:#334155;line-height:1.6;"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
+                        <div
+                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">
+                            File Type</div>
+                        <div id="ddm-type"
+                            style="font-size:12px;font-weight:800;color:#0f172a;text-transform:uppercase;"></div>
+                    </div>
+                    <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
+                        <div
+                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">
+                            File Size</div>
+                        <div id="ddm-size" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
+                    </div>
+                    <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
+                        <div
+                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">
+                            Version</div>
+                        <div id="ddm-version" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
+                    </div>
+                    <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
+                        <div
+                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">
+                            Uploaded</div>
+                        <div id="ddm-date" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
+                    </div>
+                </div>
+                <button onclick="closeDocDetail()"
+                    style="width:100%;padding:11px;border-radius:12px;background:#f1f5f9;border:none;font-size:10px;font-weight:800;color:#64748b;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;">Close</button>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
-                    <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">File Type</div>
-                    <div id="ddm-type" style="font-size:12px;font-weight:800;color:#0f172a;text-transform:uppercase;"></div>
-                </div>
-                <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
-                    <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">File Size</div>
-                    <div id="ddm-size" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
-                </div>
-                <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
-                    <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">Version</div>
-                    <div id="ddm-version" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
-                </div>
-                <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
-                    <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">Uploaded</div>
-                    <div id="ddm-date" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
-                </div>
-            </div>
-            <button onclick="closeDocDetail()" style="width:100%;padding:11px;border-radius:12px;background:#f1f5f9;border:none;font-size:10px;font-weight:800;color:#64748b;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;">Close</button>
         </div>
     </div>
-</div></body>
+</body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
