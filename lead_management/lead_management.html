@@ -557,6 +557,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         class="h-7 px-3 bg-gray-900 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-black transition-all">Edit
                         Lead</button>
                     <button id="save-btn" onclick="saveLead()"
+                        style="display: none;"
                         class="h-7 px-3 bg-amber-600 text-white text-[8px] font-bold rounded-lg uppercase tracking-widest hover:bg-amber-700 transition-all">Save
                         Changes</button>
                     <div id="panel-dot" class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
@@ -930,12 +931,31 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         <td class="px-3 py-2"><span class="status-badge ${getStatusBadgeClass(lead.leadStatus)}">${lead.leadStatus}</span></td>
                         <td class="px-2 py-2 text-center"><i class="fa-solid fa-chevron-right text-[10px] text-gray-300 row-chevron ${open ? 'open' : ''}"></i></td>
                     </tr>
-                    ${open ? `<tr class="detail-expand-row" id="detail-${key}"><td colspan="5"><div class="detail-expand-inner px-6 py-4"><div class="grid grid-cols-4 gap-4"><div><p class="label-text mb-2"><i class="fa-solid fa-building mr-1"></i>Company</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Business</p><p class="text-[10px] font-semibold text-gray-800">${lead.companyName}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Job Title</p><p class="text-[10px] font-semibold text-gray-800">${lead.jobTitle || 'N/A'}</p></div></div></div><div><p class="label-text mb-2"><i class="fa-solid fa-address-card mr-1"></i>Contact</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Email</p><p class="text-[9px] font-semibold text-blue-600 break-all">${lead.emailAddress}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Phone</p><p class="text-[10px] font-semibold text-gray-800">${lead.phoneNumber}</p></div></div></div><div><p class="label-text mb-2"><i class="fa-solid fa-sack-dollar mr-1"></i>Funding</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Amount</p><p class="text-[10px] font-semibold text-gray-800">${lead.loanAmount}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Purpose</p><p class="text-[9px] font-semibold text-gray-700">${lead.loanPurpose || 'N/A'}</p></div></div></div><div class="flex flex-col justify-between"><div><p class="label-text mb-2"><i class="fa-solid fa-tags mr-1"></i>Summary</p><div class="flex flex-wrap gap-1"><span class="summary-chip">${lead.leadStatus}</span><span class="summary-chip">${lead.companyBank || 'No Bank'}</span><span class="summary-chip">${lead.homeOwner || 'Address Pending'}</span></div>${lead.additionalComments ? `<p class="text-[8px] text-gray-400 mt-2 leading-relaxed">${lead.additionalComments}</p>` : ''}</div><div class="flex gap-2 mt-3"><button onclick="event.stopPropagation();selectLead('${key}', true)" class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900 border border-gray-900 text-white text-[8px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all shadow-md active:scale-95"><i class="fa-solid fa-pen text-[7px]"></i>Manage Lead</button></div><p class="text-[7px] text-gray-300 font-mono mt-1">Created ${lead.createdAt || 'N/A'}</p></div></div></div></td></tr>` : ''}
+                    ${open ? `<tr class="detail-expand-row" id="detail-${key}"><td colspan="5"><div class="detail-expand-inner px-6 py-4"><div class="grid grid-cols-4 gap-4"><div><p class="label-text mb-2"><i class="fa-solid fa-building mr-1"></i>Company</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Business</p><p class="text-[10px] font-semibold text-gray-800">${lead.companyName}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Job Title</p><p class="text-[10px] font-semibold text-gray-800">${lead.jobTitle || 'N/A'}</p></div></div></div><div><p class="label-text mb-2"><i class="fa-solid fa-address-card mr-1"></i>Contact</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Email</p><p class="text-[9px] font-semibold text-blue-600 break-all">${lead.emailAddress}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Phone</p><p class="text-[10px] font-semibold text-gray-800">${lead.phoneNumber}</p></div></div></div><div><p class="label-text mb-2"><i class="fa-solid fa-sack-dollar mr-1"></i>Funding</p><div class="space-y-1.5"><div><p class="text-[7px] text-gray-400 uppercase font-bold">Amount</p><p class="text-[10px] font-semibold text-gray-800">${lead.loanAmount}</p></div><div><p class="text-[7px] text-gray-400 uppercase font-bold">Purpose</p><p class="text-[9px] font-semibold text-gray-700">${lead.loanPurpose || 'N/A'}</p></div></div></div><div class="flex flex-col justify-between"><div><p class="label-text mb-2"><i class="fa-solid fa-tags mr-1"></i>Summary</p><div class="flex flex-wrap gap-1"><span class="summary-chip">${lead.leadStatus}</span><span class="summary-chip">${lead.companyBank || 'No Bank'}</span><span class="summary-chip">${lead.homeOwner || 'Address Pending'}</span></div>${lead.additionalComments ? `<p class="text-[8px] text-gray-400 mt-2 leading-relaxed">${lead.additionalComments}</p>` : ''}</div><div class="flex gap-2 mt-3"></div><p class="text-[7px] text-gray-300 font-mono mt-1">Created ${lead.createdAt || 'N/A'}</p></div></div></div></td></tr>` : ''}
                 `;
             }).join('');
         }
 
-        function toggleLeadRow(id) { expandedLeadId = expandedLeadId === id ? null : id; renderLeadTable(); }
+        function toggleLeadRow(id) { 
+            const isClosing = expandedLeadId === id;
+            expandedLeadId = isClosing ? null : id; 
+            renderLeadTable(); 
+            if (!isClosing) {
+                selectLead(id);
+                // Smooth scroll to the top of detail panel for better visibility
+                document.getElementById('lead-form-scroll-outer').scrollTo({ top: 0, behavior: 'smooth' });
+                // Optional: Trigger a subtle fade-in animation
+                const panel = document.getElementById('lead-form-container');
+                panel.style.opacity = '0';
+                panel.style.transform = 'translateY(5px)';
+                panel.style.transition = 'none';
+                setTimeout(() => {
+                    panel.style.transition = 'all 0.3s ease-out';
+                    panel.style.opacity = '1';
+                    panel.style.transform = 'translateY(0)';
+                }, 10);
+            }
+        }
         function selectLead(id, startInEditMode = false) {
             const lead = leadsDB[id];
             if (!lead || !lead.fullName) return;
@@ -974,14 +994,19 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         function applyEditModeUI() {
             const inputs = document.querySelectorAll('#lead-form-container input, #lead-form-container select, #lead-form-container textarea');
             const btn = document.getElementById('edit-toggle-btn');
+            const saveBtn = document.getElementById('save-btn');
             const followup = document.getElementById('followup-section');
+            
             inputs.forEach(input => {
                 input.disabled = !isEditMode;
                 input.classList.toggle('bg-white', isEditMode);
             });
+
             btn.innerText = isEditMode ? 'Cancel Edit' : 'Edit Lead';
             btn.classList.toggle('bg-red-500', isEditMode);
             btn.classList.toggle('bg-gray-900', !isEditMode);
+            
+            saveBtn.style.display = isEditMode ? 'block' : 'none';
             followup.classList.toggle('hidden', !isEditMode);
         }
 
