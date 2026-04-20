@@ -633,6 +633,22 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                 </div>
             </div>
 
+            <!-- Detail Tab Navigation -->
+            <div class="detail-tab-nav">
+                <button class="detail-tab active" onclick="switchLeadTab('details')" id="tab-btn-details">
+                    <i class="fa-solid fa-address-card"></i> Details
+                </button>
+                <button class="detail-tab" onclick="switchLeadTab('tasks')" id="tab-btn-tasks">
+                    <i class="fa-solid fa-list-check"></i> Tasks
+                </button>
+                <button class="detail-tab" onclick="switchLeadTab('ai')" id="tab-btn-ai">
+                    <i class="fa-solid fa-robot"></i> AI Agent
+                </button>
+                <button class="detail-tab" onclick="switchLeadTab('notes')" id="tab-btn-notes">
+                    <i class="fa-solid fa-note-sticky"></i> Notes
+                </button>
+            </div>
+
             <div id="lead-form-scroll-outer" class="flex-1 overflow-y-auto custom-scrollbar"
                 style="scrollbar-width:none;-ms-overflow-style:none;background:#fcfcfd;">
                 <style>
@@ -1426,7 +1442,36 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             alert('Lead Saved Successfully');
         }
 
-        window.onload = () => { updateLeadStats(); renderLeadTable(); selectLead('L-1004'); };
+        window.onload = () => {
+            updateLeadStats();
+            renderLeadTable();
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('action') === 'new') {
+                selectLead('L-1004');
+                setTimeout(() => createNewLead(), 100);
+            } else {
+                selectLead('L-1004');
+            }
+        };
+
+        function switchLeadTab(tab) {
+            const tabs = ['details', 'tasks', 'ai', 'notes'];
+            tabs.forEach(t => {
+                const panel = document.getElementById(t === 'details' ? 'lead-form-container' : 'lead-tab-' + t);
+                const btn = document.getElementById('tab-btn-' + t);
+                if (panel) panel.classList.toggle('hidden', t !== tab);
+                if (btn) btn.classList.toggle('active', t === tab);
+            });
+        }
+
+        function toggleSection(bodyId, chevronId) {
+            const body = document.getElementById(bodyId);
+            const chevron = document.getElementById(chevronId);
+            if (!body) return;
+            const isOpen = body.style.display !== 'none';
+            body.style.display = isOpen ? 'none' : '';
+            if (chevron) chevron.classList.toggle('open', !isOpen);
+        }
 
         function toggleExistingLoanSection(value) {
             const section = document.getElementById('existing-loan-details');
