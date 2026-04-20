@@ -119,6 +119,100 @@
         .resize-btn { width:22px; height:22px; border-radius:6px; background:#f1f5f9; border:none; color:#64748b; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
         .resize-btn:hover { background:#0f172a; color:#fff; }
         @keyframes expandDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+        /* AI Chatbot Widget Styles */
+        .ai-fab {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 56px;
+            height: 56px;
+            background: #2447d7;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 10px 25px rgba(36, 71, 215, 0.4);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .ai-fab:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(36, 71, 215, 0.5);
+        }
+
+        .ai-widget {
+            position: fixed;
+            bottom: 6rem;
+            right: 1.5rem;
+            width: 320px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 999;
+            transform-origin: bottom right;
+        }
+
+        .ai-widget.active {
+            display: flex;
+            animation: widgetReveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes widgetReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .ai-header {
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .ai-option {
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .ai-option:last-child {
+            border-bottom: none;
+        }
+
+        .ai-option:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateX(4px);
+        }
+
+        .ai-option .icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body>
@@ -748,7 +842,34 @@ function openDocDetail(id){
 }
 function closeDocDetail(){
     document.getElementById('docDetailModal').style.display='none';
-}</script>
+}
+
+function toggleAIWidget() {
+    const widget = document.getElementById('aiWidget');
+    widget.classList.toggle('active');
+
+    // Subtle FAB rotation or icon change
+    const icon = document.querySelector('.ai-fab i');
+    if (widget.classList.contains('active')) {
+        icon.classList.remove('fa-robot');
+        icon.classList.add('fa-xmark');
+    } else {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-robot');
+    }
+}
+
+// Close widget when clicking outside
+document.addEventListener('click', (e) => {
+    const widget = document.getElementById('aiWidget');
+    const fab = document.querySelector('.ai-fab');
+    if (widget && fab) {
+        if (!widget.contains(e.target) && !fab.contains(e.target) && widget.classList.contains('active')) {
+            toggleAIWidget();
+        }
+    }
+});
+</script>
 
 
 <!-- Doc Detail Modal -->
@@ -788,7 +909,44 @@ function closeDocDetail(){
             <button onclick="closeDocDetail()" style="width:100%;padding:11px;border-radius:12px;background:#f1f5f9;border:none;font-size:10px;font-weight:800;color:#64748b;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;">Close</button>
         </div>
     </div>
-</div></body>
+</div>
+    <!-- AI Chatbot FAB -->
+    <div class="ai-fab" onclick="toggleAIWidget()">
+        <i class="fa-solid fa-robot text-2xl"></i>
+    </div>
+
+    <!-- AI Core Assistant Widget -->
+    <div id="aiWidget" class="ai-widget glass-card"
+        style="width: 260px; overflow: hidden; border: 1px solid rgba(255,255,255,0.4);">
+        <div class="ai-header">
+            <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">AI Core Assistant</h3>
+        </div>
+
+        <div class="py-1">
+            <!-- Product Info Option -->
+            <div class="ai-option">
+                <div class="icon-box bg-indigo-600 text-white">
+                    <i class="fa-solid fa-suitcase text-sm"></i>
+                </div>
+                <div>
+                    <h4 class="text-[12px] font-black text-slate-900 leading-tight">Product Info</h4>
+                    <p class="text-[9px] font-bold text-slate-400 mt-0.5">Lender & Data Intel</p>
+                </div>
+            </div>
+
+            <!-- Summarizing Option -->
+            <div class="ai-option">
+                <div class="icon-box bg-purple-600 text-white">
+                    <i class="fa-solid fa-clipboard-list text-sm"></i>
+                </div>
+                <div>
+                    <h4 class="text-[12px] font-black text-slate-900 leading-tight">Summarizing</h4>
+                    <p class="text-[9px] font-bold text-slate-400 mt-0.5">Lead Analysis</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
 
 
