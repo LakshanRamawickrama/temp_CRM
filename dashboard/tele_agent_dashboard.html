@@ -47,11 +47,14 @@
         .card-wide { grid-column:span 2 !important; }
         @media (max-width:768px) { .card-wide { grid-column:span 1; } }
         /* Design Mode */
-        .design-mode .glass-card { border:1px dashed #6366f1 !important; cursor:grab !important; position:relative; }
-        .design-mode .glass-card:active { cursor:grabbing !important; }
-        .design-mode .glass-card::after { content:'DRAG TO REORDER'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(99,102,241,.9); color:white; font-size:8px; font-weight:800; padding:6px 12px; border-radius:99px; pointer-events:none; opacity:0; transition:opacity .2s; z-index:10; }
-        .design-mode .glass-card:hover::after { opacity:1; }
+        .module-grid.design-mode .glass-card { border:1px dashed #6366f1 !important; cursor:grab !important; position:relative; }
+        .module-grid.design-mode .glass-card:active { cursor:grabbing !important; }
+        .module-grid.design-mode .glass-card::after { content:'DRAG TO REORDER'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(99,102,241,.9); color:white; font-size:8px; font-weight:800; padding:6px 12px; border-radius:99px; pointer-events:none; opacity:0; transition:opacity .2s; z-index:10; }
+        .module-grid.design-mode .glass-card:hover::after { opacity:1; }
         .sortable-ghost { opacity:0.3; background:#eef2ff !important; border:2px dashed #6366f1 !important; }
+        .resize-btn { display:none; width:20px; height:20px; align-items:center; justify-content:center; border-radius:6px; background:#f8fafc; color:#64748b; font-size:8px; border:1px solid #e2e8f0; cursor:pointer; transition:all 0.2s; flex-shrink:0; }
+        .resize-btn:hover { background:#2447d7; color:#fff; border-color:#2447d7; }
+        .module-grid.design-mode .resize-btn { display:flex; }
         /* Notification Bell */
         .notif-bell-wrap { position:relative; display:flex; align-items:center; }
         .notif-bell-btn { width:40px; height:40px; border-radius:12px; background:#fff; border:1px solid #f1f5f9; box-shadow:0 4px 20px rgba(0,0,0,0.03); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; position:relative; flex-shrink:0; }
@@ -228,6 +231,7 @@
         .day-evt-task{border-left:3px solid #6366f1;}
         .day-evt-followup{border-left:3px solid #f59e0b;}
         .day-evt-done{opacity:0.48;}
+        .day-evt-overdue{border-left:3px solid #ef4444;}
         .dd-tab-btn{flex:1;padding:9px 6px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:none;border:none;border-bottom:2px solid transparent;color:#94a3b8;cursor:pointer;transition:all .15s;}
         .dd-tab-btn.active{color:#6366f1;border-bottom-color:#6366f1;}
         .cal-day{height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border-radius:7px;position:relative;cursor:pointer;transition:all .15s;color:#1e293b;}
@@ -312,7 +316,7 @@
     <div class="flex-1 overflow-y-auto custom-scrollbar">
         <div class="module-grid">
             <!-- My Leads Card (Wide) -->
-            <div class="glass-card flex flex-col card-wide" style="height:320px;" data-id="my-leads">
+            <div class="glass-card flex flex-col card-wide" style="height:280px;" data-id="my-leads">
                 <div style="background:#0f172a;border-radius:20px 20px 0 0;padding:0 16px;display:flex;align-items:center;gap:10px;min-height:46px;flex-shrink:0;">
                     <i class="fa-solid fa-user-group" style="color:rgba(255,255,255,.4);font-size:13px;"></i>
                     <span style="font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.12em;">My Leads</span>
@@ -408,7 +412,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
             <!-- Operational Calendar -->
             <div class="glass-card flex flex-col" style="height:280px;" data-id="calendar">
@@ -611,6 +614,7 @@ function toggleDesignMode() {
         iconBox.classList.replace('bg-slate-50', 'bg-indigo-600');
         iconBox.classList.replace('text-indigo-500', 'text-white');
         label.textContent = 'SAVE LAYOUT';
+        injectResizeButtons();
         sortableInstance = new Sortable(grid, { animation: 150, ghostClass: 'sortable-ghost', onEnd: saveDashboardLayout });
     } else {
         grid.classList.remove('design-mode');
@@ -642,7 +646,29 @@ function loadDashboardLayout() {
     });
 }
 
-window.addEventListener('load', () => { loadDashboardLayout(); updateCalculator(); });
+function injectResizeButtons() {
+    const modules = document.querySelectorAll('.module-grid > [data-id]');
+    modules.forEach(module => {
+        if (module.querySelector('.resize-btn')) return;
+        const header = module.querySelector('.border-b') || module.firstElementChild;
+        if (!header) return;
+        const titleWrapper = header.querySelector('.flex.items-center') || header;
+        const btn = document.createElement('button');
+        btn.className = 'resize-btn mr-2';
+        btn.title = 'Toggle Wide View';
+        btn.innerHTML = '<i class="fa-solid fa-arrows-left-right"></i>';
+        btn.onclick = (e) => { e.stopPropagation(); toggleCardSize(btn); };
+        titleWrapper.prepend(btn);
+    });
+}
+
+function toggleCardSize(btn) {
+    const card = btn.closest('[data-id]');
+    card.classList.toggle('card-wide');
+    saveDashboardLayout();
+}
+
+window.addEventListener('load', () => { loadDashboardLayout(); injectResizeButtons(); updateCalculator(); });
 renderTable(); renderTasks(); renderNotes(); renderNotifs();
 
 function toggleAIWidget() {
@@ -996,9 +1022,10 @@ window.addEventListener('load', () => { updateCalculator(); });
             </button>
         </div>
         <div style="display:flex;border-bottom:2px solid #f1f5f9;background:#f8fafc;flex-shrink:0;">
-            <button id="dd-tab-all" class="dd-tab-btn active" onclick="switchDayTab('all')">All Activities</button>
-            <button id="dd-tab-task" class="dd-tab-btn" onclick="switchDayTab('task')"><i class="fa-solid fa-list-check" style="margin-right:4px;font-size:7px;"></i>Tasks</button>
-            <button id="dd-tab-followup" class="dd-tab-btn" onclick="switchDayTab('followup')"><i class="fa-solid fa-phone-volume" style="margin-right:4px;font-size:7px;"></i>Follow-ups</button>
+            <button id="dd-tab-todo" class="dd-tab-btn active" onclick="switchDayTab('todo')">To Do</button>
+            <button id="dd-tab-inprogress" class="dd-tab-btn" onclick="switchDayTab('inprogress')">In Progress</button>
+            <button id="dd-tab-overdue" class="dd-tab-btn" onclick="switchDayTab('overdue')">Overdue</button>
+            <button id="dd-tab-complete" class="dd-tab-btn" onclick="switchDayTab('complete')">Complete</button>
         </div>
         <div id="ddEventsList" class="custom-scrollbar" style="flex:1;overflow-y:auto;background:#fafbfc;"></div>
         <div style="padding:20px 32px;border-top:1px solid #f1f5f9;background:#fff;flex-shrink:0;">
@@ -1065,48 +1092,126 @@ function openDayDrawer(year,month,day){
     const evts=CAL_EVENTS[_ddKey]||[];
     const tC=evts.filter(e=>e.type==='task').length,fC=evts.filter(e=>e.type==='followup').length;
     document.getElementById('ddMeta').textContent=tC+' task'+(tC!==1?'s':'')+' · '+fC+' follow-up'+(fC!==1?'s':'');
-    _ddFilter='all';
-    ['all','task','followup'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f==='all'?' active':'');});
+    _ddFilter='todo';
+    ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f==='todo'?' active':'');});
     renderDayEvents();document.getElementById('dayDrawer').classList.add('open');
 }
 function closeDayDrawer(){document.getElementById('dayDrawer').classList.remove('open');}
 function switchDayTab(filter){
     _ddFilter=filter;
-    ['all','task','followup'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===filter?' active':'');});
+    ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===filter?' active':'');});
     renderDayEvents();
+}
+function editTask(dateKey,eventIndex){
+    const row=document.querySelector(`[data-event-index="${eventIndex}"]`);
+    if(row){row.querySelector('.view-mode').style.display='none';row.querySelector('.edit-mode').style.display='block';}
+}
+function saveTask(dateKey,eventIndex){
+    const events=CAL_EVENTS[dateKey];if(!events||!events[eventIndex])return;
+    events[eventIndex].title=document.getElementById('edit-title-'+eventIndex).value;
+    events[eventIndex].lead=document.getElementById('edit-lead-'+eventIndex).value;
+    events[eventIndex].time=document.getElementById('edit-time-'+eventIndex).value;
+    events[eventIndex].priority=document.getElementById('edit-priority-'+eventIndex).value;
+    events[eventIndex].type=document.getElementById('edit-type-'+eventIndex).value;
+    const statusValue=document.getElementById('edit-status-'+eventIndex).value;
+    events[eventIndex].done=statusValue==='done';
+    events[eventIndex].customStatus=statusValue!=='done'?statusValue:undefined;
+    const newFilter=statusValue==='done'?'complete':statusValue==='overdue'?'overdue':statusValue==='in progress'?'inprogress':'todo';
+    _ddFilter=newFilter;
+    ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===newFilter?' active':'');});
+    renderDayEvents();
+    const evts=CAL_EVENTS[_ddKey]||[];
+    const tC=evts.filter(e=>e.type==='task').length,fC=evts.filter(e=>e.type==='followup').length;
+    document.getElementById('ddMeta').textContent=tC+' task'+(tC!==1?'s':'')+' · '+fC+' follow-up'+(fC!==1?'s':'');
+}
+function cancelEdit(eventIndex){
+    const row=document.querySelector(`[data-event-index="${eventIndex}"]`);
+    if(row){row.querySelector('.view-mode').style.display='flex';row.querySelector('.edit-mode').style.display='none';}
 }
 function renderDayEvents(){
     const evts=CAL_EVENTS[_ddKey]||[];
-    const filtered=_ddFilter==='all'?evts:evts.filter(e=>e.type===_ddFilter);
+    const today=new Date();today.setHours(0,0,0,0);
+    const drawerDate=new Date(_ddKey.split('-')[0],_ddKey.split('-')[1]-1,_ddKey.split('-')[2]);drawerDate.setHours(0,0,0,0);
+    const filtered=evts.filter(e=>{
+        let status='to do';
+        if(e.done)status='done';
+        else if(e.customStatus)status=e.customStatus;
+        else if(drawerDate<today)status='overdue';
+        else if(drawerDate.getTime()===today.getTime())status='in progress';
+        else status='to do';
+        if(_ddFilter==='todo')return status==='to do';
+        if(_ddFilter==='inprogress')return status==='in progress';
+        if(_ddFilter==='overdue')return status==='overdue';
+        if(_ddFilter==='complete')return status==='done';
+        return true;
+    });
     const list=document.getElementById('ddEventsList');
     if(!filtered.length){list.innerHTML=`<div style="padding:100px 40px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
             <div class="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-200 mb-6">
                 <i class="fa-solid fa-calendar-xmark text-3xl"></i>
             </div>
-            <div style="font-size:14px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:0.1em;">Schedule Empty</div>
-            <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-top:8px;max-width:240px;line-height:1.6;">No tasks or follow-ups have been scheduled for this date yet.</div>
+            <div style="font-size:14px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:0.1em;">No ${_ddFilter==='todo'?'To Do':_ddFilter==='inprogress'?'In Progress':_ddFilter==='overdue'?'Overdue':'Complete'} Activities</div>
+            <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-top:8px;max-width:240px;line-height:1.6;">No ${_ddFilter==='todo'?'to do':_ddFilter==='inprogress'?'in progress':_ddFilter==='overdue'?'overdue':'completed'} tasks or follow-ups for this date.</div>
             <button onclick="closeDayDrawer()" style="margin-top:24px;padding:10px 24px;border-radius:12px;background:#0f172a;color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;">Return to Calendar</button>
         </div>`;return;}
     const prioC={high:'#b91c1c',medium:'#b45309',low:'#64748b'},prioBg={high:'#fee2e2',medium:'#fef3c7',low:'#f1f5f9'};
-    list.innerHTML=[...filtered].sort((a,b)=>a.time.localeCompare(b.time)).map(e=>`
-        <div class="day-evt-row day-evt-${e.type}${e.done?' day-evt-done':''}">
-            <div style="width:38px;height:38px;border-radius:10px;background:${e.type==='task'?'#f5f3ff':'#fffbeb'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
-                <i class="fa-solid ${e.type==='task'?'fa-list-check':'fa-phone-volume'}" style="color:${e.type==='task'?'#7c3aed':'#d97706'};font-size:13px;"></i>
-            </div>
-            <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:4px;">
-                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${e.type==='task'?'#ede9fe':'#fef3c7'};color:${e.type==='task'?'#7c3aed':'#b45309'};text-transform:uppercase;">${e.type==='task'?'Task':'Follow-up'}</span>
-                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${prioBg[e.priority]};color:${prioC[e.priority]};text-transform:uppercase;">${e.priority}</span>
-                    ${e.done?'<span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:#dcfce7;color:#15803d;text-transform:uppercase;">Done</span>':''}
+    list.innerHTML=[...filtered].sort((a,b)=>a.time.localeCompare(b.time)).map((e,index)=>{
+        let status='to do';
+        if(e.done)status='done';
+        else if(e.customStatus)status=e.customStatus;
+        else if(drawerDate<today)status='overdue';
+        else if(drawerDate.getTime()===today.getTime())status='in progress';
+        else status='to do';
+        const statusC=status==='done'?'#15803d':status==='overdue'?'#b91c1c':status==='in progress'?'#b45309':'';
+        const statusBg=status==='done'?'#dcfce7':status==='overdue'?'#fee2e2':status==='in progress'?'#fef3c7':'';
+        return `
+        <div class="day-evt-row day-evt-${e.type}${e.done?' day-evt-done':''}${status==='overdue'?' day-evt-overdue':''}" data-event-index="${index}">
+            <div class="view-mode" style="display:flex;align-items:flex-start;gap:10px;width:100%;">
+                <div style="width:38px;height:38px;border-radius:10px;background:${e.type==='task'?'#f5f3ff':'#fffbeb'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+                    <i class="fa-solid ${e.type==='task'?'fa-list-check':'fa-phone-volume'}" style="color:${e.type==='task'?'#7c3aed':'#d97706'};font-size:13px;"></i>
                 </div>
-                <div style="font-size:10px;font-weight:700;color:#0f172a;line-height:1.4;${e.done?'text-decoration:line-through;opacity:.7;':''}">${e.title}</div>
-                <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
-                    <span style="font-size:8px;color:#64748b;font-weight:600;"><i class="fa-solid fa-user" style="font-size:7px;margin-right:3px;"></i>${e.lead}</span>
-                    <span style="font-size:8px;color:#94a3b8;font-weight:700;"><i class="fa-solid fa-clock" style="font-size:7px;margin-right:3px;"></i>${e.time}</span>
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:4px;">
+                        <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${e.type==='task'?'#ede9fe':'#fef3c7'};color:${e.type==='task'?'#7c3aed':'#b45309'};text-transform:uppercase;">${e.type==='task'?'Task':'Follow-up'}</span>
+                        <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${prioBg[e.priority]};color:${prioC[e.priority]};text-transform:uppercase;">${e.priority}</span>
+                        <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${statusBg};color:${statusC};text-transform:uppercase;">${status}</span>
+                    </div>
+                    <div style="font-size:10px;font-weight:700;color:#0f172a;line-height:1.4;${e.done?'text-decoration:line-through;opacity:.7;':''}">${e.title}</div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+                        <span style="font-size:8px;color:#64748b;font-weight:600;"><i class="fa-solid fa-user" style="font-size:7px;margin-right:3px;"></i>${e.lead}</span>
+                        <span style="font-size:8px;color:#94a3b8;font-weight:700;"><i class="fa-solid fa-clock" style="font-size:7px;margin-right:3px;"></i>${e.time}</span>
+                        <button onclick="editTask('${_ddKey}',${index})" style="margin-left:auto;padding:4px 8px;border-radius:4px;background:#f1f5f9;color:#64748b;font-size:8px;border:1px solid #e2e8f0;cursor:pointer;"><i class="fa-solid fa-pencil"></i> Edit</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    `).join('');
+            <div class="edit-mode" style="display:none;width:100%;padding:10px 0;">
+                <div style="display:flex;flex-direction:column;gap:6px;background:#f8fafc;padding:8px;border-radius:8px;">
+                    <input type="text" id="edit-title-${index}" value="${e.title}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Title">
+                    <input type="text" id="edit-lead-${index}" value="${e.lead}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Lead/Client">
+                    <input type="text" id="edit-time-${index}" value="${e.time}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Time">
+                    <select id="edit-priority-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                        <option value="low" ${e.priority==='low'?'selected':''}>Low Priority</option>
+                        <option value="medium" ${e.priority==='medium'?'selected':''}>Medium Priority</option>
+                        <option value="high" ${e.priority==='high'?'selected':''}>High Priority</option>
+                    </select>
+                    <select id="edit-type-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                        <option value="task" ${e.type==='task'?'selected':''}>Type: Task</option>
+                        <option value="followup" ${e.type==='followup'?'selected':''}>Type: Follow-up</option>
+                    </select>
+                    <select id="edit-status-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                        <option value="to do" ${status==='to do'?'selected':''}>Status: To Do</option>
+                        <option value="in progress" ${status==='in progress'?'selected':''}>Status: In Progress</option>
+                        <option value="overdue" ${status==='overdue'?'selected':''}>Status: Overdue</option>
+                        <option value="done" ${status==='done'?'selected':''}>Status: Done</option>
+                    </select>
+                    <div style="display:flex;gap:6px;margin-top:4px;">
+                        <button onclick="saveTask('${_ddKey}',${index})" style="flex:1;padding:6px 10px;border-radius:6px;background:#4f46e5;color:#fff;font-size:9px;border:none;cursor:pointer;font-weight:600;">✓ Save</button>
+                        <button onclick="cancelEdit(${index})" style="flex:1;padding:6px 10px;border-radius:6px;background:#e2e8f0;color:#64748b;font-size:9px;border:none;cursor:pointer;font-weight:600;">✕ Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
 }
 document.addEventListener('click',function(e){const drawer=document.getElementById('dayDrawer');if(!drawer||!drawer.classList.contains('open'))return;if(!drawer.querySelector('.day-drawer-panel').contains(e.target))closeDayDrawer();});
 window.addEventListener('load',()=>taRenderCalendar());
