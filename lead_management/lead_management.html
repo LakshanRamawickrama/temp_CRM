@@ -568,6 +568,22 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                 </div>
             </div>
 
+            <!-- Detail Panel Tabs -->
+            <div class="flex border-b border-gray-100 bg-white" style="flex-shrink:0;">
+                <button class="detail-tab active" id="dtab-contact" onclick="switchDetailTab('contact')" style="flex:1;padding:10px 8px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#0f172a;border-bottom:2px solid #0f172a;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;transition:all .2s;">
+                    Contact Info
+                </button>
+                <button class="detail-tab" id="dtab-tasks" onclick="switchDetailTab('tasks')" style="flex:1;padding:10px 8px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;transition:all .2s;">
+                    Tasks & Follow-ups
+                </button>
+                <button class="detail-tab" id="dtab-ai" onclick="switchDetailTab('ai')" style="flex:1;padding:10px 8px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;transition:all .2s;">
+                    AI Summary
+                </button>
+                <button class="detail-tab" id="dtab-notes" onclick="switchDetailTab('notes')" style="flex:1;padding:10px 8px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;transition:all .2s;">
+                    Notes
+                </button>
+            </div>
+
             <div id="lead-form-scroll-outer" class="flex-1 overflow-y-auto custom-scrollbar"
                 style="scrollbar-width:none;-ms-overflow-style:none;background:#fcfcfd;">
                 <style>
@@ -887,6 +903,84 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     <div id="activity-timeline-container" class="divide-y divide-gray-50"></div>
                 </div>
             </div>
+
+            <!-- ── TASKS TAB PANEL ── -->
+            <div id="panel-tasks" class="flex-1 overflow-y-auto custom-scrollbar" style="display:none;flex-direction:column;background:#fcfcfd;">
+                <div class="p-4 space-y-3">
+                    <div id="tasks-list" class="space-y-2"></div>
+                    <div class="pt-3 border-t border-gray-100">
+                        <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-3">Add Follow-up</p>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <div>
+                                <label class="label-premium">Type</label>
+                                <select id="pt-type" class="form-input-premium bg-white">
+                                    <option>Call</option><option>Meeting</option><option>Follow-up</option><option>Email</option><option>Document</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="label-premium">Date</label>
+                                <input id="pt-date" type="date" class="form-input-premium bg-white">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="label-premium">Description</label>
+                            <input id="pt-desc" type="text" placeholder="Task description..." class="form-input-premium bg-white">
+                        </div>
+                        <button onclick="addPanelTask()" class="w-full py-2 bg-gray-900 text-white text-[8px] font-black uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i>Add Task
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── AI SUMMARY TAB PANEL ── -->
+            <div id="panel-ai" class="flex-1 overflow-y-auto custom-scrollbar" style="display:none;flex-direction:column;background:#fcfcfd;">
+                <div class="p-4 space-y-3">
+                    <div style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);border:1px solid #e0e7ff;border-radius:12px;padding:16px;">
+                        <div class="flex items-center gap-2.5 mb-3">
+                            <div style="width:32px;height:32px;background:#4f46e5;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i class="fa-solid fa-wand-magic-sparkles" style="font-size:13px;color:#fff;"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p style="font-size:11px;font-weight:800;color:#3730a3;">AI Lead Summary</p>
+                                <p style="font-size:8px;color:#6366f1;font-weight:600;">Powered by lead data</p>
+                            </div>
+                            <button id="ai-generate-btn" onclick="generateAIPanel()"
+                                style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:#4f46e5;color:#fff;border:none;border-radius:8px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:all .2s;flex-shrink:0;">
+                                <i class="fa-solid fa-wand-magic-sparkles" style="font-size:8px;"></i> Generate
+                            </button>
+                        </div>
+                        <!-- Empty state -->
+                        <div id="ai-empty-state" style="text-align:center;padding:16px 0;">
+                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size:22px;color:#c7d2fe;margin-bottom:8px;display:block;"></i>
+                            <p style="font-size:9px;color:#a5b4fc;font-weight:600;">Click Generate to create an AI summary for this lead</p>
+                        </div>
+                        <!-- Summary output -->
+                        <div id="ai-result-state" style="display:none;">
+                            <p id="panel-ai-text" style="font-size:11px;color:#1e1b4b;line-height:1.8;font-style:italic;"></p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-gray-100 rounded-xl p-3">
+                        <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-3">Key Data Points</p>
+                        <div id="panel-ai-points" class="grid grid-cols-2 gap-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── NOTES TAB PANEL ── -->
+            <div id="panel-notes" class="flex-1 overflow-y-auto custom-scrollbar" style="display:none;flex-direction:column;background:#fcfcfd;">
+                <div class="p-4 space-y-3">
+                    <div id="notes-list" class="space-y-2"></div>
+                    <div class="pt-3 border-t border-gray-100">
+                        <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-3">Add Note</p>
+                        <textarea id="pn-text" rows="4" placeholder="Write a note..." class="form-input-premium bg-white resize-none mb-2"></textarea>
+                        <button onclick="addPanelNote()" class="w-full py-2 bg-gray-900 text-white text-[8px] font-black uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i>Save Note
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -1224,6 +1318,248 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             alert('Lead Saved Successfully');
         }
 
+
+        // ══ LEAD DETAILS DRAWER ══
+        let drawerLeadKey = null;
+
+        function openLeadDrawer(tab) {
+            const lead = leadsDB[currentLeadKey];
+            if (!lead || !lead.fullName) return;
+            drawerLeadKey = currentLeadKey;
+            document.getElementById('drawer-lead-id').textContent = lead.id;
+            document.getElementById('drawer-lead-name').textContent = lead.fullName;
+            renderDrawerTasks(lead);
+            renderDrawerAI(lead);
+            renderDrawerNotes(lead);
+            document.getElementById('drawer-overlay').style.display = 'block';
+            document.getElementById('lead-drawer').style.transform = 'translateX(0)';
+            if (tab) switchDrawerTab(tab);
+        }
+
+        function closeLeadDrawer() {
+            document.getElementById('drawer-overlay').style.display = 'none';
+            document.getElementById('lead-drawer').style.transform = 'translateX(100%)';
+        }
+
+        function switchDrawerTab(tab) {
+            ['tasks','ai','notes'].forEach(t => {
+                document.getElementById('dpanel-' + t).style.display = t === tab ? 'block' : 'none';
+                const btn = document.getElementById('dtab-' + t);
+                btn.style.color = t === tab ? '#0f172a' : '#94a3b8';
+                btn.style.borderBottomColor = t === tab ? '#0f172a' : 'transparent';
+            });
+        }
+
+        function renderDrawerTasks(lead) {
+            const tasks = lead.tasks || [];
+            const container = document.getElementById('drawer-tasks-list');
+            if (!tasks.length) {
+                container.innerHTML = '<p style="font-size:9px;color:#94a3b8;text-align:center;padding:20px 0;">No tasks yet</p>';
+                return;
+            }
+            container.innerHTML = tasks.map((t, i) => `
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#f8fafc;border:1px solid #f1f5f9;border-radius:10px;">
+                    <div style="width:28px;height:28px;background:#e0e7ff;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fa-solid fa-phone" style="font-size:10px;color:#4f46e5;"></i>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <p style="font-size:10px;font-weight:700;color:#0f172a;">${t.desc}</p>
+                        <p style="font-size:8px;color:#94a3b8;margin-top:2px;">${t.type} · ${t.time}</p>
+                    </div>
+                    <button onclick="removeDrawerTask(${i})" style="color:#cbd5e1;background:none;border:none;cursor:pointer;font-size:10px;padding:2px;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>`).join('');
+        }
+
+        function addDrawerTask() {
+            const lead = leadsDB[drawerLeadKey];
+            if (!lead) return;
+            const desc = document.getElementById('dt-desc').value.trim();
+            const type = document.getElementById('dt-type').value;
+            const date = document.getElementById('dt-date').value;
+            if (!desc) return;
+            if (!lead.tasks) lead.tasks = [];
+            lead.tasks.push({ desc, type, time: date || 'TBD' });
+            document.getElementById('dt-desc').value = '';
+            document.getElementById('dt-date').value = '';
+            renderDrawerTasks(lead);
+        }
+
+        function removeDrawerTask(idx) {
+            const lead = leadsDB[drawerLeadKey];
+            if (!lead) return;
+            lead.tasks.splice(idx, 1);
+            renderDrawerTasks(lead);
+        }
+
+        function renderDrawerAI(lead) {
+            document.getElementById('drawer-ai-text').textContent = generateAISummary(lead);
+            const points = [
+                { label: 'Status', val: lead.leadStatus || '—' },
+                { label: 'Amount', val: lead.loanAmount || '—' },
+                { label: 'Purpose', val: lead.loanPurpose || '—' },
+                { label: 'Industry', val: lead.industry || '—' },
+                { label: 'Bank', val: lead.companyBank || '—' },
+                { label: 'Timeline', val: lead.fundingTimeline || '—' },
+                { label: 'Home Owner', val: lead.homeOwner || '—' },
+                { label: 'Credit OK', val: lead.creditConsent || '—' },
+            ];
+            document.getElementById('drawer-ai-points').innerHTML = points.map(p => `
+                <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:7px 10px;">
+                    <p style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;">${p.label}</p>
+                    <p style="font-size:10px;font-weight:700;color:#0f172a;margin-top:2px;">${p.val}</p>
+                </div>`).join('');
+        }
+
+        function renderDrawerNotes(lead) {
+            if (!lead.notes) lead.notes = [];
+            const container = document.getElementById('drawer-notes-list');
+            const allNotes = [...(lead.notes || [])];
+            if (lead.additionalComments) allNotes.unshift({ text: lead.additionalComments, author: lead.noteBy || 'Admin', date: lead.createdAt || '' });
+            if (!allNotes.length) {
+                container.innerHTML = '<p style="font-size:9px;color:#94a3b8;text-align:center;padding:20px 0;">No notes yet</p>';
+                return;
+            }
+            container.innerHTML = allNotes.map((n, i) => `
+                <div style="padding:10px 12px;background:#f8fafc;border:1px solid #f1f5f9;border-radius:10px;">
+                    <p style="font-size:10px;color:#334155;line-height:1.6;">${n.text}</p>
+                    <div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;">
+                        <div style="width:18px;height:18px;background:#e0e7ff;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                            <span style="font-size:6px;font-weight:900;color:#4f46e5;">${(n.author||'A').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</span>
+                        </div>
+                        <span style="font-size:8px;font-weight:700;color:#475569;">${n.author || 'Admin'}</span>
+                        <span style="font-size:7px;color:#94a3b8;margin-left:auto;">${n.date || ''}</span>
+                    </div>
+                </div>`).join('');
+        }
+
+        function addDrawerNote() {
+            const lead = leadsDB[drawerLeadKey];
+            if (!lead) return;
+            const text = document.getElementById('dn-text').value.trim();
+            if (!text) return;
+            if (!lead.notes) lead.notes = [];
+            const session = JSON.parse(sessionStorage.getItem('crm_session') || '{}');
+            lead.notes.push({ text, author: session.name || 'Admin', date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) });
+            document.getElementById('dn-text').value = '';
+            renderDrawerNotes(lead);
+        }
+        // ── TAB SWITCHING ──
+        let panelNotes = {};
+        let panelTasks = {};
+
+        function switchDetailTab(tab) {
+            ['contact','tasks','ai','notes'].forEach(t => {
+                const btn = document.getElementById('dtab-' + t);
+                const panelId = t === 'contact' ? 'lead-form-scroll-outer' : 'panel-' + t;
+                const panel = document.getElementById(panelId);
+                if (btn) { btn.style.color = '#94a3b8'; btn.style.borderBottomColor = 'transparent'; btn.style.fontWeight = '700'; }
+                if (panel) panel.style.display = 'none';
+            });
+            const activeBtn = document.getElementById('dtab-' + tab);
+            const activePanelId = tab === 'contact' ? 'lead-form-scroll-outer' : 'panel-' + tab;
+            const activePanel = document.getElementById(activePanelId);
+            if (activeBtn) { activeBtn.style.color = '#0f172a'; activeBtn.style.borderBottomColor = '#0f172a'; activeBtn.style.fontWeight = '800'; }
+            if (activePanel) activePanel.style.display = 'flex';
+
+            if (tab === 'ai') renderPanelAI();
+            if (tab === 'tasks') renderPanelTasks();
+            if (tab === 'notes') renderPanelNotes();
+        }
+
+        function generateAIPanel() {
+            const lead = leadsDB[currentLeadKey];
+            if (!lead) return;
+            const btn = document.getElementById('ai-generate-btn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size:8px;"></i> Generating...';
+            btn.disabled = true;
+            setTimeout(() => {
+                document.getElementById('panel-ai-text').textContent = generateAISummary(lead);
+                document.getElementById('ai-empty-state').style.display = 'none';
+                document.getElementById('ai-result-state').style.display = 'block';
+                btn.innerHTML = '<i class="fa-solid fa-rotate-right" style="font-size:8px;"></i> Regenerate';
+                btn.disabled = false;
+                renderAIPoints(lead);
+            }, 800);
+        }
+
+        function renderAIPoints(lead) {
+            const points = [
+                ['Status', lead.leadStatus], ['Amount', lead.loanAmount], ['Purpose', lead.loanPurpose],
+                ['Bank', lead.companyBank], ['Industry', lead.industry], ['Source', lead.leadSource],
+                ['Home Owner', lead.homeOwner], ['Credit Consent', lead.creditConsent]
+            ];
+            document.getElementById('panel-ai-points').innerHTML = points.map(([k,v]) => v ? `
+                <div style="background:#f8fafc;border:1px solid #f1f5f9;border-radius:8px;padding:8px 10px;">
+                    <p style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;">${k}</p>
+                    <p style="font-size:10px;font-weight:700;color:#0f172a;margin-top:2px;">${v}</p>
+                </div>` : '').join('');
+        }
+
+        function renderPanelAI() {
+            const lead = leadsDB[currentLeadKey];
+            if (!lead) return;
+            document.getElementById('ai-empty-state').style.display = 'block';
+            document.getElementById('ai-result-state').style.display = 'none';
+            document.getElementById('panel-ai-points').innerHTML = '';
+            const btn = document.getElementById('ai-generate-btn');
+            if (btn) { btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles" style="font-size:8px;"></i> Generate'; btn.disabled = false; }
+        }
+
+        function renderPanelTasks() {
+            const tasks = panelTasks[currentLeadKey] || leadsDB[currentLeadKey]?.tasks || [];
+            document.getElementById('tasks-list').innerHTML = tasks.length ? tasks.map((t,i) => `
+                <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
+                    <div style="width:28px;height:28px;background:#f1f5f9;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fa-solid fa-phone text-[9px]" style="color:#64748b;"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p style="font-size:10px;font-weight:700;color:#0f172a;">${t.desc || t.type}</p>
+                        <p style="font-size:8px;color:#94a3b8;margin-top:1px;">${t.type}${t.date ? ' · ' + t.date : t.time ? ' · ' + t.time : ''}</p>
+                    </div>
+                </div>`).join('') : '<p style="font-size:9px;color:#94a3b8;text-align:center;padding:20px 0;">No tasks yet</p>';
+        }
+
+        function addPanelTask() {
+            const type = document.getElementById('pt-type').value;
+            const date = document.getElementById('pt-date').value;
+            const desc = document.getElementById('pt-desc').value.trim();
+            if (!desc) return;
+            if (!panelTasks[currentLeadKey]) panelTasks[currentLeadKey] = [...(leadsDB[currentLeadKey]?.tasks || [])];
+            panelTasks[currentLeadKey].push({ type, date, desc });
+            document.getElementById('pt-desc').value = '';
+            document.getElementById('pt-date').value = '';
+            renderPanelTasks();
+        }
+
+        function renderPanelNotes() {
+            const lead = leadsDB[currentLeadKey];
+            const notes = panelNotes[currentLeadKey] || [];
+            const existing = lead?.additionalComments ? [{ text: lead.additionalComments, by: lead.noteBy || 'Admin', date: lead.createdAt || '' }] : [];
+            const all = [...existing, ...notes];
+            document.getElementById('notes-list').innerHTML = all.length ? all.map(n => `
+                <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;">
+                    <p style="font-size:10px;color:#334155;line-height:1.6;">${n.text}</p>
+                    <div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;">
+                        <div style="width:18px;height:18px;background:#e0e7ff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <span style="font-size:6px;font-weight:900;color:#4f46e5;">${(n.by||'A').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</span>
+                        </div>
+                        <p style="font-size:8px;font-weight:700;color:#64748b;">${n.by || 'Admin'}${n.date ? ' · ' + n.date : ''}</p>
+                    </div>
+                </div>`).join('') : '<p style="font-size:9px;color:#94a3b8;text-align:center;padding:20px 0;">No notes yet</p>';
+        }
+
+        function addPanelNote() {
+            const text = document.getElementById('pn-text').value.trim();
+            if (!text) return;
+            if (!panelNotes[currentLeadKey]) panelNotes[currentLeadKey] = [];
+            const session = JSON.parse(sessionStorage.getItem('crm_session') || '{}');
+            panelNotes[currentLeadKey].push({ text, by: session.name || 'Admin', date: new Date().toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) });
+            document.getElementById('pn-text').value = '';
+            renderPanelNotes();
+        }
+
         window.onload = () => { updateLeadStats(); renderLeadTable(); selectLead('L-1004'); };
 
         function toggleExistingLoanSection(value) {
@@ -1246,6 +1582,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             });
         });
     </script>
-</body>
+
+    </body>
 
 </html>
