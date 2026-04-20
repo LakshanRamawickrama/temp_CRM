@@ -637,14 +637,14 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
 
             <!-- Detail Tab Navigation -->
             <div class="detail-tab-nav">
-                <button class="detail-tab active" onclick="switchLeadTab('details')" id="tab-btn-details">
-                    <i class="fa-solid fa-address-card"></i> Details
+                <button class="detail-tab" onclick="switchLeadTab('details')" id="tab-btn-details">
+                    <i class="fa-solid fa-address-card"></i> Contact Info
                 </button>
-                <button class="detail-tab" onclick="switchLeadTab('tasks')" id="tab-btn-tasks">
-                    <i class="fa-solid fa-list-check"></i> Tasks
+                <button class="detail-tab active" onclick="switchLeadTab('tasks')" id="tab-btn-tasks">
+                    <i class="fa-solid fa-list-check"></i> Tasks &amp; Follow-ups
                 </button>
                 <button class="detail-tab" onclick="switchLeadTab('ai')" id="tab-btn-ai">
-                    <i class="fa-solid fa-robot"></i> AI Agent
+                    <i class="fa-solid fa-robot"></i> AI Summary
                 </button>
                 <button class="detail-tab" onclick="switchLeadTab('notes')" id="tab-btn-notes">
                     <i class="fa-solid fa-note-sticky"></i> Notes
@@ -652,7 +652,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             </div>
 
             <div id="lead-form-scroll-outer" class="flex-1 overflow-y-auto custom-scrollbar"
-                style="scrollbar-width:none;-ms-overflow-style:none;background:#fcfcfd;">
+                style="display:none;scrollbar-width:none;-ms-overflow-style:none;background:#fcfcfd;">
                 <style>
                     #lead-form-scroll-outer::-webkit-scrollbar {
                         display: none;
@@ -988,14 +988,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     <div id="notes-container"></div>
                 </div>
 
-                <!-- Activity Timeline — always visible -->
-                <div id="activity-log-section" class="border-t border-gray-100 bg-white">
-                    <div class="px-4 py-2.5 border-b border-gray-50 flex items-center gap-2">
-                        <i class="fa-solid fa-users text-[9px] text-[#2447d7]"></i>
-                        <h3 class="text-[9px] font-black text-gray-700 uppercase tracking-widest">Assigned Agents</h3>
-                    </div>
-                    <div id="activity-timeline-container" class="divide-y divide-gray-50"></div>
-                </div>
+                
             </div>
 
             <!-- ── TASKS TAB PANEL ── -->
@@ -1187,6 +1180,8 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             }
         }
         function selectLead(id, startInEditMode = false) {
+            switchLeadTab('tasks');
+            switchLeadTab('tasks');
             const lead = leadsDB[id];
             if (!lead || !lead.fullName) return;
             currentLeadKey = id;
@@ -1444,7 +1439,123 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             alert('Lead Saved Successfully');
         }
 
-        window.onload = () => {
+        
+        // ── Panel render functions ──
+        let panelNotes = {};
+        let panelTasks = {};
+
+        function renderPanelTasks() {
+            const lead = leadsDB[currentLeadKey];
+            const tasks = (panelTasks[currentLeadKey] || []).concat(lead ? (lead.tasks || []) : []);
+            const el = document.getElementById('tasks-list');
+            if (!el) return;
+            if (!tasks.length) { el.innerHTML = '<p style="font-size:9px;color:#94a3b8;text-align:center;padding:24px 0;">No tasks yet</p>'; return; }
+            var html = '';
+            var icons = { Call: 'fa-phone', Meeting: 'fa-calendar', Email: 'fa-envelope', Document: 'fa-file', 'Follow-up': 'fa-rotate-right' };
+            for (var i = 0; i < tasks.length; i++) {
+                var t = tasks[i];
+                var icon = icons[t.type] || 'fa-phone';
+                html += '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;">';
+                html += '<div style="width:32px;height:32px;background:#f1f5f9;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
+                html += '<i class="fa-solid ' + icon + '" style="font-size:11px;color:#64748b;"></i></div>';
+                html += '<div style="flex:1;min-width:0;">';
+                html += '<p style="font-size:11px;font-weight:700;color:#0f172a;margin:0;">' + (t.desc || t.type) + '</p>';
+                html += '<p style="font-size:9px;color:#94a3b8;margin:2px 0 0;">' + t.type + (t.time ? ' · ' + t.time : '') + (t.date ? ' · ' + t.date : '') + '</p>';
+                html += '</div></div>';
+            }
+            el.innerHTML = html;
+        }
+
+        function addPanelTask() {
+            var type = document.getElementById('pt-type').value;
+            var date = document.getElementById('pt-date').value;
+            var desc = document.getElementById('pt-desc').value.trim();
+            if (!desc) return;
+            if (!panelTasks[currentLeadKey]) panelTasks[currentLeadKey] = [];
+            panelTasks[currentLeadKey].unshift({ type: type, date: date, desc: desc });
+            document.getElementById('pt-desc').value = '';
+            document.getElementById('pt-date').value = '';
+            renderPanelTasks();
+        }
+
+        function renderPanelAI() {
+            var lead = leadsDB[currentLeadKey];
+            if (!lead) return;
+            var emptyEl = document.getElementById('ai-empty-state');
+            var resultEl = document.getElementById('ai-result-state');
+            var btn = document.getElementById('ai-generate-btn');
+            if (emptyEl) emptyEl.style.display = 'block';
+            if (resultEl) resultEl.style.display = 'none';
+            if (btn) { btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles" style="font-size:8px;"></i> Generate'; btn.disabled = false; }
+            document.getElementById('panel-ai-points').innerHTML = '';
+        }
+
+        function generateAIPanel() {
+            var lead = leadsDB[currentLeadKey];
+            if (!lead) return;
+            var btn = document.getElementById('ai-generate-btn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size:8px;"></i> Generating...';
+            btn.disabled = true;
+            setTimeout(function() {
+                var textEl = document.getElementById('panel-ai-text');
+                if (textEl) textEl.textContent = generateAISummary(lead);
+                var emptyEl = document.getElementById('ai-empty-state');
+                var resultEl = document.getElementById('ai-result-state');
+                if (emptyEl) emptyEl.style.display = 'none';
+                if (resultEl) resultEl.style.display = 'block';
+                btn.innerHTML = '<i class="fa-solid fa-rotate-right" style="font-size:8px;"></i> Regenerate';
+                btn.disabled = false;
+                renderAIPoints(lead);
+            }, 800);
+        }
+
+        function renderAIPoints(lead) {
+            var points = [['Status',lead.leadStatus],['Amount',lead.loanAmount],['Purpose',lead.loanPurpose],['Bank',lead.companyBank],['Industry',lead.industry],['Source',lead.leadSource],['Home Owner',lead.homeOwner],['Credit',lead.creditConsent]];
+            var html = '';
+            for (var i = 0; i < points.length; i++) {
+                if (!points[i][1]) continue;
+                html += '<div style="background:#f8fafc;border:1px solid #f1f5f9;border-radius:8px;padding:8px 10px;">';
+                html += '<p style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin:0;">' + points[i][0] + '</p>';
+                html += '<p style="font-size:10px;font-weight:700;color:#0f172a;margin:2px 0 0;">' + points[i][1] + '</p>';
+                html += '</div>';
+            }
+            var el = document.getElementById('panel-ai-points');
+            if (el) el.innerHTML = html;
+        }
+
+        function renderPanelNotes() {
+            var lead = leadsDB[currentLeadKey];
+            var notes = panelNotes[currentLeadKey] || [];
+            var existing = (lead && lead.additionalComments) ? [{ text: lead.additionalComments, by: lead.noteBy || 'Admin', date: lead.createdAt || '' }] : [];
+            var all = existing.concat(notes);
+            var el = document.getElementById('notes-list');
+            if (!el) return;
+            if (!all.length) { el.innerHTML = '<p style="font-size:9px;color:#94a3b8;text-align:center;padding:24px 0;">No notes yet</p>'; return; }
+            var html = '';
+            for (var i = 0; i < all.length; i++) {
+                var n = all[i];
+                var initials = (n.by || 'A').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+                html += '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;margin-bottom:8px;">';
+                html += '<p style="font-size:11px;color:#334155;line-height:1.6;margin:0 0 10px;">' + n.text + '</p>';
+                html += '<div style="display:flex;align-items:center;gap:8px;">';
+                html += '<div style="width:22px;height:22px;background:#e0e7ff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
+                html += '<span style="font-size:7px;font-weight:900;color:#4f46e5;">' + initials + '</span></div>';
+                html += '<p style="font-size:9px;font-weight:600;color:#64748b;margin:0;">' + (n.by || 'Admin') + (n.date ? ' · ' + n.date : '') + '</p>';
+                html += '</div></div>';
+            }
+            el.innerHTML = html;
+        }
+
+        function addPanelNote() {
+            var text = document.getElementById('pn-text').value.trim();
+            if (!text) return;
+            if (!panelNotes[currentLeadKey]) panelNotes[currentLeadKey] = [];
+            var s = JSON.parse(sessionStorage.getItem('crm_session') || '{}');
+            panelNotes[currentLeadKey].unshift({ text: text, by: s.name || 'Admin', date: new Date().toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) });
+            document.getElementById('pn-text').value = '';
+            renderPanelNotes();
+        }
+window.onload = () => {
             updateLeadStats();
             renderLeadTable();
             const params = new URLSearchParams(window.location.search);
@@ -1454,34 +1565,20 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             } else {
                 selectLead('L-1004');
             }
+            switchLeadTab('tasks');
         };
 
         function switchLeadTab(tab) {
-            const tabs = ['details', 'tasks', 'ai', 'notes'];
-            tabs.forEach(t => {
-                const panel = document.getElementById(t === 'details' ? 'lead-form-container' : 'lead-tab-' + t);
-                const btn = document.getElementById('tab-btn-' + t);
-                if (panel) panel.classList.toggle('hidden', t !== tab);
-                if (btn) btn.classList.toggle('active', t === tab);
+            var map = { details: 'lead-form-scroll-outer', tasks: 'panel-tasks', ai: 'panel-ai', notes: 'panel-notes' };
+            Object.keys(map).forEach(function(t) {
+                var panel = document.getElementById(map[t]);
+                var btn = document.getElementById('tab-btn-' + t);
+                if (panel) panel.style.display = (t === tab) ? (t === 'details' ? 'block' : 'flex') : 'none';
+                if (btn) { btn.classList.toggle('active', t === tab); }
             });
-        }
-
-        function toggleSection(bodyId, chevronId) {
-            const body = document.getElementById(bodyId);
-            const chevron = document.getElementById(chevronId);
-            if (!body) return;
-            const isOpen = body.style.display !== 'none';
-            body.style.display = isOpen ? 'none' : '';
-            if (chevron) chevron.classList.toggle('open', !isOpen);
-        }
-
-        function toggleExistingLoanSection(value) {
-            const section = document.getElementById('existing-loan-details');
-            if (value === 'Yes') {
-                section.classList.remove('hidden');
-            } else {
-                section.classList.add('hidden');
-            }
+            if (tab === 'tasks') renderPanelTasks();
+            if (tab === 'ai') renderPanelAI();
+            if (tab === 'notes') renderPanelNotes();
         }
 
         // Add event listeners to radio buttons
