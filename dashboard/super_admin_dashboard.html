@@ -850,7 +850,7 @@
                                         class="bg-[#dbeafe] text-[#1e40af] text-[7px] font-black px-1.5 py-0.5 rounded flex items-center gap-1">
                                         <i class="fa-solid fa-thumbtack text-[7px] text-rose-500"></i> PINNED
                                     </span>
-                                    <span class="text-[8px] font-bold text-amber-700/60">2026-04-09 Ãƒâ€š· 01:54
+                                    <span class="text-[8px] font-bold text-amber-700/60">2026-04-09 £· 01:54
                                         PM</span>
                                 </div>
                                 <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1061,9 +1061,14 @@
                             <table class="w-full text-left" id="leadPortfolioTable">
                                 <thead>
                                     <tr class="border-b border-slate-50">
-                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest">Client</th>
-                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
-                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-right">#</th>
+                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest">
+                                            Client</th>
+                                        <th
+                                            class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-center">
+                                            Status</th>
+                                        <th
+                                            class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-right">
+                                            #</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -1120,11 +1125,11 @@
                                                 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Base
                                                 Loan Amount</label>
                                             <span class="text-[10px] font-black text-amber-600"
-                                                id="valDisplayAmount">Ãƒâ€š£50,000</span>
+                                                id="valDisplayAmount">£50,000</span>
                                         </div>
                                         <div class="relative">
                                             <span
-                                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px]">Ãƒâ€š£</span>
+                                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px]">£</span>
                                             <input type="number" id="calcAmount" value="50000"
                                                 class="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 pl-7 pr-3 text-[11px] font-black text-slate-900 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
                                                 oninput="syncInput('amount')">
@@ -1162,7 +1167,7 @@
                                                 <button onclick="setFeeType('percent')" id="feeTypePct"
                                                     class="px-2 py-0.5 text-[7px] font-black uppercase rounded bg-slate-900 text-white shadow-sm transition-all">%</button>
                                                 <button onclick="setFeeType('fixed')" id="feeTypeFix"
-                                                    class="px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all">Ãƒâ€š£</button>
+                                                    class="px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all">£</button>
                                             </div>
                                         </div>
                                         <div class="relative">
@@ -1216,7 +1221,7 @@
                                             Contractual Monthly Payment</p>
                                         <h2 id="resMonthly"
                                             class="text-4xl lg:text-5xl font-black text-white mb-8 transition-all">
-                                            Ãƒâ€š£0.00
+                                            £0.00
                                         </h2>
 
                                         <div class="grid grid-cols-2 gap-6 pt-6 border-t border-slate-800">
@@ -1225,14 +1230,14 @@
                                                     class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">
                                                     Total Cost of Credit</p>
                                                 <p id="resTotalInterest" class="text-[14px] font-black text-amber-500">
-                                                    Ãƒâ€š£0.00</p>
+                                                    £0.00</p>
                                             </div>
                                             <div class="border-l border-slate-800">
                                                 <p
                                                     class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">
                                                     Total Amount Payable</p>
                                                 <p id="resTotalPayable" class="text-[14px] font-black text-white">
-                                                    Ãƒâ€š£0.00
+                                                    £0.00
                                                 </p>
                                             </div>
                                         </div>
@@ -1676,7 +1681,7 @@
                             <span class="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Estimated
                                 Monthly Payment</span>
                             <span class="block text-2xl font-black text-emerald-600 mt-1"
-                                id="mod-resMonthlyDisplay">Ãƒâ€š£0.00</span>
+                                id="mod-resMonthlyDisplay">£0.00</span>
                         </div>
 
                         <div class="space-y-2">
@@ -1688,17 +1693,17 @@
                             <div
                                 class="flex justify-between items-center text-[10px] font-bold border-b border-dotted border-slate-200 pb-1.5">
                                 <span class="text-slate-400 uppercase tracking-tight">Arrangement Fees</span>
-                                <span class="text-slate-900" id="mod-resFeeDisplay">Ãƒâ€š£0.00</span>
+                                <span class="text-slate-900" id="mod-resFeeDisplay">£0.00</span>
                             </div>
                             <div
                                 class="flex justify-between items-center text-[10px] font-bold border-b border-dotted border-slate-200 pb-1.5">
                                 <span class="text-slate-400 uppercase tracking-tight">Total Interest</span>
-                                <span class="text-slate-900" id="mod-resInterestDisplay">Ãƒâ€š£0.00</span>
+                                <span class="text-slate-900" id="mod-resInterestDisplay">£0.00</span>
                             </div>
                             <div
                                 class="flex justify-between items-center text-[11px] font-black bg-indigo-50 text-indigo-700 p-2 rounded-lg">
                                 <span class="uppercase tracking-widest">Total Payable</span>
-                                <span id="mod-resTotalDisplay">Ãƒâ€š£0.00</span>
+                                <span id="mod-resTotalDisplay">£0.00</span>
                             </div>
                         </div>
 
@@ -1852,7 +1857,7 @@
             if (!text) return;
 
             const now = new Date();
-            const dateStr = now.toISOString().split('T')[0] + ' Ãƒâ€š· ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toISOString().split('T')[0] + ' €· ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             const noteHtml = `
                 <div class="bg-white border border-amber-100 p-3 rounded-xl relative group">
@@ -1951,7 +1956,7 @@
             } else {
                 fixBtn.className = 'px-2 py-0.5 text-[7px] font-black uppercase rounded bg-slate-900 text-white shadow-sm transition-all';
                 pctBtn.className = 'px-2 py-0.5 text-[7px] font-black uppercase rounded text-slate-400 hover:text-slate-600 transition-all';
-                suffix.textContent = 'Ãƒâ€š£';
+                suffix.textContent = '£';
             }
             updateCalculator();
         }
@@ -2044,7 +2049,7 @@
             const feeValue = parseFloat(fElem.value) || 0;
             const rateValue = parseFloat(rElem.value) || 0;
 
-            document.getElementById('valDisplayAmount').textContent = 'Ãƒâ€š£' + principalBase.toLocaleString();
+            document.getElementById('valDisplayAmount').textContent = '£' + principalBase.toLocaleString();
             document.getElementById('valDisplayTerm').textContent = termMonths + ' Months';
 
             if (principalBase <= 0 || termMonths <= 0) return;
@@ -2085,7 +2090,7 @@
             const factorRate = totalPayable / P;
             const dailyRatePct = (monthlyRateDecimal * 12 / 365) * 100;
 
-            const fmt = (val) => 'Ãƒâ€š£' + val.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const fmt = (val) => '£' + val.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             const mapping = {
                 'resMonthly': fmt(M), 'resTotalInterest': fmt(totalInterest), 'resTotalPayable': fmt(totalPayable),
                 'metricYield': yieldPct.toFixed(2) + '%', 'metricFactor': factorRate.toFixed(4), 'metricDaily': dailyRatePct.toFixed(4) + '%',
