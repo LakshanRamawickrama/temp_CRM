@@ -878,15 +878,15 @@
                 </div>
 
                 <!-- Licenses & Insurance Reminders -->
-                <div class="glass-card flex flex-col h-[280px]" data-id="licenses">
-                    <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                <div class="glass-card flex flex-col h-[280px] overflow-hidden" data-id="licenses">
+
+                    <!-- Header: List Mode -->
+                    <div id="licHeaderList" class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
                         <div class="flex items-center gap-3">
-                            <div
-                                class="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-white shadow-lg shadow-rose-100">
+                            <div class="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-white shadow-lg shadow-rose-100">
                                 <i class="fa-solid fa-file-shield text-xs"></i>
                             </div>
-                            <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Licenses &
-                                Insurance</h3>
+                            <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Licenses & Insurance</h3>
                         </div>
                         <button onclick="toggleLicenseForm()"
                             class="w-6 h-6 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all">
@@ -894,66 +894,100 @@
                         </button>
                     </div>
 
+                    <!-- Header: Detail Mode -->
+                    <div id="licHeaderDetail" class="hidden px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                        <div class="flex items-center gap-3">
+                            <button onclick="closeLicenseDetail()"
+                                class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition-all">
+                                <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            </button>
+                            <h3 id="licDetailTitle" class="text-[11px] font-black uppercase tracking-widest text-slate-900">Details</h3>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button id="licDetailEditBtn" onclick="openLicenseEditForm()"
+                                class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all">
+                                <i class="fa-solid fa-pen text-[10px]"></i>
+                            </button>
+                            <button id="licDetailDeleteBtn" onclick=""
+                                class="w-7 h-7 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-100 transition-all">
+                                <i class="fa-solid fa-trash-can text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Add License Form (Hidden by default) -->
                     <div id="licenseForm"
-                        class="hidden p-4 border-b border-slate-50 bg-slate-50/50 animate-in slide-in-from-top duration-200">
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="col-span-2">
-                                <label class="text-[8px] font-black text-slate-400 uppercase mb-1 block">License
-                                    Name</label>
+                        class="hidden flex-1 flex flex-col p-3 bg-slate-50/50 animate-in slide-in-from-top duration-200">
+                        <div class="grid grid-cols-2 gap-x-2 gap-y-0 flex-1 content-between">
+                            <div>
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Type</label>
+                                <select id="licType"
+                                    class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-rose-500">
+                                    <option value="License">License</option>
+                                    <option value="Insurance">Insurance</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Name</label>
                                 <input id="licName" type="text"
-                                    class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-[10px] outline-none focus:border-rose-500"
+                                    class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-rose-500"
                                     placeholder="e.g. FCA License">
                             </div>
-                            <div>
-                                <label class="text-[8px] font-black text-slate-400 uppercase mb-1 block">Expiry
-                                    Date</label>
-                                <input id="licDate" type="date"
-                                    class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-[10px] outline-none focus:border-rose-500">
+                            <div class="col-span-2 mt-2">
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Description</label>
+                                <textarea id="licDesc" rows="2"
+                                    class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-rose-500 resize-none"
+                                    placeholder="Brief description..."></textarea>
                             </div>
-                            <div>
-                                <label class="text-[8px] font-black text-slate-400 uppercase mb-1 block">Remind
-                                    Period</label>
+                            <div class="mt-2">
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Expiry Date</label>
+                                <input id="licDate" type="date"
+                                    class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-rose-500">
+                            </div>
+                            <div class="mt-2">
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Remind Period</label>
                                 <select id="licPeriod"
-                                    class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-[10px] outline-none focus:border-rose-500">
+                                    class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-rose-500">
                                     <option value="30">30 Days Before</option>
                                     <option value="14">14 Days Before</option>
                                     <option value="7">7 Days Before</option>
                                 </select>
                             </div>
-                            <div class="col-span-2 flex gap-2 pt-1">
+                            <div class="col-span-2 flex gap-2 mt-2">
                                 <button onclick="addLicense()"
-                                    class="flex-1 bg-rose-600 text-white py-2 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-rose-700 transition-all">Save
-                                    Reminder</button>
+                                    class="flex-1 bg-rose-600 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-rose-700 transition-all">Save</button>
                                 <button onclick="toggleLicenseForm()"
-                                    class="px-4 bg-slate-200 text-slate-600 py-2 rounded-lg text-[9px] font-black uppercase transition-all">Cancel</button>
+                                    class="px-4 bg-slate-200 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase transition-all">Cancel</button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- List View -->
                     <div id="licenseList" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
                         <!-- Sample License -->
-                        <div
-                            class="p-3 bg-white border border-slate-100 rounded-xl hover:border-rose-200 transition-all group">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <h4 class="text-[10px] font-black text-slate-900">FCA Regulatory License</h4>
-                                    <p class="text-[8px] font-bold text-slate-400 uppercase">Expires: 24 May 2026</p>
+                        <div class="lic-card bg-white border border-slate-100 rounded-xl transition-all cursor-pointer hover:border-rose-200 hover:shadow-sm"
+                            data-type="License" data-name="FCA Regulatory License" data-date="24 May 2026"
+                            data-remind="30" data-status="ACTIVE" data-status-cls="bg-emerald-50 text-emerald-600"
+                            data-desc="Financial Conduct Authority regulatory license for brokerage operations."
+                            onclick="openLicenseDetail(this)">
+                            <div class="p-3">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h4 class="text-[10px] font-black text-slate-900">FCA Regulatory License</h4>
+                                        <p class="text-[8px] font-bold text-slate-400 uppercase">Expires: 24 May 2026</p>
+                                    </div>
+                                    <span class="bg-emerald-50 text-emerald-600 text-[7px] font-black px-1.5 py-0.5 rounded">ACTIVE</span>
                                 </div>
-                                <span
-                                    class="bg-emerald-50 text-emerald-600 text-[7px] font-black px-1.5 py-0.5 rounded">ACTIVE</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span
-                                    class="text-[7px] font-bold text-rose-500 uppercase tracking-tight flex items-center gap-1">
+                                <span class="text-[7px] font-bold text-rose-500 uppercase tracking-tight flex items-center gap-1">
                                     <i class="fa-solid fa-bell text-[7px]"></i> Remind 30 days before
                                 </span>
-                                <button onclick="deleteLicense(this)"
-                                    class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-300 hover:text-rose-500">
-                                    <i class="fa-solid fa-trash-can text-[9px]"></i>
-                                </button>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Detail Page View (hidden by default) -->
+                    <div id="licenseDetail" class="hidden flex-1 flex flex-col">
+                        <!-- Detail content injected by JS -->
                     </div>
                 </div>
 
@@ -2214,69 +2248,209 @@
         }
 
         // Licenses & Insurance Logic
+        let _currentLicCard = null;
+
         function toggleLicenseForm() {
             const form = document.getElementById('licenseForm');
+            const list = document.getElementById('licenseList');
+            const isHidden = form.classList.contains('hidden');
             form.classList.toggle('hidden');
+            list.classList.toggle('hidden', isHidden);
+        }
+
+        function getLicenseStatus(dateValue) {
+            const expiryDate = new Date(dateValue);
+            const today = new Date();
+            const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+            if (diffDays < 0) return { label: 'EXPIRED', cls: 'bg-rose-50 text-rose-600' };
+            if (diffDays <= 30) return { label: 'EXPIRING SOON', cls: 'bg-amber-50 text-amber-600' };
+            return { label: 'ACTIVE', cls: 'bg-emerald-50 text-emerald-600' };
         }
 
         function addLicense() {
+            const type = document.getElementById('licType').value;
             const name = document.getElementById('licName').value.trim();
+            const desc = document.getElementById('licDesc').value.trim();
             const date = document.getElementById('licDate').value;
             const period = document.getElementById('licPeriod').value;
 
-            if (!name || !date) {
-                alert('Please fill in all fields');
-                return;
-            }
+            if (!name || !date) { alert('Please fill in Name and Expiry Date'); return; }
 
-            const expiryDate = new Date(date);
-            const today = new Date();
-            const diffDays = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+            const formattedDate = new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const { label: status, cls: statusClass } = getLicenseStatus(date);
+            const descText = desc || 'No description provided.';
 
-            let status = 'ACTIVE';
-            let statusClass = 'bg-emerald-50 text-emerald-600';
-
-            if (diffDays <= 30) {
-                status = 'EXPIRING SOON';
-                statusClass = 'bg-amber-50 text-amber-600';
-            }
-            if (diffDays < 0) {
-                status = 'EXPIRED';
-                statusClass = 'bg-rose-50 text-rose-600';
-            }
-
-            const formattedDate = expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-            const licenseHtml = `
-                <div class="p-3 bg-white border border-slate-100 rounded-xl hover:border-rose-200 transition-all group animate-in slide-in-from-bottom duration-300">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <h4 class="text-[10px] font-black text-slate-900">${name}</h4>
-                            <p class="text-[8px] font-bold text-slate-400 uppercase">Expires: ${formattedDate}</p>
-                        </div>
-                        <span class="${statusClass} text-[7px] font-black px-1.5 py-0.5 rounded">${status}</span>
+            const div = document.createElement('div');
+            div.className = 'lic-card bg-white border border-slate-100 rounded-xl transition-all cursor-pointer hover:border-rose-200 hover:shadow-sm animate-in slide-in-from-bottom duration-300';
+            div.dataset.type = type; div.dataset.name = name; div.dataset.date = formattedDate;
+            div.dataset.remind = period; div.dataset.status = status; div.dataset.statusCls = statusClass;
+            div.dataset.desc = descText;
+            div.setAttribute('onclick', 'openLicenseDetail(this)');
+            div.innerHTML = `<div class="p-3">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h4 class="text-[10px] font-black text-slate-900">${name}</h4>
+                        <p class="text-[8px] font-bold text-slate-400 uppercase">Expires: ${formattedDate}</p>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-[7px] font-bold text-rose-500 uppercase tracking-tight flex items-center gap-1">
-                            <i class="fa-solid fa-bell text-[7px]"></i> Remind ${period} days before
-                        </span>
-                        <button onclick="deleteLicense(this)" class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-300 hover:text-rose-500">
-                            <i class="fa-solid fa-trash-can text-[9px]"></i>
-                        </button>
-                    </div>
+                    <span class="${statusClass} text-[7px] font-black px-1.5 py-0.5 rounded">${status}</span>
                 </div>
-            `;
-
-            document.getElementById('licenseList').insertAdjacentHTML('afterbegin', licenseHtml);
-
-            // Reset and Close
+                <span class="text-[7px] font-bold text-rose-500 uppercase tracking-tight flex items-center gap-1">
+                    <i class="fa-solid fa-bell text-[7px]"></i> Remind ${period} days before
+                </span></div>`;
+            document.getElementById('licenseList').prepend(div);
             document.getElementById('licName').value = '';
+            document.getElementById('licDesc').value = '';
             document.getElementById('licDate').value = '';
             toggleLicenseForm();
         }
 
+        function openLicenseDetail(card) {
+            _currentLicCard = card;
+            const { type, name, date, remind, status, statusCls, desc } = card.dataset;
+            document.getElementById('licHeaderList').classList.add('hidden');
+            document.getElementById('licHeaderDetail').classList.remove('hidden');
+            document.getElementById('licenseForm').classList.add('hidden');
+            document.getElementById('licenseList').classList.add('hidden');
+            document.getElementById('licDetailTitle').textContent = name;
+            document.getElementById('licDetailDeleteBtn').classList.remove('hidden'); document.getElementById('licDetailEditBtn').classList.remove('hidden');
+            document.getElementById('licDetailDeleteBtn').onclick = () => deleteLicenseFromDetail(card);
+            renderLicenseDetailView(type, name, date, remind, status, statusCls, desc);
+            document.getElementById('licenseDetail').classList.remove('hidden');
+        }
+
+        function renderLicenseDetailView(type, name, date, remind, status, statusCls, desc) {
+            document.getElementById('licenseDetail').innerHTML = `
+                <div class="p-3 flex flex-col h-full">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[7px] font-black text-rose-500 uppercase tracking-widest px-1.5 py-0.5 bg-rose-50 rounded">${type}</span>
+                        <span class="${statusCls} text-[7px] font-black px-1.5 py-0.5 rounded">${status}</span>
+                    </div>
+                    <h2 class="text-[12px] font-black text-slate-900 leading-tight mb-2">${name}</h2>
+                    <div class="space-y-1.5 flex-1">
+                        <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
+                            <i class="fa-solid fa-calendar-days text-[8px] text-slate-400 w-3 shrink-0"></i>
+                            <div>
+                                <p class="text-[6.5px] font-black text-slate-400 uppercase tracking-widest">Expiry Date</p>
+                                <p class="text-[9px] font-black text-slate-900">${date}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
+                            <i class="fa-solid fa-bell text-[8px] text-rose-400 w-3 shrink-0"></i>
+                            <div>
+                                <p class="text-[6.5px] font-black text-slate-400 uppercase tracking-widest">Reminder</p>
+                                <p class="text-[9px] font-black text-slate-900">${remind} days before expiry</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2 p-2 bg-slate-50 rounded-lg">
+                            <i class="fa-solid fa-align-left text-[8px] text-slate-400 w-3 shrink-0 mt-0.5"></i>
+                            <div>
+                                <p class="text-[6.5px] font-black text-slate-400 uppercase tracking-widest">Description</p>
+                                <p class="text-[9px] font-bold text-slate-600 leading-snug">${desc}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function openLicenseEditForm() {
+            const { type, name, date, remind, desc } = _currentLicCard.dataset;
+            document.getElementById('licDetailTitle').textContent = 'Edit Details';
+            document.getElementById('licDetailDeleteBtn').classList.add('hidden'); document.getElementById('licDetailEditBtn').classList.add('hidden');
+            document.getElementById('licenseDetail').innerHTML = `
+                <div class="p-3 flex flex-col h-full">
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Type</label>
+                            <select id="licEditType" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[9px] outline-none focus:border-rose-500">
+                                <option value="License" ${type==='License'?'selected':''}>License</option>
+                                <option value="Insurance" ${type==='Insurance'?'selected':''}>Insurance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Name</label>
+                            <input id="licEditName" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[9px] outline-none focus:border-rose-500" value="${name}">
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Description</label>
+                        <textarea id="licEditDesc" rows="1" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[9px] outline-none focus:border-rose-500 resize-none">${desc === 'No description provided.' ? '' : desc}</textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Expiry Date</label>
+                            <input id="licEditDate" type="date" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[9px] outline-none focus:border-rose-500">
+                        </div>
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Remind Period</label>
+                            <select id="licEditRemind" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-[9px] outline-none focus:border-rose-500">
+                                <option value="30" ${remind==='30'?'selected':''}>30 Days Before</option>
+                                <option value="14" ${remind==='14'?'selected':''}>14 Days Before</option>
+                                <option value="7" ${remind==='7'?'selected':''}>7 Days Before</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-auto">
+                        <button onclick="saveLicenseEdit()"
+                            class="flex-1 bg-rose-600 text-white py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-rose-700 transition-all">Save</button>
+                        <button onclick="cancelLicenseEdit()"
+                            class="px-4 bg-slate-100 text-slate-600 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-slate-200 transition-all">Cancel</button>
+                    </div>
+                </div>`;
+        }
+
+        function saveLicenseEdit() {
+            const card = _currentLicCard;
+            const newType = document.getElementById('licEditType').value;
+            const newName = document.getElementById('licEditName').value.trim();
+            const newDesc = document.getElementById('licEditDesc').value.trim() || 'No description provided.';
+            const newDateVal = document.getElementById('licEditDate').value;
+            const newRemind = document.getElementById('licEditRemind').value;
+            if (!newName) { alert('Name is required'); return; }
+
+            const newDate = newDateVal
+                ? new Date(newDateVal).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                : card.dataset.date;
+            const { label: newStatus, cls: newStatusCls } = newDateVal
+                ? getLicenseStatus(newDateVal)
+                : { label: card.dataset.status, cls: card.dataset.statusCls };
+
+            card.dataset.type = newType; card.dataset.name = newName; card.dataset.date = newDate;
+            card.dataset.remind = newRemind; card.dataset.status = newStatus; card.dataset.statusCls = newStatusCls;
+            card.dataset.desc = newDesc;
+
+            card.querySelector('h4').textContent = newName;
+            card.querySelector('p.text-slate-400').textContent = 'Expires: ' + newDate;
+            const statusSpan = card.querySelector('span[class*="bg-"]');
+            if (statusSpan) { statusSpan.className = `${newStatusCls} text-[7px] font-black px-1.5 py-0.5 rounded`; statusSpan.textContent = newStatus; }
+
+            document.getElementById('licDetailTitle').textContent = newName;
+            document.getElementById('licDetailDeleteBtn').classList.remove('hidden'); document.getElementById('licDetailEditBtn').classList.remove('hidden');
+            renderLicenseDetailView(newType, newName, newDate, newRemind, newStatus, newStatusCls, newDesc);
+        }
+
+        function cancelLicenseEdit() {
+            const { type, name, date, remind, status, statusCls, desc } = _currentLicCard.dataset;
+            document.getElementById('licDetailTitle').textContent = name;
+            document.getElementById('licDetailDeleteBtn').classList.remove('hidden'); document.getElementById('licDetailEditBtn').classList.remove('hidden');
+            renderLicenseDetailView(type, name, date, remind, status, statusCls, desc);
+        }
+
+        function closeLicenseDetail() {
+            _currentLicCard = null;
+            document.getElementById('licHeaderDetail').classList.add('hidden');
+            document.getElementById('licHeaderList').classList.remove('hidden');
+            document.getElementById('licenseDetail').classList.add('hidden');
+            document.getElementById('licenseList').classList.remove('hidden');
+        }
+
+        function deleteLicenseFromDetail(card) {
+            closeLicenseDetail();
+            card.classList.add('scale-95', 'opacity-0', 'transition-all');
+            setTimeout(() => card.remove(), 200);
+        }
+
         function deleteLicense(btn) {
-            const card = btn.closest('.p-3');
+            const card = btn.closest('.lic-card');
             card.classList.add('scale-95', 'opacity-0');
             setTimeout(() => card.remove(), 200);
         }
