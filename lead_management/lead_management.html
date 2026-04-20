@@ -88,6 +88,10 @@
             display: none;
         }
 
+        .dashboard-container.create-mode #activity-log-section {
+            display: none !important;
+        }
+
         .panel-card {
             background: #fff;
             border-radius: 24px;
@@ -822,6 +826,16 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                     class="form-input-premium bg-white">
                             </div>
                             <div>
+                                <label class="label-premium">Task Type</label>
+                                <select id="task-type" class="form-input-premium bg-white">
+                                    <option>Call</option>
+                                    <option>Meeting</option>
+                                    <option>Follow-up</option>
+                                    <option>Email</option>
+                                    <option>Document</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label class="label-premium">Task Status</label>
                                 <select id="task-status" class="form-input-premium bg-white">
                                     <option>Warm</option>
@@ -865,7 +879,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     </div>
                 </div>
                 <!-- Task Feed Integration -->
-                <div class="p-4 border-t border-gray-50 bg-gray-50/20">
+                <div id="activity-log-section" class="p-4 border-t border-gray-50 bg-gray-50/20">
                     <h3 class="section-header" style="margin-bottom:10px;">Activity Log</h3>
                     <div id="task-feed-container" class="space-y-2"></div>
                 </div>
