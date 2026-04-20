@@ -221,6 +221,27 @@
             flex-shrink: 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
+        /* Day Events Drawer */
+        .day-drawer{position:fixed;inset:0;z-index:400;display:none;justify-content:flex-end;overflow:hidden;pointer-events:none;}
+        .day-drawer.open{pointer-events:all;display:flex;}
+        .day-drawer-backdrop{position:absolute;inset:0;background:rgba(15,23,42,0.28);backdrop-filter:blur(3px);opacity:0;transition:opacity .3s;}
+        .day-drawer.open .day-drawer-backdrop{opacity:1;}
+        .day-drawer-panel{position:relative;width:100%;max-width:520px;background:#fff;height:100%;box-shadow:-24px 0 60px rgba(0,0,0,0.14);border-left:1px solid #f1f5f9;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .42s cubic-bezier(0.16,1,0.3,1);}
+        .day-drawer.open .day-drawer-panel{transform:translateX(0);}
+        .day-evt-row{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid #f8fafc;transition:background .1s;}
+        .day-evt-row:hover{background:#f8fafc;}
+        .day-evt-task{border-left:3px solid #6366f1;}
+        .day-evt-followup{border-left:3px solid #f59e0b;}
+        .day-evt-done{opacity:0.48;}
+        .dd-tab-btn{flex:1;padding:9px 6px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:none;border:none;border-bottom:2px solid transparent;color:#94a3b8;cursor:pointer;transition:all .15s;}
+        .dd-tab-btn.active{color:#6366f1;border-bottom-color:#6366f1;}
+        .cal-day{height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border-radius:7px;position:relative;cursor:pointer;transition:all .15s;color:#1e293b;}
+        .cal-day:hover{background:#f1f5f9;}
+        .cal-day.today{background:#0f172a;color:#fff;font-weight:900;}
+        .cal-day.selected{background:#6366f1;color:#fff;box-shadow:0 4px 12px rgba(99,102,241,.3);}
+        .cal-day.muted{color:#cbd5e1;cursor:default;pointer-events:none;}
+        .cal-day .evt-dot{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:#6366f1;}
+        .cal-day.today .evt-dot,.cal-day.selected .evt-dot{background:rgba(255,255,255,.8);}
     </style>
 </head>
 <body>
@@ -384,6 +405,34 @@
                 <div class="p-3 border-t border-amber-100 flex gap-2 items-center bg-white">
                     <input id="noteInput" type="text" class="flex-1 bg-white border border-amber-100 rounded-lg px-3 py-2 text-[10px] font-medium focus:outline-none focus:border-amber-400 placeholder:text-slate-300" placeholder="Type a note & press Enter..." onkeypress="if(event.key==='Enter')addNote()">
                     <button onclick="addNote()" class="bg-[#fbbf24] hover:bg-[#f59e0b] text-white px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Add</button>
+                </div>
+            </div>
+        </div>
+
+            <!-- Operational Calendar -->
+            <div class="glass-card flex flex-col" style="height:280px;" data-id="calendar">
+                <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-calendar-days text-xs"></i></div>
+                        <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Operational Calendar</h3>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="tlChangeMonth(-1)" class="w-6 h-6 rounded bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-solid fa-chevron-left text-[8px]"></i></button>
+                        <span id="tlMonthYear" class="text-[9px] font-black text-slate-900 uppercase"></span>
+                        <button onclick="tlChangeMonth(1)" class="w-6 h-6 rounded bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all"><i class="fa-solid fa-chevron-right text-[8px]"></i></button>
+                    </div>
+                </div>
+                <div class="flex-1 px-3 pt-2 pb-1">
+                    <div class="grid grid-cols-7 gap-0.5 mb-1">
+                        <div class="text-center text-[7px] font-black text-slate-400 uppercase">S</div>
+                        <div class="text-center text-[7px] font-black text-slate-400 uppercase">M</div>
+                        <div class="text-center text-[7px] font-black text-slate-400 uppercase">T</div>
+                        <div class="text-center text-[7px] font-black text-slate-400 uppercase">W</div>
+                        <div class="text-center text-[7px] font-black text-slate-400 uppercase">T</div>
+                        <div class="text-center text-[7px] font-black text-slate-400 uppercase">F</div>
+                        <div class="text-center text-[7px] font-black text-slate-400 uppercase">S</div>
+                    </div>
+                    <div id="tlCalGrid" class="grid grid-cols-7 gap-0.5"></div>
                 </div>
             </div>
         </div>
@@ -889,6 +938,144 @@ window.addEventListener('load', () => { updateCalculator(); });
             </div>
         </div>
     </div>
+</div>
+
+<!-- Day Events Drawer -->
+<div class="day-drawer" id="dayDrawer">
+    <div class="day-drawer-backdrop" onclick="closeDayDrawer()"></div>
+    <div class="day-drawer-panel">
+        <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500">
+                    <i class="fa-solid fa-calendar-day text-lg"></i>
+                </div>
+                <div>
+                    <h2 id="ddDateLabel" class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none"></h2>
+                    <p id="ddMeta" class="text-[9px] font-bold text-slate-400 mt-1.5 uppercase tracking-wider"></p>
+                </div>
+            </div>
+            <button onclick="closeDayDrawer()"
+                class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+        <div style="display:flex;border-bottom:2px solid #f1f5f9;background:#f8fafc;flex-shrink:0;">
+            <button id="dd-tab-all" class="dd-tab-btn active" onclick="switchDayTab('all')">All Activities</button>
+            <button id="dd-tab-task" class="dd-tab-btn" onclick="switchDayTab('task')"><i class="fa-solid fa-list-check" style="margin-right:4px;font-size:7px;"></i>Tasks</button>
+            <button id="dd-tab-followup" class="dd-tab-btn" onclick="switchDayTab('followup')"><i class="fa-solid fa-phone-volume" style="margin-right:4px;font-size:7px;"></i>Follow-ups</button>
+        </div>
+        <div id="ddEventsList" class="custom-scrollbar" style="flex:1;overflow-y:auto;background:#fafbfc;"></div>
+        <div style="padding:20px 32px;border-top:1px solid #f1f5f9;background:#fff;flex-shrink:0;">
+            <a href="../task_and_followups/task_management.html" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:14px;background:#0f172a;color:#fff;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;box-shadow:0 10px 20px rgba(15,23,42,0.15);"><i class="fa-solid fa-list-check"></i>Open Task Hub</a>
+        </div>
+    </div>
+</div>
+
+<script>
+// ── Calendar + Day Drawer (Team Lead) ──────────────────────────
+let _tlCurDate=new Date(),_tlSelDate=null,_ddFilter='all',_ddKey='';
+function _addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function _dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+const CAL_EVENTS={};
+(function(){
+    const t=new Date();
+    [[0,'task','Team briefing - weekly sync','Internal','09:00','high',false],
+    [0,'followup','Call James Smith re: mortgage docs','James Smith','10:30','high',false],
+    [0,'task','Review agent performance reports','Internal','11:00','medium',false],
+    [1,'followup','Pipeline review with Thanushika','Thanushika','09:00','medium',false],
+    [1,'task','Approve lead assignments','Internal','10:00','high',false],
+    [2,'task','Compliance training session','Internal','09:30','high',false],
+    [2,'followup','Courtesy check-in call','Sarah Smith','11:30','low',false],
+    [3,'task','Monthly KPI review','Internal','10:00','high',false],
+    [3,'followup','Loan approval confirmation call','Henry Miller','15:00','high',false],
+    [-1,'task','Performance review - Ravindu','Internal','10:00','medium',true],
+    [-1,'followup','Contract signature follow-up','Johnathan Doe','14:30','high',true],
+    [-3,'task','Lender panel rate update','Internal','09:00','medium',true],
+    [5,'task','Monthly portfolio review','Internal','10:00','high',false],
+    [5,'followup','Settlement checklist review','ABC Corp','13:00','medium',false],
+    [7,'followup','Post-settlement courtesy call','Wilson Family','09:00','medium',false],
+    [10,'task','Quarterly compliance check','Internal','10:00','medium',false],
+    ].forEach(([delta,type,title,lead,time,priority,done])=>{
+        const key=_dateKey(_addDays(t,delta));
+        if(!CAL_EVENTS[key])CAL_EVENTS[key]=[];
+        CAL_EVENTS[key].push({type,title,lead,time,priority,done});
+    });
+})();
+function tlRenderCalendar(){
+    const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const y=_tlCurDate.getFullYear(),m=_tlCurDate.getMonth();
+    document.getElementById('tlMonthYear').textContent=MONTHS[m]+' '+y;
+    const grid=document.getElementById('tlCalGrid');grid.innerHTML='';
+    const firstDay=new Date(y,m,1).getDay(),daysInMonth=new Date(y,m+1,0).getDate(),prevDays=new Date(y,m,0).getDate(),today=new Date();
+    for(let i=firstDay;i>0;i--){const d=document.createElement('div');d.className='cal-day muted';d.textContent=prevDays-i+1;grid.appendChild(d);}
+    for(let i=1;i<=daysInMonth;i++){
+        const d=document.createElement('div');
+        const isToday=i===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+        const isSel=_tlSelDate&&i===_tlSelDate.getDate()&&m===_tlSelDate.getMonth()&&y===_tlSelDate.getFullYear();
+        d.className='cal-day'+(isToday?' today':'')+(isSel?' selected':'');
+        d.textContent=i;
+        const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(i).padStart(2,'0');
+        if(CAL_EVENTS[key]&&CAL_EVENTS[key].length){const dot=document.createElement('div');dot.className='evt-dot';d.appendChild(dot);}
+        d.onclick=()=>{_tlSelDate=new Date(y,m,i);tlRenderCalendar();openDayDrawer(y,m,i);};
+        grid.appendChild(d);
+    }
+}
+function tlChangeMonth(delta){_tlCurDate.setMonth(_tlCurDate.getMonth()+delta);tlRenderCalendar();}
+function openDayDrawer(year,month,day){
+    _ddKey=year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+    const date=new Date(year,month,day);
+    const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    document.getElementById('ddDateLabel').textContent=DAYS[date.getDay()]+', '+day+' '+MONTHS[month]+' '+year;
+    const evts=CAL_EVENTS[_ddKey]||[];
+    const tC=evts.filter(e=>e.type==='task').length,fC=evts.filter(e=>e.type==='followup').length;
+    document.getElementById('ddMeta').textContent=tC+' task'+(tC!==1?'s':'')+' · '+fC+' follow-up'+(fC!==1?'s':'');
+    _ddFilter='all';
+    ['all','task','followup'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f==='all'?' active':'');});
+    renderDayEvents();document.getElementById('dayDrawer').classList.add('open');
+}
+function closeDayDrawer(){document.getElementById('dayDrawer').classList.remove('open');}
+function switchDayTab(filter){
+    _ddFilter=filter;
+    ['all','task','followup'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===filter?' active':'');});
+    renderDayEvents();
+}
+function renderDayEvents(){
+    const evts=CAL_EVENTS[_ddKey]||[];
+    const filtered=_ddFilter==='all'?evts:evts.filter(e=>e.type===_ddFilter);
+    const list=document.getElementById('ddEventsList');
+    if(!filtered.length){list.innerHTML=`<div style="padding:100px 40px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+            <div class="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-200 mb-6">
+                <i class="fa-solid fa-calendar-xmark text-3xl"></i>
+            </div>
+            <div style="font-size:14px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:0.1em;">Schedule Empty</div>
+            <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-top:8px;max-width:240px;line-height:1.6;">No tasks or follow-ups have been scheduled for this date yet.</div>
+            <button onclick="closeDayDrawer()" style="margin-top:24px;padding:10px 24px;border-radius:12px;background:#0f172a;color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;">Return to Calendar</button>
+        </div>`;return;}
+    const prioC={high:'#b91c1c',medium:'#b45309',low:'#64748b'},prioBg={high:'#fee2e2',medium:'#fef3c7',low:'#f1f5f9'};
+    list.innerHTML=[...filtered].sort((a,b)=>a.time.localeCompare(b.time)).map(e=>`
+        <div class="day-evt-row day-evt-${e.type}${e.done?' day-evt-done':''}">
+            <div style="width:38px;height:38px;border-radius:10px;background:${e.type==='task'?'#f5f3ff':'#fffbeb'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+                <i class="fa-solid ${e.type==='task'?'fa-list-check':'fa-phone-volume'}" style="color:${e.type==='task'?'#7c3aed':'#d97706'};font-size:13px;"></i>
+            </div>
+            <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:4px;">
+                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${e.type==='task'?'#ede9fe':'#fef3c7'};color:${e.type==='task'?'#7c3aed':'#b45309'};text-transform:uppercase;">${e.type==='task'?'Task':'Follow-up'}</span>
+                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${prioBg[e.priority]};color:${prioC[e.priority]};text-transform:uppercase;">${e.priority}</span>
+                    ${e.done?'<span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:#dcfce7;color:#15803d;text-transform:uppercase;">Done</span>':''}
+                </div>
+                <div style="font-size:10px;font-weight:700;color:#0f172a;line-height:1.4;${e.done?'text-decoration:line-through;opacity:.7;':''}">${e.title}</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+                    <span style="font-size:8px;color:#64748b;font-weight:600;"><i class="fa-solid fa-user" style="font-size:7px;margin-right:3px;"></i>${e.lead}</span>
+                    <span style="font-size:8px;color:#94a3b8;font-weight:700;"><i class="fa-solid fa-clock" style="font-size:7px;margin-right:3px;"></i>${e.time}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+document.addEventListener('click',function(e){const drawer=document.getElementById('dayDrawer');if(!drawer||!drawer.classList.contains('open'))return;if(!drawer.querySelector('.day-drawer-panel').contains(e.target))closeDayDrawer();});
+window.addEventListener('load',()=>tlRenderCalendar());
+</script>
 </body>
 
 

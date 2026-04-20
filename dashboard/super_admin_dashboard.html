@@ -600,6 +600,23 @@
                 transform: translateY(0)
             }
         }
+
+        /* ── Day Events Drawer ──────────────────────────── */
+        .day-drawer { position:fixed; inset:0; z-index:400; display:none; justify-content:flex-end; overflow:hidden; pointer-events:none; }
+        .day-drawer.open { pointer-events:all; display:flex; }
+        .day-drawer-backdrop { position:absolute; inset:0; background:rgba(15,23,42,0.28); backdrop-filter:blur(3px); opacity:0; transition:opacity .3s; }
+        .day-drawer.open .day-drawer-backdrop { opacity:1; }
+        .day-drawer-panel { position:relative; width:100%; max-width:520px; background:#fff; height:100%; box-shadow:-24px 0 60px rgba(0,0,0,0.14); border-left:1px solid #f1f5f9; display:flex; flex-direction:column; transform:translateX(100%); transition:transform .42s cubic-bezier(0.16,1,0.3,1); }
+        .day-drawer.open .day-drawer-panel { transform:translateX(0); }
+        .day-evt-row { display:flex; align-items:flex-start; gap:10px; padding:12px 16px; border-bottom:1px solid #f8fafc; transition:background .1s; background:#fff; }
+        .day-evt-row:hover { background:#f8fafc; }
+        .day-evt-overdue { border-left:3px solid #b91c1c; background:#fef2f2; }
+        .day-evt-row .view-mode { display:flex; gap:10px; width:100%; }
+        .day-evt-task { border-left:3px solid #6366f1; }
+        .day-evt-followup { border-left:3px solid #f59e0b; }
+        .day-evt-done { opacity:0.48; }
+        .dd-tab-btn { flex:1; padding:9px 6px; font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; background:none; border:none; border-bottom:2px solid transparent; color:#94a3b8; cursor:pointer; transition:all .15s; }
+        .dd-tab-btn.active { color:#6366f1; border-bottom-color:#6366f1; }
     </style>
 </head>
 
@@ -1591,15 +1608,18 @@
                         dayDiv.className = `h-7 flex items-center justify-center text-[11px] font-black rounded relative cursor-pointer transition-all ${isToday ? 'bg-slate-900 text-white' : isSelected ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-slate-900 hover:bg-slate-50'}`;
                         dayDiv.innerText = i;
 
-                        dayDiv.onclick = () => {
+                        dayDiv.onclick = (e) => {
+                            e.stopPropagation();
                             selectedDate = new Date(year, month, i);
                             renderCalendar();
+                            openDayDrawer(year, month, i);
                         };
 
-                        // Mock dots
-                        if (i % 7 === 0) {
+                        // Event indicator dots
+                        const calKey = year + '-' + String(month+1).padStart(2,'0') + '-' + String(i).padStart(2,'0');
+                        if (CAL_EVENTS[calKey] && CAL_EVENTS[calKey].length) {
                             const dot = document.createElement('div');
-                            dot.className = `absolute bottom-1 w-1 h-1 rounded-full ${isToday || isSelected ? 'bg-white' : 'bg-indigo-500'}`;
+                            dot.className = `absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${isToday || isSelected ? 'bg-white' : 'bg-indigo-500'}`;
                             dayDiv.appendChild(dot);
                         }
 
@@ -1613,6 +1633,266 @@
                 }
 
                 renderCalendar();
+            </script>
+
+            <script>
+            // ── Calendar Events Data ──────────────────────────────────────
+            function _addDays(date, n) { const d = new Date(date); d.setDate(d.getDate() + n); return d; }
+            function _dateKey(date) { return date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0'); }
+
+            const CAL_EVENTS = {};
+            (function seedCalendarEvents() {
+                const t = new Date();
+                const seed = [
+                    [0,  'task',     'Call James Smith re: mortgage docs',   'James Smith',   '09:00', 'high',   false],
+                    [0,  'task',     'Review ANZ credit application',         'Oliver Jones',  '11:00', 'medium', true ],
+                    [0,  'task',     'Team Meeting: Weekly Sync',            'Internal',      '14:00', 'medium', false],
+                    [0,  'followup', 'Send proposal to Williams & Co',        'Williams & Co', '10:30', 'high',   false],
+                    [0,  'followup', 'Follow up on Westpac interest terms',   'Sarah Brown',   '14:00', 'low',    false],
+                    [1,  'task',     'Upload client payslips to portal',      'Brown Family',  '09:30', 'high',   false],
+                    [1,  'followup', 'KYC verification follow-up call',       'Noah Williams', '11:00', 'medium', false],
+                    [1,  'task',     'Draft Loan Agreement',                 'Peter Parker',  '15:00', 'high',   false],
+                    [2,  'followup', 'Courtesy check-in call',                'Sarah Smith',   '11:30', 'low',    false],
+                    [2,  'task',     'Prepare lender comparison report',      'James Davis',   '14:00', 'medium', false],
+                    [3,  'task',     'Compliance doc audit',                  'Internal',      '09:00', 'high',   false],
+                    [3,  'followup', 'Loan approval confirmation call',       'Henry Miller',  '15:00', 'high',   false],
+                    [5,  'task',     'Client Onboarding Session',             'Startup Ltd',   '10:00', 'medium', false],
+                    [-1, 'task',     'Review credit files (completed)',       'Multiple',      '10:00', 'high',   true ],
+                    [-1, 'followup', 'Contract signature follow-up',          'Johnathan Doe', '14:30', 'high',   true ],
+                    [-2, 'task',     'Team weekly briefing notes',            'Internal',      '09:30', 'medium', true ],
+                    [-3, 'task',     'Lender panel rate update',              'Internal',      '09:00', 'medium', true ],
+                    [5,  'task',     'Monthly portfolio review',              'Internal',      '10:00', 'high',   false],
+                    [5,  'followup', 'Settlement checklist review',           'ABC Corp',      '13:00', 'medium', false],
+                    [7,  'followup', 'Post-settlement courtesy call',         'Wilson Family', '09:00', 'medium', false],
+                    [7,  'task',     'Broker panel compliance submission',    'Internal',      '14:00', 'high',   false],
+                    [10, 'task',     'Quarterly compliance check',            'Internal',      '10:00', 'medium', false],
+                    [14, 'followup', 'Annual review check-in',                'Davis Holdings','11:00', 'low',    false],
+                    // Additional mock data for more dates
+                    [4,  'task',     'Update client database',                'Internal',      '10:00', 'medium', false],
+                    [4,  'followup', 'Follow up on pending applications',     'Multiple',      '14:00', 'low',    false],
+                    [6,  'task',     'Prepare monthly reports',               'Internal',      '09:00', 'high',   false],
+                    [6,  'followup', 'Client feedback call',                  'Emma Wilson',   '11:00', 'medium', false],
+                    [8,  'task',     'Review loan documents',                 'Legal Team',    '10:30', 'high',   false],
+                    [8,  'followup', 'Settlement confirmation',               'Robert Lee',    '15:00', 'medium', false],
+                    [9,  'task',     'Team performance review',               'Internal',      '14:00', 'medium', false],
+                    [11, 'followup', 'Quarterly client check-in',             'Corporate Clients', '10:00', 'low', false],
+                    [12, 'task',     'Update compliance policies',            'Internal',      '09:00', 'high',   false],
+                    [13, 'followup', 'Loan restructuring follow-up',          'Finance Dept',  '11:30', 'medium', false],
+                    [-4, 'task',     'Archive old files',                     'Internal',      '10:00', 'low',    true ],
+                    [-5, 'followup', 'Previous month review',                 'Management',    '14:00', 'medium', true ],
+                ];
+                seed.forEach(([delta, type, title, lead, time, priority, done]) => {
+                    const key = _dateKey(_addDays(t, delta));
+                    if (!CAL_EVENTS[key]) CAL_EVENTS[key] = [];
+                    CAL_EVENTS[key].push({ type, title, lead, time, priority, done });
+                });
+            })();
+
+            // ── Day Drawer Logic ──────────────────────────────────────────
+            let _ddFilter = 'all';
+            let _ddKey = '';
+
+            function openDayDrawer(year, month, day) {
+                closeCalculator();
+                _ddKey = year + '-' + String(month+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+                const date = new Date(year, month, day);
+                const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+                const DAY_NAMES   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                document.getElementById('ddDateLabel').textContent = DAY_NAMES[date.getDay()] + ', ' + day + ' ' + MONTH_NAMES[month] + ' ' + year;
+                const evts = CAL_EVENTS[_ddKey] || [];
+                const tCount = evts.filter(e => e.type === 'task').length;
+                const fCount = evts.filter(e => e.type === 'followup').length;
+                document.getElementById('ddMeta').textContent = tCount + ' task' + (tCount !== 1 ? 's' : '') + ' · ' + fCount + ' follow-up' + (fCount !== 1 ? 's' : '');
+                _ddFilter = 'todo';
+                ['todo','inprogress','overdue','complete'].forEach(f => {
+                    const b = document.getElementById('dd-tab-' + f);
+                    if (b) { b.className = 'dd-tab-btn' + (f === 'todo' ? ' active' : ''); }
+                });
+                renderDayEvents();
+                document.getElementById('dayDrawer').classList.add('open');
+            }
+
+            function closeDayDrawer() {
+                document.getElementById('dayDrawer').classList.remove('open');
+            }
+
+            function switchDayTab(filter) {
+                _ddFilter = filter;
+                ['todo','inprogress','overdue','complete'].forEach(f => {
+                    const b = document.getElementById('dd-tab-' + f);
+                    if (b) { b.className = 'dd-tab-btn' + (f === filter ? ' active' : ''); }
+                });
+                renderDayEvents();
+            }
+
+            function editTask(dateKey, eventIndex) {
+                const row = document.querySelector(`[data-event-index="${eventIndex}"]`);
+                if (row) {
+                    row.querySelector('.view-mode').style.display = 'none';
+                    row.querySelector('.edit-mode').style.display = 'block';
+                }
+            }
+
+            function saveTask(dateKey, eventIndex) {
+                const events = CAL_EVENTS[dateKey];
+                if (!events || !events[eventIndex]) return;
+                events[eventIndex].title = document.getElementById(`edit-title-${eventIndex}`).value;
+                events[eventIndex].lead = document.getElementById(`edit-lead-${eventIndex}`).value;
+                events[eventIndex].time = document.getElementById(`edit-time-${eventIndex}`).value;
+                events[eventIndex].priority = document.getElementById(`edit-priority-${eventIndex}`).value;
+                events[eventIndex].type = document.getElementById(`edit-type-${eventIndex}`).value;
+                
+                // Handle status change
+                const statusValue = document.getElementById(`edit-status-${eventIndex}`).value;
+                if (statusValue === 'done') {
+                    events[eventIndex].done = true;
+                } else {
+                    events[eventIndex].done = false;
+                }
+                
+                // Determine new filter based on status
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const drawerDate = new Date(dateKey.split('-')[0], dateKey.split('-')[1]-1, dateKey.split('-')[2]);
+                drawerDate.setHours(0,0,0,0);
+                
+                let newFilter = 'todo';
+                if (statusValue === 'done') {
+                    newFilter = 'complete';
+                } else if (statusValue === 'overdue') {
+                    newFilter = 'overdue';
+                } else if (statusValue === 'in progress') {
+                    newFilter = 'inprogress';
+                } else {
+                    newFilter = 'todo';
+                }
+                
+                // Switch to appropriate filter
+                _ddFilter = newFilter;
+                ['todo','inprogress','overdue','complete'].forEach(f => {
+                    const b = document.getElementById('dd-tab-' + f);
+                    if (b) { b.className = 'dd-tab-btn' + (f === newFilter ? ' active' : ''); }
+                });
+                
+                renderDayEvents();
+                // Update meta
+                const evts = CAL_EVENTS[_ddKey] || [];
+                const tCount = evts.filter(e => e.type === 'task').length;
+                const fCount = evts.filter(e => e.type === 'followup').length;
+                document.getElementById('ddMeta').textContent = tCount + ' task' + (tCount !== 1 ? 's' : '') + ' · ' + fCount + ' follow-up' + (fCount !== 1 ? 's' : '');
+            }
+
+            function cancelEdit(eventIndex) {
+                const row = document.querySelector(`[data-event-index="${eventIndex}"]`);
+                if (row) {
+                    row.querySelector('.view-mode').style.display = 'flex';
+                    row.querySelector('.edit-mode').style.display = 'none';
+                }
+            }
+
+            function renderDayEvents() {
+                const evts = CAL_EVENTS[_ddKey] || [];
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const drawerDate = new Date(_ddKey.split('-')[0], _ddKey.split('-')[1]-1, _ddKey.split('-')[2]);
+                drawerDate.setHours(0,0,0,0);
+                const filtered = evts.filter(e => {
+                    let status = 'to do';
+                    if (e.done) status = 'done';
+                    else if (e.customStatus) {
+                        status = e.customStatus;
+                    } else if (drawerDate < today) status = 'overdue';
+                    else if (drawerDate.getTime() === today.getTime()) status = 'in progress';
+                    else status = 'to do';
+                    if (_ddFilter === 'todo') return status === 'to do';
+                    if (_ddFilter === 'inprogress') return status === 'in progress';
+                    if (_ddFilter === 'overdue') return status === 'overdue';
+                    if (_ddFilter === 'complete') return status === 'done';
+                    return true;
+                });
+                const list = document.getElementById('ddEventsList');
+                if (!filtered.length) {
+                    list.innerHTML = `<div style="padding:100px 40px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+                        <div class="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-200 mb-6">
+                            <i class="fa-solid fa-calendar-xmark text-3xl"></i>
+                        </div>
+                        <div style="font-size:14px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:0.1em;">No ${ _ddFilter === 'todo' ? 'To Do' : _ddFilter === 'inprogress' ? 'In Progress' : _ddFilter === 'overdue' ? 'Overdue' : 'Complete' } Activities</div>
+                        <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-top:8px;max-width:240px;line-height:1.6;">No ${ _ddFilter === 'todo' ? 'to do' : _ddFilter === 'inprogress' ? 'in progress' : _ddFilter === 'overdue' ? 'overdue' : 'completed' } tasks or follow-ups for this date.</div>
+                        <button onclick="closeDayDrawer()" style="margin-top:24px;padding:10px 24px;border-radius:12px;background:#0f172a;color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;">Return to Calendar</button>
+                    </div>`;
+                    return;
+                }
+                const prioC = {high:'#b91c1c', medium:'#b45309', low:'#64748b'};
+                const prioBg = {high:'#fee2e2', medium:'#fef3c7', low:'#f1f5f9'};
+                list.innerHTML = [...filtered].sort((a,b) => a.time.localeCompare(b.time)).map((e, index) => {
+                    let status = 'to do';
+                    if (e.done) status = 'done';
+                    else if (e.customStatus) {
+                        status = e.customStatus;
+                    } else if (drawerDate < today) status = 'overdue';
+                    else if (drawerDate.getTime() === today.getTime()) status = 'in progress';
+                    else status = 'to do';
+                    const statusC = status === 'done' ? '#15803d' : status === 'overdue' ? '#b91c1c' : status === 'in progress' ? '#b45309' : '';
+                    const statusBg = status === 'done' ? '#dcfce7' : status === 'overdue' ? '#fee2e2' : status === 'in progress' ? '#fef3c7' : '';
+                    return `
+                    <div class="day-evt-row day-evt-${e.type} ${e.done ? 'day-evt-done' : ''} ${status === 'overdue' ? 'day-evt-overdue' : ''}" data-event-index="${index}">
+                        <div class="view-mode">
+                            <div style="width:38px;height:38px;border-radius:10px;background:${e.type==='task'?'#f5f3ff':'#fffbeb'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+                                <i class="fa-solid ${e.type==='task'?'fa-list-check':'fa-phone-volume'}" style="color:${e.type==='task'?'#7c3aed':'#d97706'};font-size:13px;"></i>
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:4px;">
+                                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${e.type==='task'?'#ede9fe':'#fef3c7'};color:${e.type==='task'?'#7c3aed':'#b45309'};text-transform:uppercase;">${e.type === 'task' ? 'Task' : 'Follow-up'}</span>
+                                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${prioBg[e.priority]};color:${prioC[e.priority]};text-transform:uppercase;">${e.priority}</span>
+                                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${statusBg};color:${statusC};text-transform:uppercase;">${status}</span>
+                                </div>
+                                <div style="font-size:10px;font-weight:700;color:#0f172a;line-height:1.4;${e.done?'text-decoration:line-through;opacity:.7;':''}">${e.title}</div>
+                                <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+                                    <span style="font-size:8px;color:#64748b;font-weight:600;"><i class="fa-solid fa-user" style="font-size:7px;margin-right:3px;"></i>${e.lead}</span>
+                                    <span style="font-size:8px;color:#94a3b8;font-weight:700;"><i class="fa-solid fa-clock" style="font-size:7px;margin-right:3px;"></i>${e.time}</span>
+                                    <button onclick="editTask('${_ddKey}', ${index})" style="margin-left:auto;padding:4px 8px;border-radius:4px;background:#f1f5f9;color:#64748b;font-size:8px;border:1px solid #e2e8f0;cursor:pointer;transition:all 0.2s;hover:background:#e2e8f0;"><i class="fa-solid fa-pencil"></i> Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="edit-mode" style="display:none;width:100%;padding:10px 0;">
+                            <div style="display:flex;flex-direction:column;gap:6px;background:#f8fafc;padding:8px;border-radius:8px;">
+                                <input type="text" id="edit-title-${index}" value="${e.title}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Title">
+                                <input type="text" id="edit-lead-${index}" value="${e.lead}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Lead/Client">
+                                <input type="text" id="edit-time-${index}" value="${e.time}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Time">
+                                <select id="edit-priority-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                                    <option value="low" ${e.priority==='low'?'selected':''}>Low Priority</option>
+                                    <option value="medium" ${e.priority==='medium'?'selected':''}>Medium Priority</option>
+                                    <option value="high" ${e.priority==='high'?'selected':''}>High Priority</option>
+                                </select>
+                                <select id="edit-type-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                                    <option value="task" ${e.type==='task'?'selected':''}>Type: Task</option>
+                                    <option value="followup" ${e.type==='followup'?'selected':''}>Type: Follow-up</option>
+                                </select>
+                                <select id="edit-status-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                                    <option value="to do" ${status==='to do'?'selected':''}>Status: To Do</option>
+                                    <option value="in progress" ${status==='in progress'?'selected':''}>Status: In Progress</option>
+                                    <option value="overdue" ${status==='overdue'?'selected':''}>Status: Overdue</option>
+                                    <option value="done" ${status==='done'?'selected':''}>Status: Done</option>
+                                </select>
+                                <div style="display:flex;gap:6px;margin-top:4px;">
+                                    <button onclick="saveTask('${_ddKey}', ${index})" style="flex:1;padding:6px 10px;border-radius:6px;background:#4f46e5;color:#fff;font-size:9px;border:none;cursor:pointer;font-weight:600;transition:all 0.2s;">✓ Save</button>
+                                    <button onclick="cancelEdit(${index})" style="flex:1;padding:6px 10px;border-radius:6px;background:#e2e8f0;color:#64748b;font-size:9px;border:none;cursor:pointer;font-weight:600;transition:all 0.2s;">✕ Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `}).join('');
+            }
+
+            // Close drawer on outside click
+            document.addEventListener('click', function(e) {
+                const drawer = document.getElementById('dayDrawer');
+                if (!drawer || !drawer.classList.contains('open')) return;
+                const panel = drawer.querySelector('.day-drawer-panel');
+                if (!panel.contains(e.target) && !e.target.closest('[data-cal-day]')) {
+                    closeDayDrawer();
+                }
+            });
             </script>
 
 
@@ -2000,6 +2280,7 @@
 
 
         function openCalculator() {
+            closeDayDrawer();
             const modal = document.getElementById('calculatorModal');
             const panel = document.getElementById('calculatorPanel');
             modal.style.display = 'flex';
@@ -2828,6 +3109,43 @@
             </div>
         </div>
     </div>
+
+<!-- Day Events Drawer -->
+<div class="day-drawer" id="dayDrawer">
+    <div class="day-drawer-backdrop" onclick="closeDayDrawer()"></div>
+    <div class="day-drawer-panel">
+        <!-- Modal Header (Matching Calculator Style) -->
+        <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500">
+                    <i class="fa-solid fa-calendar-day text-lg"></i>
+                </div>
+                <div>
+                    <h2 id="ddDateLabel" class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none"></h2>
+                    <p id="ddMeta" class="text-[9px] font-bold text-slate-400 mt-1.5 uppercase tracking-wider"></p>
+                </div>
+            </div>
+            <button onclick="closeDayDrawer()"
+                class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+        <!-- Tab Bar -->
+        <div style="display:flex;border-bottom:2px solid #f1f5f9;background:#f8fafc;flex-shrink:0;">
+            <button id="dd-tab-todo" class="dd-tab-btn active" onclick="switchDayTab('todo')">To Do</button>
+            <button id="dd-tab-inprogress" class="dd-tab-btn" onclick="switchDayTab('inprogress')">In Progress</button>
+            <button id="dd-tab-overdue" class="dd-tab-btn" onclick="switchDayTab('overdue')">Overdue</button>
+            <button id="dd-tab-complete" class="dd-tab-btn" onclick="switchDayTab('complete')">Complete</button>
+        </div>
+        <!-- Events List -->
+        <div id="ddEventsList" class="custom-scrollbar" style="flex:1;overflow-y:auto;background:#fafbfc;"></div>
+        <!-- Footer -->
+        <div style="padding:20px 32px;border-top:1px solid #f1f5f9;background:#fff;flex-shrink:0;">
+            <a href="../task_and_followups/task_management.html" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:14px;background:#0f172a;color:#fff;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;box-shadow:0 10px 20px rgba(15,23,42,0.15);"><i class="fa-solid fa-list-check"></i>Go to Task Management</a>
+        </div>
+    </div>
+</div>
+
 </body>
 
 </html>
