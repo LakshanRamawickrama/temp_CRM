@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -647,7 +647,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     <input type="hidden" id="edit-id" value="">
                     <input type="hidden" id="f-type" value="Bank">
 
-                    <!-- ── SECTION: Identity ── -->
+                    <!-- -- SECTION: Identity -- -->
                     <div class="space-y-2.5">
                         <div class="grid grid-cols-2 gap-2.5">
                             <div>
@@ -675,7 +675,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         </div>
                     </div>
 
-                    <!-- ── SECTION: Contact ── -->
+                    <!-- -- SECTION: Contact -- -->
                     <div class="form-section">
                         <p class="form-section-title"><i class="fa-solid fa-envelope text-[8px]"></i> Contact</p>
                         <div class="space-y-2.5">
@@ -698,7 +698,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         </div>
                     </div>
 
-                    <!-- ── SECTION: Address ── -->
+                    <!-- -- SECTION: Address -- -->
                     <div class="form-section">
                         <p class="form-section-title"><i class="fa-solid fa-location-dot text-[8px]"></i> Address</p>
                         <div class="space-y-2.5">
@@ -715,7 +715,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         </div>
                     </div>
 
-                    <!-- ── SECTION: Categories ── -->
+                    <!-- -- SECTION: Categories -- -->
                     <div class="form-section">
                         <p class="form-section-title"><i class="fa-solid fa-tags text-[8px]"></i> Categories</p>
                         <div id="cat-tags-container" class="flex flex-wrap gap-1.5 mb-2"></div>
@@ -730,7 +730,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         </div>
                     </div>
 
-                    <!-- ── SECTION: Notes ── -->
+                    <!-- -- SECTION: Notes -- -->
                     <div class="form-section">
                         <label class="label-text">Notes</label>
                         <textarea id="f-notes" rows="3" placeholder="Internal notes..."
@@ -747,7 +747,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     </div>
                 </div>
 
-                <!-- ══ SEND APPLICATION TAB ══ -->
+                <!-- -- SEND APPLICATION TAB -- -->
                 <div id="sendapp-tab" class="hidden p-4 space-y-3">
                     <!-- Multi-select drop zone -->
                     <div id="sendapp-dropzone"
@@ -757,7 +757,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                         style="border:2px dashed #e2e8f0;border-radius:12px;padding:16px 12px;text-align:center;transition:all .2s;background:#fafafa;margin-bottom:8px;">
                         <i class="fa-solid fa-building-columns" style="font-size:20px;color:#cbd5e1;display:block;margin-bottom:6px;"></i>
                         <p style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;">Drag lenders here</p>
-                        <p style="font-size:8px;color:#cbd5e1;margin-top:2px;">Up to 4 lenders · <span id="sendapp-count" style="color:#6366f1;font-weight:800;">0 / 4</span> selected</p>
+                        <p style="font-size:8px;color:#cbd5e1;margin-top:2px;">Up to 4 lenders � <span id="sendapp-count" style="color:#6366f1;font-weight:800;">0 / 4</span> selected</p>
                     </div>
                     <!-- Selected lenders list -->
                     <div id="sendapp-selected-list" style="display:none;margin-bottom:8px;">
@@ -766,9 +766,6 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                             <button onclick="clearAllLenders()" style="font-size:7px;font-weight:800;color:#ef4444;background:none;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;">Clear All</button>
                         </div>
                         <div id="sendapp-lender-cards" style="display:flex;flex-direction:column;gap:6px;"></div>
-                    </div>
-                        <div style="flex:1;"><p style="font-size:11px;font-weight:800;color:#15803d;" id="sendapp-lender-name">—</p><p style="font-size:8px;color:#86efac;font-weight:600;" id="sendapp-lender-type">—</p></div>
-                        <button onclick="clearSelectedLender()" style="background:none;border:none;cursor:pointer;color:#86efac;font-size:12px;"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
                     <!-- Lender Contact -->
@@ -812,7 +809,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                     </select></div>
                             </div>
                             <div><label class="label-text">Previous Address</label><input id="sa-prev-addr" type="text"
-                                    placeholder="37 Lechmere Ave, IG8 8QF (05/2020–07/2025)" class="input-compact">
+                                    placeholder="37 Lechmere Ave, IG8 8QF (05/2020�07/2025)" class="input-compact">
                             </div>
                         </div>
                     </div>
@@ -833,10 +830,10 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 <div><label class="label-text">Overdraft</label><input id="sa-overdraft" type="text"
                                         placeholder="2K / NA" class="input-compact"></div>
                                 <div><label class="label-text">Documents Attached</label><input id="sa-docs" type="text"
-                                        placeholder="6 months bank statements…" class="input-compact"></div>
+                                        placeholder="6 months bank statements�" class="input-compact"></div>
                             </div>
                             <div><label class="label-text">Business Overview</label><textarea id="sa-biz" rows="2"
-                                    placeholder="Construction of utility projects…"
+                                    placeholder="Construction of utility projects�"
                                     class="input-compact resize-none"></textarea></div>
                         </div>
                     </div>
@@ -984,7 +981,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
     </main>
 
     <script>
-        // ── DATA ──────────────────────────────────────────────────────────────────────
+        // -- DATA ----------------------------------------------------------------------
         let lenders = [
             {
                 id: 1, name: "ANZ Bank", trading: "ANZ", type: "Bank", status: "Active",
@@ -1070,7 +1067,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         let expandedId = null;
         let nextId = 7;
 
-        // ── HELPERS ───────────────────────────────────────────────────────────────────
+        // -- HELPERS -------------------------------------------------------------------
         const fmt$ = n => n >= 1000000
             ? '$' + (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + 'M'
             : n >= 1000 ? '$' + (n / 1000).toFixed(0) + 'K' : '$' + n;
@@ -1079,7 +1076,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         const iconColor = t => t === 'Bank' ? '#2563eb' : t === 'Non-Bank' ? '#d97706' : '#059669';
         const getInitials = n => n.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 
-        // ── CATEGORY CHIPS (form) ─────────────────────────────────────────────────────
+        // -- CATEGORY CHIPS (form) -----------------------------------------------------
         function renderCatTags() {
             const container = document.getElementById('cat-tags-container');
             container.innerHTML = formCategories.map(cat => {
@@ -1118,7 +1115,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             renderCatTags();
         }
 
-        // ── RENDER TABLE ──────────────────────────────────────────────────────────────
+        // -- RENDER TABLE --------------------------------------------------------------
         function getFiltered() {
             const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
             return lenders.filter(l => {
@@ -1170,7 +1167,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             </td>
             <td class="px-3 py-2">
                 ${l.manager ? `<p class="text-[10px] font-semibold text-gray-800">${l.manager}</p>
-                <p class="text-[7px] text-gray-400 mt-0.5 truncate max-w-[120px]">${l.managerEmail || ''}</p>` : `<span class="text-[9px] text-gray-300">—</span>`}
+                <p class="text-[7px] text-gray-400 mt-0.5 truncate max-w-[120px]">${l.managerEmail || ''}</p>` : `<span class="text-[9px] text-gray-300">�</span>`}
             </td>
             <td class="px-3 py-2">
                 <div class="flex flex-wrap gap-1">
@@ -1178,7 +1175,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     ${(l.categories || []).length > 2 ? `<span class="category-chip text-gray-400">+${l.categories.length - 2}</span>` : ''}
                 </div>
             </td>
-            <td class="px-3 py-2"><span class="badge ${l.status === 'Active' ? 'badge-active' : 'badge-inactive'}">${l.status === 'Active' ? '● ' : '○ '}${l.status}</span></td>
+            <td class="px-3 py-2"><span class="badge ${l.status === 'Active' ? 'badge-active' : 'badge-inactive'}">${l.status === 'Active' ? '? ' : '? '}${l.status}</span></td>
             <td class="px-2 py-2 text-center"><i class="fa-solid fa-chevron-right text-[10px] text-gray-300 row-chevron ${open ? 'open' : ''}"></i></td>
         </tr>`;
 
@@ -1240,7 +1237,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                       <i class="fa-solid fa-paper-plane" style="font-size:7px;"></i>Send App
                     </button>
                   </div>
-                  <p class="text-[7px] text-gray-300 font-mono mt-1">Added ${l.added} · ID #${String(l.id).padStart(3, '0')}</p>
+                  <p class="text-[7px] text-gray-300 font-mono mt-1">Added ${l.added} � ID #${String(l.id).padStart(3, '0')}</p>
                 </div>
 
                 <!-- Promotions -->
@@ -1272,7 +1269,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             document.getElementById('stat-inactive').textContent = lenders.filter(l => l.status === 'Inactive').length;
         }
 
-        // ── ROW ACCORDION ─────────────────────────────────────────────────────────────
+        // -- ROW ACCORDION -------------------------------------------------------------
         function toggleRow(id) {
             expandedId = expandedId === id ? null : id;
             renderTable();
@@ -1373,7 +1370,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             }
         }
 
-        // ── FILE UPLOAD LOGIC ────────────────────────────────────────────────────────
+        // -- FILE UPLOAD LOGIC --------------------------------------------------------
         function handleDragOver(e) {
             e.preventDefault();
             e.currentTarget.classList.add('dragover');
@@ -1421,7 +1418,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             }
         }
 
-        // ── LOAD EDIT FORM ────────────────────────────────────────────────────────────
+        // -- LOAD EDIT FORM ------------------------------------------------------------
         function loadEditForm(id) {
             const l = lenders.find(x => x.id === id);
             if (!l) return;
@@ -1498,7 +1495,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             renderCatTags();
         }
 
-        // ── SAVE FORM ─────────────────────────────────────────────────────────────────
+        // -- SAVE FORM -----------------------------------------------------------------
         function saveForm(event) {
             const name = document.getElementById('f-name').value.trim();
             if (!name) { document.getElementById('f-name').focus(); return; }
@@ -1542,7 +1539,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             }
         }
 
-        // ── DELETE ────────────────────────────────────────────────────────────────────
+        // -- DELETE --------------------------------------------------------------------
         function deleteLender(id) {
             const l = lenders.find(x => x.id === id);
             if (!l || !confirm(`Delete ${l.name}? This cannot be undone.`)) return;
@@ -1552,7 +1549,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             renderTable();
         }
 
-        // ── FILTERS ───────────────────────────────────────────────────────────────────
+        // -- FILTERS -------------------------------------------------------------------
         function toggleFilter(dim, value) {
             filters[dim] = value;
             const dd = document.getElementById('dd-' + dim);
@@ -1597,7 +1594,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
 
         function applyFilters() { updateFilterChips(); renderTable(); }
 
-        // ── EXPORT CSV ────────────────────────────────────────────────────────────────
+        // -- EXPORT CSV ----------------------------------------------------------------
         function exportCSV() {
             const filtered = getFiltered();
             const headers = ['ID', 'Name', 'Trading', 'Type', 'Status', 'Trading Years', 'Email', 'Account Manager', 'Manager Email', 'Address', 'Registered Address', 'Categories', 'Notes', 'Added'];
@@ -1614,7 +1611,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             a.click();
         }
 
-        // ── INIT ──────────────────────────────────────────────────────────────────────
+        // -- INIT ----------------------------------------------------------------------
         renderCatTags();
         updateFilterChips();
         renderTable();
