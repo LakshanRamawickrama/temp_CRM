@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -182,8 +182,8 @@
                     <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:3px;">Lloyds Bank: 0.25% Rate Cut</div>
                     <div style="font-size:8px;color:#64748b;line-height:1.5;">All new business expansion loans over £250k.</div>
                     <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
-                        <span style="font-size:8px;font-weight:700;color:#6366f1;">Code: LLOYDS25</span>
-                        <button onclick="navigator.clipboard.writeText('LLOYDS25')" style="background:#eef2ff;border:none;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:8px;font-weight:700;color:#6366f1;display:flex;align-items:center;gap:3px;"><i class="fa-solid fa-copy"></i> Copy</button>
+                        <button onclick="openDocViewer('Lloyds Bank','0.25% Rate Cut','All new business expansion loans over £250k.','30 Apr')" style="background:#f1f5f9;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:8px;font-weight:700;color:#64748b;display:flex;align-items:center;gap:4px;"><i class="fa-solid fa-file-pdf"></i> View Doc</button>
+                        <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;font-size:8px;"></i>
                     </div>
                 </div>
                 <!-- Promo 2 -->
@@ -195,8 +195,8 @@
                     <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:3px;">Funding Circle: 1% Fee Rebate</div>
                     <div style="font-size:8px;color:#64748b;line-height:1.5;">Bonus commission on all asset finance deals this month.</div>
                     <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+                        <button onclick="openDocViewer('Funding Circle','1% Fee Rebate','Bonus commission on all asset finance deals this month.','15 May')" style="background:#f1f5f9;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:8px;font-weight:700;color:#64748b;display:flex;align-items:center;gap:4px;"><i class="fa-solid fa-file-pdf"></i> View Doc</button>
                         <span style="font-size:8px;font-weight:700;color:#10b981;font-style:italic;">Auto-Applied</span>
-                        <i class="fa-solid fa-arrow-right-long" style="color:#94a3b8;font-size:9px;"></i>
                     </div>
                 </div>
                 <!-- Promo 3 -->
@@ -208,8 +208,8 @@
                     <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:3px;">Allica: Fast-Track Processing</div>
                     <div style="font-size:8px;color:#64748b;line-height:1.5;">Guaranteed 24-hour turnaround on commercial mortgage apps.</div>
                     <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
-                        <span style="font-size:8px;font-weight:700;color:#94a3b8;text-transform:uppercase;">Standard T&Cs</span>
-                        <i class="fa-solid fa-arrow-right-long" style="color:#94a3b8;font-size:9px;"></i>
+                        <button onclick="openDocViewer('Allica','Fast-Track Processing','Guaranteed 24-hour turnaround on commercial mortgage apps.','22 Apr')" style="background:#f1f5f9;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:8px;font-weight:700;color:#64748b;display:flex;align-items:center;gap:4px;"><i class="fa-solid fa-file-pdf"></i> View Doc</button>
+                        <i class="fa-solid fa-chevron-right" style="color:#cbd5e1;font-size:8px;"></i>
                     </div>
                 </div>
                 <!-- Promo 4 -->
@@ -221,14 +221,89 @@
                     <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:3px;">Westpac: Zero Arrangement Fee</div>
                     <div style="font-size:8px;color:#64748b;line-height:1.5;">No arrangement fee on SME loans £100k–£500k this month.</div>
                     <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
-                        <span style="font-size:8px;font-weight:700;color:#ef4444;">Code: WPZERO</span>
-                        <button onclick="navigator.clipboard.writeText('WPZERO')" style="background:#fef2f2;border:none;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:8px;font-weight:700;color:#ef4444;display:flex;align-items:center;gap:3px;"><i class="fa-solid fa-copy"></i> Copy</button>
+                        <button onclick="openDocViewer('Westpac','Zero Arrangement Fee','No arrangement fee on SME loans £100k–£500k this month.','28 Apr')" style="background:#f1f5f9;border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:8px;font-weight:700;color:#64748b;display:flex;align-items:center;gap:4px;"><i class="fa-solid fa-file-pdf"></i> View Doc</button>
+                        <span style="font-size:8px;font-weight:700;color:#ef4444;">Hot Deal</span>
                     </div>
                 </div>
             </div>
         </section>
 
     </main>
+
+    <!-- Document Viewer Modal -->
+    <div id="doc-viewer-modal" class="fixed inset-0 bg-slate-900/90 backdrop-blur-sm z-[200] hidden flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-4xl h-full max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <div>
+                        <h3 id="dv-filename" class="text-[11px] font-black text-gray-900 uppercase">promotion_document.pdf</h3>
+                        <p class="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Promotion Reference Document</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 transition-all"><i class="fa-solid fa-print"></i></button>
+                    <button class="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-400 transition-all"><i class="fa-solid fa-download"></i></button>
+                    <div class="w-px h-4 bg-gray-200 mx-1"></div>
+                    <button onclick="closeDocViewer()" class="w-8 h-8 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <!-- Modal Content (Mock Document) -->
+            <div class="flex-1 bg-gray-100 p-8 overflow-y-auto flex justify-center">
+                <div class="bg-white w-full max-w-[800px] shadow-lg p-12 min-h-[1100px] relative">
+                    <!-- Ribbon -->
+                    <div class="absolute top-0 right-0 w-32 h-32 overflow-hidden">
+                        <div class="bg-indigo-600 text-white text-[8px] font-bold text-center py-1 transform rotate-45 translate-x-10 translate-y-6 w-[150%] uppercase tracking-widest shadow-sm">Official Offer</div>
+                    </div>
+                    
+                    <div class="border-b-4 border-indigo-600 pb-8 mb-8 flex justify-between items-end">
+                        <div class="text-indigo-600 font-black text-2xl tracking-tighter">WHITEROCK <span class="text-gray-300">|</span> <span class="text-gray-900 text-lg uppercase tracking-widest">Lender Promo</span></div>
+                        <div class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Issued: 21 Apr 2026</div>
+                    </div>
+
+                    <div class="space-y-8 text-left">
+                        <div>
+                            <h1 id="dv-title" class="text-3xl font-black text-gray-900 leading-none mb-2">Q3 CASHBACK SPECIAL</h1>
+                            <p id="dv-lender-label" class="text-indigo-600 font-bold uppercase tracking-widest text-[11px]">ANZ BANK</p>
+                        </div>
+
+                        <div class="bg-slate-50 border-l-4 border-indigo-600 p-6">
+                            <p class="text-[9px] font-bold text-indigo-600 uppercase mb-2 tracking-widest">Promotion Summary</p>
+                            <p id="dv-detail" class="text-base text-slate-700 leading-relaxed italic">"Get up to $3000 cashback on all new home loan applications submitted before the end of the quarter."</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-12 text-left">
+                            <div class="space-y-4">
+                                <h4 class="text-[10px] font-black uppercase text-gray-900 border-b border-gray-100 pb-2">Terms & Conditions</h4>
+                                <ul class="text-[10px] text-gray-500 space-y-2 list-disc pl-4 leading-relaxed">
+                                    <li>Terms and conditions apply as per lender agreement.</li>
+                                    <li>Available for accredited brokers only.</li>
+                                    <li>Subject to final credit approval.</li>
+                                    <li>Lender reserves right to withdraw offer.</li>
+                                </ul>
+                            </div>
+                            <div class="space-y-4 text-left">
+                                <h4 class="text-[10px] font-black uppercase text-gray-900 border-b border-gray-100 pb-2">Eligibility</h4>
+                                <p class="text-[10px] text-gray-500 leading-relaxed">This promotion is exclusively available through the Whiterock partner network. Electronic submission via CRM is required.</p>
+                                <div class="p-4 bg-indigo-50 rounded-xl">
+                                    <p class="text-[8px] font-bold text-indigo-600 uppercase mb-1">Valid Until</p>
+                                    <p id="dv-expiry-date" class="text-lg font-black text-indigo-900">30 APR 2026</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-20 border-t border-gray-100 mt-20 flex justify-between items-center opacity-50">
+                            <div class="text-[8px] font-bold text-gray-400 uppercase">Ref: WR-LENDER-PROMO-2026</div>
+                            <div class="text-[8px] font-bold text-gray-400 uppercase tracking-widest text-right">Whiterock CRM Ecosystem<br>Authorized Electronic Document</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <style>
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.2)} }
@@ -247,6 +322,7 @@
         .cal-day:not(.other-month):not(.today):not(.selected):hover { background: #f1f5f9; color: #0f172a; }
     </style>
     <script>
+<<<<<<< Updated upstream
         // ── Leads reference data ─────────────────────────────────────────
         const leadsData = [
             { key:'L-1004', name:'John Perera',     phone:'+44 7700 900000', email:'john@abc.com',                  company:'ABC Solutions Ltd',       leadStatus:'Warm' },
@@ -517,5 +593,20 @@
         renderTasksTable();
     </script>
 <script src="../profile/profile_drawer.js"></script>
+=======
+        function openDocViewer(lender, name, detail, expiry) {
+            document.getElementById('dv-filename').textContent = (name + '.pdf').toLowerCase().replace(/\s+/g, '_');
+            document.getElementById('dv-title').textContent = name.toUpperCase();
+            document.getElementById('dv-lender-label').textContent = lender.toUpperCase();
+            document.getElementById('dv-detail').textContent = '"' + detail + '"';
+            document.getElementById('dv-expiry-date').textContent = expiry.toUpperCase() + ' 2026';
+            document.getElementById('doc-viewer-modal').classList.remove('hidden');
+        }
+        function closeDocViewer() {
+            document.getElementById('doc-viewer-modal').classList.add('hidden');
+        }
+    </script>
+    <script src="../profile/profile_drawer.js"></script>
+>>>>>>> Stashed changes
 </body>
 </html>
