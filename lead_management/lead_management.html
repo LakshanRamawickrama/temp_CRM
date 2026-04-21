@@ -1336,6 +1336,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             document.getElementById('doc-list-container').innerHTML = '';
             document.getElementById('task-feed-container').innerHTML = '';
 
+            switchLeadTab('details');
             initSyncListeners();
         }
 
