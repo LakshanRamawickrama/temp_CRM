@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -173,6 +173,9 @@
 
         .exp-mod-row { display: flex; align-items: flex-start; gap: 5px; padding: 3px 0; border-bottom: 1px solid #f1f5f9; }
         .exp-mod-row:last-child { border-bottom: none; }
+        .detail-header { font-size: 9px; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .detail-label { font-size: 7px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+        .detail-value { font-size: 10px; font-weight: 700; color: #1e293b; }
         .hidden { display: none; }
     </style>
 </head>
@@ -374,14 +377,36 @@
 
         <!-- RIGHT PANEL: Directory -->
         <section class="panel-card">
-            <div class="px-4 bg-[#0f172a] flex items-center gap-4 overflow-x-auto custom-scrollbar no-scrollbar" style="min-height:48px; flex-shrink:0;">
-                <div class="flex items-center gap-2 flex-shrink-0">
-                    <h2 class="text-[10px] font-black text-white uppercase tracking-widest">Team Directory</h2>
-                    <span id="result-count" class="text-[8px] font-bold text-gray-500 ml-1"></span>
+            <div class="px-4 bg-[#0f172a] border-b border-white/5 flex items-center gap-3" style="min-height:48px; flex-shrink:0;">
+                <h2 class="text-[9px] font-bold uppercase tracking-widest text-white flex-shrink-0">Team Directory</h2>
+                <div class="relative flex-1 min-w-[80px]">
+                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-[8px] text-gray-500"></i>
+                    <input id="search-input" type="text" placeholder="Search team..." oninput="renderTable()" class="w-full bg-white/5 border border-white/10 rounded-lg py-1 pl-8 pr-3 text-[9px] font-medium text-white outline-none focus:bg-white/10 transition-all">
                 </div>
-                <div class="relative flex-1 min-w-[150px]">
-                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-[9px] text-gray-500"></i>
-                    <input id="search-input" type="text" placeholder="Search..." oninput="renderTable()" class="w-full bg-white/5 border border-white/10 rounded-lg py-1.5 pl-8 pr-3 text-[9px] font-medium text-white outline-none focus:bg-white/10 transition-all">
+                
+                <select id="filter-module" onchange="renderTable()" class="dark-select">
+                    <option value="">All Access</option>
+                    <option value="tasks">Tasks Flow</option>
+                    <option value="leads">Leads Hub</option>
+                    <option value="pipeline">Pipeline</option>
+                    <option value="lenders">Lenders</option>
+                    <option value="docs">Vault</option>
+                    <option value="users">Admin</option>
+                </select>
+
+                <div class="flex items-center gap-0 flex-shrink-0 border-l border-white/10 pl-3 ml-1">
+                    <div class="flex items-center gap-1.5 px-3 py-2 border-r border-white/10">
+                        <span id="stat-total" class="text-[13px] font-black text-white">0</span>
+                        <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Total</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 px-3 py-2 border-r border-white/10">
+                        <span id="stat-active" class="text-[13px] font-black text-green-400">0</span>
+                        <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Live</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 px-3 py-2">
+                        <span id="stat-inactive" class="text-[13px] font-black text-red-100">0</span>
+                        <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Off</span>
+                    </div>
                 </div>
             </div>
 
@@ -389,10 +414,11 @@
                 <table class="w-full text-left">
                     <thead class="sticky top-0 bg-gray-50 border-b border-gray-100 z-10">
                         <tr class="text-[8px] font-black uppercase text-gray-400">
+                            <th class="px-3 py-3 w-8"></th>
                             <th class="px-4 py-3">Team Member</th>
                             <th class="px-4 py-3">Role</th>
-                            <th class="px-4 py-3">Email</th>
-                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">Permissions</th>
+                            <th class="px-4 py-3 w-32">Status</th>
                             <th class="px-4 py-3 text-right">Action</th>
                         </tr>
                     </thead>
@@ -420,7 +446,10 @@
         ];
 
         let users = [
-            { id: 1, name: 'Lakshan R', email: 'admin@whiterock.com', role: 'Admin', status: 'Active', designation: 'Super Admin', joined: '2024-01-01', modules: {}, features: {} }
+            { id: 1, name: 'Lakshan R', email: 'admin@whiterock.com', role: 'Admin', status: 'Active', designation: 'Super Admin', joined: '2024-01-01', modules: { tasks:true, leads:true, pipeline:true, lenders:true, docs:true, users:true, reports:true }, features: { ai:true, calculator:true, whatsapp:true } },
+            { id: 2, name: 'Sarah White', email: 'sarah.w@whiterock.com', role: 'Team Leader', status: 'Active', designation: 'Lending Specialist', joined: '2024-02-15', modules: { tasks:true, leads:true, docs:true }, features: { calculator:true } },
+            { id: 3, name: 'Cody Lane', email: 'cody@whiterock.com', role: 'Tele Agent', status: 'Active', designation: 'Lead Generator', joined: '2024-03-10', modules: { tasks:true, leads:true }, features: { whatsapp:true } },
+            { id: 4, name: 'Leo Kumar', email: 'leo.k@whiterock.com', role: 'Accounts Manager', status: 'Inactive', designation: 'Brokerage Accounts', joined: '2024-01-20', modules: { tasks:true, lenders:true, reporting:true }, features: {} }
         ];
 
         let formModules = {};
@@ -475,33 +504,100 @@
 
         function renderTable() {
             const q = document.getElementById('search-input').value.toLowerCase();
+            const modF = document.getElementById('filter-module').value;
             const tbody = document.getElementById('user-tbody');
-            const filtered = users.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.role.toLowerCase().includes(q));
             
-            tbody.innerHTML = filtered.map(u => `
-                <tr class="user-row">
+            const filtered = users.filter(u => {
+                const matchesSearch = u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.role.toLowerCase().includes(q);
+                const matchesMod = !modF || u.modules[modF];
+                return matchesSearch && matchesMod;
+            });
+            
+            document.getElementById('stat-total').textContent = users.length;
+            document.getElementById('stat-active').textContent = users.filter(u => u.status === 'Active').length;
+            document.getElementById('stat-inactive').textContent = users.filter(u => u.status !== 'Active').length;
+
+            tbody.innerHTML = filtered.map(u => {
+                const activeMods = Object.keys(u.modules).filter(k => u.modules[k]);
+                const activeFeats = Object.keys(u.features).filter(k => u.features[k]);
+                
+                return `
+                <tr class="user-row border-b border-gray-50" onclick="toggleUserRow(${u.id})">
+                    <td class="px-3 py-2.5 text-center">
+                        <i id="chevron-${u.id}" class="fa-solid fa-chevron-right text-[8px] text-gray-300 row-chevron"></i>
+                    </td>
                     <td class="px-4 py-2.5">
                         <div class="flex items-center gap-2">
                             <div class="avatar" style="background:#0f172a">${u.name[0]}</div>
                             <div>
                                 <p class="text-[10px] font-bold text-gray-900">${u.name}</p>
-                                <p class="text-[8px] text-gray-400 font-medium">${u.designation || '-'}</p>
+                                <p class="text-[8px] text-gray-400 font-medium">${u.email}</p>
                             </div>
                         </div>
                     </td>
                     <td class="px-4 py-2.5">
                         <span class="badge" style="background:#eff6ff;color:#2563eb">${u.role}</span>
                     </td>
-                    <td class="px-4 py-2.5 text-[10px] font-semibold text-gray-600">${u.email}</td>
+                    <td class="px-4 py-2.5">
+                        <div class="flex flex-wrap gap-1 max-w-[200px]">
+                            ${activeMods.slice(0,3).map(m => `<span class="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[7px] font-bold uppercase flex items-center gap-1">${m}</span>`).join('')}
+                            ${activeMods.length > 3 ? `<span class="text-[7px] font-bold text-slate-300">+${activeMods.length - 3} more</span>` : ''}
+                        </div>
+                    </td>
                     <td class="px-4 py-2.5">
                         <span class="badge ${u.status==='Active'?'badge-active':'badge-inactive'}">${u.status}</span>
                     </td>
                     <td class="px-4 py-2.5 text-right">
-                        <button onclick="editUser(${u.id})" class="text-[10px] text-gray-400 hover:text-blue-600"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteUser(${u.id})" class="text-[10px] text-gray-400 hover:text-red-600 ml-2"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="event.stopPropagation(); editUser(${u.id})" class="text-[10px] text-gray-400 hover:text-blue-600"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="event.stopPropagation(); deleteUser(${u.id})" class="text-[10px] text-gray-400 hover:text-red-600 ml-2"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-            `).join('');
+                <tr id="user-info-${u.id}" class="hidden border-b border-gray-50">
+                    <td colspan="6" class="p-0">
+                        <div class="detail-expand-inner p-6 grid grid-cols-4 gap-8">
+                            <!-- BIO -->
+                            <div>
+                                <h3 class="detail-header"><i class="fa-solid fa-id-card"></i> Bio</h3>
+                                <div class="space-y-4">
+                                    <div><p class="detail-label">Designation</p><p class="detail-value text-indigo-600">${u.designation || 'N/A'}</p></div>
+                                    <div><p class="detail-label">Joined Date</p><p class="detail-value">${u.joined || '-'}</p></div>
+                                </div>
+                            </div>
+                            <!-- CONTACT -->
+                            <div>
+                                <h3 class="detail-header"><i class="fa-solid fa-phone"></i> Contact</h3>
+                                <div class="space-y-4">
+                                    <div><p class="detail-label">Email</p><p class="detail-value text-blue-600">${u.email}</p></div>
+                                    <div><p class="detail-label">Phone</p><p class="detail-value">${u.phone || 'No Number'}</p></div>
+                                </div>
+                            </div>
+                            <!-- ACCESS -->
+                            <div>
+                                <h3 class="detail-header"><i class="fa-solid fa-puzzle-piece"></i> Access</h3>
+                                <div class="space-y-1">
+                                    ${activeMods.map(m => `<div class="text-[9px] font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-circle text-[4px] text-green-500"></i> ${MODULES.find(x=>x.key===m)?.label}</div>`).join('')}
+                                    ${activeMods.length === 0 ? '<p class="text-[9px] text-slate-300 font-bold">Standard Limited Access</p>' : ''}
+                                </div>
+                            </div>
+                            <!-- FEATURES -->
+                            <div>
+                                <h3 class="detail-header"><i class="fa-solid fa-microchip"></i> Features</h3>
+                                <div class="space-y-1">
+                                    ${activeFeats.map(f => `<div class="text-[9px] font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-bolt text-[8px] text-amber-500"></i> ${FEATURES.find(x=>x.key===f)?.label}</div>`).join('')}
+                                    ${activeFeats.length === 0 ? '<p class="text-[9px] text-slate-300 font-bold">No Premium Features</p>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+
+        function toggleUserRow(id) {
+            const row = document.getElementById(`user-info-${id}`);
+            const chevron = document.getElementById(`chevron-${id}`);
+            row.classList.toggle('hidden');
+            chevron.classList.toggle('open');
         }
 
         function saveForm() {
