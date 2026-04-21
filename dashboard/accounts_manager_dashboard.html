@@ -359,25 +359,6 @@
                 </div>
             </div>
 
-            <!-- Payout Management -->
-            <div class="glass-card flex flex-col card-wide" style="height:300px;" data-id="payouts">
-                <div class="border-b" style="background:#0f172a;border-radius:20px 20px 0 0;padding:0 16px;display:flex;align-items:center;gap:10px;min-height:46px;flex-shrink:0;">
-                    <i class="fa-solid fa-sterling-sign" style="color:rgba(255,255,255,.4);font-size:13px;"></i>
-                    <span style="font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.12em;">Payout Management</span>
-                    <div style="flex:1;"></div>
-                    <select id="f-status" onchange="renderPayouts()" class="dark-select">
-                        <option value="">All Status</option><option>Pending</option><option>Approved</option><option>On Hold</option><option>Paid</option>
-                    </select>
-                    <span id="payout-total-hdr" style="font-size:9px;font-weight:900;color:#fbbf24;margin-left:8px;"></span>
-                </div>
-                <div class="flex-1 overflow-y-auto custom-scrollbar">
-                    <table class="data-table">
-                        <colgroup><col style="width:20%;"><col style="width:18%;"><col style="width:12%;"><col style="width:13%;"><col style="width:12%;"><col style="width:11%;"><col style="width:14%;"></colgroup>
-                        <thead><tr><th>Agent</th><th>Client</th><th>Lender</th><th>Amount</th><th>Status</th><th>Due</th><th>Actions</th></tr></thead>
-                        <tbody id="payout-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
 
             <!-- Finance Centre -->
             <div class="glass-card flex flex-col" style="height:280px;" data-id="finance">
@@ -410,15 +391,13 @@
                     </div>
                 </div>
                 <div class="flex-1 p-4 grid grid-cols-2 gap-3 content-start">
-                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-100">
-                        <div id="s-pending" class="text-2xl font-black text-amber-600">0</div>
-                        <div class="text-[7px] font-800 uppercase tracking-widest text-amber-500 mt-1">Pending Payouts</div>
-                        <div id="s-pending-val" class="text-[8px] font-600 text-amber-700 mt-1">-</div>
+                    <div class="p-3 bg-red-50 rounded-xl border border-red-100">
+                        <div id="s-hot" class="text-2xl font-black text-red-600">8</div>
+                        <div class="text-[7px] font-800 uppercase tracking-widest text-red-500 mt-1">Hot Leads</div>
                     </div>
-                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                        <div id="s-approved" class="text-2xl font-black text-emerald-600">0</div>
-                        <div class="text-[7px] font-800 uppercase tracking-widest text-emerald-500 mt-1">Approved</div>
-                        <div id="s-approved-val" class="text-[8px] font-600 text-emerald-700 mt-1">-</div>
+                    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                        <div id="s-pipeline" class="text-2xl font-black text-indigo-600">35</div>
+                        <div class="text-[7px] font-800 uppercase tracking-widest text-indigo-500 mt-1">Total Pipeline</div>
                     </div>
                     <div class="p-3 bg-violet-50 rounded-xl border border-violet-100">
                         <div id="s-lenders" class="text-2xl font-black text-violet-600">0</div>
@@ -442,14 +421,6 @@
                 </div>
                 <div class="flex-1 p-4 overflow-y-auto custom-scrollbar">
                     <div class="space-y-4">
-                        <div class="flex gap-3">
-                            <div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shrink-0"><i class="fa-solid fa-file-invoice text-[10px] text-blue-600"></i></div>
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-800">New Payout Approved</p>
-                                <p class="text-[8px] font-medium text-slate-500">James Smith - £12,400</p>
-                                <p class="text-[7px] font-bold text-slate-400 mt-1">10 MIN AGO</p>
-                            </div>
-                        </div>
                         <div class="flex gap-3">
                             <div class="w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center shrink-0"><i class="fa-solid fa-user-plus text-[10px] text-emerald-600"></i></div>
                             <div>
@@ -551,16 +522,45 @@ const PAYOUTS=[{id:1,agent:'Thanushika R.',client:'ABC Corp',lender:'Westpac',am
 const LENDERS=[{name:'Westpac',rate:'5.89%',maxLvr:'80%',status:'Active',deals:18,color:'#dc2626'},{name:'ANZ',rate:'5.74%',maxLvr:'85%',status:'Active',deals:24,color:'#2563eb'},{name:'NAB',rate:'5.99%',maxLvr:'80%',status:'Active',deals:15,color:'#16a34a'},{name:'CBA',rate:'5.69%',maxLvr:'90%',status:'Active',deals:31,color:'#d97706'},{name:'Macquarie',rate:'6.15%',maxLvr:'75%',status:'Review',deals:9,color:'#7c3aed'}];
 const DOCS=[{client:'ABC Corp',type:'Payslips x3',agent:'Thanushika R.',overdue:'2 days',urgent:true},{client:'Brown Family',type:'Bank Statements',agent:'Amal J.',overdue:'Today',urgent:true},{client:'XYZ Ltd',type:'ID Verification',agent:'Ravindu P.',overdue:'1 day',urgent:true},{client:'Patel Finance',type:'Tax Returns',agent:'Priya S.',overdue:'3 days',urgent:false}];
 
-function updateStats(){const pend=PAYOUTS.filter(p=>p.status==='Pending');const appr=PAYOUTS.filter(p=>p.status==='Approved');document.getElementById('s-pending').textContent=pend.length;document.getElementById('s-pending-val').textContent='Total: £'+pend.reduce((s,p)=>s+p.amt,0).toLocaleString();document.getElementById('s-approved').textContent=appr.length;document.getElementById('s-approved-val').textContent='Total: £'+appr.reduce((s,p)=>s+p.amt,0).toLocaleString();document.getElementById('s-lenders').textContent=LENDERS.filter(l=>l.status==='Active').length;document.getElementById('s-docs').textContent=DOCS.filter(d=>d.urgent).length;}
+function updateStats(){
+    const hotLeads = MY_LEADS.filter(l => l.status === 'Hot').length;
+    const hotEl = document.getElementById('s-hot');
+    if(hotEl) hotEl.textContent = hotLeads;
+
+    const pipelineEl = document.getElementById('s-pipeline');
+    if(pipelineEl) pipelineEl.textContent = MY_LEADS.length;
+
+    const lenderEl = document.getElementById('s-lenders');
+    if(lenderEl) lenderEl.textContent = LENDERS.filter(l=>l.status==='Active').length;
+
+    const docsEl = document.getElementById('s-docs');
+    if(docsEl) docsEl.textContent = DOCS.filter(d=>d.urgent).length;
+}
 const SS={Pending:'background:#fef3c7;color:#b45309',Approved:'background:#dcfce7;color:#15803d','On Hold':'background:#fee2e2;color:#b91c1c',Paid:'background:#f1f5f9;color:#64748b'};
 
-function renderPayouts(){const fs=document.getElementById('f-status').value;const rows=PAYOUTS.filter(p=>!fs||p.status===fs);document.getElementById('payout-total-hdr').textContent='Total: £'+rows.reduce((s,p)=>s+p.amt,0).toLocaleString();document.getElementById('payout-tbody').innerHTML=rows.map(p=>'<tr><td><div style="display:flex;align-items:center;gap:6px;"><div style="width:22px;height:22px;border-radius:50%;background:'+p.ab+';display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:900;color:#fff;">'+p.agent.slice(0,2).toUpperCase()+'</div><span>'+p.agent+'</span></div></td><td>'+p.client+'</td><td style="color:#64748b;">'+p.lender+'</td><td style="font-weight:800;">£'+p.amt.toLocaleString()+'</td><td><span class="badge" style="'+SS[p.status]+'">'+p.status+'</span></td><td style="font-size:9px;color:'+(p.due==='Today'?'#b91c1c':'#64748b')+';font-weight:700;">'+p.due+'</td><td><div style="display:flex;gap:3px;">'+(p.status==='Pending'?'<button onclick="approvePayout('+p.id+')" style="font-size:7px;font-weight:800;padding:3px 7px;border-radius:5px;background:#dcfce7;color:#15803d;border:none;cursor:pointer;">Approve</button>':'')+(p.status==='Approved'?'<button onclick="markPaid('+p.id+')" style="font-size:7px;font-weight:800;padding:3px 7px;border-radius:5px;background:#dbeafe;color:#1d4ed8;border:none;cursor:pointer;">Mark Paid</button>':'')+'</div></td></tr>').join('');}
-function approvePayout(id){const p=PAYOUTS.find(x=>x.id===id);if(p){p.status='Approved';renderPayouts();updateStats();}}
-function markPaid(id){const p=PAYOUTS.find(x=>x.id===id);if(p){p.status='Paid';renderPayouts();updateStats();}}
+function renderPayouts(){}
+function approvePayout(id){}
+function markPaid(id){}
 
 function renderLenders(){document.getElementById('lenders-list').innerHTML=LENDERS.map(l=>'<div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;border:1px solid #f1f5f9;background:#fafbfc;margin-bottom:5px;"><div style="width:32px;height:32px;border-radius:8px;background:'+l.color+'22;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-building-columns" style="font-size:12px;color:'+l.color+';"></i></div><div style="flex:1;min-width:0;"><div style="font-size:10px;font-weight:700;color:#0f172a;">'+l.name+'</div><div style="font-size:8px;color:#94a3b8;">Rate: '+l.rate+' · Max LVR: '+l.maxLvr+'</div></div><div style="text-align:right;flex-shrink:0;"><span class="badge" style="background:'+(l.status==='Active'?'#dcfce7':'#fef3c7')+';color:'+(l.status==='Active'?'#15803d':'#b45309')+';">'+l.status+'</span><div style="font-size:7px;color:#94a3b8;margin-top:2px;">'+l.deals+' deals</div></div></div>').join('');}
 function renderDocs(){document.getElementById('docs-count').textContent=DOCS.filter(d=>d.urgent).length+' urgent';document.getElementById('docs-list').innerHTML=DOCS.map(d=>'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;border:1px solid #f1f5f9;background:#fafbfc;margin-bottom:5px;"><div style="width:30px;height:30px;border-radius:8px;background:'+(d.urgent?'#fee2e2':'#f1f5f9')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-file-circle-exclamation" style="font-size:12px;color:'+(d.urgent?'#b91c1c':'#64748b')+';"></i></div><div style="flex:1;min-width:0;"><div style="font-size:10px;font-weight:700;color:#0f172a;">'+d.client+'</div><div style="font-size:8px;color:#94a3b8;">'+d.type+' · '+d.agent+'</div></div><div style="text-align:right;flex-shrink:0;"><div style="font-size:8px;font-weight:800;color:'+(d.urgent?'#b91c1c':'#64748b')+';">'+d.overdue+'</div></div></div>').join('');}
-function renderSummary(){const tp=PAYOUTS.filter(p=>p.status==='Paid').reduce((s,p)=>s+p.amt,0);const tpend=PAYOUTS.filter(p=>p.status==='Pending').reduce((s,p)=>s+p.amt,0);document.getElementById('summary-content').innerHTML='<p style="font-size:7.5px;font-weight:800;text-transform:uppercase;color:#94a3b8;margin-bottom:10px;">Monthly Summary</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;"><div style="padding:10px 12px;border-radius:10px;background:#dcfce7;"><div style="font-size:7px;font-weight:800;text-transform:uppercase;color:#15803d;margin-bottom:4px;">Total Paid Out</div><div style="font-size:16px;font-weight:900;color:#0f172a;">£'+tp.toLocaleString()+'</div></div><div style="padding:10px 12px;border-radius:10px;background:#fef3c7;"><div style="font-size:7px;font-weight:800;text-transform:uppercase;color:#b45309;margin-bottom:4px;">Pending Value</div><div style="font-size:16px;font-weight:900;color:#0f172a;">£'+tpend.toLocaleString()+'</div></div></div>'+LENDERS.map(l=>'<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><div style="font-size:8px;font-weight:700;color:#475569;width:80px;text-align:right;">'+l.name+'</div><div style="flex:1;background:#f1f5f9;border-radius:99px;height:5px;overflow:hidden;"><div style="width:'+Math.round(l.deals/31*100)+'%;height:100%;border-radius:99px;background:'+l.color+';"></div></div><div style="font-size:8px;font-weight:800;color:#1e293b;width:24px;text-align:right;">'+l.deals+'</div></div>').join('');}
+function renderSummary(){
+    const summaryContainer = document.getElementById('summary-content');
+    if(!summaryContainer) return;
+
+    summaryContainer.innerHTML = '<p style="font-size:7.5px;font-weight:800;text-transform:uppercase;color:#94a3b8;margin-bottom:10px;">Pipeline Summary</p>' + 
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">' +
+            '<div style="padding:10px 12px;border-radius:10px;background:#fee2e2;">' +
+                '<div style="font-size:7px;font-weight:800;text-transform:uppercase;color:#b91c1c;margin-bottom:4px;">Hot Leads</div>' +
+                '<div style="font-size:16px;font-weight:900;color:#0f172a;">' + MY_LEADS.filter(l => l.status === 'Hot').length + '</div>' +
+            '</div>' +
+            '<div style="padding:10px 12px;border-radius:10px;background:#f1f5f9;">' +
+                '<div style="font-size:7px;font-weight:800;text-transform:uppercase;color:#475569;margin-bottom:4px;">Total Leads</div>' +
+                '<div style="font-size:16px;font-weight:900;color:#0f172a;">' + MY_LEADS.length + '</div>' +
+            '</div>' +
+        '</div>' +
+        LENDERS.map(l=>'<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><div style="font-size:8px;font-weight:700;color:#475569;width:80px;text-align:right;">'+l.name+'</div><div style="flex:1;background:#f1f5f9;border-radius:99px;height:5px;overflow:hidden;"><div style="width:'+Math.round(l.deals/31*100)+'%;height:100%;border-radius:99px;background:'+l.color+';"></div></div><div style="font-size:8px;font-weight:800;color:#1e293b;width:24px;text-align:right;">'+l.deals+'</div></div>').join('');
+}
 function switchTab(name,btn){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');btn.classList.add('active');}
 
 // Leads table

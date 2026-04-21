@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -283,32 +283,8 @@
 
 <body>
 
-    <nav class="side-nav">
-        <div class="mb-6">
-            <img src="../logo/alpha.png" alt="Alpha Funding" style="width:38px;height:38px;object-fit:contain;border-radius:8px;">
-        </div>
-        <a href="../task_and_followups/task_management.html" class="nav-item"><i class="fa-solid fa-tasks"></i><span
-                class="nav-text">Tasks</span></a>
-        <a href="../lead_management/lead_management.html" class="nav-item"><i class="fa-solid fa-user-group"></i><span
-                class="nav-text">Leads</span></a>
-        <a href="loan_pipeline.html" class="nav-item active"><i class="fa-solid fa-diagram-project"></i><span
-                class="nav-text">Pipeline</span></a>
-        <a href="../lenders/lender_management.html" class="nav-item"><i
-                class="fa-solid fa-hand-holding-dollar"></i><span class="nav-text">Lenders</span></a>
-        <a href="../documents/document_vault.html" class="nav-item"><i class="fa-solid fa-folder-open"></i><span
-                class="nav-text">Documents</span></a>
-        <a href="../user_management/user_management.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span
-                class="nav-text">Users</span></a>
-        <a href="../reporting/reporting_logs.html" class="nav-item"><i class="fa-solid fa-chart-line"></i><span
-                class="nav-text">Reports</span></a>
-
-        <div style="flex:1;"></div>
-                <div class="nav-item" onclick="openProfileDrawer()" title="Profile" style="cursor:pointer;">
-            <i class="fa-solid fa-circle-user"></i>
-            <span class="nav-text">Profile</span>
-        </div>
-<div class="nav-item" onclick="logout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i><span
-                class="nav-text">Logout</span></div>
+    <nav class="side-nav" id="side-nav">
+        <!-- Sidebar items injected via JS -->
     </nav>
 
     <div class="main-wrap">
@@ -501,6 +477,37 @@
         }
 
         function updateMasterTable() {
+            // Sidebar Role Based Logic
+            const SESSION = JSON.parse(sessionStorage.getItem('crm_session') || '{}');
+            const role = SESSION.role || 'Tele Agent';
+            const nav = document.getElementById('side-nav');
+            if (nav) {
+                let navHtml = `
+                    <div class="mb-6">
+                        <img src="../logo/alpha.png" alt="Alpha Funding" style="width:38px;height:38px;object-fit:contain;border-radius:8px;">
+                    </div>
+                    <a href="${SESSION.landing || '../dashboard/tele_agent_dashboard.html'}" class="nav-item"><i class="fa-solid fa-house"></i><span class="nav-text">Dashboard</span></a>
+                    <a href="../task_and_followups/task_management.html" class="nav-item"><i class="fa-solid fa-tasks"></i><span class="nav-text">Tasks</span></a>
+                    <a href="../lead_management/lead_management.html" class="nav-item"><i class="fa-solid fa-user-group"></i><span class="nav-text">Leads</span></a>`;
+
+                if (role === 'Accounts Manager') {
+                    navHtml += `<a href="../lenders/lender_management.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span class="nav-text">Lenders</span></a>`;
+                } else if (role === 'Admin') {
+                    navHtml += `
+                    <a href="loan_pipeline.html" class="nav-item active"><i class="fa-solid fa-diagram-project"></i><span class="nav-text">Pipeline</span></a>
+                    <a href="../lenders/lender_management.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><span class="nav-text">Lenders</span></a>
+                    <a href="../documents/document_vault.html" class="nav-item"><i class="fa-solid fa-folder-open"></i><span class="nav-text">Documents</span></a>
+                    <a href="../user_management/user_management.html" class="nav-item"><i class="fa-solid fa-user-gear"></i><span class="nav-text">Users</span></a>
+                    <a href="../reporting/reporting_logs.html" class="nav-item"><i class="fa-solid fa-chart-line"></i><span class="nav-text">Reports</span></a>`;
+                }
+
+                navHtml += `
+                    <div style="flex:1;"></div>
+                    <div class="nav-item" onclick="openProfileDrawer()" title="Profile" style="cursor:pointer;"><i class="fa-solid fa-circle-user"></i><span class="nav-text">Profile</span></div>
+                    <div class="nav-item" onclick="logout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i><span class="nav-text">Logout</span></div>`;
+                nav.innerHTML = navHtml;
+            }
+
             const html = [
                 // Section 1: Lead Information (Paired internally for density)
                 `<tr class="sec-row">

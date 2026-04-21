@@ -260,7 +260,7 @@
     <div class="flex items-center gap-2 px-6 pt-4 w-full" style="flex-shrink:0;overflow-x:auto;min-height:60px;"><div class="flex items-center gap-2 flex-nowrap flex-1 min-w-0">
         <div class="glass-card p-2.5 flex items-center gap-3 w-[200px]">
             <div id="u-avatar" style="width:32px;height:32px;border-radius:50%;background:#16a34a;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0;"></div>
-            <div class="truncate"><h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Tele Agent</h4><p id="u-name" class="text-[10px] font-black text-slate-900 mt-1 truncate">Ã¢â‚¬â€</p></div>
+            <div class="truncate"><h4 class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">Tele Agent</h4><p id="u-name" class="text-[10px] font-black text-slate-900 mt-1 truncate">—</p></div>
         </div>
         <a href="../lead_management/register_lead.html" class="glass-card p-2.5 flex items-center gap-3 hover:border-emerald-500/50 group transition-all w-[140px]">
             <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all shrink-0"><i class="fa-solid fa-user-plus text-sm"></i></div>
@@ -325,7 +325,7 @@
                     <i class="fa-solid fa-user-group" style="color:rgba(255,255,255,.4);font-size:13px;"></i>
                     <span style="font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.12em;">My Leads</span>
                     <div style="flex:1;"></div>
-                    <input id="srch" type="text" placeholder="SearchÃ¢â‚¬Â¦" class="dark-input" style="width:130px;" oninput="renderTable()">
+                    <input id="srch" type="text" placeholder="Search..." class="dark-input" style="width:130px;" oninput="renderTable()">
                     <select id="f-stage" class="dark-select" onchange="renderTable()">
                         <option value="">All Stages</option>
                         <option>Inquiry</option><option>Qualified</option><option>Proposal</option><option>Negotiation</option><option>Closed</option>
@@ -349,9 +349,9 @@
             <div class="glass-card flex flex-col" style="height:280px;" data-id="followups">
                 <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between">
                     <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Upcoming Follow-ups</h3>
-                    <span class="text-[8px] font-bold text-indigo-600 uppercase">View All</span>
+                    <a href="../task_and_followups/task_management.html" class="text-[8px] font-bold text-indigo-600 uppercase hover:underline">View All</a>
                 </div>
-                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
+                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3" id="tasks-list">
                     <div class="p-3 bg-red-50/50 border border-red-100 rounded-xl group hover:bg-red-50 transition-all cursor-pointer">
                         <div class="flex items-center justify-between mb-1">
                             <span class="text-[8px] font-black text-red-600 uppercase">Priority: High</span>
@@ -391,30 +391,61 @@
                 </div>
             </div>
 
-            <!-- Stats Row -->
-            <!--<div class="glass-card flex flex-col" style="height:280px;" data-id="stats">
-                <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between">
-                    <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">My Performance</h3>
+            <!-- Pipeline Snapshot Card -->
+            <div class="glass-card flex flex-col" style="height:280px;" data-id="pipeline-snapshot">
+                <div class="px-5 py-3 border-b border-slate-50 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-white shadow-lg shadow-teal-100">
+                        <i class="fa-solid fa-diagram-project text-xs"></i>
+                    </div>
+                    <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Pipeline Snapshot</h3>
                 </div>
-                <div class="flex-1 p-4 grid grid-cols-2 gap-3 content-start">
-                    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
-                        <div id="s-total" class="text-2xl font-black text-indigo-700">0</div>
-                        <div class="text-[7px] font-800 uppercase tracking-widest text-indigo-500 mt-1">Total Leads</div>
+                <div class="flex-1 p-4 flex flex-col">
+                    <!-- Pipeline Flow -->
+                    <div class="flex items-center justify-between gap-1 mb-6">
+                        <div onclick="filterByStage('Inquiry')" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
+                            <div id="pipe-inquiry" class="text-xl font-black text-slate-700 leading-none group-hover:text-indigo-600">0</div>
+                            <div class="text-[7px] font-black text-slate-400 uppercase mt-2 tracking-tighter group-hover:text-slate-600">Inquiry</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[7px] text-slate-200"></i>
+                        <div onclick="filterByStage('Qualified')" class="flex-1 bg-blue-50/50 border border-blue-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
+                            <div id="pipe-qualified" class="text-xl font-black text-blue-600 leading-none">0</div>
+                            <div class="text-[7px] font-black text-blue-400 uppercase mt-2 tracking-tighter group-hover:text-blue-600">Qualified</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[7px] text-slate-200"></i>
+                        <div onclick="filterByStage('Proposal')" class="flex-1 bg-amber-50/50 border border-amber-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
+                            <div id="pipe-proposal" class="text-xl font-black text-amber-600 leading-none">0</div>
+                            <div class="text-[7px] font-black text-amber-400 uppercase mt-2 tracking-tighter group-hover:text-amber-600">Proposal</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[7px] text-slate-200"></i>
+                        <div onclick="filterByStage('Negotiation')" class="flex-1 bg-purple-50/50 border border-purple-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
+                            <div id="pipe-negotiation" class="text-xl font-black text-purple-600 leading-none">0</div>
+                            <div class="text-[7px] font-black text-purple-400 uppercase mt-2 tracking-tighter group-hover:text-purple-600">Negotiation</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[7px] text-slate-200"></i>
+                        <div onclick="filterByStage('Closed')" class="flex-1 bg-emerald-50/50 border border-emerald-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
+                            <div id="pipe-closed" class="text-xl font-black text-emerald-600 leading-none">0</div>
+                            <div class="text-[7px] font-black text-emerald-400 uppercase mt-2 tracking-tighter group-hover:text-emerald-600">Closed</div>
+                        </div>
                     </div>
-                    <div class="p-3 bg-red-50 rounded-xl border border-red-100">
-                        <div id="s-hot" class="text-2xl font-black text-red-600">0</div>
-                        <div class="text-[7px] font-800 uppercase tracking-widest text-red-400 mt-1">Hot Leads</div>
-                    </div>
-                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-100">
-                        <div id="s-tasks" class="text-2xl font-black text-amber-600">0</div>
-                        <div class="text-[7px] font-800 uppercase tracking-widest text-amber-400 mt-1">Tasks Due Today</div>
-                    </div>
-                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                        <div id="s-closed" class="text-2xl font-black text-emerald-600">0</div>
-                        <div class="text-[7px] font-800 uppercase tracking-widest text-emerald-400 mt-1">Closed</div>
+
+                    <!-- My Performance -->
+                    <div class="space-y-2.5 mt-auto">
+                        <div class="text-[8px] font-black text-slate-300 uppercase tracking-widest mb-2">Personal Growth Tracks</div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex flex-col gap-1.5">
+                                <div class="flex justify-between items-center text-[9px] font-black uppercase">
+                                    <span class="text-slate-500">Lead Conversion</span>
+                                    <span id="p-conv-val" class="text-indigo-600">0%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="p-conv-bar" class="h-full bg-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.4)]" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>-->
+            </div>
 
             <!-- Lender Promotions -->
             <div class="glass-card flex flex-col" style="height:280px;" data-id="promotions">
@@ -423,7 +454,7 @@
                         <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-100"><i class="fa-solid fa-tags text-xs"></i></div>
                         <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Lender Promotions</h3>
                     </div>
-                    <a href="../lenders/lender_management.html" class="text-[8px] font-black text-indigo-600 uppercase hover:underline">Manage All</a>
+                    <a href="../task_and_followups/task_management.html" class="text-[8px] font-black text-indigo-600 uppercase hover:underline">Manage All</a>
                 </div>
                 <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
                     <div class="p-3 bg-indigo-50/30 border border-indigo-100 rounded-xl hover:border-indigo-200 transition-all group">
@@ -433,9 +464,8 @@
                         </div>
                         <h4 class="text-[10px] font-black text-slate-900">Lloyds Bank: 0.25% Rate Cut</h4>
                         <p class="text-[9px] text-slate-500 leading-tight mt-1">Applicable to all new business expansion loans over £250k.</p>
-                        <div class="mt-2 pt-2 border-t border-indigo-100/50 flex justify-between items-center">
-                            <span class="text-[8px] font-bold text-indigo-600 uppercase">Code: LLOYDS25</span>
-                            <button class="text-indigo-600 hover:text-indigo-900"><i class="fa-solid fa-copy text-[9px]"></i></button>
+                        <div class="mt-2 pt-2 border-t border-indigo-100/50 flex justify-end">
+                            <button onclick="openPromoDoc(1)" class="text-[8px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-file-contract"></i> View Doc</button>
                         </div>
                     </div>
                     <div class="p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group">
@@ -445,9 +475,8 @@
                         </div>
                         <h4 class="text-[10px] font-black text-slate-900">Funding Circle: 1% Fee Rebate</h4>
                         <p class="text-[9px] text-slate-500 leading-tight mt-1">Bonus commission on all asset finance deals closed this month.</p>
-                        <div class="mt-2 pt-2 border-t border-slate-50 flex justify-between items-center">
-                            <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest italic text-indigo-600">Auto-Applied</span>
-                            <button class="text-slate-300 hover:text-indigo-600"><i class="fa-solid fa-arrow-right-long text-[9px]"></i></button>
+                        <div class="mt-2 pt-2 border-t border-slate-50 flex justify-end">
+                            <button onclick="openPromoDoc(2)" class="text-[8px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-file-contract"></i> View Doc</button>
                         </div>
                     </div>
                     <div class="p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group">
@@ -457,9 +486,8 @@
                         </div>
                         <h4 class="text-[10px] font-black text-slate-900">Allica: Fast-Track Processing</h4>
                         <p class="text-[9px] text-slate-500 leading-tight mt-1">Guaranteed 24-hour turnaround on commercial mortgage apps.</p>
-                        <div class="mt-2 pt-2 border-t border-slate-50 flex justify-between items-center">
-                            <span class="text-[8px] font-bold text-slate-400 uppercase">Standard T&Cs</span>
-                            <button class="text-slate-300 hover:text-indigo-600"><i class="fa-solid fa-arrow-right-long text-[9px]"></i></button>
+                        <div class="mt-2 pt-2 border-t border-slate-50 flex justify-end">
+                            <button onclick="openPromoDoc(3)" class="text-[8px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-file-contract"></i> View Doc</button>
                         </div>
                     </div>
                 </div>
@@ -494,6 +522,78 @@
         </div>
     </div>
 </main>
+
+    <!-- Promo Doc Viewer Modal -->
+    <div id="promoDocModal" class="modal-overlay" style="background:rgba(15,23,42,0.85);z-index:1000;" onclick="if(event.target===this)closePromoDoc();">
+        <div style="background:#fff;width:800px;max-width:95vw;height:90vh;border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.3);position:relative;">
+            <!-- Header -->
+            <div style="padding:14px 24px;background:#fff;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="width:36px;height:36px;border-radius:10px;background:#f5f3ff;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-file-pdf text-indigo-600 text-lg"></i></div>
+                    <div>
+                        <div id="pdm-filename" style="font-size:11px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;">PROMOTION_BRIEF.PDF</div>
+                        <div style="font-size:8px;font-weight:700;color:#94a3b8;text-transform:uppercase;">Lender Reference Document</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <button class="w-8 h-8 rounded-lg hover:bg-slate-50 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-print"></i></button>
+                    <button class="w-8 h-8 rounded-lg hover:bg-slate-50 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-download"></i></button>
+                    <div style="width:1px;height:20px;background:#f1f5f9;margin:0 4px;"></div>
+                    <button onclick="closePromoDoc()" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+            </div>
+            <!-- Doc Body -->
+            <div style="flex:1;overflow-y:auto;background:#f1f5f9;padding:40px 0;display:flex;justify-content:center;">
+                <div style="width:100%;max-width:650px;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,0.05);min-height:900px;padding:60px 50px;display:flex;flex-direction:column;position:relative;">
+                    <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:#6366f1;clip-path:polygon(100% 0, 0 0, 100% 100%);display:flex;align-items:center;justify-content:center;">
+                        <span style="transform:rotate(45deg) translateY(-10px);color:#fff;font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;">OFFICIAL</span>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #6366f1;padding-bottom:12px;margin-bottom:40px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="font-size:18px;font-weight:900;color:#0f172a;letter-spacing:-.5px;">WHITEROCK</span>
+                            <div style="width:1.5px;height:24px;background:#cbd5e1;"></div>
+                            <span style="font-size:16px;font-weight:700;color:#64748b;letter-spacing:.5px;">LENDER PROMO</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;">Issued: 21 APR 2026</div>
+                        </div>
+                    </div>
+
+                    <h1 id="pdm-title" style="font-size:32px;font-weight:900;color:#0f172a;margin-bottom:4px;letter-spacing:-1px;"></h1>
+                    <h2 id="pdm-lender" style="font-size:12px;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:.15em;margin-bottom:32px;"></h2>
+
+                    <div style="background:#f8fafc;border-left:4px solid #6366f1;padding:24px;margin-bottom:32px;">
+                        <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">Promotion Summary</div>
+                        <p id="pdm-summary" style="font-size:14px;font-weight:600;color:#334155;line-height:1.6;font-style:italic;"></p>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:40px;">
+                        <div>
+                            <div style="font-size:10px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;border-bottom:1px solid #f1f5f9;padding-bottom:8px;">Terms & Conditions</div>
+                            <ul id="pdm-terms" style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;"></ul>
+                        </div>
+                        <div>
+                            <div style="font-size:10px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;border-bottom:1px solid #f1f5f9;padding-bottom:8px;">Eligibility</div>
+                            <p id="pdm-eligibility" style="font-size:10px;font-weight:500;color:#64748b;line-height:1.7;margin-bottom:20px;"></p>
+                            <div style="background:#eef2ff;padding:12px 16px;border-radius:12px;">
+                                <div style="font-size:7px;font-weight:900;color:#6366f1;text-transform:uppercase;letter-spacing:.05em;">Valid Until</div>
+                                <div id="pdm-expiry" style="font-size:16px;font-weight:900;color:#0f172a;margin-top:2px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;padding-top:40px;border-top:1px solid #f1f5f9;">
+                        <div style="font-size:7px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Ref: WR-LENDER-PROMO-2026</div>
+                        <div style="text-align:right;">
+                            <div style="font-size:7px;font-weight:900;color:#cbd5e1;text-transform:uppercase;letter-spacing:.02em;">Whiterock CRM Ecosystem</div>
+                            <div style="font-size:7px;font-weight:700;color:#cbd5e1;text-transform:uppercase;">Authorized Electronic Document</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <!-- Create Lead Modal -->
 
 <script>
@@ -516,10 +616,36 @@ let MY_LEADS = Array.from({length:42},(_,i)=>({
     stage:rnd(STAGES), status:rnd(['Hot','Warm','Cool']), loanAmt:rndInt(50,800)*1000, lender:rnd(LENDERS), date:rndDate(),
 }));
 
-document.getElementById('s-total').textContent = MY_LEADS.length;
-document.getElementById('s-hot').textContent = MY_LEADS.filter(l=>l.status==='Hot').length;
-document.getElementById('s-closed').textContent = MY_LEADS.filter(l=>l.stage==='Closed').length;
-document.getElementById('chip-total').textContent = MY_LEADS.length;
+// Update stats if elements exist
+const elTotal = document.getElementById('s-total');
+if (elTotal) elTotal.textContent = MY_LEADS.length;
+const elHot = document.getElementById('s-hot');
+if (elHot) elHot.textContent = MY_LEADS.filter(l=>l.status==='Hot').length;
+const elClosed = document.getElementById('s-closed');
+if (elClosed) elClosed.textContent = MY_LEADS.filter(l=>l.stage==='Closed').length;
+const elChipTotal = document.getElementById('chip-total');
+if (elChipTotal) elChipTotal.textContent = MY_LEADS.length;
+
+function updatePipelineSnapshot(data = MY_LEADS) {
+    const counts = { Inquiry: 0, Qualified: 0, Proposal: 0, Negotiation: 0, Closed: 0 };
+    data.forEach(l => { if (counts[l.stage] !== undefined) counts[l.stage]++; });
+    
+    for (const [stage, count] of Object.entries(counts)) {
+        const el = document.getElementById('pipe-' + stage.toLowerCase());
+        if (el) el.textContent = count;
+    }
+
+    const closed = counts.Closed;
+    const total = data.length;
+    const convRate = total > 0 ? Math.round((closed / total) * 100 * 3.5) : 0; 
+    const cappedRate = Math.min(100, convRate);
+    
+    const valEl = document.getElementById('p-conv-val');
+    const barEl = document.getElementById('p-conv-bar');
+    if (valEl) valEl.textContent = cappedRate + '%';
+    if (barEl) barEl.style.width = cappedRate + '%';
+}
+updatePipelineSnapshot();
 
 const TASKS=[
     {id:1,text:'Call James Smith re: mortgage docs',due:'Today',priority:'high',done:false},
@@ -530,7 +656,8 @@ const TASKS=[
     {id:6,text:'Schedule call with Oliver Jones',due:'Tomorrow',priority:'medium',done:false},
     {id:7,text:'Complete KYC for Noah Davis',due:'This week',priority:'low',done:false},
 ];
-document.getElementById('s-tasks').textContent = TASKS.filter(t=>t.due==='Today'&&!t.done).length;
+const elTasks = document.getElementById('s-tasks');
+if (elTasks) elTasks.textContent = TASKS.filter(t=>t.due==='Today'&&!t.done).length;
 
 function stageStyle(s){ const m={Inquiry:'background:#f1f5f9;color:#475569',Qualified:'background:#dbeafe;color:#1d4ed8',Proposal:'background:#fef3c7;color:#b45309',Negotiation:'background:#f5f3ff;color:#7c3aed',Closed:'background:#dcfce7;color:#15803d'}; return m[s]||''; }
 function statusBadge(s){ const m={Hot:'background:#fee2e2;color:#b91c1c',Warm:'background:#fef3c7;color:#b45309',Cool:'background:#dbeafe;color:#1d4ed8'}; return '<span class="badge" style="'+m[s]+'">'+s+'</span>'; }
@@ -548,25 +675,32 @@ function renderTable(){
     const totalPages=Math.max(1,Math.ceil(total/PAGE));
     if(page>totalPages) page=1;
     const rows=filtered.slice((page-1)*PAGE,page*PAGE);
-    document.getElementById('tbody').innerHTML=rows.map(l=>`
-        <tr onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3,'0')}'">
-            <td><div style="font-size:10px;font-weight:700;color:#0f172a;">${l.name}</div><div style="font-size:8px;color:#94a3b8;">${l.lender}</div></td>
-            <td><span class="stage-chip" style="${stageStyle(l.stage)}">${l.stage}</span></td>
-            <td>${statusBadge(l.status)}</td>
-            <td style="font-weight:700;">${fmtAmt(l.loanAmt)}</td>
-            <td style="font-size:9px;color:#64748b;">${l.lender}</td>
-            <td style="font-size:9px;color:#94a3b8;">${fmtDate(l.date)}</td>
-            <td><div style="display:flex;gap:4px;">
-                <button onclick="event.stopPropagation();window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3,'0')}'" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-eye" style="font-size:9px;"></i></button>
-                <button onclick="event.stopPropagation();" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-message" style="font-size:9px;"></i></button>
-            </div></td>
-        </tr>`).join('');
-    document.getElementById('count-txt').textContent=`${(page-1)*PAGE+1}Ã¢â‚¬â€œ${Math.min(page*PAGE,total)} of ${total}`;
+    if (total === 0) {
+        document.getElementById('tbody').innerHTML = `<tr><td colspan="7" class="py-20 text-center text-[11px] font-bold text-gray-400">No leads found matching your criteria</td></tr>`;
+    } else {
+        document.getElementById('tbody').innerHTML=rows.map(l=>`
+            <tr onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3,'0')}'">
+                <td><div style="font-size:10px;font-weight:700;color:#0f172a;">${l.name}</div><div style="font-size:8px;color:#94a3b8;">${l.lender}</div></td>
+                <td><span class="stage-chip" style="${stageStyle(l.stage)}">${l.stage}</span></td>
+                <td>${statusBadge(l.status)}</td>
+                <td style="font-weight:700;">${fmtAmt(l.loanAmt)}</td>
+                <td style="font-size:9px;color:#64748b;">${l.lender}</td>
+                <td style="font-size:9px;color:#94a3b8;">${fmtDate(l.date)}</td>
+                <td><div style="display:flex;gap:4px;">
+                    <button onclick="event.stopPropagation();window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3,'0')}'" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-eye" style="font-size:9px;"></i></button>
+                    <button onclick="event.stopPropagation();" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-message" style="font-size:9px;"></i></button>
+                </div></td>
+            </tr>`).join('');
+    }
+    document.getElementById('count-txt').textContent=`${(page-1)*PAGE+1}–${Math.min(page*PAGE,total)} of ${total}`;
     let pg=`<div class="pg-btn ${page===1?'opacity-30 pointer-events-none':''}" onclick="goPage(${page-1})"><i class="fa-solid fa-chevron-left" style="font-size:8px;"></i></div>`;
     const s=Math.max(1,page-2),e=Math.min(totalPages,page+2);
     for(let p=s;p<=e;p++) pg+=`<div class="pg-btn ${p===page?'active':''}" onclick="goPage(${p})">${p}</div>`;
     pg+=`<div class="pg-btn ${page===totalPages?'opacity-30 pointer-events-none':''}" onclick="goPage(${page+1})"><i class="fa-solid fa-chevron-right" style="font-size:8px;"></i></div>`;
     document.getElementById('pagination').innerHTML=pg;
+
+    // Keep snapshot showing total pipeline overview
+    updatePipelineSnapshot(MY_LEADS);
 }
 function goPage(p){ page=p; renderTable(); document.getElementById('tbl-scroll').scrollTop=0; }
 
@@ -603,8 +737,38 @@ function addNote(){ const v=document.getElementById('noteInput').value.trim(); i
 function deleteNote(id){ NOTES=NOTES.filter(n=>n.id!==id); localStorage.setItem('ta_notes',JSON.stringify(NOTES)); renderNotes(); }
 function clearNotes(){ NOTES=[]; localStorage.setItem('ta_notes',JSON.stringify(NOTES)); renderNotes(); }
 
+const PROMO_DATA = {
+    1: { title: "0.25% Rate Cut", lender: "Lloyds Bank", summary: '"Applicable to all new business expansion loans over £250k."', expiry: "30 April 2026", filename: "LLOYDS_RATE_CUT.PDF", terms: ["Minimum loan amount £250,000", "Available for commercial business expansion only", "Subject to credit risk approval", "Special rate code must be applied on submission"], eligibility: "This promotion is exclusively available to platinum-tier brokers. Electronic submission via Whiterock CRM is required." },
+    2: { title: "1% Fee Rebate", lender: "Funding Circle", summary: '"Bonus commission on all asset finance deals closed this month."', expiry: "15 May 2026", filename: "FC_FEE_REBATE.PDF", terms: ["Applies to asset finance products only", "Minimum settlement of £50k", "Bonus paid on next commission cycle", "Offer valid for registered active brokers"], eligibility: "Available for all accredited brokers within the Whiterock partner network. Auto-applied on eligible settled deals." },
+    3: { title: "Fast-Track Processing", lender: "Allica Bank", summary: '"Guaranteed 24-hour turnaround on commercial mortgage apps."', expiry: "22 April 2026", filename: "ALLICA_FAST_TRACK.PDF", terms: ["Completed application package required", "Commercial mortgages up to £5M", "Excludes complex multi-layered corporate structures", "Standard lending criteria still applies"], eligibility: "Priority processing available for all 'clean' applications submitted through the Alpha Funding portal." }
+};
 
-        // Ã¢â€â‚¬Ã¢â€â‚¬ Notification Bell Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+function openPromoDoc(id) {
+    const data = PROMO_DATA[id];
+    if (!data) return;
+    document.getElementById('pdm-filename').textContent = data.filename;
+    document.getElementById('pdm-title').textContent = data.title;
+    document.getElementById('pdm-lender').textContent = data.lender;
+    document.getElementById('pdm-summary').textContent = data.summary;
+    document.getElementById('pdm-expiry').textContent = data.expiry;
+    document.getElementById('pdm-eligibility').textContent = data.eligibility;
+    document.getElementById('pdm-terms').innerHTML = data.terms.map(t => `<li style="font-size:10px;font-weight:500;color:#64748b;display:flex;gap:8px;"><span style="color:#6366f1;">•</span> ${t}</li>`).join('');
+    document.getElementById('promoDocModal').classList.add('active');
+}
+function closePromoDoc() { document.getElementById('promoDocModal').classList.remove('active'); }
+
+function filterByStage(s) {
+    const el = document.getElementById('f-stage');
+    if (el) {
+        el.value = s;
+        page = 1;
+        renderTable();
+        document.getElementById('leads-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+
+        // ———————— Notification Bell ————————
         let NOTIFS=[{id:1,unread:true,icon:'fa-triangle-exclamation',iconBg:'#fee2e2',iconColor:'#b91c1c',title:'3 documents overdue',body:'Action needed on pending client documents.',time:'2 min ago'},{id:2,unread:true,icon:'fa-clock',iconBg:'#fef3c7',iconColor:'#b45309',title:'Follow-ups due today',body:'12 leads require follow-up before 17:00.',time:'15 min ago'},{id:3,unread:true,icon:'fa-diagram-project',iconBg:'#dbeafe',iconColor:'#1d4ed8',title:'Pipeline updated',body:'2 leads moved to Negotiation stage.',time:'1 hr ago'},{id:4,unread:false,icon:'fa-user-plus',iconBg:'#dcfce7',iconColor:'#15803d',title:'New lead assigned',body:'James Smith has been assigned to you.',time:'3 hrs ago'},{id:5,unread:false,icon:'fa-hand-holding-dollar',iconBg:'#f5f3ff',iconColor:'#7c3aed',title:'Payout approved',body:'Payout for ABC Corp approved.',time:'Yesterday'}];
 function renderNotifs(){const list=document.getElementById('notifList');const unread=NOTIFS.filter(n=>n.unread).length;document.getElementById('notifBadge').textContent=unread;document.getElementById('notifBadge').style.display=unread?'flex':'none';document.getElementById('notif-unread-txt').textContent=unread?unread+' unread':'All caught up';if(!NOTIFS.length){list.innerHTML='<div style="padding:32px;text-align:center;font-size:9px;color:#94a3b8;"><i class="fa-solid fa-bell-slash" style="font-size:24px;display:block;margin-bottom:8px;opacity:.3;"></i>No notifications</div>';return;}list.innerHTML=NOTIFS.map(n=>`<div class="notif-item ${n.unread?'unread':''}" onclick="readNotif(${n.id})"><div class="notif-icon" style="background:${n.iconBg};"><i class="fa-solid ${n.icon}" style="color:${n.iconColor};"></i></div><div style="flex:1;min-width:0;"><div style="font-size:10px;font-weight:${n.unread?'800':'600'};color:#0f172a;line-height:1.3;">${n.title}</div><div style="font-size:8px;color:#64748b;margin-top:2px;line-height:1.4;">${n.body}</div><div style="font-size:7px;color:#94a3b8;margin-top:3px;font-weight:700;">${n.time}</div></div>${n.unread?'<div class="notif-dot"></div>':''}</div>`).join('');}
 function toggleNotifPanel(){document.getElementById('notifPanel').classList.toggle('open');}
@@ -629,7 +793,13 @@ function toggleDesignMode() {
         iconBox.classList.replace('text-indigo-500', 'text-white');
         label.textContent = 'SAVE LAYOUT';
         injectResizeButtons();
-        sortableInstance = new Sortable(grid, { animation: 150, ghostClass: 'sortable-ghost', onEnd: saveDashboardLayout });
+        try {
+            if (typeof Sortable !== 'undefined') {
+                sortableInstance = new Sortable(grid, { animation: 150, ghostClass: 'sortable-ghost', onEnd: saveDashboardLayout });
+            } else {
+                console.warn('Sortable.js not loaded');
+            }
+        } catch(e) { console.error('Design mode init failed', e); }
     } else {
         grid.classList.remove('design-mode');
         btn.classList.remove('border-indigo-500', 'bg-indigo-50/30');
@@ -683,7 +853,7 @@ function toggleCardSize(btn) {
 }
 
 window.addEventListener('load', () => { loadDashboardLayout(); injectResizeButtons(); updateCalculator(); });
-renderTable(); renderNotes(); renderNotifs();
+renderTable(); renderNotes(); renderNotifs(); renderTasks();
 
 // AI Core Assistant Functions
 function toggleAIWidget() {
@@ -750,7 +920,7 @@ const DRAWER_DOCS = [
     { id:1, title:"Home Loan Product Guide 2026",    category:"Products",       fileType:"pdf",  fileSize:"3.4 MB", version:"v2.1", uploaded:"2026-04-10", desc:"Comprehensive guide covering all home loan products, rates, and eligibility criteria for 2026." },
     { id:2, title:"AML & KYC Compliance Policy",     category:"Policies",       fileType:"pdf",  fileSize:"1.2 MB", version:"v4.0", uploaded:"2026-04-08", desc:"Updated AML and KYC policy aligned with AUSTRAC 2026 guidelines." },
     { id:3, title:"Broker Onboarding FAQ",           category:"FAQs",           fileType:"docx", fileSize:"420 KB", version:"v1.3", uploaded:"2026-04-12", desc:"Frequently asked questions for new brokers joining the panel." },
-    { id:4, title:"Cold Call Script Ã¢â‚¬â€ Refinance",    category:"Scripts",        fileType:"docx", fileSize:"190 KB", version:"v1.0", uploaded:"2026-04-14", desc:"Structured outbound call script for refinance lead conversations." },
+    { id:4, title:"Cold Call Script — Refinance",    category:"Scripts",        fileType:"docx", fileSize:"190 KB", version:"v1.0", uploaded:"2026-04-14", desc:"Structured outbound call script for refinance lead conversations." },
     { id:5, title:"Lender Panel Overview Guide",     category:"Guides",         fileType:"pdf",  fileSize:"5.1 MB", version:"v3.2", uploaded:"2026-04-05", desc:"Full overview of all lenders including products, BDMs, and turnaround times." },
     { id:6, title:"CRM Usage Knowledge Base",        category:"Knowledge Base", fileType:"pdf",  fileSize:"2.8 MB", version:"v1.1", uploaded:"2026-04-15", desc:"Internal knowledge base for using the CRM platform." },
     { id:7, title:"Commercial Loan Product Sheet",   category:"Products",       fileType:"xlsx", fileSize:"680 KB", version:"v1.0", uploaded:"2026-04-13", desc:"Rate and product comparison sheet for commercial lending solutions." },

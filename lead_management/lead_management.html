@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -437,8 +437,8 @@
             <img src="../logo/alpha.png" alt="Alpha Funding" style="width:38px;height:38px;object-fit:contain;border-radius:8px;">
         </div>
 
-        <a href="../dashboard/super_admin_dashboard.html" id="nav-dashboard" class="nav-item">
-            <i class="fa-solid fa-gauge-high"></i>
+        <a href="${s.landing || '../dashboard/tele_agent_dashboard.html'}" id="nav-dashboard" class="nav-item">
+            <i class="fa-solid fa-house"></i>
             <span class="nav-text">Dashboard</span>
         </a>
 
@@ -495,9 +495,9 @@
     if(el&&s.landing){el.href='../dashboard/'+s.landing.split('/').pop();}
     // Role-based nav visibility
     const ROLE_NAV = {
-        'Admin':         ['nav-tasks', 'nav-leads', 'nav-pipeline', 'nav-lenders', 'nav-docs', 'nav-users', 'nav-reports'],
-        'Team Leader':   ['nav-tasks', 'nav-leads'],
-        'Tele Agent':    ['nav-tasks', 'nav-leads'],
+        'Admin':            ['nav-tasks', 'nav-leads', 'nav-pipeline', 'nav-lenders', 'nav-docs', 'nav-users', 'nav-reports'],
+        'Team Leader':      ['nav-tasks', 'nav-leads'],
+        'Tele Agent':       ['nav-tasks', 'nav-leads'],
         'Accounts Manager': ['nav-tasks', 'nav-leads', 'nav-lenders']
     };
     const allowed = ROLE_NAV[s.role] || ROLE_NAV['Admin'];
