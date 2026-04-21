@@ -125,6 +125,58 @@
             user-select: none;
         }
 
+        /* Document Row Styles */
+        .doc-row {
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            transition: all .2s;
+        }
+        .doc-row:hover { border-color: #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .doc-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .doc-status-badge { font-size: 8px; font-weight: 800; padding: 3px 8px; border-radius: 99px; background: #f1f5f9; color: #64748b; text-transform: uppercase; letter-spacing: .05em; }
+        .doc-btn { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; transition: all .15s; border: none; }
+        .doc-btn.btn-view, .doc-btn.btn-edit { background: #f8fafc; color: #94a3b8; }
+        .doc-btn.btn-verify { background: #f0fdf4; color: #166534; }
+        .doc-btn.btn-reject { background: #fef2f2; color: #b91c1c; }
+        .doc-btn.btn-delete { background: #fee2e2; color: #dc2626; }
+        .doc-btn:hover { transform: scale(1.05); }
+
+        .doc-btn:hover { transform: scale(1.05); }
+
+        /* Multi-Select Dropdown Styles */
+        .custom-dropdown { position: relative; width: 100%; margin-bottom: 15px; }
+        .dropdown-header { 
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+            cursor: pointer; font-size: 11px; font-weight: 700; color: #1e293b;
+        }
+        .dropdown-options {
+            position: absolute; top: calc(100% + 5px); left: 0; right: 0;
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            z-index: 100; display: none; padding: 10px;
+            max-height: 250px; overflow-y: auto;
+        }
+        .custom-dropdown.open .dropdown-options { display: block; }
+        .lender-option {
+            display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+            border-radius: 8px; cursor: pointer; transition: all .15s; margin-bottom: 2px;
+        }
+        .lender-option:hover { background: #f8fafc; }
+        .lender-option input { width: 14px; height: 14px; accent-color: #6366f1; cursor: pointer; }
+        .lender-option label { font-size: 10px; font-weight: 700; color: #475569; cursor: pointer; flex: 1; }
+        .lender-option.selected { background: #eef2ff; }
+        .lender-option.selected label { color: #6366f1; }
+
+        .email-preview-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-top: 10px; }
+        .email-preview-header { font-size: 8px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+        .email-preview-content { font-size: 10px; color: #475569; line-height: 1.5; font-family: monospace; white-space: pre-wrap; }
         .stage-header {
             border-radius: 10px 10px 0 0;
             padding: 10px 12px;
@@ -210,9 +262,9 @@
         .lead-card.dragging { opacity: .45; transform: rotate(1.5deg) scale(.97); cursor: grabbing; }
 
         .card-priority-bar { position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 0 2px 2px 0; }
-        .priority-high   { background: #ef4444; }
-        .priority-medium { background: #f59e0b; }
-        .priority-low    { background: #10b981; }
+        .priority-hot { background: #fee2e2; color: #ef4444; }
+        .priority-warm { background: #fef3c7; color: #f59e0b; }
+        .priority-cool { background: #dcfce7; color: #22c55e; }
 
         .card-id { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; }
         .card-name { font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -261,6 +313,11 @@
         .btn-confirm-move, .btn-save-move { padding: 8px 20px; border-radius: 8px; border: none; background: #0f172a; color: #fff; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
         .btn-save-move { background: #4f46e5; }
 
+        /* Drawer */
+        #drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:900; opacity:0; pointer-events:none; transition:opacity .25s; }
+        #drawer-overlay.open { opacity:1; pointer-events:all; }
+        #create-lead-drawer { position:fixed; top:0; right:-520px; width:500px; height:100vh; background:#fff; z-index:901; display:flex; flex-direction:column; box-shadow:-8px 0 40px rgba(0,0,0,.15); transition:right .3s cubic-bezier(.4,0,.2,1); }
+        #create-lead-drawer.open { right:0; }
     </style>
 </head>
 
@@ -350,10 +407,10 @@
                     <option>Priya Sharma</option>
                 </select>
                 <select id="pipeline-priority" class="input-clean w-28" onchange="filterCards()">
-                    <option value="">All Priority</option>
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
+                    <option value="">All Lead Temp</option>
+                    <option value="hot">Hot</option>
+                    <option value="warm">Warm</option>
+                    <option value="cool">Cool</option>
                 </select>
                 <a href="../lead_management/register_lead.html" class="bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-lg text-[9px] font-bold uppercase tracking-widest transition-all flex items-center gap-2" style="text-decoration:none;">
                     <i class="fa-solid fa-plus text-[10px]"></i> Add Lead
@@ -379,13 +436,103 @@
                 <div class="stage-header"><span class="stage-title"><i class="fa-solid fa-circle-check"></i> Loan Approved</span><span class="stage-count" id="count-approved">0</span></div>
                 <div class="stage-body" id="col-approved" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'approved')"></div>
             </div>
-            <div class="stage-col stage-completed">
-                <div class="stage-header"><span class="stage-title"><i class="fa-solid fa-flag-checkered"></i> Completed</span><span class="stage-count" id="count-completed">0</span></div>
-                <div class="stage-body" id="col-completed" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'completed')"></div>
-            </div>
             <div class="stage-col stage-rejected">
                 <div class="stage-header"><span class="stage-title"><i class="fa-solid fa-circle-xmark"></i> Rejected</span><span class="stage-count" id="count-rejected">0</span></div>
                 <div class="stage-body" id="col-rejected" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'rejected')"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Viewer Modal -->
+    <div class="confirm-backdrop hidden" id="doc-viewer-backdrop" style="z-index: 2200;">
+        <div class="modal-box" style="width: 800px; height: 85vh; display: flex; flex-direction: column;">
+            <div class="modal-header bg-slate-900 text-white">
+                <h3 class="text-[10px] font-black uppercase tracking-widest"><i class="fa-solid fa-file-lines mr-2"></i> Document Viewer - <span id="viewing-doc-name" class="text-indigo-300"></span></h3>
+                <button class="modal-close bg-slate-800 text-white hover:bg-slate-700 hover:text-white" onclick="closeDocViewer()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="flex-1 bg-slate-200 p-10 overflow-auto flex items-center justify-center custom-scrollbar">
+                <!-- PDF Mock -->
+                <div id="pdf-mock" class="bg-white shadow-2xl p-16 w-full max-w-2xl min-h-[1000px] hidden rounded-lg">
+                    <div class="border-b-2 border-slate-900 pb-4 mb-8 flex justify-between items-end">
+                        <div class="text-2xl font-black text-slate-900">STARLING BANK</div>
+                        <div class="text-right">
+                           <div class="text-[10px] font-black text-slate-400">STATEMENT OF ACCOUNT</div>
+                           <div class="text-[14px] font-bold text-slate-900 uppercase">January 2026</div>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="flex justify-between border-b border-slate-100 pb-4">
+                            <div><div class="text-[8px] font-black text-slate-400 uppercase">Customer Name</div><div class="text-[12px] font-bold text-slate-800">Robert Miller</div></div>
+                            <div class="text-right"><div class="text-[8px] font-black text-slate-400 uppercase">Account Number</div><div class="text-[12px] font-bold text-slate-800">XXXX - 5678</div></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-8 py-4">
+                            <div class="p-4 bg-slate-50 rounded-lg"><div class="text-[8px] font-black text-slate-400 uppercase">Total Inbound</div><div class="text-xl font-black text-green-600">£12,450.00</div></div>
+                            <div class="p-4 bg-slate-50 rounded-lg"><div class="text-[8px] font-black text-slate-400 uppercase">Total Outbound</div><div class="text-xl font-black text-red-600">£8,120.45</div></div>
+                        </div>
+                        <div class="h-64 bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center gap-2">
+                             <i class="fa-solid fa-table text-slate-300 text-3xl"></i>
+                             <div class="text-[10px] font-bold text-slate-300 uppercase">Detailed Transaction Log</div>
+                        </div>
+                        <div class="space-y-3 pt-6 border-t border-slate-100">
+                            <div class="h-3 bg-slate-100 rounded w-full"></div>
+                            <div class="h-3 bg-slate-100 rounded w-5/6"></div>
+                            <div class="h-3 bg-slate-100 rounded w-4/6"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Image Mock -->
+                <div id="img-mock" class="hidden flex flex-col items-center gap-4">
+                    <div class="text-[11px] font-black text-slate-500 uppercase tracking-widest bg-white/80 px-4 py-2 rounded-full shadow-sm"><i class="fa-solid fa-fingerprint mr-2 text-indigo-500"></i> Identity Verification Source</div>
+                    <img id="mock-img-element" src="https://via.placeholder.com/600x400?text=PASSPORT+OR+ID+DOCUMENT+PREVIEW" class="rounded-xl shadow-2xl border-8 border-white max-w-lg">
+                </div>
+            </div>
+            <div class="p-4 bg-white border-t flex justify-center gap-3">
+                 <button class="px-8 py-2.5 bg-indigo-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest transition-all hover:bg-black hover:transform hover:scale-105" onclick="closeDocViewer()">BACK TO AUDIT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full Email Preview Modal -->
+    <div class="confirm-backdrop hidden" id="preview-backdrop" style="z-index: 2100;">
+        <div class="modal-box" style="width: 750px;">
+            <div class="modal-header bg-slate-900 text-white">
+                <h3 class="text-[10px] font-black uppercase tracking-widest"><i class="fa-solid fa-envelope-open-text mr-2"></i> Submission Email Preview</h3>
+                <button class="modal-close bg-slate-800 text-white hover:bg-slate-700 hover:text-white" onclick="closeFullPreview()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-8 bg-slate-50">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b bg-slate-50 flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] font-black text-slate-400 uppercase w-16">From:</span>
+                            <span class="text-[10px] font-bold text-slate-600">Whiterock Submission Team &lt;deal-flow@whiterock.com&gt;</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] font-black text-slate-400 uppercase w-16">To:</span>
+                            <span id="preview-to-lenders" class="text-[10px] font-bold text-indigo-600"></span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
+                            <span class="text-[9px] font-black text-slate-400 uppercase w-16">Subject:</span>
+                            <span id="preview-subject" class="text-[11px] font-black text-slate-900"></span>
+                        </div>
+                    </div>
+                    <div class="p-10 min-h-[350px] text-[12px] text-slate-700 leading-relaxed font-medium whitespace-pre-line" id="preview-body-content"></div>
+                    <div class="px-6 py-4 bg-slate-50 border-t">
+                        <div class="text-[9px] font-black text-slate-400 uppercase mb-3"><i class="fa-solid fa-paperclip mr-1 text-[10px]"></i> Case Documents Attached</div>
+                        <div class="flex gap-2">
+                            <div class="px-3 py-2 bg-white border rounded-lg flex items-center gap-2">
+                                <i class="fa-solid fa-file-pdf text-red-500"></i>
+                                <span class="text-[9px] font-bold text-slate-600">Bank_Statements_AF.pdf</span>
+                            </div>
+                            <div class="px-3 py-2 bg-white border rounded-lg flex items-center gap-2">
+                                <i class="fa-solid fa-file-image text-blue-500"></i>
+                                <span class="text-[9px] font-bold text-slate-600">DirectorID_Verification.jpg</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t flex justify-center bg-white">
+                <button class="bg-indigo-600 text-white px-10 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all" onclick="closeFullPreview()">CLOSE PREVIEW</button>
             </div>
         </div>
     </div>
@@ -399,14 +546,74 @@
                     <p id="confirm-lead-id" class="text-gray-400 font-bold uppercase"></p>
                     <p id="confirm-lead-name" class="font-black text-gray-900"></p>
                 </div>
-                <p id="confirm-message" class="text-[10px] text-gray-600 mb-4"></p>
-                <div class="flex gap-2">
-                    <div id="confirm-from-pill" class="flex-1 p-2 rounded text-center text-[9px] font-bold uppercase"></div>
+                <p id="confirm-message" class="text-[10px] text-gray-600 mb-4 text-center"></p>
+                
+                <!-- Pipeline Path Diagram -->
+                <div id="confirm-pipeline-viz" class="relative flex items-center justify-between mb-2 px-6 py-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div class="absolute top-1/2 left-12 right-12 h-[2px] bg-slate-200 -translate-y-1/2 -z-0"></div>
+                    
+                    <div class="flex flex-col items-center gap-1.5 z-10" id="step-wrap-collecting">
+                        <div id="step-viz-collecting" class="w-7 h-7 rounded-full bg-white border-2 border-slate-200 text-[9px] flex items-center justify-center font-extrabold text-slate-300">1</div>
+                        <span class="text-[6px] font-black uppercase tracking-tighter text-slate-400">Collect</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-1.5 z-10" id="step-wrap-verified">
+                        <div id="step-viz-verified" class="w-7 h-7 rounded-full bg-white border-2 border-slate-200 text-[9px] flex items-center justify-center font-extrabold text-slate-300">2</div>
+                        <span class="text-[6px] font-black uppercase tracking-tighter text-slate-400">Verify</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-1.5 z-10" id="step-wrap-lender">
+                        <div id="step-viz-lender" class="w-7 h-7 rounded-full bg-white border-2 border-slate-200 text-[9px] flex items-center justify-center font-extrabold text-slate-300">3</div>
+                        <span class="text-[6px] font-black uppercase tracking-tighter text-slate-400">Lender</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-1.5 z-10" id="step-wrap-approved">
+                        <div id="step-viz-approved" class="w-7 h-7 rounded-full bg-white border-2 border-slate-200 text-[9px] flex items-center justify-center font-extrabold text-slate-300">4</div>
+                        <span class="text-[6px] font-black uppercase tracking-tighter text-slate-400">Approve</span>
+                    </div>
+                </div>
+
+                <div id="confirm-simple-path" class="flex gap-2 hidden">
+                    <div id="confirm-from-pill" class="flex-1 p-2 rounded text-center text-[9px] font-bold uppercase border"></div>
                     <i class="fa-solid fa-arrow-right self-center text-gray-300"></i>
-                    <div id="confirm-to-pill" class="flex-1 p-2 rounded text-center text-[9px] font-bold uppercase"></div>
+                    <div id="confirm-to-pill" class="flex-1 p-2 rounded text-center text-[9px] font-bold uppercase border"></div>
                 </div>
             </div>
             <div class="confirm-footer"><button class="btn-cancel-move" onclick="cancelMove()">Cancel</button><button class="btn-confirm-move" onclick="confirmMove()">Confirm & Continue</button></div>
+        </div>
+    </div>
+
+    <!-- Custom Error Alert Popup -->
+    <div class="confirm-backdrop hidden" id="error-backdrop">
+        <div class="confirm-box" style="width: 480px;">
+            <div class="confirm-header" style="background: #ef4444;"><h3 class="text-[10px] font-black uppercase tracking-widest text-white w-full text-center"><i class="fa-solid fa-circle-exclamation mr-2"></i> Action Restricted</h3></div>
+            <div class="confirm-body p-6">
+                <p id="error-message" class="text-[11px] text-gray-700 font-bold leading-relaxed text-center mb-6"></p>
+                
+                <div id="error-workflow-viz" class="hidden">
+                    <div class="update-section-title mb-3">Required Pipeline Workflow</div>
+                    <div class="flex items-center justify-between bg-slate-50 p-4 rounded-xl border border-slate-100 mb-2">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-7 h-7 rounded-full bg-white border-2 border-slate-200 text-[10px] flex items-center justify-center font-black text-slate-400">1</div>
+                            <span class="text-[7px] font-black text-slate-400 uppercase tracking-tighter text-slate-400">Collection</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-right-long text-slate-200"></i>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-7 h-7 rounded-full bg-white border-2 border-slate-200 text-[10px] flex items-center justify-center font-black text-slate-400">2</div>
+                            <span class="text-[7px] font-black text-slate-400 uppercase tracking-tighter text-slate-400">Verified</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-right-long text-slate-200"></i>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-7 h-7 rounded-full bg-white border-2 border-slate-200 text-[10px] flex items-center justify-center font-black text-slate-400">3</div>
+                            <span class="text-[7px] font-black text-slate-400 uppercase tracking-tighter text-slate-400">Lender</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-right-long text-slate-200"></i>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-7 h-7 rounded-full bg-indigo-50 border-2 border-indigo-200 text-[10px] flex items-center justify-center font-black text-indigo-600">4</div>
+                            <span class="text-[7px] font-black text-indigo-600 uppercase tracking-tighter text-indigo-600">Approved</span>
+                        </div>
+                    </div>
+                    <p class="text-[9px] text-slate-400 font-bold text-center mt-2 italic">* You must reach the Lender stage before approving a loan.</p>
+                </div>
+            </div>
+            <div class="confirm-footer" style="justify-content: center; background: #f8fafc;"><button class="btn-confirm-move" style="background: #0f172a; padding: 10px 60px;" onclick="closeErrorAlert()">UNDERSTOOD</button></div>
         </div>
     </div>
 
@@ -418,17 +625,39 @@
         </div>
     </div>
 
+    <!-- Create Lead Drawer -->
+    <div id="drawer-overlay" onclick="closeAddModal()"></div>
+    <div id="create-lead-drawer">
+         <div style="background:#0f172a;padding:15px 20px;color:#fff;display:flex;justify-content:between;align-items:center;">
+            <h2 class="text-sm font-black uppercase">Register New Lead</h2>
+            <button onclick="closeAddModal()" class="text-white opacity-50"><i class="fa-solid fa-xmark"></i></button>
+         </div>
+         <div class="p-5 flex-1 overflow-y-auto custom-scrollbar">
+            <div class="space-y-4">
+                <div><label class="update-label">Full Name *</label><input id="clf-name" class="update-input" type="text"></div>
+                <div><label class="update-label">Company Name *</label><input id="clf-company" class="update-input" type="text"></div>
+                <div><label class="update-label">Amount Needed *</label><input id="clf-amount" class="update-input" type="text"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="update-label">Agent</label><select id="clf-agent" class="update-input"><option>Sarah White</option><option>Cody Lane</option></select></div>
+                    <div><label class="update-label">Priority</label><select id="clf-priority" class="update-input"><option>Medium</option><option>High</option><option>Low</option></select></div>
+                </div>
+                <div><label class="update-label">Notes</label><textarea id="clf-notes" class="update-input h-24"></textarea></div>
+            </div>
+         </div>
+         <div class="p-4 border-t flex gap-2"><button onclick="closeAddModal()" class="flex-1 py-2 border rounded font-bold text-[9px]">CANCEL</button><button onclick="saveNewLead()" class="flex-1 py-2 bg-indigo-600 text-white rounded font-bold text-[9px]">REGISTER LEAD</button></div>
+    </div>
 
     <script>
-        const STAGES = ['collecting','verified','lender','approved','completed','rejected'];
-        const STAGE_LABELS = { collecting:'Doc Collection', verified:'Doc Verified', lender:'Lender Selection', approved:'Loan Approved', completed:'Completed', rejected:'Rejected' };
+        const STAGES = ['collecting','verified','lender','approved','rejected'];
+        const STAGE_LABELS = { collecting:'Doc Collection', verified:'Doc Verified', lender:'Lender Selection', approved:'Loan Approved', rejected:'Rejected' };
         
         let leads = [
-            { id:'AF-028', name:'Minosh Example', business:'ex ABC', amount:'£3,456', agent:'Sarah White', bank:'Starling', stage:'verified', priority:'High', days:3, lender:'NAB', notes:'Awaiting final sign-off.' },
-            { id:'AF-027', name:'ABC Corp', business:'ABCD Ltd', amount:'£2,345', agent:'Cody Lane', bank:'—', stage:'verified', priority:'Medium', days:5, lender:'Commonwealth Bank', notes:'Docs reviewed.' },
-            { id:'AF-026', name:'Kavi', business:'No Company', amount:'£34,567', agent:'Sarah White', bank:'—', stage:'collecting', priority:'Low', days:8, lender:'—', notes:'Waiting on bank statements.' },
-            { id:'AF-029', name:'Priya', business:'No Company', amount:'£456.90', agent:'Sarah White', bank:'—', stage:'collecting', priority:'Medium', days:2, lender:'—', notes:'ID docs pending.' },
-            { id:'AF-001', name:'Robert Miller', business:'Miller Logistics', amount:'£250,000', agent:'Cody Lane', bank:'Barclays', stage:'collecting', priority:'High', days:12, lender:'—', notes:'Missing payslips.' }
+            { id: 'AL-902', name: 'Robert Miller', business: 'Miller Logistics', email: 'robert.m@miller-logistics.co.uk', amount: '£12,000', agent: 'Sarah Jenkins', stage: 'collecting', priority: 'hot', days: 2, lender: '—', notes: 'Waiting for bank statements' },
+            { id: 'AF-550', name: 'Priya Singh', business: 'Singh Media', email: 'contact@singhmedia.com', amount: '£450,000', agent: 'James White', stage: 'collecting', priority: 'warm', days: 1, lender: '—', notes: 'Large expansion loan request.' },
+            { id: 'AF-027', name: 'John Smith', business: 'ABC Corp', email: 'jsmith@abccorp.uk', amount: '£55,000', agent: 'Sarah Jenkins', stage: 'lender', priority: 'hot', days: 4, lender: 'Barclays, HSBC', notes: 'Email sent to partners, awaiting offers.' },
+            { id: 'AL-339', name: 'Mike Johnson', business: 'Urban Scaffolding Ltd', email: 'mike@urban-scaff.co.uk', amount: '£85,000', agent: 'James White', stage: 'verified', priority: 'cool', days: 5, lender: '—', notes: 'Bank statements audited and approved.' },
+            { id: 'AF-001', name: 'David Brown', business: 'Miller Logistics', email: 'd.brown@miller-logistics.co.uk', amount: '£150,000', agent: 'Sarah Jenkins', stage: 'approved', priority: 'hot', days: 12, lender: 'Starling', notes: 'Offer accepted, final checks in progress.' },
+            { id: 'AL-209', name: 'Kevin Malone', business: 'Malone Paints', email: 'kevin@malonepaints.com', amount: '£25,000', agent: 'James White', stage: 'rejected', priority: 'cool', days: 1, lender: '—', notes: 'Low credit score and high existing debt.' }
         ];
 
         let dragId = null, pendingMoveId = null, pendingMoveStage = null;
@@ -447,7 +676,36 @@
                     const card = document.createElement('div');
                     card.className = 'lead-card';
                     card.draggable = true;
-                    card.innerHTML = `<div class="card-priority-bar ${l.priority==='High'?'priority-high':l.priority==='Medium'?'priority-medium':'priority-low'}"></div><div class="card-id">${l.id}</div><div class="card-name">${l.name}</div><div class="card-amount">${l.amount}</div><div class="card-meta"><span class="card-agent">${l.agent}</span><span class="card-days">${l.days}d</span></div>`;
+                    const pClass = l.priority === 'hot' ? 'priority-hot' : l.priority === 'warm' ? 'priority-warm' : 'priority-cool';
+                    const pLabel = l.priority.charAt(0).toUpperCase() + l.priority.slice(1);
+                    card.innerHTML = `
+                        <div class="card-priority-bar ${pClass}"></div>
+                        <div class="bg-slate-50 -mx-[11px] -mt-[10px] px-3 py-2.5 mb-3 border-b border-slate-100 flex justify-between items-center rounded-t-lg">
+                            <span class="text-[13px] font-black text-slate-900">${l.amount}</span>
+                            <span class="card-id text-slate-400">${l.id}</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 mb-3 truncate py-0.5">
+                            <div class="card-name leading-none flex-shrink-0">${l.name}</div>
+                            <div class="w-1 h-1 rounded-full bg-slate-200"></div>
+                            <div class="text-[10px] font-black text-indigo-600 truncate opacity-80">${l.business}</div>
+                        </div>
+                        
+                        <div class="mb-3 px-2 py-1.5 bg-slate-50 border-l-2 border-slate-200">
+                            <div class="text-[9px] text-slate-500 font-medium italic line-clamp-1 leading-snug">${l.notes || 'No active notes.'}</div>
+                        </div>
+
+                        <div class="flex items-center justify-between border-t border-slate-50 pt-2 pb-0.5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[8px] font-black text-slate-400 flex items-center gap-1"><i class="fa-solid fa-user-tie text-[7px]"></i> ${l.agent.split(' ')[0]}</span>
+                                <span class="text-[8px] font-black text-slate-300 flex items-center gap-1"><i class="fa-solid fa-clock text-[7px]"></i> ${l.days}d</span>
+                                <span class="text-[7px] font-black uppercase px-1.5 py-0.5 rounded ${pClass} ml-1">${pLabel}</span>
+                            </div>
+                            <a href="lead_detail.html?id=${l.id}" class="w-6 h-6 flex items-center justify-center bg-slate-100 text-slate-400 rounded-lg hover:bg-slate-900 hover:text-white transition-all">
+                                <i class="fa-solid fa-eye text-[9px]"></i>
+                            </a>
+                        </div>
+                    `;
                     card.addEventListener('dragstart', () => { dragId = l.id; setTimeout(()=>card.classList.add('dragging'),0); });
                     card.addEventListener('dragend', () => card.classList.remove('dragging'));
                     col.appendChild(card);
@@ -464,18 +722,78 @@
             if(!dragId) return;
             const l = leads.find(x => x.id === dragId);
             if(l && l.stage !== stage) {
+                const fromIdx = STAGES.indexOf(l.stage);
+                const toIdx = STAGES.indexOf(stage);
+
+                // Validation: Only allow next stage, rejected stage, or moving backwards
+                const isNextStage = toIdx === fromIdx + 1;
+                const isRejected = stage === 'rejected';
+                const isMovingBack = toIdx < fromIdx;
+                const isAllowedJump = (l.stage === 'collecting' && stage === 'lender');
+
+                if (!isNextStage && !isRejected && !isMovingBack && !isAllowedJump) {
+                    showErrorAlert(`Invalid Move: You cannot skip to "${STAGE_LABELS[stage]}" from "${STAGE_LABELS[l.stage]}". Please follow the progress sequence.`, true);
+                    dragId = null;
+                    return;
+                }
+
                 pendingMoveId = dragId; pendingMoveStage = stage;
                 showConfirmMove(l, stage);
             }
             dragId = null;
         }
 
+        function showErrorAlert(msg, showWorkflow = false) {
+            document.getElementById('error-message').textContent = msg;
+            const viz = document.getElementById('error-workflow-viz');
+            if(showWorkflow) viz.classList.remove('hidden'); else viz.classList.add('hidden');
+            document.getElementById('error-backdrop').classList.remove('hidden');
+        }
+        function closeErrorAlert() {
+            document.getElementById('error-backdrop').classList.add('hidden');
+        }
+
         function showConfirmMove(l, to) {
             document.getElementById('confirm-lead-id').textContent = l.id;
             document.getElementById('confirm-lead-name').textContent = l.name;
             document.getElementById('confirm-message').textContent = `Move this lead to ${STAGE_LABELS[to]}?`;
-            document.getElementById('confirm-from-pill').textContent = STAGE_LABELS[l.stage];
-            document.getElementById('confirm-to-pill').textContent = STAGE_LABELS[to];
+
+            const viz = document.getElementById('confirm-pipeline-viz');
+            const simple = document.getElementById('confirm-simple-path');
+
+            if (to === 'rejected' || l.stage === 'rejected') {
+                viz.classList.add('hidden');
+                simple.classList.remove('hidden');
+                document.getElementById('confirm-from-pill').textContent = STAGE_LABELS[l.stage];
+                document.getElementById('confirm-to-pill').textContent = STAGE_LABELS[to];
+                document.getElementById('confirm-from-pill').className = 'flex-1 p-2 rounded text-center text-[9px] font-bold uppercase border bg-gray-50 text-gray-400';
+                document.getElementById('confirm-to-pill').className = 'flex-1 p-2 rounded text-center text-[9px] font-bold uppercase border bg-red-50 text-red-600 border-red-100';
+            } else {
+                viz.classList.remove('hidden');
+                simple.classList.add('hidden');
+                
+                // Reset all viz circles
+                ['collecting', 'verified', 'lender', 'approved'].forEach(s => {
+                    const circle = document.getElementById('step-viz-' + s);
+                    const label = circle.nextElementSibling;
+                    circle.className = 'w-7 h-7 rounded-full bg-white border-2 border-slate-100 text-[9px] flex items-center justify-center font-extrabold text-slate-200';
+                    label.className = 'text-[6px] font-black uppercase tracking-tighter text-slate-300';
+                });
+
+                // Style 'From'
+                const fCircle = document.getElementById('step-viz-' + l.stage);
+                if (fCircle) {
+                    fCircle.className = 'w-7 h-7 rounded-full bg-slate-100 border-2 border-slate-300 text-[9px] flex items-center justify-center font-extrabold text-slate-500';
+                    fCircle.nextElementSibling.className = 'text-[6px] font-black uppercase tracking-tighter text-slate-500';
+                }
+
+                // Style 'To'
+                const tCircle = document.getElementById('step-viz-' + to);
+                if (tCircle) {
+                    tCircle.className = 'w-7 h-7 rounded-full bg-indigo-600 border-2 border-indigo-600 text-[9px] flex items-center justify-center font-extrabold text-white';
+                    tCircle.nextElementSibling.className = 'text-[6px] font-black uppercase tracking-tighter text-indigo-700';
+                }
+            }
             document.getElementById('confirm-backdrop').classList.remove('hidden');
         }
 
@@ -484,24 +802,199 @@
 
         function openUpdateModal() {
             const l = leads.find(x => x.id === pendingMoveId);
-            document.getElementById('update-lead-name-title').textContent = `${l.name} -> ${STAGE_LABELS[pendingMoveStage]}`;
-            document.getElementById('update-form-body').innerHTML = `<div class="p-4"><label class="update-label">Stage Specific Notes</label><textarea id="upd-notes" class="update-input h-20">${l.notes}</textarea></div>`;
+            const title = document.getElementById('update-lead-name-title');
+            const body = document.getElementById('update-form-body');
+            const from = l.stage;
+            const to = pendingMoveStage;
+            
+            title.innerHTML = `<div class="flex items-center gap-2 text-[10px]"><span class="text-gray-400 font-bold">${l.id}</span><span class="text-gray-300">|</span><span>${l.name}</span></div>`;
+
+            // Helper to generate verification section
+            const getVerificationSection = () => `
+                <div class="update-section">
+                    <div class="update-section-title text-blue-600"><i class="fa-solid fa-file-shield mr-1"></i> Audit Required Documents (Step: Verified)</div>
+                    <div class="space-y-1 mb-3">
+                        <div class="doc-row">
+                            <div class="doc-icon bg-red-50 text-red-500"><i class="fa-solid fa-file-pdf"></i></div>
+                            <div class="flex-1 min-w-0"><div class="text-[11px] font-black text-slate-900 truncate">Bank Statement Jan.pdf</div><div class="text-[8px] font-bold text-slate-400">PDF • 14 Apr 2026</div></div>
+                            <div class="doc-status-badge">PENDING</div>
+                            <div class="flex gap-1">
+                                <button class="doc-btn btn-view" title="View Document" onclick="viewDoc('Bank Statement Jan.pdf', 'pdf')"><i class="fa-solid fa-eye"></i></button>
+                                <button class="doc-btn btn-verify" onclick="this.closest('.doc-row').style.opacity='0.5'"><i class="fa-solid fa-check"></i></button>
+                                <button class="doc-btn btn-reject"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </div>
+                        <div class="doc-row">
+                            <div class="doc-icon bg-blue-50 text-blue-500"><i class="fa-solid fa-image"></i></div>
+                            <div class="flex-1 min-w-0"><div class="text-[11px] font-black text-slate-900 truncate">ID Verification.jpg</div><div class="text-[8px] font-bold text-slate-400">JPG • 14 Apr 2026</div></div>
+                            <div class="doc-status-badge">PENDING</div>
+                            <div class="flex gap-1">
+                                <button class="doc-btn btn-view" title="View Document" onclick="viewDoc('ID Verification.jpg', 'img')"><i class="fa-solid fa-eye"></i></button>
+                                <button class="doc-btn btn-verify" onclick="this.closest('.doc-row').style.opacity='0.5'"><i class="fa-solid fa-check"></i></button>
+                                <button class="doc-btn btn-reject"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="update-label">Verification Notes</label>
+                    <textarea id="upd-audit-notes" class="update-input h-16" placeholder="Document audit findings..."></textarea>
+                </div>`;
+
+            // Helper to generate lender section
+            const getLenderSection = () => {
+                const lenderList = ['Barclays','HSBC','NAB','Starling','Lloyds','NatWest','Santander'];
+                return `
+                <div class="update-section">
+                    <div class="update-section-title text-indigo-600"><i class="fa-solid fa-building-columns mr-1"></i> Selection & Submission (Step: Lender)</div>
+                    <div class="custom-dropdown" id="lender-dropdown">
+                        <div class="dropdown-header" onclick="this.parentElement.classList.toggle('open')"><span id="dropdown-label">Select Target Lenders (Max 4)</span><i class="fa-solid fa-chevron-down text-gray-400"></i></div>
+                        <div class="dropdown-options">
+                            ${lenderList.map(name => `<div class="lender-option"><input type="checkbox" id="lender-${name}" class="lender-chk" value="${name}" onchange="updateLenderSelection(this)"><label for="lender-${name}">${name}</label></div>`).join('')}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="update-label mb-0">Submission Email Draft</label>
+                            <button onclick="openFullPreview()" class="text-[9px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"><i class="fa-solid fa-eye"></i> PREVIEW FULL DRAFT</button>
+                        </div>
+                    </div>
+                    <div class="mt-4"><label class="update-label">Lender Submission Notes</label><textarea id="upd-notes" class="update-input h-16" placeholder="Notes for lenders..."></textarea></div>
+                </div>`;
+            };
+
+            // Helper for Approved
+            const getApprovedSection = () => `
+                <div class="update-section">
+                    <div class="update-section-title text-teal-600"><i class="fa-solid fa-circle-check mr-1"></i> Loan Approval Details</div>
+                    <div class="space-y-4">
+                        <div><label class="update-label">Confirmed Lender *</label><select id="upd-final-lender" class="update-input"><option value="">-- Select Partner --</option>${['Barclays','HSBC','NAB','Starling','Lloyds','NatWest','Santander'].map(n => `<option>${n}</option>`).join('')}</select></div>
+                        <div><label class="update-label">Final Approval Notes</label><textarea id="upd-notes" class="update-input h-20" placeholder="Offer details, rates, etc..."></textarea></div>
+                    </div>
+                </div>`;
+
+            // Helper for Rejected
+            const getRejectedSection = () => `
+                <div class="update-section">
+                    <div class="update-section-title text-red-500"><i class="fa-solid fa-circle-xmark mr-1"></i> Rejection Details</div>
+                    <div class="p-3 bg-red-50 border border-red-100 rounded-lg mb-4 text-[9px] font-bold text-red-700">Please provide the specific reason for rejecting this lead.</div>
+                    <label class="update-label">Rejection Reason *</label>
+                    <textarea id="upd-notes" class="update-input h-24 border-red-200 focus:border-red-500 focus:ring-red-500" placeholder="e.g. Credit score too low..."></textarea>
+                </div>`;
+
+            // Logic to stack sections
+            let html = '';
+            if (from === 'collecting' && to === 'lender') {
+                html = getVerificationSection() + '<div class="h-2 bg-slate-50 border-y border-slate-100"></div>' + getLenderSection();
+            } else if (to === 'verified') {
+                html = getVerificationSection();
+            } else if (to === 'lender') {
+                html = getLenderSection();
+            } else if (to === 'approved') {
+                html = getApprovedSection();
+            } else if (to === 'rejected') {
+                html = getRejectedSection();
+            } else {
+                html = `<div class="p-6"><label class="update-label">Update Notes (Optional)</label><textarea id="upd-notes" class="update-input h-24" placeholder="Update details...">${l.notes}</textarea></div>`;
+            }
+
+            body.innerHTML = html;
             document.getElementById('update-backdrop').classList.remove('hidden');
         }
 
         function closeUpdateModal() { document.getElementById('update-backdrop').classList.add('hidden'); }
 
+        function openFullPreview() {
+            const l = leads.find(x => x.id === pendingMoveId);
+            const selected = Array.from(document.querySelectorAll('.lender-chk:checked')).map(cb => cb.value);
+            
+            document.getElementById('preview-to-lenders').textContent = selected.length > 0 ? selected.join(', ') : '[Recipient Partner Lenders]';
+            document.getElementById('preview-subject').textContent = `OFFER SUBMISSION: ${l.id} - ${l.business || l.name}`;
+            
+            let body = `Hi Team,\n\nPlease review the following submission for ${l.name} (${l.business || 'No Company'}).\n\n[DEAL HIGHLIGHTS]\n• Funding Required: ${l.amount}\n• Purpose: General Working Capital\n• Current Status: High-Priority Lead\n\n[SUBMISSION NOTES]\n${document.getElementById('upd-notes') ? document.getElementById('upd-notes').value : 'No additional notes provided.'}\n\nPlease find the full KYC and bank audit files attached to this case. We look forward to your pricing offer.\n\nRegards,\nWhiterock CRM Deal Desk`;
+            
+            document.getElementById('preview-body-content').textContent = body;
+            document.getElementById('preview-backdrop').classList.remove('hidden');
+        }
+
+        function closeFullPreview() { document.getElementById('preview-backdrop').classList.add('hidden'); }
+
+        function viewDoc(name, type) {
+            document.getElementById('viewing-doc-name').textContent = name;
+            const pdf = document.getElementById('pdf-mock');
+            const img = document.getElementById('img-mock');
+            if(type === 'pdf') { pdf.classList.remove('hidden'); img.classList.add('hidden'); }
+            else { 
+                document.getElementById('mock-img-element').src = name.includes('ID') ? 'https://via.placeholder.com/600x400?text=ID+CARD+PREVIEW' : 'https://via.placeholder.com/600x800?text=BANK+STMT+IMAGE';
+                img.classList.remove('hidden'); pdf.classList.add('hidden'); 
+            }
+            document.getElementById('doc-viewer-backdrop').classList.remove('hidden');
+        }
+
+        function closeDocViewer() { document.getElementById('doc-viewer-backdrop').classList.add('hidden'); }
+
         function saveAndMove() {
             const l = leads.find(x => x.id === pendingMoveId);
-            l.stage = pendingMoveStage;
-            l.notes = document.getElementById('upd-notes').value;
-            l.days = 0;
+            const to = pendingMoveStage;
+            const from = l.stage;
+
+            // Handle audit notes if move involved verification
+            if (to === 'verified' || (from === 'collecting' && to === 'lender')) {
+                const auditNotes = document.getElementById('upd-audit-notes').value;
+                if (auditNotes) l.notes = `[AUDIT]: ${auditNotes}\n${l.notes}`;
+            }
+            
+            // Capture stage specific data
+            if(to === 'lender') {
+                const selected = Array.from(document.querySelectorAll('.lender-chk:checked')).map(cb => cb.value);
+                if(selected.length === 0) return showErrorAlert('Please select at least one target lender to proceed with the submission.');
+                l.lender = selected.join(', ');
+            }
+
+            if(to === 'approved') {
+                const finalLender = document.getElementById('upd-final-lender').value;
+                if(!finalLender) return showErrorAlert('A confirmed funding partner must be selected before moving to the Approved stage.');
+                l.lender = finalLender;
+            }
+
+            if (to === 'rejected') {
+                const reason = document.getElementById('upd-notes').value.trim();
+                if (!reason) return showErrorAlert('Please provide a specific rejection reason for the audit history.');
+            }
+
+            l.stage = to;
+            l.notes = (document.getElementById('upd-notes') ? document.getElementById('upd-notes').value : '') || l.notes;
+            l.days = 0; 
+            
             renderBoard();
             closeUpdateModal();
         }
 
+        function openAddModal() { document.getElementById('create-lead-drawer').classList.add('open'); document.getElementById('drawer-overlay').classList.add('open'); }
+        function closeAddModal() { document.getElementById('create-lead-drawer').classList.remove('open'); document.getElementById('drawer-overlay').classList.remove('open'); }
+
+        function saveNewLead() {
+            const n = document.getElementById('clf-name').value, c = document.getElementById('clf-company').value, a = document.getElementById('clf-amount').value;
+            if(!n || !c || !a) return alert('Fill required fields');
+            leads.unshift({ id: 'AF-'+Math.floor(Math.random()*1000), name:n, business:c, amount:a, agent:document.getElementById('clf-agent').value, stage:'collecting', priority:document.getElementById('clf-priority').value, days:0, lender:'—', notes:document.getElementById('clf-notes').value });
+            renderBoard(); closeAddModal();
+        }
 
         renderBoard();
+
+        // Lender Multi-Select Control
+        function updateLenderSelection(chk) {
+            const checked = document.querySelectorAll('.lender-chk:checked');
+            if(checked.length > 4) {
+                chk.checked = false;
+                showErrorAlert('Maximum of 4 lenders can be selected for a single bulk submission.');
+                return;
+            }
+            chk.closest('.lender-option').classList.toggle('selected', chk.checked);
+            
+            const label = document.getElementById('dropdown-label');
+            if(checked.length === 0) label.textContent = 'Select Lenders';
+            else if(checked.length === 1) label.textContent = checked[0].value;
+            else label.textContent = `${checked.length} Lenders Selected`;
+        }
 
         // Column Resizing Logic
         document.querySelectorAll('.stage-col').forEach(col => {
