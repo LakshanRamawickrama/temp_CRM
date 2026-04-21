@@ -602,7 +602,7 @@
         }
 
         /* ── Day Events Drawer ──────────────────────────── */
-        .day-drawer { position:fixed; inset:0; z-index:400; display:none; justify-content:flex-end; overflow:hidden; pointer-events:none; }
+        .day-drawer { position:fixed; inset:0; z-index:1100; display:none; justify-content:flex-end; overflow:hidden; pointer-events:none; }
         .day-drawer.open { pointer-events:all; display:flex; }
         .day-drawer-backdrop { position:absolute; inset:0; background:rgba(15,23,42,0.28); backdrop-filter:blur(3px); opacity:0; transition:opacity .3s; }
         .day-drawer.open .day-drawer-backdrop { opacity:1; }
@@ -1695,6 +1695,8 @@
             let _ddKey = '';
 
             function openDayDrawer(year, month, day) {
+                const fab = document.querySelector('.ai-fab');
+                if (fab) { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
                 closeCalculator();
                 _ddKey = year + '-' + String(month+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
                 const date = new Date(year, month, day);
@@ -1715,6 +1717,8 @@
             }
 
             function closeDayDrawer() {
+                const fab = document.querySelector('.ai-fab');
+                if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = 'all'; }
                 document.getElementById('dayDrawer').classList.remove('open');
             }
 
@@ -1907,7 +1911,7 @@
     </main>
 
     <!-- Right Side Calculator Drawer -->
-    <div id="calculatorModal" class="fixed inset-0 z-[100] justify-end overflow-hidden" style="display:none">
+    <div id="calculatorModal" class="fixed inset-0 z-[1100] justify-end overflow-hidden" style="display:none">
         <div class="absolute inset-0 bg-slate-900/20 backdrop-blur-[2px] transition-opacity duration-300"
             onclick="closeCalculator()"></div>
         <div id="calculatorPanel"
@@ -2097,7 +2101,7 @@
                 </tr>`).join('');
         }
 
-        // Ã¢â€â‚¬Ã¢â€â‚¬ Notification Bell Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+        // ── Notification Bell ──────────────────────────────────────
         let NOTIFS = [
             { id: 1, unread: true, icon: 'fa-triangle-exclamation', iconBg: '#fee2e2', iconColor: '#b91c1c', title: '3 documents overdue', body: 'Action needed on pending client documents.', time: '2 min ago' },
             { id: 2, unread: true, icon: 'fa-clock', iconBg: '#fef3c7', iconColor: '#b45309', title: 'Follow-ups due today', body: '12 leads require follow-up before 17:00.', time: '15 min ago' },
@@ -2159,7 +2163,7 @@
         });
 
         renderNotifs();
-        // Ã¢â€â‚¬Ã¢â€â‚¬ End Notification Bell Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+        // ── End Notification Bell ──────────────────────────────────────
 
 
 
@@ -2176,7 +2180,7 @@
             if (!text) return;
 
             const now = new Date();
-            const dateStr = now.toISOString().split('T')[0] + ' €· ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toISOString().split('T')[0] + ' · ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             const noteHtml = `
                 <div class="bg-white border border-amber-100 p-3 rounded-xl relative group">
@@ -2282,6 +2286,8 @@
 
 
         function openCalculator() {
+            const fab = document.querySelector('.ai-fab');
+            if (fab) { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
             closeDayDrawer();
             const modal = document.getElementById('calculatorModal');
             const panel = document.getElementById('calculatorPanel');
@@ -2298,6 +2304,8 @@
 
 
         function closeCalculator() {
+            const fab = document.querySelector('.ai-fab');
+            if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = 'all'; }
             const modal = document.getElementById('calculatorModal');
             const panel = document.getElementById('calculatorPanel');
             panel.classList.add('translate-x-full');
@@ -2808,13 +2816,17 @@ function toggleAIWidget() {
 function openAIDrawer() {
     const drawer = document.getElementById('aiDrawer');
     const panel = drawer.querySelector('.day-drawer-panel');
+    const fab = document.querySelector('.ai-fab');
+    if (fab) { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
     drawer.style.display = 'flex';
     void panel.offsetWidth;
     drawer.classList.add('open');
 }
 function closeAIDrawer() {
     const drawer = document.getElementById('aiDrawer');
+    const fab = document.querySelector('.ai-fab');
     drawer.classList.remove('open');
+    if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = 'all'; }
     setTimeout(() => { drawer.style.display = 'none'; }, 420);
 }
 
@@ -3009,10 +3021,16 @@ document.addEventListener('click', (e) => {
             "Products": "#065f46", "Policies": "#b91c1c", "Scripts": "#334155"
         };
         function openDocsDrawer() {
+            const fab = document.querySelector('.ai-fab');
+            if (fab) { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
             document.getElementById('docsModal').classList.add('open');
             renderDrawerDocs();
         }
-        function closeDocsDrawer() { const m = document.getElementById('docsModal'); m.classList.remove('open'); m.style.display = ''; }
+        function closeDocsDrawer() { 
+            const fab = document.querySelector('.ai-fab');
+            if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = 'all'; }
+            const m = document.getElementById('docsModal'); m.classList.remove('open'); m.style.display = ''; 
+        }
         function renderDrawerDocs() {
             const q = (document.getElementById('drawer-search').value || '').toLowerCase();
             const cat = document.getElementById('drawer-cat-filter').value;

@@ -115,7 +115,7 @@
             line-height: 1;
         }
             /* Docs Drawer */
-        .docs-modal { position:fixed; inset:0; z-index:100; display:none; justify-content:flex-end; overflow:hidden; pointer-events:none; }
+        .docs-modal { position:fixed; inset:0; z-index:1100; display:none; justify-content:flex-end; overflow:hidden; pointer-events:none; }
         .docs-modal.open { pointer-events:all; display:flex; }
         .docs-modal-backdrop { position:absolute; inset:0; background:rgba(15,23,42,0.2); backdrop-filter:blur(2px); opacity:0; transition:opacity .3s; }
         .docs-modal.open .docs-modal-backdrop { opacity:1; }
@@ -222,7 +222,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         /* Day Events Drawer */
-        .day-drawer{position:fixed;inset:0;z-index:400;display:none;justify-content:flex-end;overflow:hidden;pointer-events:none;}
+        .day-drawer{position:fixed;inset:0;z-index:1100;display:none;justify-content:flex-end;overflow:hidden;pointer-events:none;}
         .day-drawer.open{pointer-events:all;display:flex;}
         .day-drawer-backdrop{position:absolute;inset:0;background:rgba(15,23,42,0.28);backdrop-filter:blur(3px);opacity:0;transition:opacity .3s;}
         .day-drawer.open .day-drawer-backdrop{opacity:1;}
@@ -690,13 +690,17 @@ function toggleAIWidget() {
 function openAIDrawer() {
     const drawer = document.getElementById('aiDrawer');
     const panel = drawer.querySelector('.day-drawer-panel');
+    const fab = document.querySelector('.ai-fab');
+    if (fab) { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
     drawer.style.display = 'flex';
     void panel.offsetWidth;
     drawer.classList.add('open');
 }
 function closeAIDrawer() {
     const drawer = document.getElementById('aiDrawer');
+    const fab = document.querySelector('.ai-fab');
     drawer.classList.remove('open');
+    if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = 'all'; }
     setTimeout(() => { drawer.style.display = 'none'; }, 420);
 }
 
@@ -768,10 +772,16 @@ const CAT_COLORS = {
     "Products":"#065f46","Policies":"#b91c1c","Scripts":"#334155"
 };
 function openDocsDrawer(){
+    const fab = document.querySelector('.ai-fab');
+    if (fab) { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
     document.getElementById('docsModal').classList.add('open');
     renderDrawerDocs();
 }
-function closeDocsDrawer(){ const m=document.getElementById('docsModal'); m.classList.remove('open'); m.style.display=''; }
+function closeDocsDrawer(){ 
+    const fab = document.querySelector('.ai-fab');
+    if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = 'all'; }
+    const m=document.getElementById('docsModal'); m.classList.remove('open'); m.style.display=''; 
+}
 function renderDrawerDocs(){
     const q=(document.getElementById('drawer-search').value||'').toLowerCase();
     const cat=document.getElementById('drawer-cat-filter').value;
@@ -814,6 +824,8 @@ function renderDrawerDocs(){
 
 // Calculator Logic
 function openCalculator() {
+    const fab = document.querySelector('.ai-fab');
+    if (fab) { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
     closeDayDrawer();
     const modal = document.getElementById('calculatorModal');
     const panel = document.getElementById('calculatorPanel');
@@ -823,6 +835,8 @@ function openCalculator() {
     setTimeout(initModalCalculator, 50);
 }
 function closeCalculator() {
+    const fab = document.querySelector('.ai-fab');
+    if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = 'all'; }
     const modal = document.getElementById('calculatorModal');
     const panel = document.getElementById('calculatorPanel');
     panel.classList.add('translate-x-full');
@@ -893,7 +907,7 @@ function initModalCalculator() {
 </script>
 
 <!-- Calculator Modal (matches Tele Agent) -->
-<div id="calculatorModal" class="fixed inset-0 z-[100] justify-end overflow-hidden" style="display:none">
+<div id="calculatorModal" class="fixed inset-0 z-[1100] justify-end overflow-hidden" style="display:none">
     <div class="absolute inset-0 bg-slate-900/20 backdrop-blur-[2px] transition-opacity duration-300" onclick="closeCalculator()"></div>
     <div id="calculatorPanel" class="relative w-full max-w-[520px] bg-white h-full shadow-[-20px_0_50px_rgba(0,0,0,0.1)] border-l border-slate-100 translate-x-full transition-transform duration-500 ease-out flex flex-col">
         <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
@@ -1140,6 +1154,8 @@ function tlRenderCalendar(){
 }
 function tlChangeMonth(delta){_tlCurDate.setMonth(_tlCurDate.getMonth()+delta);tlRenderCalendar();}
 function openDayDrawer(year,month,day){
+    const fab = document.querySelector('.ai-fab');
+    if (fab) { fab.style.opacity = '0'; fab.style.pointerEvents = 'none'; }
     _ddKey=year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
     const date=new Date(year,month,day);
     const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1154,7 +1170,11 @@ function openDayDrawer(year,month,day){
     ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===_ddFilter?' active':'');});
     renderDayEvents();document.getElementById('dayDrawer').classList.add('open');
 }
-function closeDayDrawer(){document.getElementById('dayDrawer').classList.remove('open');}
+function closeDayDrawer(){
+    const fab = document.querySelector('.ai-fab');
+    if (fab) { fab.style.opacity = '1'; fab.style.pointerEvents = 'all'; }
+    document.getElementById('dayDrawer').classList.remove('open');
+}
 function switchDayTab(filter){
     _ddFilter=filter;
     ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===filter?' active':'');});
