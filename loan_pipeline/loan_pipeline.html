@@ -261,11 +261,6 @@
         .btn-confirm-move, .btn-save-move { padding: 8px 20px; border-radius: 8px; border: none; background: #0f172a; color: #fff; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
         .btn-save-move { background: #4f46e5; }
 
-        /* Drawer */
-        #drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:900; opacity:0; pointer-events:none; transition:opacity .25s; }
-        #drawer-overlay.open { opacity:1; pointer-events:all; }
-        #create-lead-drawer { position:fixed; top:0; right:-520px; width:500px; height:100vh; background:#fff; z-index:901; display:flex; flex-direction:column; box-shadow:-8px 0 40px rgba(0,0,0,.15); transition:right .3s cubic-bezier(.4,0,.2,1); }
-        #create-lead-drawer.open { right:0; }
     </style>
 </head>
 
@@ -423,27 +418,6 @@
         </div>
     </div>
 
-    <!-- Create Lead Drawer -->
-    <div id="drawer-overlay" onclick="closeAddModal()"></div>
-    <div id="create-lead-drawer">
-         <div style="background:#0f172a;padding:15px 20px;color:#fff;display:flex;justify-content:between;align-items:center;">
-            <h2 class="text-sm font-black uppercase">Register New Lead</h2>
-            <button onclick="closeAddModal()" class="text-white opacity-50"><i class="fa-solid fa-xmark"></i></button>
-         </div>
-         <div class="p-5 flex-1 overflow-y-auto custom-scrollbar">
-            <div class="space-y-4">
-                <div><label class="update-label">Full Name *</label><input id="clf-name" class="update-input" type="text"></div>
-                <div><label class="update-label">Company Name *</label><input id="clf-company" class="update-input" type="text"></div>
-                <div><label class="update-label">Amount Needed *</label><input id="clf-amount" class="update-input" type="text"></div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="update-label">Agent</label><select id="clf-agent" class="update-input"><option>Sarah White</option><option>Cody Lane</option></select></div>
-                    <div><label class="update-label">Priority</label><select id="clf-priority" class="update-input"><option>Medium</option><option>High</option><option>Low</option></select></div>
-                </div>
-                <div><label class="update-label">Notes</label><textarea id="clf-notes" class="update-input h-24"></textarea></div>
-            </div>
-         </div>
-         <div class="p-4 border-t flex gap-2"><button onclick="closeAddModal()" class="flex-1 py-2 border rounded font-bold text-[9px]">CANCEL</button><button onclick="saveNewLead()" class="flex-1 py-2 bg-indigo-600 text-white rounded font-bold text-[9px]">REGISTER LEAD</button></div>
-    </div>
 
     <script>
         const STAGES = ['collecting','verified','lender','approved','completed','rejected'];
@@ -526,15 +500,6 @@
             closeUpdateModal();
         }
 
-        function openAddModal() { document.getElementById('create-lead-drawer').classList.add('open'); document.getElementById('drawer-overlay').classList.add('open'); }
-        function closeAddModal() { document.getElementById('create-lead-drawer').classList.remove('open'); document.getElementById('drawer-overlay').classList.remove('open'); }
-
-        function saveNewLead() {
-            const n = document.getElementById('clf-name').value, c = document.getElementById('clf-company').value, a = document.getElementById('clf-amount').value;
-            if(!n || !c || !a) return alert('Fill required fields');
-            leads.unshift({ id: 'AF-'+Math.floor(Math.random()*1000), name:n, business:c, amount:a, agent:document.getElementById('clf-agent').value, stage:'collecting', priority:document.getElementById('clf-priority').value, days:0, lender:'—', notes:document.getElementById('clf-notes').value });
-            renderBoard(); closeAddModal();
-        }
 
         renderBoard();
 
