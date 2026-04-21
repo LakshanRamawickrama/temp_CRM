@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -708,11 +708,24 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 <select id="field-industry" class="form-input-premium" disabled>
                                     <option value="">Select industry...</option>
                                     <option>Software</option>
-                                    <option>Retail</option>
-                                    <option>Health</option>
-                                    <option>Construction</option>
-                                    <option>Logistics</option>
-                                    <option>Others</option>
+                                    <option>Hardware</option>
+                                    <option>IT Services</option>
+                                    <option>Telecommunications</option>
+                                    <option>E-commerce </option>
+                                    <option>Digital Media</option>
+                                    <option>Robotics</option>
+                                    <option>Pharmaceuticals</option>
+                                    <option>Medical Devices</option>
+                                    <option>Hospitals </option>
+                                    <option>Health Insurance</option>
+                                    <option>BioTechnology</option>
+                                    <option>Wellness</option>
+                                    <option>Banking</option>
+                                    <option>Insurance</option>
+                                    <option>Investment Banking</option>
+                                    <option>Venture Capital</option>
+                                    <option>Accounting</option>
+                                    <option>Aerospace</option>
                                 </select>
                             </div>
                             <div>
@@ -730,7 +743,8 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 <div class="flex gap-2">
                                     <div class="radio-btn active px-2.5 py-1.5" id="contact-email">Email</div>
                                     <div class="radio-btn px-2.5 py-1.5" id="contact-phone">Phone</div>
-                                    <div class="radio-btn px-2.5 py-1.5" id="contact-whatsapp">WA</div>
+                                    <div class="radio-btn px-2.5 py-1.5" id="contact-whatsapp">WhatsApp</div>
+                                    <div class="radio-btn px-2.5 py-1.5" id="contact-other">Other</div>
                                 </div>
                             </div>
                             <div>
@@ -741,7 +755,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 </select>
                             </div>
                             <div>
-                                <label class="label-premium">Time at Address</label>
+                                <label class="label-premium">Time at Current Address</label>
                                 <input type="text" id="field-timeAtCurrentAddress" placeholder="e.g. 3 years"
                                     class="form-input-premium" disabled>
                             </div>
@@ -769,7 +783,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                     disabled>
                             </div>
                             <div>
-                                <label class="label-premium">Loan Purpose</label>
+                                <label class="label-premium">Purpose of Taking Loan</label>
                                 <input type="text" id="field-loanPurpose" placeholder="Business expansion..."
                                     class="form-input-premium" disabled>
                             </div>
@@ -790,11 +804,11 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 <div class="grid grid-cols-3 gap-4">
                                     <input type="text" id="field-existingLender" placeholder="Lender Name"
                                         class="form-input-premium bg-white" disabled>
-                                    <input type="text" id="field-existingAmount" placeholder="Amount (£)"
+                                    <input type="text" id="field-existingAmount" placeholder="Amount Taken (£)"
                                         class="form-input-premium bg-white" disabled>
-                                    <input type="text" id="field-existingRate" placeholder="Rate (%)"
+                                    <input type="text" id="field-existingRate" placeholder="Interest Rate (%)"
                                         class="form-input-premium bg-white" disabled>
-                                    <input type="text" id="field-existingRepayment" placeholder="Monthly (£)"
+                                    <input type="text" id="field-existingRepayment" placeholder="Monthly Repayment(£)"
                                         class="form-input-premium bg-white" disabled>
                                     <input type="text" id="field-existingTerm" placeholder="Loan Term"
                                         class="form-input-premium bg-white col-span-2" disabled>
@@ -809,16 +823,24 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 </select>
                             </div>
                             <div>
-                                <label class="label-premium">Company Bank</label>
+                                <label class="label-premium">Which Bank is your Company with</label>
                                 <select id="field-companyBank" class="form-input-premium" disabled>
                                     <option value="">Select a bank...</option>
                                     <option>Santander</option>
                                     <option>HSBC</option>
-                                    <option>Lloyds</option>
+                                    <option>Lloyds Bank</option>
                                     <option>Starling</option>
                                     <option>NatWest</option>
                                     <option>Barclays</option>
-                                    <option>Others</option>
+                                    <option>Metro Bank</option>
+                                    <option>Royal Bank of Scotland</option>
+                                    <option>The Co-operative Bank</option>
+                                    <option>The Cumberland</option>
+                                    <option>Tide</option>
+                                    <option>TSB</option>
+                                    <option>Ulster Bank</option>
+                                    <option>Unity Trust Bank</option>
+                                    <option>Zempler</option>
                                 </select>
                             </div>
                             <div>
@@ -828,18 +850,25 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                     <option>Advertisement</option>
                                     <option>Cold Call</option>
                                     <option>Web</option>
-                                    <option>Referral</option>
-                                    <option>Social Media</option>
-                                    <option>Others</option>
+                                    <option>External Referral</option>
+                                    <option>Sales Email Alias</option>
+                                    <option>Employee Referral</option>
+                                    <option>Online Store</option>
+                                    <option>Partner</option>
+                                    <option>Public Relations</option>
+                                    <option>Seminar Partner</option>
+                                    <option>Internal Seminar</option>
+                                    <option>Trade Show</option>
+                                    <option>Chat</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="label-premium">Funding Timeline</label>
+                                <label class="label-premium">How soon do you need this funding?</label>
                                 <input type="text" id="field-fundingTimeline" placeholder="e.g. Within 2 weeks"
                                     class="form-input-premium" disabled>
                             </div>
                             <div>
-                                <label class="label-premium">Prev Alpha Loan? <span
+                                <label class="label-premium">Have you taken any loans before from Alpha Funding?  <span
                                         class="text-red-500">*</span></label>
                                 <select id="field-previousAlphaFundingLoan" class="form-input-premium" disabled>
                                     <option>No</option>
@@ -847,7 +876,8 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                                 </select>
                             </div>
                             <div>
-                                <label class="label-premium">Credit Search <span class="text-red-500">*</span></label>
+                                <label class="label-premium">Credit Search Consent  <span class="text-red-500">*</span></label>
+                                <p class="text-[7px] text-gray-500 italic mb-1">Does the client consent to a credit search being carried out?</p>
                                 <select id="field-creditConsent" class="form-input-premium" disabled>
                                     <option>Yes</option>
                                     <option>No</option>
