@@ -469,10 +469,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-        <!-- Operational Calendar -->
+            <!-- Operational Calendar -->
             <div class="glass-card flex flex-col" style="height:280px;" data-id="calendar">
                 <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between">
                     <div class="flex items-center gap-3">
@@ -1023,9 +1021,10 @@ document.addEventListener('click', (e) => {
             </button>
         </div>
         <div style="display:flex;border-bottom:2px solid #f1f5f9;background:#f8fafc;flex-shrink:0;">
-            <button id="dd-tab-all" class="dd-tab-btn active" onclick="switchDayTab('all')">All Activities</button>
-            <button id="dd-tab-task" class="dd-tab-btn" onclick="switchDayTab('task')"><i class="fa-solid fa-list-check" style="margin-right:4px;font-size:7px;"></i>Tasks</button>
-            <button id="dd-tab-followup" class="dd-tab-btn" onclick="switchDayTab('followup')"><i class="fa-solid fa-phone-volume" style="margin-right:4px;font-size:7px;"></i>Follow-ups</button>
+            <button id="dd-tab-todo" class="dd-tab-btn" onclick="switchDayTab('todo')">To Do</button>
+            <button id="dd-tab-inprogress" class="dd-tab-btn" onclick="switchDayTab('inprogress')">In Progress</button>
+            <button id="dd-tab-overdue" class="dd-tab-btn" onclick="switchDayTab('overdue')">Overdue</button>
+            <button id="dd-tab-complete" class="dd-tab-btn" onclick="switchDayTab('complete')">Complete</button>
         </div>
         <div id="ddEventsList" class="custom-scrollbar" style="flex:1;overflow-y:auto;background:#fafbfc;"></div>
         <div style="padding:20px 32px;border-top:1px solid #f1f5f9;background:#fff;flex-shrink:0;">
@@ -1118,61 +1117,121 @@ function openDayDrawer(year,month,day){
     const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     document.getElementById('ddDateLabel').textContent=DAYS[date.getDay()]+', '+day+' '+MONTHS[month]+' '+year;
     const evts=CAL_EVENTS[_ddKey]||[];
-    const tC=evts.filter(e=>e.type==='task').length;
-    const fC=evts.filter(e=>e.type==='followup').length;
+    const tC=evts.filter(e=>e.type==='task').length,fC=evts.filter(e=>e.type==='followup').length;
     document.getElementById('ddMeta').textContent=tC+' task'+(tC!==1?'s':'')+' · '+fC+' follow-up'+(fC!==1?'s':'');
-    _ddFilter='all';
-    ['all','task','followup'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f==='all'?' active':'');});
+    const _clickedDate=new Date(year,month,day);_clickedDate.setHours(0,0,0,0);
+    const _todayMid=new Date();_todayMid.setHours(0,0,0,0);
+    _ddFilter=_clickedDate<_todayMid?'overdue':_clickedDate.getTime()===_todayMid.getTime()?'inprogress':'todo';
+    ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===_ddFilter?' active':'');});
     renderDayEvents();
     document.getElementById('dayDrawer').classList.add('open');
 }
 
-function closeDayDrawer(){
-    document.getElementById('dayDrawer').classList.remove('open');
-}
+function closeDayDrawer(){document.getElementById('dayDrawer').classList.remove('open');}
 
 function switchDayTab(filter){
     _ddFilter=filter;
-    ['all','task','followup'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===filter?' active':'');});
+    ['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===filter?' active':'');});
     renderDayEvents();
 }
 
+function editTask(dateKey,idx){const row=document.querySelector(`[data-event-index="${idx}"]`);if(row){row.querySelector('.view-mode').style.display='none';row.querySelector('.edit-mode').style.display='block';}}
+function saveTask(dateKey,idx){
+    const events=CAL_EVENTS[dateKey];if(!events||!events[idx])return;
+    events[idx].title=document.getElementById('am-edit-title-'+idx).value;
+    events[idx].lead=document.getElementById('am-edit-lead-'+idx).value;
+    events[idx].time=document.getElementById('am-edit-time-'+idx).value;
+    events[idx].priority=document.getElementById('am-edit-priority-'+idx).value;
+    events[idx].type=document.getElementById('am-edit-type-'+idx).value;
+    const sv=document.getElementById('am-edit-status-'+idx).value;
+    events[idx].done=sv==='done';events[idx].customStatus=sv!=='done'?sv:undefined;
+    const nf=sv==='done'?'complete':sv==='overdue'?'overdue':sv==='in progress'?'inprogress':'todo';
+    _ddFilter=nf;['todo','inprogress','overdue','complete'].forEach(f=>{const b=document.getElementById('dd-tab-'+f);if(b)b.className='dd-tab-btn'+(f===nf?' active':'');});
+    renderDayEvents();
+    const evts=CAL_EVENTS[_ddKey]||[];const tC=evts.filter(e=>e.type==='task').length,fC=evts.filter(e=>e.type==='followup').length;
+    document.getElementById('ddMeta').textContent=tC+' task'+(tC!==1?'s':'')+' · '+fC+' follow-up'+(fC!==1?'s':'');
+}
+function cancelEdit(idx){const row=document.querySelector(`[data-event-index="${idx}"]`);if(row){row.querySelector('.view-mode').style.display='flex';row.querySelector('.edit-mode').style.display='none';}}
+
 function renderDayEvents(){
     const evts=CAL_EVENTS[_ddKey]||[];
-    const filtered=_ddFilter==='all'?evts:evts.filter(e=>e.type===_ddFilter);
+    const today=new Date();today.setHours(0,0,0,0);
+    const drawerDate=new Date(_ddKey.split('-')[0],_ddKey.split('-')[1]-1,_ddKey.split('-')[2]);drawerDate.setHours(0,0,0,0);
+    const filtered=evts.filter(e=>{
+        let status='to do';
+        if(e.done)status='done';
+        else if(e.customStatus)status=e.customStatus;
+        else if(drawerDate<today)status='overdue';
+        else if(drawerDate.getTime()===today.getTime())status='in progress';
+        else status='to do';
+        if(_ddFilter==='todo')return status==='to do';
+        if(_ddFilter==='inprogress')return status==='in progress';
+        if(_ddFilter==='overdue')return status==='overdue';
+        if(_ddFilter==='complete')return status==='done';
+        return true;
+    });
     const list=document.getElementById('ddEventsList');
     if(!filtered.length){
         list.innerHTML=`<div style="padding:100px 40px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
-            <div class="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-200 mb-6">
-                <i class="fa-solid fa-calendar-xmark text-3xl"></i>
-            </div>
-            <div style="font-size:14px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:0.1em;">Schedule Empty</div>
-            <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-top:8px;max-width:240px;line-height:1.6;">No tasks or follow-ups have been scheduled for this date yet.</div>
+            <div class="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-200 mb-6"><i class="fa-solid fa-calendar-xmark text-3xl"></i></div>
+            <div style="font-size:14px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:0.1em;">No ${_ddFilter==='todo'?'To Do':_ddFilter==='inprogress'?'In Progress':_ddFilter==='overdue'?'Overdue':'Complete'} Activities</div>
+            <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-top:8px;max-width:240px;line-height:1.6;">No ${_ddFilter==='todo'?'to do':_ddFilter==='inprogress'?'in progress':_ddFilter==='overdue'?'overdue':'completed'} tasks or follow-ups for this date.</div>
             <button onclick="closeDayDrawer()" style="margin-top:24px;padding:10px 24px;border-radius:12px;background:#0f172a;color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;">Return to Calendar</button>
-        </div>`;
-        return;
+        </div>`;return;
     }
-    const prioC={high:'#b91c1c',medium:'#b45309',low:'#64748b'};
-    const prioBg={high:'#fee2e2',medium:'#fef3c7',low:'#f1f5f9'};
-    list.innerHTML=[...filtered].sort((a,b)=>a.time.localeCompare(b.time)).map(e=>`
-        <div class="day-evt-row day-evt-${e.type}${e.done?' day-evt-done':''}">
-            <div style="width:38px;height:38px;border-radius:10px;background:${e.type==='task'?'#f5f3ff':'#fffbeb'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
-                <i class="fa-solid ${e.type==='task'?'fa-list-check':'fa-phone-volume'}" style="color:${e.type==='task'?'#7c3aed':'#d97706'};font-size:13px;"></i>
-            </div>
-            <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:4px;">
-                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${e.type==='task'?'#ede9fe':'#fef3c7'};color:${e.type==='task'?'#7c3aed':'#b45309'};text-transform:uppercase;">${e.type==='task'?'Task':'Follow-up'}</span>
-                    <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${prioBg[e.priority]};color:${prioC[e.priority]};text-transform:uppercase;">${e.priority}</span>
-                    ${e.done?'<span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:#dcfce7;color:#15803d;text-transform:uppercase;">Done</span>':''}
+    const prioC={high:'#b91c1c',medium:'#b45309',low:'#64748b'},prioBg={high:'#fee2e2',medium:'#fef3c7',low:'#f1f5f9'};
+    list.innerHTML=[...filtered].sort((a,b)=>a.time.localeCompare(b.time)).map((e,index)=>{
+        let status='to do';
+        if(e.done)status='done';else if(e.customStatus)status=e.customStatus;else if(drawerDate<today)status='overdue';else if(drawerDate.getTime()===today.getTime())status='in progress';else status='to do';
+        const statusC=status==='done'?'#15803d':status==='overdue'?'#b91c1c':status==='in progress'?'#b45309':'';
+        const statusBg=status==='done'?'#dcfce7':status==='overdue'?'#fee2e2':status==='in progress'?'#fef3c7':'';
+        return `<div class="day-evt-row day-evt-${e.type}${e.done?' day-evt-done':''}${status==='overdue'?' day-evt-overdue':''}" data-event-index="${index}">
+            <div class="view-mode" style="display:flex;align-items:flex-start;gap:10px;width:100%;">
+                <div style="width:38px;height:38px;border-radius:10px;background:${e.type==='task'?'#f5f3ff':'#fffbeb'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+                    <i class="fa-solid ${e.type==='task'?'fa-list-check':'fa-phone-volume'}" style="color:${e.type==='task'?'#7c3aed':'#d97706'};font-size:13px;"></i>
                 </div>
-                <div style="font-size:10px;font-weight:700;color:#0f172a;line-height:1.4;${e.done?'text-decoration:line-through;opacity:.7;':''}">${e.title}</div>
-                <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
-                    <span style="font-size:8px;color:#64748b;font-weight:600;"><i class="fa-solid fa-user" style="font-size:7px;margin-right:3px;"></i>${e.lead}</span>
-                    <span style="font-size:8px;color:#94a3b8;font-weight:700;"><i class="fa-solid fa-clock" style="font-size:7px;margin-right:3px;"></i>${e.time}</span>
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:4px;">
+                        <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${e.type==='task'?'#ede9fe':'#fef3c7'};color:${e.type==='task'?'#7c3aed':'#b45309'};text-transform:uppercase;">${e.type==='task'?'Task':'Follow-up'}</span>
+                        <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${prioBg[e.priority]};color:${prioC[e.priority]};text-transform:uppercase;">${e.priority}</span>
+                        <span style="font-size:7px;font-weight:800;padding:2px 6px;border-radius:99px;background:${statusBg};color:${statusC};text-transform:uppercase;">${status}</span>
+                    </div>
+                    <div style="font-size:10px;font-weight:700;color:#0f172a;line-height:1.4;${e.done?'text-decoration:line-through;opacity:.7;':''}">${e.title}</div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+                        <span style="font-size:8px;color:#64748b;font-weight:600;"><i class="fa-solid fa-user" style="font-size:7px;margin-right:3px;"></i>${e.lead}</span>
+                        <span style="font-size:8px;color:#94a3b8;font-weight:700;"><i class="fa-solid fa-clock" style="font-size:7px;margin-right:3px;"></i>${e.time}</span>
+                        <button onclick="editTask('${_ddKey}',${index})" style="margin-left:auto;padding:4px 8px;border-radius:4px;background:#f1f5f9;color:#64748b;font-size:8px;border:1px solid #e2e8f0;cursor:pointer;"><i class="fa-solid fa-pencil"></i> Edit</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    `).join('');
+            <div class="edit-mode" style="display:none;width:100%;padding:10px 0;">
+                <div style="display:flex;flex-direction:column;gap:6px;background:#f8fafc;padding:8px;border-radius:8px;">
+                    <input type="text" id="am-edit-title-${index}" value="${e.title}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Title">
+                    <input type="text" id="am-edit-lead-${index}" value="${e.lead}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Lead/Client">
+                    <input type="text" id="am-edit-time-${index}" value="${e.time}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;" placeholder="Time">
+                    <select id="am-edit-priority-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                        <option value="low" ${e.priority==='low'?'selected':''}>Low Priority</option>
+                        <option value="medium" ${e.priority==='medium'?'selected':''}>Medium Priority</option>
+                        <option value="high" ${e.priority==='high'?'selected':''}>High Priority</option>
+                    </select>
+                    <select id="am-edit-type-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                        <option value="task" ${e.type==='task'?'selected':''}>Type: Task</option>
+                        <option value="followup" ${e.type==='followup'?'selected':''}>Type: Follow-up</option>
+                    </select>
+                    <select id="am-edit-status-${index}" style="padding:6px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:9px;font-weight:500;cursor:pointer;">
+                        <option value="to do" ${status==='to do'?'selected':''}>Status: To Do</option>
+                        <option value="in progress" ${status==='in progress'?'selected':''}>Status: In Progress</option>
+                        <option value="overdue" ${status==='overdue'?'selected':''}>Status: Overdue</option>
+                        <option value="done" ${status==='done'?'selected':''}>Status: Done</option>
+                    </select>
+                    <div style="display:flex;gap:6px;margin-top:4px;">
+                        <button onclick="saveTask('${_ddKey}',${index})" style="flex:1;padding:6px 10px;border-radius:6px;background:#4f46e5;color:#fff;font-size:9px;border:none;cursor:pointer;font-weight:600;">✓ Save</button>
+                        <button onclick="cancelEdit(${index})" style="flex:1;padding:6px 10px;border-radius:6px;background:#e2e8f0;color:#64748b;font-size:9px;border:none;cursor:pointer;font-weight:600;">✕ Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
 }
 
 document.addEventListener('click',function(e){
