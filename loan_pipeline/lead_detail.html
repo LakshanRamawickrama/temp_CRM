@@ -61,122 +61,113 @@
 
         .content-area {
             flex: 1;
-            overflow-y: auto;
-            padding: 14px 16px;
-        }
-
-        /* Single master table */
-        .master-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid #e2e8f0;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
         }
 
-        /* Section header row */
-        .sec-row td {
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 5px 14px;
+        /* Grid layout — no outer scroll */
+        #master-table {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: 3fr 2fr;
+            gap: 10px;
+        }
+
+        /* Panels */
+        .detail-panel {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .panel-ai       { grid-column: 1 / 5; }
+        .panel-notes    { grid-column: 5 / 9; }
+        .panel-reminders{ grid-column: 9 / 13; }
+        .panel-quarter  { grid-column: span 3; }
+
+        .panel-hdr {
+            padding: 7px 12px;
             font-size: 9px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: .07em;
             color: #64748b;
-        }
-
-        .sec-row:first-child td {
-            border-top: none;
-        }
-
-        /* Label cell */
-        .lbl {
-            width: 130px;
-            padding: 6px 14px;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: #94a3b8;
             border-bottom: 1px solid #f1f5f9;
-            white-space: nowrap;
-            vertical-align: middle;
-        }
-
-        /* Value cell */
-        .val {
-            padding: 6px 14px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #0f172a;
-            border-bottom: 1px solid #f1f5f9;
-            vertical-align: middle;
-        }
-
-        /* Divider between paired columns */
-        .divider {
-            width: 1px;
-            background: #f1f5f9;
-            padding: 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        tr:hover .lbl,
-        tr:hover .val {
             background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
         }
 
-        .sec-row:hover td {
+        .panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+            min-height: 0;
+        }
+
+        .panel-footer {
+            padding: 8px;
+            border-top: 1px solid #f1f5f9;
+            background: #fafafa;
+            flex-shrink: 0;
+        }
+
+        .note-item, .reminder-item {
+            padding: 6px 8px;
+            border-radius: 6px;
             background: #f8fafc;
+            margin-bottom: 5px;
+            border: 1px solid #f1f5f9;
         }
 
-        /* Doc sub-rows */
-        .doc-lbl {
+        .note-input-field {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 10px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            resize: none;
+        }
+
+        .note-input-field:focus { border-color: #a5b4fc; }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 0;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .info-lbl {
             font-size: 8px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: .05em;
             color: #94a3b8;
-            padding: 5px 14px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
+            width: 58px;
+            flex-shrink: 0;
         }
 
-        .doc-val {
-            padding: 5px 14px;
+        .info-val {
             font-size: 10px;
-            color: #334155;
-            border-bottom: 1px solid #f1f5f9;
-            vertical-align: middle;
-        }
-
-        tr:hover .doc-val {
-            background: #f8fafc;
-        }
-
-        /* Timeline rows */
-        .tl-val {
-            padding: 6px 14px;
-            border-bottom: 1px solid #f1f5f9;
-            vertical-align: top;
-        }
-
-        tr:hover .tl-val {
-            background: #f8fafc;
-        }
-
-        /* Note rows */
-        .note-val {
-            padding: 6px 14px;
-            border-bottom: 1px solid #f1f5f9;
-            vertical-align: top;
-        }
-
-        tr:hover .note-val {
-            background: #f8fafc;
+            font-weight: 600;
+            color: #0f172a;
+            flex: 1;
+            min-width: 0;
         }
 
         /* Buttons */
@@ -305,9 +296,9 @@
         </div>
 
         <div class="content-area">
-            <table class="master-table" id="master-table">
+            <div id="master-table">
                 <!-- Content injected via JS -->
-            </table>
+            </div>
         </div>
 
     </div>
@@ -357,6 +348,19 @@
         document.title = lead.name + ' — Alpha Funding CRM';
 
         let isEditing = false;
+        let aiSummary = null;
+        let aiGenerating = false;
+
+        function generateAISummary() {
+            if (aiGenerating) return;
+            aiGenerating = true;
+            updateMasterTable();
+            setTimeout(() => {
+                aiSummary = `${lead.priority}-priority lead requiring ${lead.priority === 'High' ? 'immediate' : 'timely'} attention. ${lead.name} (${lead.business}) seeking ${lead.amount} for business funding${lead.bank !== '—' ? ', banking with ' + lead.bank : ''}. Currently at <strong>${STAGE_LABELS[lead.stage]}</strong> stage with ${lead.days} day${lead.days !== 1 ? 's' : ''} elapsed. ${lead.payoutStatus === 'Yes' ? 'Payout confirmed via ' + (lead.lender || 'lender') + '.' : 'Payout pending — account manager action required.'}`;
+                aiGenerating = false;
+                updateMasterTable();
+            }, 1400);
+        }
 
         function renderHeader() {
             document.getElementById('hdr-id').textContent = '#' + lead.id;
@@ -465,17 +469,6 @@
             { author: 'System', time: '2026-04-07 09:00', text: 'Automated reminder sent to client for outstanding documents.' },
         ];
 
-        function row(l1, v1, l2, v2) {
-            if (l2 !== undefined) {
-                return `<tr>
-                    <td class="lbl">${l1}</td><td class="val">${v1}</td>
-                    <td class="divider"></td>
-                    <td class="lbl">${l2}</td><td class="val">${v2}</td>
-                </tr>`;
-            }
-            return `<tr><td class="lbl">${l1}</td><td class="val" colspan="4">${v1}</td></tr>`;
-        }
-
         function updateMasterTable() {
             // Sidebar Role Based Logic
             const SESSION = JSON.parse(sessionStorage.getItem('crm_session') || '{}');
@@ -508,200 +501,164 @@
                 nav.innerHTML = navHtml;
             }
 
-            const html = [
-                // Section 1: Lead Information (Paired internally for density)
-                `<tr class="sec-row">
-                    <td colspan="5">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-user text-slate-400"></i>Lead Information
-                        </span>
-                    </td>
-                </tr>`,
-                row('Lead ID', `<span style="font-family:monospace;font-weight:700">#${lead.id}</span>`, 'Assigned Agent', editField('agent', lead.agent)),
-                row('Full Name', editField('name', lead.name), 'Priority', editField('priority', lead.priority)),
-                row('Business', editField('business', lead.business), 'Lead Notes', isEditing ? editField('notes', lead.notes) : `<span style="color:#64748b;font-size:10px">${lead.notes}</span>`),
+            const TC = { Call:'#3b82f6', Meeting:'#8b5cf6', 'Follow-up':'#f59e0b', Document:'#10b981' };
+            const TI = { Call:'fa-phone', Meeting:'fa-users', 'Follow-up':'fa-rotate-right', Document:'fa-file' };
+            const SC = { Pending:'#f59e0b', Completed:'#10b981', Overdue:'#ef4444' };
 
-                // Section 2: Loan Details & Payout Tracking (SIDE BY SIDE)
-                `<tr class="sec-row">
-                    <td colspan="2">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-coins text-slate-400"></i>Loan Details
-                        </span>
-                    </td>
-                    <td class="divider"></td>
-                    <td colspan="2">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-money-bill-transfer text-slate-400"></i>Payout Tracking
-                        </span>
-                    </td>
-                </tr>`,
-
-                // Paired Rows for Loan vs Payout
-                (() => {
-                    const loanRows = [
-                        ['Loan Amount', isEditing ? editField('amount', lead.amount) : `<span style="font-size:13px;font-weight:900;color:#0f172a">${lead.amount}</span>`],
-                        ['Bank Name', editField('bank', lead.bank)],
-                        ['Lender Partner', editField('lender', lead.lender)],
-                        ['Current Stage', isEditing ? editField('stage', lead.stage) : `<span style="background:${stageBg[lead.stage]};color:${stageAccent[lead.stage]};border:1px solid ${stageAccent[lead.stage]}33;padding:2px 9px;border-radius:10px;font-size:9px;font-weight:700">${STAGE_LABELS[lead.stage]}</span>`],
-                        ['Days in Stage', lead.days + ' day' + (lead.days !== 1 ? 's' : '')]
-                    ];
-
-                    const payoutRows = lead.payoutStatus === 'Yes' ? [
-                        ['Payout Status', '<span class="text-emerald-600 font-black text-[10px]"><i class="fa-solid fa-circle-check mr-1"></i>CONFIRMED</span>'],
-                        ['Lender Contact', (lendersDB[lead.lender]?.contact || 'N/A')],
-                        ['Lender Email', (lendersDB[lead.lender]?.email || 'N/A')],
-                        ['Lender Terms', (lendersDB[lead.lender]?.terms || 'N/A')],
-                        ['Lender Phone', (lendersDB[lead.lender]?.phone || 'N/A')]
-                    ] : [
-                        ['Payout Status', '<span class="text-amber-600 font-black text-[10px]"><i class="fa-solid fa-clock mr-1"></i>PENDING</span>'],
-                        ['Action Required', `<button onclick="notifyAccountManager()" class="bg-indigo-600 text-white px-3 py-1 rounded-md text-[8px] font-black hover:bg-indigo-700 transition-all shadow-sm active:scale-95"><i class="fa-solid fa-paper-plane mr-1"></i>Notify AM</button>`],
-                        ['', ''], ['', ''], ['', ''] // Padding
-                    ];
-
-                    return Array.from({ length: Math.max(loanRows.length, payoutRows.length) }, (_, i) => {
-                        const l = loanRows[i] || ['', ''];
-                        const p = payoutRows[i] || ['', ''];
-                        return `<tr>
-                            <td class="lbl">${l[0]}</td><td class="val">${l[1]}</td>
-                            <td class="divider"></td>
-                            <td class="lbl">${p[0]}</td><td class="val">${p[1]}</td>
-                        </tr>`;
-                    }).join('');
-                })(),
-
-                // Documents + Activity Timeline
-                `<tr class="sec-row">
-                    <td colspan="2">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-folder-open text-slate-400"></i>Documents
-                            <span class="text-[8px] text-slate-400 normal-case ml-2">${docs.length} files</span>
-                        </span>
-                    </td>
-                    <td class="divider"></td>
-                    <td colspan="2">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-timeline text-slate-400"></i>Activity Timeline
-                        </span>
-                    </td>
-                </tr>`,
-
-                ...Array.from({ length: Math.max(docs.length, timeline.length) }, (_, i) => {
-                    const d = docs[i];
-                    const t = timeline[i];
-                    const leftCell = d ? `
-                        <td class="lbl"><div class="w-5 h-5 bg-slate-100 rounded flex items-center justify-center text-[9px] text-slate-500"><i class="fa-regular fa-file-pdf"></i></div></td>
-                        <td class="val">
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="font-bold text-[10px]">${d.name}</span>
-                                <div class="flex items-center gap-2 shrink-0">
-                                    <span class="font-mono text-[8px] text-slate-400">${d.date}</span>
-                                    <button onclick="previewDoc('${d.name}')" class="bg-slate-100 border border-slate-200 px-2 py-0.5 rounded text-[8px] font-bold text-slate-600 hover:bg-slate-200 transition-colors"><i class="fa-solid fa-eye mr-1"></i>Preview</button>
-                                    <button class="bg-white border border-slate-200 px-2 py-0.5 rounded text-[8px] font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-download mr-1"></i>Download</button>
-                                </div>
-                            </div>
-                        </td>` : '<td class="lbl"></td><td class="val"></td>';
-
-                    const rightCell = t ? `
-                        <td class="lbl">
-                            <div class="w-5 h-5 rounded-full flex items-center justify-center border-1.5" style="background:${t.done ? t.color + '22' : '#f1f5f9'};border-color:${t.done ? t.color + '44' : '#e2e8f0'}">
-                                <i class="fa-solid ${t.icon}" style="font-size:8px;color:${t.done ? t.color : '#cbd5e1'}"></i>
-                            </div>
-                        </td>
-                        <td class="val">
-                            <div class="flex items-center justify-between gap-2">
-                                <div>
-                                    <span class="text-[10px] font-bold ${t.done ? 'text-slate-900' : 'text-slate-400'}">${t.label}</span>
-                                    <span class="text-[9px] ${t.done ? 'text-slate-500' : 'text-slate-300'} ml-2">${t.sub}</span>
-                                </div>
-                                <span class="text-[8px] text-slate-400 font-mono">${t.done ? t.time : '—'}</span>
-                            </div>
-                        </td>` : '<td class="lbl"></td><td class="val"></td>';
-
-                    return `<tr>${leftCell}<td class="divider"></td>${rightCell}</tr>`;
-                }),
-
-                // Notes + Reminders
-                `<tr class="sec-row">
-                    <td colspan="2">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-note-sticky text-slate-400"></i>Notes
-                        </span>
-                    </td>
-                    <td class="divider"></td>
-                    <td colspan="2">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-bell text-slate-400"></i>Reminders
-                        </span>
-                    </td>
-                </tr>`,
-
-                ...Array.from({ length: Math.max(notes.length, reminders.length) }, (_, i) => {
-                    const n = notes[i];
-                    const r = reminders[i];
-                    const leftCell = n ? `
-                        <td class="lbl">${n.author}</td>
-                        <td class="val">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-[10px] text-slate-600 leading-normal">${n.text}</span>
-                                <span class="text-[8px] text-slate-400 font-mono shrink-0">${n.time}</span>
-                            </div>
-                        </td>` : '<td class="lbl"></td><td class="val"></td>';
-
-                    const typeColors = { Call: '#3b82f6', Meeting: '#8b5cf6', 'Follow-up': '#f59e0b', Document: '#10b981' };
-                    const typeIcons = { Call: 'fa-phone', Meeting: 'fa-users', 'Follow-up': 'fa-rotate-right', Document: 'fa-file' };
-                    const statusColors = { Pending: '#f59e0b', Completed: '#10b981', Overdue: '#ef4444' };
-
-                    const rightCell = r ? `
-                        <td class="lbl">
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full flex items-center justify-center" style="background:${typeColors[r.type]}15;border:1px solid ${typeColors[r.type]}33">
-                                    <i class="fa-solid ${typeIcons[r.type]}" style="font-size:7px;color:${typeColors[r.type]}"></i>
-                                </div>
-                                <span class="text-[8px] font-bold uppercase" style="color:${typeColors[r.type]}">${r.type}</span>
-                            </div>
-                        </td>
-                        <td class="val">
-                            <div class="flex items-center justify-between gap-2">
-                                <div><span class="text-[10px] font-bold text-slate-900">${r.title}</span><span class="text-[9px] text-slate-500 ml-2">${r.assignee}</span></div>
-                                <div class="flex items-center gap-2 shrink-0">
-                                    <span class="font-mono text-[8px] text-slate-400">${r.due}</span>
-                                    <span class="text-[8px] font-bold px-1.5 py-0.5 rounded-full" style="background:${statusColors[r.status]}15;color:${statusColors[r.status]};border:1px solid ${statusColors[r.status]}33">${r.status}</span>
-                                </div>
-                            </div>
-                        </td>` : '<td class="lbl"></td><td class="val"></td>';
-
-                    return `<tr>${leftCell}<td class="divider"></td>${rightCell}</tr>`;
-                }),
-
-                // Inputs Row
-                `<tr>
-                    <td colspan="2" class="p-3 !border-b-0 align-top">
-                        <textarea id="new-note-text" class="w-full border border-slate-200 rounded-lg p-2 text-[10px] outline-none focus:border-indigo-300 transition-colors" rows="2" placeholder="Write a note..."></textarea>
-                        <div class="flex justify-end mt-2"><button onclick="saveNote()" class="btn btn-dark !py-1 !text-[8px]">Save Note</button></div>
-                    </td>
-                    <td class="divider !border-b-0"></td>
-                    <td colspan="2" class="p-3 !border-b-0 align-top">
-                        <div class="flex gap-2 flex-wrap">
-                            <select id="new-rem-type" class="flex-1 border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-bold outline-none"><option>Call</option><option>Meeting</option><option>Follow-up</option><option>Document</option></select>
-                            <input id="new-rem-title" class="flex-[2] border border-slate-200 rounded-lg px-2 py-1 text-[10px] outline-none" placeholder="Task title...">
-                            <input id="new-rem-date" type="date" class="flex-1 border border-slate-200 rounded-lg px-2 py-1 text-[10px] outline-none">
+            const html = `
+            <div class="detail-panel panel-ai">
+                <div class="panel-hdr" style="padding:10px 14px;background:#fff;border-bottom:1px solid #eef2ff">
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <div style="width:34px;height:34px;background:#4f46e5;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px #4f46e540">
+                            <i class="fa-solid fa-wand-magic-sparkles" style="color:#fff;font-size:14px"></i>
                         </div>
-                        <div class="flex justify-between items-center mt-2">
-                            <a href="../task_and_followups/task_management.html" class="text-[8px] text-indigo-600 font-bold hover:underline flex items-center gap-1"><i class="fa-solid fa-arrow-up-right-from-square"></i>Task Hub</a>
-                            <button onclick="addReminder()" class="btn btn-dark !py-1 !text-[8px]">Add Reminder</button>
+                        <div>
+                            <div style="font-size:12px;font-weight:800;color:#0f172a;letter-spacing:-.01em">AI Lead Summary</div>
+                            <div style="font-size:8px;font-weight:500;color:#94a3b8;margin-top:1px">Powered by lead data</div>
                         </div>
-                    </td>
-                </tr>`
-            ].join('');
+                    </div>
+                    <button onclick="generateAISummary()" style="background:#4f46e5;color:#fff;border:none;border-radius:7px;padding:6px 13px;font-size:8px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:Inter,sans-serif;letter-spacing:.04em;opacity:${aiGenerating?'.6':'1'}">
+                        ${aiGenerating ? '<i class="fa-solid fa-spinner fa-spin"></i> GENERATING...' : aiSummary ? '<i class="fa-solid fa-rotate"></i> REGENERATE' : '<i class="fa-solid fa-wand-magic-sparkles"></i> GENERATE'}
+                    </button>
+                </div>
+                <div class="panel-body" style="padding:10px 14px">
+                    ${aiSummary ? `
+                    <div style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;padding:10px 12px;margin-bottom:12px">
+                        <p style="font-size:10px;color:#312e81;font-style:italic;line-height:1.7;margin:0">${aiSummary}</p>
+                    </div>
+                    <div style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;margin-bottom:8px">Key Data Points</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                        ${[['Status', lead.priority + ' Priority'],['Amount', lead.amount],['Stage', STAGE_LABELS[lead.stage]],['Bank', lead.bank !== '—' ? lead.bank : 'N/A'],['Agent', lead.agent],['Days', lead.days + 'd in stage'],['Payout', lead.payoutStatus === 'Yes' ? 'Confirmed' : 'Pending'],['Lender', lead.lender !== '—' ? lead.lender : 'N/A']].map(([l,v]) => `
+                        <div style="background:#f8fafc;border:1px solid #f1f5f9;border-radius:7px;padding:7px 10px">
+                            <div style="font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8">${l}</div>
+                            <div style="font-size:11px;font-weight:700;color:#0f172a;margin-top:2px">${v}</div>
+                        </div>`).join('')}
+                    </div>` : `
+                    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:#c7d2fe">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="font-size:26px"></i>
+                        <span style="font-size:10px;color:#94a3b8;text-align:center">Click Generate to create an AI summary for this lead</span>
+                    </div>`}
+                </div>
+            </div>
 
-            const colgroup = `<colgroup>
-                <col style="width:140px">
-                <col>
-                <col style="width:1px;background:#f1f5f9">
-                <col style="width:140px">
-                <col>
-            </colgroup>`;
-            document.getElementById('master-table').innerHTML = colgroup + html;
+            <div class="detail-panel panel-notes">
+                <div class="panel-hdr">
+                    <span><i class="fa-solid fa-note-sticky mr-1.5" style="color:#f59e0b"></i>Notes <span style="font-weight:400;opacity:.6">${notes.length}</span></span>
+                </div>
+                <div class="panel-body">
+                    ${notes.map(n => `<div class="note-item">
+                        <div class="flex items-start justify-between gap-2">
+                            <span style="font-size:10px;color:#475569;line-height:1.5">${n.text}</span>
+                            <span style="font-size:8px;color:#94a3b8;font-family:monospace;white-space:nowrap">${n.time}</span>
+                        </div>
+                        <div style="font-size:8px;font-weight:700;color:#94a3b8;margin-top:3px">${n.author}</div>
+                    </div>`).join('')}
+                </div>
+                <div class="panel-footer" style="padding:6px 8px">
+                    <div style="position:relative">
+                        <textarea id="new-note-text" class="note-input-field" rows="3" placeholder="Write a note…" style="padding-bottom:28px"></textarea>
+                        <button onclick="saveNote()" style="position:absolute;bottom:6px;right:6px;background:#0f172a;color:#fff;border:none;border-radius:5px;padding:3px 10px;font-size:8px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;letter-spacing:.03em">Save Note</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-panel panel-reminders">
+                <div class="panel-hdr">
+                    <span><i class="fa-solid fa-bell mr-1.5" style="color:#6366f1"></i>Followups &amp; Reminders <span style="font-weight:400;opacity:.6">${reminders.length}</span></span>
+                    <a href="../task_and_followups/task_management.html" style="font-size:8px;color:#6366f1;font-weight:700;text-decoration:none">Task Hub →</a>
+                </div>
+                <div class="panel-body">
+                    ${reminders.map(r => `<div class="reminder-item">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                            <div style="display:flex;align-items:center;gap:6px;min-width:0">
+                                <div style="width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:${TC[r.type]}18;border:1px solid ${TC[r.type]}33">
+                                    <i class="fa-solid ${TI[r.type]}" style="font-size:7px;color:${TC[r.type]}"></i>
+                                </div>
+                                <span style="font-size:10px;font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.title}</span>
+                            </div>
+                            <span style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;background:${SC[r.status]}18;color:${SC[r.status]};border:1px solid ${SC[r.status]}33">${r.status}</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:3px">
+                            <span style="font-size:8px;font-weight:700;text-transform:uppercase;color:${TC[r.type]}">${r.type}</span>
+                            <span style="font-size:8px;color:#94a3b8">${r.assignee}</span>
+                            <span style="font-size:8px;font-family:monospace;color:#94a3b8;margin-left:auto">${r.due}</span>
+                        </div>
+                        ${r.note ? `<div style="font-size:9px;color:#64748b;margin-top:5px;padding-top:5px;border-top:1px solid #f1f5f9;line-height:1.5">${r.note}</div>` : ''}
+                    </div>`).join('')}
+                </div>
+                <div class="panel-footer" style="padding:6px 8px">
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                        <select id="new-rem-type" style="flex:1;min-width:0;border:1px solid #e2e8f0;border-radius:6px;padding:4px 6px;font-size:10px;font-weight:700;outline:none"><option>Call</option><option>Meeting</option><option>Follow-up</option><option>Document</option></select>
+                        <input id="new-rem-title" style="flex:2;min-width:0;border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:10px;outline:none" placeholder="Task title…">
+                        <input id="new-rem-date" type="date" style="flex:1;min-width:0;border:1px solid #e2e8f0;border-radius:6px;padding:4px 6px;font-size:10px;outline:none">
+                    </div>
+                    <div style="position:relative;margin-top:5px">
+                        <textarea id="new-rem-note" rows="2" style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:5px 8px;padding-bottom:26px;font-size:10px;outline:none;font-family:Inter,sans-serif;resize:none;box-sizing:border-box" placeholder="Add a description or note…"></textarea>
+                        <button onclick="addReminder()" style="position:absolute;bottom:6px;right:6px;background:#0f172a;color:#fff;border:none;border-radius:5px;padding:3px 10px;font-size:8px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;letter-spacing:.03em">Add Reminder</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-panel panel-quarter">
+                <div class="panel-hdr"><i class="fa-solid fa-user mr-1.5"></i>Lead Info ${isEditing ? `<button onclick="saveChanges()" class="btn btn-indigo" style="padding:2px 8px;font-size:8px">Save</button>` : `<button onclick="toggleEdit()" class="btn btn-ghost" style="padding:2px 8px;font-size:8px"><i class="fa-solid fa-pen"></i></button>`}</div>
+                <div class="panel-body" style="padding:10px 12px">
+                    <div class="info-row"><span class="info-lbl">ID</span><span class="info-val" style="font-family:monospace;font-weight:900">#${lead.id}</span></div>
+                    <div class="info-row"><span class="info-lbl">Name</span><span class="info-val">${editField('name', lead.name)}</span></div>
+                    <div class="info-row"><span class="info-lbl">Business</span><span class="info-val">${editField('business', lead.business)}</span></div>
+                    <div class="info-row"><span class="info-lbl">Agent</span><span class="info-val">${editField('agent', lead.agent)}</span></div>
+                    <div class="info-row"><span class="info-lbl">Priority</span><span class="info-val">${editField('priority', lead.priority)}</span></div>
+                    <div class="info-row"><span class="info-lbl">Stage</span><span class="info-val">${isEditing ? editField('stage', lead.stage) : `<span style="background:${stageBg[lead.stage]};color:${stageAccent[lead.stage]};padding:1px 8px;border-radius:8px;font-size:8px;font-weight:700">${STAGE_LABELS[lead.stage]}</span>`}</span></div>
+                    <div class="info-row"><span class="info-lbl">Days</span><span class="info-val">${lead.days}d in stage</span></div>
+                </div>
+            </div>
+
+            <div class="detail-panel panel-quarter">
+                <div class="panel-hdr"><i class="fa-solid fa-coins mr-1.5"></i>Loan Details</div>
+                <div class="panel-body" style="padding:10px 12px">
+                    <div class="info-row"><span class="info-lbl">Amount</span><span class="info-val" style="font-weight:900;font-size:12px">${isEditing ? editField('amount', lead.amount) : lead.amount}</span></div>
+                    <div class="info-row"><span class="info-lbl">Bank</span><span class="info-val">${editField('bank', lead.bank)}</span></div>
+                    <div class="info-row"><span class="info-lbl">Lender</span><span class="info-val">${editField('lender', lead.lender)}</span></div>
+                    <div class="info-row"><span class="info-lbl">Payout</span><span class="info-val">${lead.payoutStatus === 'Yes' ? '<span style="color:#10b981;font-weight:900;font-size:9px">✓ CONFIRMED</span>' : '<span style="color:#f59e0b;font-weight:900;font-size:9px">⏳ PENDING</span>'}</span></div>
+                    ${lead.payoutStatus !== 'Yes' ? `<div class="info-row" style="margin-top:4px"><button onclick="notifyAccountManager()" class="btn btn-indigo" style="font-size:8px;padding:4px 10px;width:100%"><i class="fa-solid fa-paper-plane mr-1"></i>Notify Account Manager</button></div>` : `
+                    <div class="info-row"><span class="info-lbl">Contact</span><span class="info-val" style="font-size:9px">${lendersDB[lead.lender]?.contact || 'N/A'}</span></div>
+                    <div class="info-row"><span class="info-lbl">Terms</span><span class="info-val" style="font-size:9px">${lendersDB[lead.lender]?.terms || 'N/A'}</span></div>`}
+                </div>
+            </div>
+
+            <div class="detail-panel panel-quarter">
+                <div class="panel-hdr"><i class="fa-solid fa-timeline mr-1.5"></i>Activity Timeline</div>
+                <div class="panel-body" style="padding:8px 12px">
+                    ${timeline.map((t, i) => `<div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0;${i < timeline.length-1 ? 'border-bottom:1px solid #f1f5f9' : ''}">
+                        <div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;background:${t.done ? t.color+'22' : '#f1f5f9'};border:1px solid ${t.done ? t.color+'44' : '#e2e8f0'}">
+                            <i class="fa-solid ${t.icon}" style="font-size:7px;color:${t.done ? t.color : '#cbd5e1'}"></i>
+                        </div>
+                        <div style="flex:1;min-width:0">
+                            <div style="font-size:9px;font-weight:700;color:${t.done ? '#0f172a' : '#cbd5e1'};line-height:1.3">${t.label}</div>
+                            <div style="font-size:8px;color:${t.done ? '#94a3b8' : '#e2e8f0'};font-family:monospace">${t.done ? t.time : '—'}</div>
+                        </div>
+                    </div>`).join('')}
+                </div>
+            </div>
+
+            <div class="detail-panel panel-quarter">
+                <div class="panel-hdr"><i class="fa-solid fa-folder-open mr-1.5"></i>Documents <span style="font-weight:400;opacity:.6">${docs.length}</span></div>
+                <div class="panel-body" style="padding:8px 12px">
+                    ${docs.map(d => {
+                        const sc = d.status === 'Verified' ? '#10b981' : d.status === 'Missing' ? '#ef4444' : d.status === 'Failed' ? '#ef4444' : '#f59e0b';
+                        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f8fafc">
+                        <div style="width:18px;height:18px;background:#f1f5f9;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="fa-regular fa-file-pdf" style="font-size:8px;color:#94a3b8"></i>
+                        </div>
+                        <div style="flex:1;min-width:0">
+                            <div style="font-size:9px;font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name}</div>
+                            <div style="font-size:8px;color:#94a3b8;font-family:monospace">${d.date} · <span style="color:${sc}">${d.status}</span></div>
+                        </div>
+                        <button onclick="previewDoc('${d.name}')" style="flex-shrink:0;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:2px 6px;font-size:7px;font-weight:700;color:#64748b;cursor:pointer"><i class="fa-solid fa-eye"></i></button>
+                    </div>`;}).join('')}
+                </div>
+            </div>`;
+
+            document.getElementById('master-table').innerHTML = html;
         }
 
         updateMasterTable();
@@ -729,9 +686,9 @@
             const type = document.getElementById('new-rem-type').value;
             const title = document.getElementById('new-rem-title').value.trim();
             const date = document.getElementById('new-rem-date').value;
+            const note = document.getElementById('new-rem-note').value.trim();
             if(!title || !date) return;
-            reminders.unshift({ type, title, assignee: 'You', due: date, status: 'Pending' });
-            document.getElementById('new-rem-title').value = '';
+            reminders.unshift({ type, title, assignee: 'You', due: date, status: 'Pending', note });
             updateMasterTable();
         }
 
