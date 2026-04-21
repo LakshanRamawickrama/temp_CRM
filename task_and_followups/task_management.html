@@ -322,7 +322,6 @@
         .cal-day:not(.other-month):not(.today):not(.selected):hover { background: #f1f5f9; color: #0f172a; }
     </style>
     <script>
-<<<<<<< Updated upstream
         // ── Leads reference data ─────────────────────────────────────────
         const leadsData = [
             { key:'L-1004', name:'John Perera',     phone:'+44 7700 900000', email:'john@abc.com',                  company:'ABC Solutions Ltd',       leadStatus:'Warm' },
@@ -586,14 +585,7 @@
         function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); }
         function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); }
 
-        // ── Init ─────────────────────────────────────────────────────────
-        populateLeadDropdown();
-        renderCalendar();
-        renderCalTasks(calYear, calMonth, selectedDay);
-        renderTasksTable();
-    </script>
-<script src="../profile/profile_drawer.js"></script>
-=======
+        // ── Document Viewer ──────────────────────────────────────────────
         function openDocViewer(lender, name, detail, expiry) {
             document.getElementById('dv-filename').textContent = (name + '.pdf').toLowerCase().replace(/\s+/g, '_');
             document.getElementById('dv-title').textContent = name.toUpperCase();
@@ -605,8 +597,13 @@
         function closeDocViewer() {
             document.getElementById('doc-viewer-modal').classList.add('hidden');
         }
+
+        // ── Init ─────────────────────────────────────────────────────────
+        populateLeadDropdown();
+        renderCalendar();
+        renderCalTasks(calYear, calMonth, selectedDay);
+        renderTasksTable();
     </script>
     <script src="../profile/profile_drawer.js"></script>
->>>>>>> Stashed changes
 </body>
 </html>
