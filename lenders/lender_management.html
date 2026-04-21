@@ -776,149 +776,95 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                     </div>
                 </div>
 
-                <!-- -- SEND APPLICATION TAB -- -->
-                <div id="sendapp-tab" class="hidden p-4 space-y-3">
-                    <!-- Multi-select drop zone -->
-                    <div id="sendapp-dropzone"
-                        ondragover="event.preventDefault();this.classList.add('drag-over')"
-                        ondragleave="this.classList.remove('drag-over')"
-                        ondrop="onLenderDrop(event)"
-                        style="border:2px dashed #e2e8f0;border-radius:12px;padding:16px 12px;text-align:center;transition:all .2s;background:#fafafa;margin-bottom:8px;">
-                        <i class="fa-solid fa-building-columns" style="font-size:20px;color:#cbd5e1;display:block;margin-bottom:6px;"></i>
-                        <p style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;">Drag lenders here</p>
-                        <p style="font-size:8px;color:#cbd5e1;margin-top:2px;">Up to 4 lenders · <span id="sendapp-count" style="color:#94a3b8;font-weight:800;">0 / 4</span> selected</p>
-                    </div>
-                    <!-- Selected lenders list -->
-                    <div id="sendapp-selected-list" style="display:none;margin-bottom:8px;">
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                            <p style="font-size:8px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.06em;"><span id="sendapp-count2">0</span> / 4 Lenders Selected</p>
-                            <button onclick="clearAllLenders()" style="font-size:7px;font-weight:800;color:#ef4444;background:none;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;">Clear All</button>
+                <!-- -- SEND APPLICATION TAB (Step-based Wizard) -- -->
+                <div id="sendapp-tab" class="hidden">
+                    <!-- Step 1: Lead Selection -->
+                    <div id="sendapp-step-1" class="p-4 space-y-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <p class="text-[10px] font-black text-gray-900 uppercase tracking-widest">Step 1: Select Approved Lead</p>
+                                <p class="text-[8px] text-gray-400 font-bold uppercase tracking-tight">Only showing leads with approved documentation</p>
+                            </div>
+                            <div class="relative w-32">
+                                <input type="text" id="sa-lead-search" placeholder="Search leads..." class="input-compact bg-gray-50/50 py-1 pl-6 text-[9px]" oninput="renderLeadSelector()">
+                                <i class="fa-solid fa-magnifying-glass absolute left-2 top-1/2 -track -translate-y-1/2 text-[8px] text-gray-300"></i>
+                            </div>
                         </div>
-                        <div id="sendapp-lender-cards" style="display:flex;flex-direction:column;gap:6px;"></div>
-                    </div>
-
-                    <!-- Lender Contact -->
-                    <div>
-                        <p
-                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">
-                            Lender Contact</p>
-                        <label class="label-text">Account Manager Name *</label>
-                        <input id="sa-am-name" type="text" placeholder="e.g. Shifat" class="input-compact">
-                    </div>
-
-                    <!-- Client Details -->
-                    <div>
-                        <p
-                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">
-                            Client Details</p>
-                        <div class="space-y-2">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Full Name *</label><input id="sa-name" type="text"
-                                        placeholder="Eduard Ceban" class="input-compact"></div>
-                                <div><label class="label-text">Business Name *</label><input id="sa-business"
-                                        type="text" placeholder="CES COMMUNICATIONS LTD" class="input-compact"></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Date of Birth</label><input id="sa-dob" type="text"
-                                        placeholder="DD/MM/YYYY" class="input-compact"></div>
-                                <div><label class="label-text">Contact Number</label><input id="sa-phone" type="text"
-                                        placeholder="07546516898" class="input-compact"></div>
-                            </div>
-                            <div><label class="label-text">Email Address</label><input id="sa-email" type="email"
-                                    placeholder="client@company.co.uk" class="input-compact"></div>
-                            <div><label class="label-text">Residential Address</label><input id="sa-address" type="text"
-                                    placeholder="99 Halbutt Street, Dagenham, RM9 5AR" class="input-compact"></div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Time at Current Address</label><input id="sa-time-addr"
-                                        type="text" placeholder="e.g. 2 years / NA" class="input-compact"></div>
-                                <div><label class="label-text">Homeowner</label><select id="sa-homeowner"
-                                        class="input-compact">
-                                        <option>NO</option>
-                                        <option>YES</option>
-                                    </select></div>
-                            </div>
-                            <div><label class="label-text">Previous Address</label><input id="sa-prev-addr" type="text"
-                                    placeholder="37 Lechmere Ave, IG8 8QF (05/2020 – 07/2025)" class="input-compact">
-                            </div>
+                        
+                        <div id="sa-lead-list" class="space-y-2 max-h-[400px] overflow-y-auto custom-scrollbar pr-1">
+                            <!-- Lead rows will be injected here -->
                         </div>
                     </div>
 
-                    <!-- Loan Details -->
-                    <div>
-                        <p
-                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">
-                            Loan Details</p>
-                        <div class="space-y-2">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Amount Requested *</label><input id="sa-amount"
-                                        type="text" placeholder="25K" class="input-compact"></div>
-                                <div><label class="label-text">Loan Purpose</label><input id="sa-purpose" type="text"
-                                        placeholder="Working Capital" class="input-compact"></div>
+                    <!-- Step 2: Lender Selection & Finalize -->
+                    <div id="sendapp-step-2" class="hidden p-4 space-y-4">
+                        <div class="flex items-center justify-between mb-2 pb-2 border-b border-gray-100">
+                            <button onclick="goToSendAppStep(1)" class="text-[8px] font-bold text-indigo-600 uppercase tracking-widest flex items-center gap-1.5 hover:text-indigo-800 transition-colors">
+                                <i class="fa-solid fa-arrow-left"></i> Change Lead
+                            </button>
+                            <div class="text-right">
+                                <p id="sa-selected-lead-name" class="text-[11px] font-black text-gray-900 leading-none">ELENA RODRIGUEZ</p>
+                                <p id="sa-selected-lead-id" class="text-[8px] font-bold text-gray-400 uppercase tracking-tight mt-0.5">L-1007 · £25,000</p>
                             </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><label class="label-text">Overdraft</label><input id="sa-overdraft" type="text"
-                                        placeholder="2K / NA" class="input-compact"></div>
-                                <div><label class="label-text">Documents Attached</label><input id="sa-docs" type="text"
-                                        placeholder="6 months bank statements..." class="input-compact"></div>
+                        </div>
+
+                        <!-- Multi-select drop zone -->
+                        <div>
+                            <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-2">Step 2: Select Lenders (Max 4)</p>
+                            <div id="sendapp-dropzone"
+                                ondragover="event.preventDefault();this.style.background='#f0f4ff';this.style.borderColor='#6366f1'"
+                                ondragleave="this.style.background='#fafafa';this.style.borderColor='#e2e8f0'"
+                                ondrop="onLenderDrop(event)"
+                                style="border:2px dashed #e2e8f0;border-radius:12px;padding:16px 12px;text-align:center;transition:all .2s;background:#fafafa;margin-bottom:8px;">
+                                <i class="fa-solid fa-building-columns" style="font-size:20px;color:#cbd5e1;display:block;margin-bottom:6px;"></i>
+                                <p style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;">Drag lenders from table here</p>
+                                <p style="font-size:8px;color:#cbd5e1;margin-top:2px;">Selection: <span id="sendapp-count" style="color:#6366f1;font-weight:800;">0 / 4</span></p>
                             </div>
-                            <div><label class="label-text">Business Overview</label><textarea id="sa-biz" rows="2"
-                                    placeholder="Construction of utility projects..."
-                                    class="input-compact resize-none"></textarea></div>
                         </div>
-                    </div>
 
-                    <!-- Existing Loans -->
-                    <div>
-                        <p
-                            style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f1f5f9;">
-                            Existing Loans</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div><label class="label-text">Lender Name</label><input id="sa-el-lender" type="text"
-                                    placeholder="Iwoca / NA" class="input-compact"></div>
-                            <div><label class="label-text">Amount Taken</label><input id="sa-el-amount" type="text"
-                                    placeholder="12K" class="input-compact"></div>
-                            <div><label class="label-text">Interest Rate</label><input id="sa-el-rate" type="text"
-                                    placeholder="5.7%" class="input-compact"></div>
-                            <div><label class="label-text">Term</label><input id="sa-el-term" type="text"
-                                    placeholder="24 months" class="input-compact"></div>
+                        <!-- Selected lenders list -->
+                        <div id="sendapp-selected-list" style="display:none;margin-bottom:12px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                                <p style="font-size:8px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.06em;">Current Selection</p>
+                                <button onclick="clearAllLenders()" style="font-size:7px;font-weight:800;color:#ef4444;background:none;border:none;cursor:pointer;text-transform:uppercase;">Clear All</button>
+                            </div>
+                            <div id="sendapp-lender-cards" style="display:flex;flex-direction:column;gap:6px;"></div>
                         </div>
-                        <div class="mt-2"><label class="label-text">Credit Consent</label><input id="sa-el-consent"
-                                type="text" placeholder="on email / NA" class="input-compact"></div>
-                    </div>
 
-                    <!-- Note -->
-                    <div>
-                        <label class="label-text">Note (Pitched lenders & terms)</label>
-                        <textarea id="sa-note" rows="2"
-                            placeholder="e.g. Pitched Funding Circle for 72 months and Iwoca for 24 months."
-                            class="input-compact resize-none"></textarea>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="pt-2 flex gap-2">
-                        <button onclick="previewSendApp()"
-                            class="flex-1 py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
-                            <i class="fa-solid fa-eye mr-1.5"></i>Preview
-                        </button>
-                        <button onclick="copySendApp()"
-                            class="flex-1 py-2.5 bg-amber-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-amber-700 transition-all">
-                            <i class="fa-solid fa-paper-plane mr-1.5"></i>Send
-                        </button>
-                    </div>
-
-                    <!-- Preview output -->
-                    <div id="sa-preview-box"
-                        style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;">
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                            <span
-                                style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;">Application
-                                Preview</span>
-                            <button onclick="document.getElementById('sa-preview-box').style.display='none'"
-                                style="border:none;background:none;cursor:pointer;color:#94a3b8;font-size:10px;"><i
-                                    class="fa-solid fa-xmark"></i></button>
+                        <!-- Final Note -->
+                        <div>
+                            <label class="label-text">Final Submission Note</label>
+                            <textarea id="sa-note" rows="3"
+                                placeholder="e.g. Pitched Funding Circle for 72 months..."
+                                class="input-compact resize-none bg-gray-50/50"></textarea>
                         </div>
-                        <pre id="sa-preview-text"
-                            style="font-size:9px;font-family:'Inter',sans-serif;color:#1e293b;white-space:pre-wrap;line-height:1.7;margin:0;"></pre>
+
+                        <!-- Actions -->
+                        <div class="pt-2 flex gap-2">
+                            <button onclick="previewSendApp()"
+                                class="flex-1 py-2.5 bg-gray-900 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                                <i class="fa-solid fa-eye mr-1.5"></i>Preview
+                            </button>
+                            <button onclick="copySendApp()"
+                                class="flex-1 py-2.5 bg-amber-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-amber-700 transition-all">
+                                <i class="fa-solid fa-paper-plane mr-1.5"></i>Send / Copy
+                            </button>
+                        </div>
+
+                        <!-- Preview output -->
+                        <div id="sa-preview-box"
+                            style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;animation: slideUp 0.3s ease;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                                <span
+                                    style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#94a3b8;">Application
+                                    Preview</span>
+                                <button onclick="document.getElementById('sa-preview-box').style.display='none'"
+                                    style="border:none;background:none;cursor:pointer;color:#94a3b8;font-size:10px;"><i
+                                        class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <pre id="sa-preview-text"
+                                style="font-size:9px;font-family:'Inter',sans-serif;color:#1e293b;white-space:pre-wrap;line-height:1.7;margin:0;"></pre>
+                        </div>
                     </div>
                 </div>
 
@@ -1404,6 +1350,7 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
                  +               notesHtml
                  +             '</div>'
                  +             '<div style="display:flex;gap:8px;margin-top:12px;">'
+                 +               '<button onclick="event.stopPropagation();openSendApp(' + l.id + ')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#4f46e5;color:#fff;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border:none;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.background=\'#4338ca\'" onmouseout="this.style.background=\'#4f46e5\'"><i class="fa-solid fa-paper-plane" style="font-size:7px;"></i>Send App</button>'
                  +               '<button onclick="event.stopPropagation();loadEditForm(' + l.id + ')" id="btn-edit-' + l.id + '" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#111827;color:#fff;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border:none;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.background=\'#000\'" onmouseout="this.style.background=\'#111827\'"><i class="fa-solid fa-pen" style="font-size:7px;"></i>Edit</button>'
                  +               '<button onclick="event.stopPropagation();deleteLender(' + l.id + ')" id="btn-del-' + l.id + '" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#fff;color:#f87171;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border:1px solid #fecaca;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.borderColor=\'#fca5a5\';this.style.color=\'#dc2626\'" onmouseout="this.style.borderColor=\'#fecaca\';this.style.color=\'#f87171\'"><i class="fa-solid fa-trash" style="font-size:7px;"></i>Delete</button>'
                  +             '</div>'
@@ -1689,8 +1636,17 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             document.getElementById('tab-lender').classList.toggle('active', tab === 'lender');
             document.getElementById('tab-promotions').classList.toggle('active', tab === 'promotions');
             document.getElementById('tab-sendapp').classList.toggle('active', tab === 'sendapp');
+            
             if (tab === 'promotions') {
                 populatePromoLenderFilter();
+            }
+            if (tab === 'sendapp') {
+                // Only go to step 1 if no lead is currently selected
+                if (!selectedLeadForApp) {
+                    goToSendAppStep(1);
+                } else {
+                    goToSendAppStep(2);
+                }
             }
         }
 
@@ -1994,33 +1950,102 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             document.getElementById('panel-title').textContent = 'Send Application';
             document.getElementById('panel-subtitle').textContent = l.name;
             document.getElementById('panel-subtitle').style.display = 'block';
+            
+            // If coming from a specific lender, add them automatically
+            if (!selectedLendersForApp.find(x => x.id === lenderId)) {
+                addLenderToSelection(l);
+            }
+        }
+
+        // -- SEND APPLICATION WIZARD LOGIC --
+        const leadRecordsForApp = [
+            { id: 'L-1004', fullName: 'John Perera', companyName: 'ABC Solutions Ltd', docStatus: 'Approved', leadStatus: 'Warm', loanAmount: '£45,000', emailAddress: 'john@abc.com', phoneNumber: '+44 7700 900000', residentialAddress: '99 Halbutt Street, Dagenham, RM9 5AR', timeAtCurrentAddress: '3 Years', homeOwner: 'Yes', loanPurpose: 'Business Expansion', dob: '12/06/1985', turnover: '£250,000', industry: 'Software' },
+            { id: 'L-1005', fullName: 'Sarah Silva', companyName: 'XYZ Logistics', docStatus: 'Approved', leadStatus: 'Hot', loanAmount: '£120,000', emailAddress: 'sarah@xyz.com', phoneNumber: '+44 7700 111222', residentialAddress: '24 Riverside Gardens, Reading, RG1 2AB', timeAtCurrentAddress: '5 Years', homeOwner: 'No', loanPurpose: 'Warehouse Scaling', dob: '20/11/1992', turnover: '£1,200,000', industry: 'Logistics' },
+            { id: 'L-1006', fullName: 'David Thompson', companyName: 'Thompson Construction', docStatus: 'Pending', leadStatus: 'Warm', loanAmount: '£75,000' },
+            { id: 'L-1007', fullName: 'Elena Rodriguez', companyName: 'Sol Coffee Roasters', docStatus: 'Approved', leadStatus: 'Hot', loanAmount: '£25,000', emailAddress: 'elena@solroasters.com', phoneNumber: '+44 7444 555666', residentialAddress: 'Apartment 4, Skyline Plaza, Manchester', timeAtCurrentAddress: '2 Years', homeOwner: 'No', loanPurpose: 'Stock Purchase', dob: '14/09/1989', turnover: '£400,000', industry: 'Retail' },
+        ];
+
+        let selectedLeadForApp = null;
+        let currentSendAppStep = 1;
+
+        function goToSendAppStep(step) {
+            currentSendAppStep = step;
+            const s1 = document.getElementById('sendapp-step-1');
+            const s2 = document.getElementById('sendapp-step-2');
+            if (s1) s1.classList.toggle('hidden', step !== 1);
+            if (s2) s2.classList.toggle('hidden', step !== 2);
+            if (step === 1) renderLeadSelector();
+        }
+
+        function renderLeadSelector() {
+            const q = (document.getElementById('sa-lead-search')?.value || '').toLowerCase();
+            const list = document.getElementById('sa-lead-list');
+            if (!list) return;
+
+            const filtered = leadRecordsForApp.filter(l => 
+                l.docStatus === 'Approved' && 
+                (l.fullName.toLowerCase().includes(q) || l.companyName.toLowerCase().includes(q) || l.id.toLowerCase().includes(q))
+            );
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="text-center py-10"><p class="text-[9px] text-gray-400 font-bold uppercase">No approved leads found</p></div>';
+                return;
+            }
+
+            list.innerHTML = filtered.map(l => `
+                <div onclick="selectLeadForApp('${l.id}')" class="p-3 bg-white border border-gray-100 rounded-xl hover:border-indigo-200 hover:shadow-sm cursor-pointer transition-all group">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-[7.5px] font-black px-2 py-0.5 rounded-full ${l.leadStatus === 'Hot' ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-500'} uppercase tracking-tight">${l.leadStatus}</span>
+                        <span class="text-[7.5px] font-mono text-gray-300 uppercase">${l.id}</span>
+                    </div>
+                    <p class="text-[10px] font-black text-gray-900 group-hover:text-indigo-600 transition-colors">${l.fullName}</p>
+                    <div class="flex items-center justify-between mt-1">
+                        <p class="text-[8px] font-bold text-gray-400 uppercase tracking-tight">${l.companyName}</p>
+                        <p class="text-[10px] font-black text-indigo-600">${l.loanAmount}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectLeadForApp(id) {
+            selectedLeadForApp = leadRecordsForApp.find(l => l.id === id);
+            if (!selectedLeadForApp) return;
+
+            document.getElementById('sa-selected-lead-name').textContent = selectedLeadForApp.fullName.toUpperCase();
+            document.getElementById('sa-selected-lead-id').textContent = `${selectedLeadForApp.id} · ${selectedLeadForApp.loanAmount}`;
+            
+            goToSendAppStep(2);
         }
 
         function buildSendAppText() {
-            const f = {
-                amName: document.getElementById('sa-am-name').value || '[LENDER ACCOUNT MANAGER NAME]',
-                name: document.getElementById('sa-name').value || '[CLIENT NAME]',
-                business: document.getElementById('sa-business').value || '[CLIENT COMPANY NAME]',
-                dob: document.getElementById('sa-dob').value || 'NA',
-                phone: document.getElementById('sa-phone').value || 'NA',
-                email: document.getElementById('sa-email').value || 'NA',
-                address: document.getElementById('sa-address').value || 'NA',
-                timeAddr: document.getElementById('sa-time-addr').value || 'NA',
-                prevAddr: document.getElementById('sa-prev-addr').value || 'NA',
-                homeowner: document.getElementById('sa-homeowner').value,
-                amount: document.getElementById('sa-amount').value || 'NA',
-                purpose: document.getElementById('sa-purpose').value || 'NA',
-                overdraft: document.getElementById('sa-overdraft').value || 'NA',
-                biz: document.getElementById('sa-biz').value || 'NA',
-                docs: document.getElementById('sa-docs').value || 'NA',
-                elLender: document.getElementById('sa-el-lender').value || 'NA',
-                elAmount: document.getElementById('sa-el-amount').value || 'NA',
-                elRate: document.getElementById('sa-el-rate').value || 'NA',
-                elTerm: document.getElementById('sa-el-term').value || 'NA',
-                elConsent: document.getElementById('sa-el-consent').value || 'NA',
-                note: document.getElementById('sa-note').value || '',
-            };
-            return `Hi ${f.amName},\n\nSubmission details for ${f.business}\n\nPlease find the attached documents. Client details are as follows:\n\nClient Details\nName: ${f.name}\nBusiness Name: ${f.business}\nDOB: ${f.dob}\nContact Number: ${f.phone}\nEmail Address: ${f.email}\nResidential Address: ${f.address}\nTime at Current Address: ${f.timeAddr}\nPrevious Address: ${f.prevAddr}\nHomeowner: ${f.homeowner}\n\nLoan Details\nAmount Requested: ${f.amount}\nLoan Purpose: ${f.purpose}\nOverdraft: ${f.overdraft}\nBusiness Overview: ${f.biz}\n\nDocuments Attached\n${f.docs}\n\nExisting Loans\nLender Name: ${f.elLender}\nAmount Taken: ${f.elAmount}\nInterest Rate: ${f.elRate}\nTerm: ${f.elTerm}\nCredit Consent: ${f.elConsent}${f.note ? '\n\nNote: ' + f.note : ''}`;
+            if (!selectedLeadForApp) return "No lead selected.";
+            
+            const l = selectedLeadForApp;
+            const lendersStr = selectedLendersForApp.map(x => x.name).join(', ') || '[SELECTED LENDERS]';
+            const note = document.getElementById('sa-note').value || '';
+            const s = JSON.parse(sessionStorage.getItem('crm_session') || '{}');
+            const amName = s.name || 'Accounts Manager';
+
+            return `Hi Team,\n\nI am submitting the following application for your review:\n\n`
+                 + `SUBMITTED BY: ${amName}\n`
+                 + `LENDER(S): ${lendersStr}\n\n`
+                 + `CLIENT DETAILS\n`
+                 + `Name: ${l.fullName}\n`
+                 + `Business: ${l.companyName}\n`
+                 + `Industry: ${l.industry || 'N/A'}\n`
+                 + `DOB: ${l.dob || 'N/A'}\n\n`
+                 + `CONTACT DETAILS\n`
+                 + `Phone: ${l.phoneNumber || 'N/A'}\n`
+                 + `Email: ${l.emailAddress || 'N/A'}\n`
+                 + `Residential Address: ${l.residentialAddress || 'N/A'}\n`
+                 + `Time at Address: ${l.timeAtCurrentAddress || 'N/A'}\n`
+                 + `Homeowner: ${l.homeOwner || 'N/A'}\n\n`
+                 + `LOAN DETAILS\n`
+                 + `Amount: ${l.loanAmount}\n`
+                 + `Purpose: ${l.loanPurpose || 'Business Needs'}\n`
+                 + `Turnover: ${l.turnover || 'N/A'}\n\n`
+                 + `DOCUMENTS: All documents for this case are APPROVED and stored in the vault.\n`
+                 + (note ? `\nADDITIONAL NOTE: ${note}` : '');
         }
 
         function previewSendApp() {
@@ -2035,11 +2060,12 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
             navigator.clipboard.writeText(text).then(() => {
                 const btn = event.currentTarget;
                 const orig = btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-check mr-1.5"></i>Sent!';
-                btn.style.background = '#334155';
+                btn.innerHTML = '<i class="fa-solid fa-check mr-1.5"></i>Copied to Clipboard!';
+                btn.style.background = '#059669';
                 setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 2000);
             });
         }
+
 
         // Drag & Drop - Multi Select (max 4)
         let draggedLenderId = null;
@@ -2049,23 +2075,40 @@ function logout(){sessionStorage.removeItem('crm_session');window.location.repla
         function onLenderDragStart(e, id) {
             draggedLenderId = id;
             e.dataTransfer.effectAllowed = 'copy';
-            // Highlight the drop zone to guide user
+            
+            // Switch to sendapp tab if not already there
+            const tabBtn = document.getElementById('tab-sendapp');
+            if (tabBtn && !tabBtn.classList.contains('active')) {
+                switchLeftTab('sendapp');
+            }
+
+            // Highlight the drop zone to guide user if we are in step 2
             setTimeout(() => {
                 const dz = document.getElementById('sendapp-dropzone');
-                if (dz) dz.style.borderColor = '#94a3b8';
+                if (dz && currentSendAppStep === 2) {
+                    dz.style.borderColor = '#6366f1';
+                    dz.style.background = '#f5f7ff';
+                }
             }, 0);
         }
 
         function onLenderDrop(e) {
             e.preventDefault();
             const dz = document.getElementById('sendapp-dropzone');
-            dz.classList.remove('drag-over');
-            dz.style.borderColor = '';
+            if (dz) {
+                dz.classList.remove('drag-over');
+                dz.style.borderColor = '';
+                dz.style.background = '';
+            }
             if (draggedLenderId === null) return;
             const l = lenders.find(x => x.id === draggedLenderId);
             if (l) {
-                addLenderToSelection(l);
-                switchLeftTab('sendapp');
+                // If they drop but are still on step 1, we can't add yet
+                if (currentSendAppStep !== 2) {
+                    alert('Please select an approved lead first before adding lenders.');
+                } else {
+                    addLenderToSelection(l);
+                }
             }
             draggedLenderId = null;
         }
