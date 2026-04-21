@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -685,29 +685,30 @@ function toggleCardSize(btn) {
 window.addEventListener('load', () => { loadDashboardLayout(); injectResizeButtons(); updateCalculator(); });
 renderTable(); renderNotes(); renderNotifs();
 
+// AI Core Assistant Functions
 function toggleAIWidget() {
-    const widget = document.getElementById('aiWidget');
-    widget.classList.toggle('active');
-
-    // Subtle FAB rotation or icon change
-    const icon = document.querySelector('.ai-fab i');
-    if (widget.classList.contains('active')) {
-        icon.classList.remove('fa-robot');
-        icon.classList.add('fa-xmark');
-    } else {
-        icon.classList.remove('fa-xmark');
-        icon.classList.add('fa-robot');
-    }
+    openAIDrawer();
+}
+function openAIDrawer() {
+    const drawer = document.getElementById('aiDrawer');
+    const panel = drawer.querySelector('.day-drawer-panel');
+    drawer.style.display = 'flex';
+    void panel.offsetWidth;
+    drawer.classList.add('open');
+}
+function closeAIDrawer() {
+    const drawer = document.getElementById('aiDrawer');
+    drawer.classList.remove('open');
+    setTimeout(() => { drawer.style.display = 'none'; }, 420);
 }
 
 // Close widget when clicking outside
 document.addEventListener('click', (e) => {
-    const widget = document.getElementById('aiWidget');
+    const drawer = document.getElementById('aiDrawer');
+    const panel = drawer?.querySelector('.day-drawer-panel');
     const fab = document.querySelector('.ai-fab');
-    if (widget && fab) {
-        if (!widget.contains(e.target) && !fab.contains(e.target) && widget.classList.contains('active')) {
-            toggleAIWidget();
-        }
+    if (drawer && drawer.classList.contains('open') && !panel.contains(e.target) && !fab.contains(e.target)) {
+        closeAIDrawer();
     }
 });
 </script>
@@ -1064,38 +1065,61 @@ function initModalCalculator() {
         <i class="fa-solid fa-robot text-2xl"></i>
     </div>
 
-    <!-- AI Core Assistant Widget -->
-    <div id="aiWidget" class="ai-widget glass-card"
-        style="width: 260px; overflow: hidden; border: 1px solid rgba(255,255,255,0.4);">
-        <div class="ai-header">
-            <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">AI Core Assistant</h3>
-        </div>
-
-        <div class="py-1">
-            <!-- Product Info Option -->
-            <div class="ai-option">
-                <div class="icon-box bg-indigo-600 text-white">
-                    <i class="fa-solid fa-suitcase text-sm"></i>
+    <!-- AI Side Drawer -->
+    <div id="aiDrawer" class="day-drawer" style="z-index: 1100;">
+        <div class="day-drawer-backdrop" onclick="closeAIDrawer()"></div>
+        <div class="day-drawer-panel" style="max-width: 480px;">
+            <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg">
+                        <i class="fa-solid fa-robot text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">AI Core Assistant</h2>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1.5 uppercase tracking-wider">Lead Intelligence Hub</p>
+                    </div>
                 </div>
-                <div>
-                    <h4 class="text-[12px] font-black text-slate-900 leading-tight">Product Info</h4>
-                    <p class="text-[9px] font-bold text-slate-400 mt-0.5">Lender & Data Intel</p>
+                <button onclick="closeAIDrawer()" class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white transition-all">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+                <!-- Summarizing Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-[10px] font-black text-slate-900 uppercase tracking-widest">Lead Summarizing</h3>
+                        <span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-600 text-[8px] font-black uppercase">Active</span>
+                    </div>
+                    
+                    <div class="glass-card p-5 border border-purple-100 bg-purple-50/20">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-xl bg-purple-600 flex items-center justify-center text-white shrink-0 shadow-md">
+                                <i class="fa-solid fa-clipboard-list text-xs"></i>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="text-[11px] font-bold text-slate-700 leading-relaxed">
+                                    Select a lead from your pipeline to generate a high-fidelity intelligence summary.
+                                </p>
+                                <div class="flex gap-2">
+                                    <button class="px-3 py-1.5 bg-purple-600 text-white text-[9px] font-black uppercase rounded-lg hover:bg-purple-700 transition-all">Select Lead</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Summarizing Option -->
-            <div class="ai-option">
-                <div class="icon-box bg-purple-600 text-white">
-                    <i class="fa-solid fa-clipboard-list text-sm"></i>
-                </div>
-                <div>
-                    <h4 class="text-[12px] font-black text-slate-900 leading-tight">Summarizing</h4>
-                    <p class="text-[9px] font-bold text-slate-400 mt-0.5">Lead Analysis</p>
+            <div class="p-6 bg-slate-50 border-t border-slate-100 mt-auto rounded-b-[28px]">
+                <div class="relative">
+                    <input type="text" placeholder="Ask AI Core anything..." class="w-full bg-white border border-slate-200 rounded-xl py-3 pl-4 pr-12 text-[11px] font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                    <button class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-indigo-600 transition-all">
+                        <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 <!-- Day Events Drawer -->
 <div class="day-drawer" id="dayDrawer">
