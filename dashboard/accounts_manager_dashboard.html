@@ -225,6 +225,7 @@
         .day-evt-task{border-left:3px solid #6366f1;}
         .day-evt-followup{border-left:3px solid #f59e0b;}
         .day-evt-done{opacity:0.48;}
+        .day-evt-overdue{border-left:3px solid #ef4444;}
         .dd-tab-btn{flex:1;padding:9px 6px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:none;border:none;border-bottom:2px solid transparent;color:#94a3b8;cursor:pointer;transition:all .15s;}
         .dd-tab-btn.active{color:#6366f1;border-bottom-color:#6366f1;}
         .cal-day{height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border-radius:7px;position:relative;cursor:pointer;transition:all .15s;color:#1e293b;}
@@ -321,7 +322,7 @@
     <div class="flex-1 overflow-y-auto custom-scrollbar">
         <div class="module-grid">
             <!-- My Leads Card (Wide) -->
-            <div class="glass-card flex flex-col card-wide" style="height:320px;" data-id="my-leads">
+            <div class="glass-card flex flex-col card-wide" style="height:280px;" data-id="my-leads">
                 <div class="border-b" style="background:#0f172a;border-radius:20px 20px 0 0;padding:0 16px;display:flex;align-items:center;gap:10px;min-height:46px;flex-shrink:0;">
                     <i class="fa-solid fa-users" style="color:rgba(255,255,255,.4);font-size:13px;"></i>
                     <span style="font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.12em;">My Leads</span>
@@ -1027,7 +1028,7 @@ function renderCalendar(){
             dot.className='evt-dot';
             d.appendChild(dot);
         }
-        d.onclick=()=>{_amSelDate=new Date(y,m,i);renderCalendar();openDayDrawer(y,m,i);};
+        d.onclick=(ev)=>{ev.stopPropagation();_amSelDate=new Date(y,m,i);renderCalendar();openDayDrawer(y,m,i);};
         grid.appendChild(d);
     }
 }
