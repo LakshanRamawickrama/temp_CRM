@@ -318,23 +318,59 @@
     <!-- Main Grid -->
     <div class="flex-1 overflow-y-auto custom-scrollbar">
         <div class="module-grid">
-            <!-- My Leads Card (Wide) -->
+            <!-- My Leads + Pipeline Snapshot (Combined Wide Card) -->
             <div class="glass-card flex flex-col card-wide" style="height:280px;" data-id="my-leads">
+                <!-- Header -->
                 <div style="background:#0f172a;border-radius:20px 20px 0 0;padding:0 16px;display:flex;align-items:center;gap:10px;min-height:46px;flex-shrink:0;">
                     <i class="fa-solid fa-user-group" style="color:rgba(255,255,255,.4);font-size:13px;"></i>
                     <span style="font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.12em;">My Leads</span>
+                    <i class="fa-solid fa-chevron-right" style="color:rgba(255,255,255,.2);font-size:8px;"></i>
+                    <span style="font-size:9px;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:.1em;">Pipeline</span>
                     <div style="flex:1;"></div>
                     <input id="srch" type="text" placeholder="Search..." class="dark-input" style="width:130px;" oninput="renderTable()">
                     <select id="f-stage" class="dark-select" onchange="renderTable()">
                         <option value="">All Stages</option>
-                        <option>Inquiry</option><option>Qualified</option><option>Proposal</option><option>Negotiation</option><option>Closed</option>
+                        <option>Create Lead</option><option>Pending Documents</option><option>Document Verification</option><option>Lender Selection</option><option>Approved</option><option>Reject</option>
                     </select>
                     <a href="../lead_management/register_lead.html" style="background:#16a34a;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:8px;font-weight:800;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none;"><i class="fa-solid fa-plus"></i> New Lead</a>
                 </div>
+                <!-- Pipeline Snapshot Strip -->
+                <div style="display:flex;align-items:stretch;gap:0;border-bottom:1px solid #f1f5f9;flex-shrink:0;overflow:hidden;">
+                    <div onclick="filterByStage('Create Lead')" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px;cursor:pointer;border-right:1px solid #f1f5f9;background:#f8fafc;transition:background .15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
+                        <div id="pipe-create-lead" style="font-size:15px;font-weight:900;color:#475569;line-height:1;">0</div>
+                        <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;margin-top:2px;letter-spacing:.04em;white-space:nowrap;">Created</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:7px;color:#e2e8f0;align-self:center;flex-shrink:0;"></i>
+                    <div onclick="filterByStage('Pending Documents')" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px;cursor:pointer;border-right:1px solid #f1f5f9;background:#fffbeb;transition:background .15s;" onmouseover="this.style.background='#fef3c7'" onmouseout="this.style.background='#fffbeb'">
+                        <div id="pipe-pending-documents" style="font-size:15px;font-weight:900;color:#b45309;line-height:1;">0</div>
+                        <div style="font-size:7px;font-weight:800;color:#d97706;text-transform:uppercase;margin-top:2px;letter-spacing:.04em;white-space:nowrap;">Pending Docs</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:7px;color:#e2e8f0;align-self:center;flex-shrink:0;"></i>
+                    <div onclick="filterByStage('Document Verification')" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px;cursor:pointer;border-right:1px solid #f1f5f9;background:#eff6ff;transition:background .15s;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
+                        <div id="pipe-document-verification" style="font-size:15px;font-weight:900;color:#1d4ed8;line-height:1;">0</div>
+                        <div style="font-size:7px;font-weight:800;color:#3b82f6;text-transform:uppercase;margin-top:2px;letter-spacing:.04em;white-space:nowrap;">Doc Verify</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:7px;color:#e2e8f0;align-self:center;flex-shrink:0;"></i>
+                    <div onclick="filterByStage('Lender Selection')" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px;cursor:pointer;border-right:1px solid #f1f5f9;background:#f5f3ff;transition:background .15s;" onmouseover="this.style.background='#ede9fe'" onmouseout="this.style.background='#f5f3ff'">
+                        <div id="pipe-lender-selection" style="font-size:15px;font-weight:900;color:#7c3aed;line-height:1;">0</div>
+                        <div style="font-size:7px;font-weight:800;color:#8b5cf6;text-transform:uppercase;margin-top:2px;letter-spacing:.04em;white-space:nowrap;">Lender</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:7px;color:#e2e8f0;align-self:center;flex-shrink:0;"></i>
+                    <div onclick="filterByStage('Approved')" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px;cursor:pointer;border-right:1px solid #f1f5f9;background:#f0fdf4;transition:background .15s;" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
+                        <div id="pipe-approved" style="font-size:15px;font-weight:900;color:#15803d;line-height:1;">0</div>
+                        <div style="font-size:7px;font-weight:800;color:#22c55e;text-transform:uppercase;margin-top:2px;letter-spacing:.04em;white-space:nowrap;">Approved</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:7px;color:#e2e8f0;align-self:center;flex-shrink:0;"></i>
+                    <div onclick="filterByStage('Reject')" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px;cursor:pointer;background:#fff5f5;transition:background .15s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fff5f5'">
+                        <div id="pipe-reject" style="font-size:15px;font-weight:900;color:#b91c1c;line-height:1;">0</div>
+                        <div style="font-size:7px;font-weight:800;color:#ef4444;text-transform:uppercase;margin-top:2px;letter-spacing:.04em;white-space:nowrap;">Rejected</div>
+                    </div>
+                </div>
+                <!-- Lead Table -->
                 <div class="flex-1 overflow-y-auto custom-scrollbar" id="tbl-scroll">
                     <table class="data-table">
-                        <colgroup><col style="width:26%;"><col style="width:14%;"><col style="width:11%;"><col style="width:15%;"><col style="width:12%;"><col style="width:10%;"><col style="width:12%;"></colgroup>
-                        <thead><tr><th>Lead Name</th><th>Stage</th><th>Status</th><th>Loan Amount</th><th>Lender</th><th>Date</th><th>Actions</th></tr></thead>
+                        <colgroup><col style="width:22%;"><col style="width:20%;"><col style="width:22%;"><col style="width:12%;"><col style="width:24%;"></colgroup>
+                        <thead><tr><th>Lead Name</th><th>Business Name</th><th>Stage</th><th>Status</th><th>Loan Amount</th></tr></thead>
                         <tbody id="tbody"></tbody>
                     </table>
                 </div>
@@ -345,36 +381,107 @@
             </div>
 
             <!-- Upcoming Follow-ups -->
-            <div class="glass-card flex flex-col" style="height:280px;" data-id="followups">
-                <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between">
-                    <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Upcoming Follow-ups</h3>
-                    <a href="../task_and_followups/task_management.html" class="text-[8px] font-bold text-indigo-600 uppercase hover:underline">View All</a>
+            <div class="glass-card flex flex-col overflow-hidden" style="height:280px;" data-id="followups">
+                <!-- Header: List Mode -->
+                <div id="followupHeaderList" class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-100">
+                            <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+                        </div>
+                        <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Upcoming Follow-ups</h3>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleFollowupForm()" class="w-6 h-6 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all">
+                            <i class="fa-solid fa-plus text-[10px]"></i>
+                        </button>
+                        <a href="../task_and_followups/task_management.html" class="text-[8px] font-black text-indigo-600 uppercase hover:underline">View All</a>
+                    </div>
                 </div>
-                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3" id="tasks-list">
-                    <div class="p-3 bg-red-50/50 border border-red-100 rounded-xl group hover:bg-red-50 transition-all cursor-pointer">
+                <!-- Header: Detail Mode -->
+                <div id="followupHeaderDetail" class="hidden px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                    <div class="flex items-center gap-3">
+                        <button onclick="closeFollowupDetail()" class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition-all">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        </button>
+                        <h3 id="followupDetailTitle" class="text-[11px] font-black uppercase tracking-widest text-slate-900">Follow-up Details</h3>
+                    </div>
+                    <button id="followupEditBtn" onclick="openFollowupEditForm()" class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all">
+                        <i class="fa-solid fa-pen text-[10px]"></i>
+                    </button>
+                </div>
+                <!-- Quick Add Form -->
+                <div id="followupForm" class="hidden flex-1 flex flex-col p-3 bg-slate-50/50 overflow-y-auto custom-scrollbar">
+                    <div class="grid grid-cols-2 gap-x-2 gap-y-2 flex-1">
+                        <div class="col-span-2">
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Title / Subject</label>
+                            <input id="fTitle" type="text" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500" placeholder="e.g. Contract Signing">
+                        </div>
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Priority</label>
+                            <select id="fPriority" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                                <option value="Hot">Hot</option>
+                                <option value="Warm">Warm</option>
+                                <option value="Cool">Cool</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Date &amp; Time</label>
+                            <input id="fTime" type="datetime-local" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Linked Lead / ID</label>
+                            <select id="fLead" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                                <option value="">-- Select Lead --</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Remarks</label>
+                            <textarea id="fRemarks" rows="2" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500 resize-none" placeholder="Enter follow-up details..."></textarea>
+                        </div>
+                        <div class="col-span-2 flex gap-2 pt-1 mt-auto">
+                            <button onclick="addFollowup()" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all">Save Activity</button>
+                            <button onclick="toggleFollowupForm()" class="px-4 bg-slate-200 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase transition-all">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- List -->
+                <div id="followupList" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
+                    <div class="followup-item p-3 bg-red-50/50 border border-red-100 rounded-xl group hover:bg-red-50 transition-all cursor-pointer"
+                        data-priority="Hot" data-time="Today, 14:30" data-title="James Smith - Mortgage Docs"
+                        data-desc="Follow up on pending payslip submission. Client requires certified copies sent today."
+                        data-client="James Smith" data-id="#AF-001" onclick="openFollowupDetail(this)">
                         <div class="flex items-center justify-between mb-1">
-                            <span class="text-[8px] font-black text-red-600 uppercase">Priority: High</span>
+                            <span class="text-[8px] font-black text-red-600 uppercase">Priority: Hot</span>
                             <span class="text-[8px] font-bold text-slate-400">Today, 14:30</span>
                         </div>
                         <h4 class="text-[10px] font-black text-slate-900">James Smith - Mortgage Docs</h4>
                         <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Follow up on pending payslip submission.</p>
                     </div>
-                    <div class="p-3 bg-amber-50/50 border border-amber-100 rounded-xl group hover:bg-amber-50 transition-all cursor-pointer">
+                    <div class="followup-item p-3 bg-amber-50/50 border border-amber-100 rounded-xl group hover:bg-amber-50 transition-all cursor-pointer"
+                        data-priority="Warm" data-time="Tmr, 09:00" data-title="Oliver Jones - Proposal Review"
+                        data-desc="Discuss the new valuation report with the client. Check if they agree with the commercial premises appraisal."
+                        data-client="Oliver Jones" data-id="#AF-022" onclick="openFollowupDetail(this)">
                         <div class="flex items-center justify-between mb-1">
-                            <span class="text-[8px] font-black text-amber-600 uppercase">Priority: Medium</span>
+                            <span class="text-[8px] font-black text-amber-600 uppercase">Priority: Warm</span>
                             <span class="text-[8px] font-bold text-slate-400">Tmr, 09:00</span>
                         </div>
                         <h4 class="text-[10px] font-black text-slate-900">Oliver Jones - Proposal Review</h4>
                         <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Discuss the new valuation report with the client.</p>
                     </div>
-                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 group hover:bg-slate-100 transition-all cursor-pointer">
+                    <div class="followup-item p-3 bg-slate-50 rounded-xl border border-slate-100 group hover:bg-slate-100 transition-all cursor-pointer"
+                        data-priority="Cool" data-time="21 Apr, 11:30" data-title="Noah Williams - KYC Pending"
+                        data-desc="Routine check-in call to ensure client is happy with the current application progress."
+                        data-client="Noah Williams" data-id="#AF-018" onclick="openFollowupDetail(this)">
                         <div class="flex items-center justify-between mb-1">
-                            <span class="text-[8px] font-black text-slate-500 uppercase">Priority: Low</span>
+                            <span class="text-[8px] font-black text-slate-500 uppercase">Priority: Cool</span>
                             <span class="text-[8px] font-bold text-slate-400">21 Apr, 11:30</span>
                         </div>
                         <h4 class="text-[10px] font-black text-slate-900">Noah Williams - KYC Pending</h4>
+                        <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Routine check-in call.</p>
                     </div>
                 </div>
+                <!-- Detail View -->
+                <div id="followupDetail" class="hidden flex-1 flex flex-col"></div>
             </div>
 
             <!-- My Notes -->
@@ -390,61 +497,6 @@
                 </div>
             </div>
 
-            <!-- Pipeline Snapshot Card -->
-            <div class="glass-card flex flex-col" style="height:280px;" data-id="pipeline-snapshot">
-                <div class="px-5 py-3 border-b border-slate-50 flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-white shadow-lg shadow-teal-100">
-                        <i class="fa-solid fa-diagram-project text-xs"></i>
-                    </div>
-                    <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Pipeline Snapshot</h3>
-                </div>
-                <div class="flex-1 p-4 flex flex-col">
-                    <!-- Pipeline Flow -->
-                    <div class="flex items-center justify-between gap-1 mb-6">
-                        <div onclick="filterByStage('Inquiry')" class="flex-1 bg-slate-50 border border-slate-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
-                            <div id="pipe-inquiry" class="text-xl font-black text-slate-700 leading-none group-hover:text-indigo-600">0</div>
-                            <div class="text-[7px] font-black text-slate-400 uppercase mt-2 tracking-tighter group-hover:text-slate-600">Inquiry</div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-[7px] text-slate-200"></i>
-                        <div onclick="filterByStage('Qualified')" class="flex-1 bg-blue-50/50 border border-blue-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
-                            <div id="pipe-qualified" class="text-xl font-black text-blue-600 leading-none">0</div>
-                            <div class="text-[7px] font-black text-blue-400 uppercase mt-2 tracking-tighter group-hover:text-blue-600">Qualified</div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-[7px] text-slate-200"></i>
-                        <div onclick="filterByStage('Proposal')" class="flex-1 bg-amber-50/50 border border-amber-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
-                            <div id="pipe-proposal" class="text-xl font-black text-amber-600 leading-none">0</div>
-                            <div class="text-[7px] font-black text-amber-400 uppercase mt-2 tracking-tighter group-hover:text-amber-600">Proposal</div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-[7px] text-slate-200"></i>
-                        <div onclick="filterByStage('Negotiation')" class="flex-1 bg-purple-50/50 border border-purple-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
-                            <div id="pipe-negotiation" class="text-xl font-black text-purple-600 leading-none">0</div>
-                            <div class="text-[7px] font-black text-purple-400 uppercase mt-2 tracking-tighter group-hover:text-purple-600">Negotiation</div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-[7px] text-slate-200"></i>
-                        <div onclick="filterByStage('Closed')" class="flex-1 bg-emerald-50/50 border border-emerald-100 rounded-xl py-3 px-1 text-center transition-all hover:bg-white hover:shadow-md cursor-pointer group">
-                            <div id="pipe-closed" class="text-xl font-black text-emerald-600 leading-none">0</div>
-                            <div class="text-[7px] font-black text-emerald-400 uppercase mt-2 tracking-tighter group-hover:text-emerald-600">Closed</div>
-                        </div>
-                    </div>
-
-                    <!-- My Performance -->
-                    <div class="space-y-2.5 mt-auto">
-                        <div class="text-[8px] font-black text-slate-300 uppercase tracking-widest mb-2">Personal Growth Tracks</div>
-                        
-                        <div class="space-y-4">
-                            <div class="flex flex-col gap-1.5">
-                                <div class="flex justify-between items-center text-[9px] font-black uppercase">
-                                    <span class="text-slate-500">Lead Conversion</span>
-                                    <span id="p-conv-val" class="text-indigo-600">0%</span>
-                                </div>
-                                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                                    <div id="p-conv-bar" class="h-full bg-indigo-500 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.4)]" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Lender Promotions -->
             <div class="glass-card flex flex-col" style="height:280px;" data-id="promotions">
@@ -489,6 +541,36 @@
                             <button onclick="openPromoDoc(3)" class="text-[8px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-file-contract"></i> View Doc</button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Document Requests -->
+            <div class="glass-card flex flex-col card-wide" style="height:280px;" data-id="doc-requests">
+                <!-- Header -->
+                <div style="background:#0f172a;border-radius:20px 20px 0 0;padding:0 16px;display:flex;align-items:center;gap:10px;min-height:46px;flex-shrink:0;">
+                    <i class="fa-solid fa-folder-open" style="color:rgba(255,255,255,.4);font-size:13px;"></i>
+                    <span style="font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.12em;">Document Requests</span>
+                    <i class="fa-solid fa-chevron-right" style="color:rgba(255,255,255,.2);font-size:8px;"></i>
+                    <span style="font-size:9px;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:.1em;">Pending &amp; Rejected</span>
+                    <div style="flex:1;"></div>
+                    <!-- Tab Buttons -->
+                    <button id="doc-tab-pending" onclick="switchDocTab('pending')" style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;background:#f59e0b;color:#fff;border:none;border-radius:7px;padding:5px 12px;cursor:pointer;transition:all .15s;">Pending <span id="doc-cnt-pending" style="background:rgba(0,0,0,.18);border-radius:99px;padding:1px 5px;margin-left:3px;">0</span></button>
+                    <button id="doc-tab-rejected" onclick="switchDocTab('rejected')" style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;background:rgba(255,255,255,.07);color:#cbd5e1;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:5px 12px;cursor:pointer;transition:all .15s;">Rejected <span id="doc-cnt-rejected" style="background:rgba(0,0,0,.18);border-radius:99px;padding:1px 5px;margin-left:3px;">0</span></button>
+                </div>
+                <!-- Column Headers -->
+                <div style="display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr 110px;gap:0;padding:7px 14px;background:#f8fafc;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
+                    <span style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;">Lead / Document</span>
+                    <span style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;">Business Name</span>
+                    <span style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;">Lead Status</span>
+                    <span style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;">Doc Status</span>
+                    <span style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;">Action</span>
+                </div>
+                <!-- List Body -->
+                <div class="flex-1 overflow-y-auto custom-scrollbar" id="doc-list-body"></div>
+                <!-- Footer -->
+                <div style="padding:8px 14px;border-top:1px solid #f1f5f9;background:#f8fafc;border-radius:0 0 20px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+                    <span id="doc-footer-txt" style="font-size:8px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;"></span>
+                    <a href="../loan_pipeline/loan_pipeline.html" style="font-size:8px;font-weight:800;color:#6366f1;text-decoration:none;text-transform:uppercase;letter-spacing:.06em;">View All Leads →</a>
                 </div>
             </div>
 
@@ -604,7 +686,7 @@ document.getElementById('u-name').textContent = SESSION?.name||'Tele Agent';
 document.getElementById('u-avatar').textContent = SESSION?.avatar||'TA';
 if(SESSION?.avatarBg) document.getElementById('u-avatar').style.background = SESSION.avatarBg;
 
-const STAGES=['Inquiry','Qualified','Proposal','Negotiation','Closed'];
+const STAGES=['Create Lead','Pending Documents','Document Verification','Lender Selection','Approved','Reject'];
 const LENDERS=['Westpac','ANZ','NAB','CBA','Macquarie'];
 function rnd(a){ return a[Math.floor(Math.random()*a.length)]; }
 function rndInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
@@ -612,6 +694,7 @@ function rndDate(){ const d=new Date(2026,0,1); d.setDate(d.getDate()+rndInt(0,1
 
 let MY_LEADS = Array.from({length:42},(_,i)=>({
     id:i+1, name:[['James','Oliver','Henry','Liam','Noah','William','Ethan','Lucas'],['Smith','Johnson','Williams','Brown','Jones','Davis','Miller','Wilson']].map(a=>rnd(a)).join(' '),
+    business:rnd(['Alpha Tech Ltd','Bright Build Co','Summit Retail','Nova Finance','Peak Homes','Crest Advisory','Blue Sky Trading','Apex Ventures']),
     stage:rnd(STAGES), status:rnd(['Hot','Warm','Cool']), loanAmt:rndInt(50,800)*1000, lender:rnd(LENDERS), date:rndDate(),
 }));
 
@@ -626,23 +709,19 @@ const elChipTotal = document.getElementById('chip-total');
 if (elChipTotal) elChipTotal.textContent = MY_LEADS.length;
 
 function updatePipelineSnapshot(data = MY_LEADS) {
-    const counts = { Inquiry: 0, Qualified: 0, Proposal: 0, Negotiation: 0, Closed: 0 };
+    const counts = {'Create Lead':0,'Pending Documents':0,'Document Verification':0,'Lender Selection':0,'Approved':0,'Reject':0};
     data.forEach(l => { if (counts[l.stage] !== undefined) counts[l.stage]++; });
-    
-    for (const [stage, count] of Object.entries(counts)) {
-        const el = document.getElementById('pipe-' + stage.toLowerCase());
-        if (el) el.textContent = count;
-    }
-
-    const closed = counts.Closed;
+    STAGES.forEach(s => {
+        const el = document.getElementById('pipe-' + s.toLowerCase().replace(/ /g,'-'));
+        if (el) el.textContent = counts[s];
+    });
+    const approved = counts['Approved'];
     const total = data.length;
-    const convRate = total > 0 ? Math.round((closed / total) * 100 * 3.5) : 0; 
-    const cappedRate = Math.min(100, convRate);
-    
+    const convRate = total > 0 ? Math.round((approved / total) * 100) : 0;
     const valEl = document.getElementById('p-conv-val');
     const barEl = document.getElementById('p-conv-bar');
-    if (valEl) valEl.textContent = cappedRate + '%';
-    if (barEl) barEl.style.width = cappedRate + '%';
+    if (valEl) valEl.textContent = convRate + '%';
+    if (barEl) barEl.style.width = convRate + '%';
 }
 updatePipelineSnapshot();
 
@@ -658,7 +737,7 @@ const TASKS=[
 const elTasks = document.getElementById('s-tasks');
 if (elTasks) elTasks.textContent = TASKS.filter(t=>t.due==='Today'&&!t.done).length;
 
-function stageStyle(s){ const m={Inquiry:'background:#f1f5f9;color:#475569',Qualified:'background:#dbeafe;color:#1d4ed8',Proposal:'background:#fef3c7;color:#b45309',Negotiation:'background:#f5f3ff;color:#7c3aed',Closed:'background:#dcfce7;color:#15803d'}; return m[s]||''; }
+function stageStyle(s){ const m={'Create Lead':'background:#f1f5f9;color:#475569','Pending Documents':'background:#fef3c7;color:#b45309','Document Verification':'background:#dbeafe;color:#1d4ed8','Lender Selection':'background:#f5f3ff;color:#7c3aed','Approved':'background:#dcfce7;color:#15803d','Reject':'background:#fee2e2;color:#b91c1c'}; return m[s]||''; }
 function statusBadge(s){ const m={Hot:'background:#fee2e2;color:#b91c1c',Warm:'background:#fef3c7;color:#b45309',Cool:'background:#dbeafe;color:#1d4ed8'}; return '<span class="badge" style="'+m[s]+'">'+s+'</span>'; }
 function fmtAmt(n){ return '£'+n.toLocaleString(); }
 function fmtDate(d){ return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}); }
@@ -675,20 +754,15 @@ function renderTable(){
     if(page>totalPages) page=1;
     const rows=filtered.slice((page-1)*PAGE,page*PAGE);
     if (total === 0) {
-        document.getElementById('tbody').innerHTML = `<tr><td colspan="7" class="py-20 text-center text-[11px] font-bold text-gray-400">No leads found matching your criteria</td></tr>`;
+        document.getElementById('tbody').innerHTML = `<tr><td colspan="5" class="py-20 text-center text-[11px] font-bold text-gray-400">No leads found matching your criteria</td></tr>`;
     } else {
         document.getElementById('tbody').innerHTML=rows.map(l=>`
             <tr onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3,'0')}'">
-                <td><div style="font-size:10px;font-weight:700;color:#0f172a;">${l.name}</div><div style="font-size:8px;color:#94a3b8;">${l.lender}</div></td>
+                <td><div style="font-size:10px;font-weight:700;color:#0f172a;">${l.name}</div></td>
+                <td style="font-size:9px;color:#64748b;font-weight:600;">${l.business}</td>
                 <td><span class="stage-chip" style="${stageStyle(l.stage)}">${l.stage}</span></td>
                 <td>${statusBadge(l.status)}</td>
                 <td style="font-weight:700;">${fmtAmt(l.loanAmt)}</td>
-                <td style="font-size:9px;color:#64748b;">${l.lender}</td>
-                <td style="font-size:9px;color:#94a3b8;">${fmtDate(l.date)}</td>
-                <td><div style="display:flex;gap:4px;">
-                    <button onclick="event.stopPropagation();window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3,'0')}'" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-eye" style="font-size:9px;"></i></button>
-                    <button onclick="event.stopPropagation();" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-message" style="font-size:9px;"></i></button>
-                </div></td>
             </tr>`).join('');
     }
     document.getElementById('count-txt').textContent=`${(page-1)*PAGE+1}–${Math.min(page*PAGE,total)} of ${total}`;
@@ -702,6 +776,88 @@ function renderTable(){
     updatePipelineSnapshot(MY_LEADS);
 }
 function goPage(p){ page=p; renderTable(); document.getElementById('tbl-scroll').scrollTop=0; }
+
+/* ── Document Requests Card ── */
+const DOC_TYPES = ['Payslips','Bank Statements','ID Proof','Utility Bill','Tax Returns','Business Accounts','Valuation Report','Insurance Docs'];
+const DOC_LEADS = MY_LEADS.filter(l => l.stage === 'Pending Documents' || l.stage === 'Reject');
+const DOCS = DOC_LEADS.flatMap((l, li) =>
+    Array.from({length: Math.floor(Math.random()*2)+1}, (_, di) => ({
+        id: li*10 + di,
+        leadId: l.id,
+        leadName: l.name,
+        businessName: l.business,
+        leadStatus: l.status,
+        docType: DOC_TYPES[Math.floor(Math.random()*DOC_TYPES.length)],
+        status: l.stage === 'Reject' ? 'Rejected' : 'Pending',
+        requestedDate: l.date,
+        reason: l.stage === 'Reject' ? ['Blurry scan','Expired document','Wrong format','Incomplete'][Math.floor(Math.random()*4)] : null,
+    }))
+);
+
+let activeDocTab = 'pending';
+
+function switchDocTab(tab) {
+    activeDocTab = tab;
+    const pendBtn = document.getElementById('doc-tab-pending');
+    const rejBtn  = document.getElementById('doc-tab-rejected');
+    if (tab === 'pending') {
+        pendBtn.style.background = '#f59e0b'; pendBtn.style.color = '#fff'; pendBtn.style.border = 'none';
+        rejBtn.style.background  = 'rgba(255,255,255,.07)'; rejBtn.style.color = '#cbd5e1'; rejBtn.style.border = '1px solid rgba(255,255,255,.1)';
+    } else {
+        rejBtn.style.background  = '#ef4444'; rejBtn.style.color = '#fff'; rejBtn.style.border = 'none';
+        pendBtn.style.background = 'rgba(255,255,255,.07)'; pendBtn.style.color = '#cbd5e1'; pendBtn.style.border = '1px solid rgba(255,255,255,.1)';
+    }
+    renderDocList();
+}
+
+function renderDocList() {
+    const pending = DOCS.filter(d => d.status === 'Pending');
+    const rejected = DOCS.filter(d => d.status === 'Rejected');
+    document.getElementById('doc-cnt-pending').textContent = pending.length;
+    document.getElementById('doc-cnt-rejected').textContent = rejected.length;
+    const list = activeDocTab === 'pending' ? pending : rejected;
+    const body = document.getElementById('doc-list-body');
+    if (!body) return;
+    if (list.length === 0) {
+        body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:11px;font-weight:700;color:#cbd5e1;">No ${activeDocTab} documents</div>`;
+        document.getElementById('doc-footer-txt').textContent = '0 items';
+        return;
+    }
+    body.innerHTML = list.map(d => {
+        const isPending = d.status === 'Pending';
+        const statusStyle = isPending
+            ? 'background:#fef3c7;color:#b45309'
+            : 'background:#fee2e2;color:#b91c1c';
+        const actionBtn = `<button onclick="event.stopPropagation();uploadDoc(${d.id})" style="display:flex;align-items:center;gap:5px;font-size:8px;font-weight:800;text-transform:uppercase;border:none;border-radius:7px;padding:5px 10px;cursor:pointer;background:${isPending?'#f1f5f9':'#fee2e2'};color:${isPending?'#475569':'#b91c1c'};transition:all .15s;" onmouseover="this.style.background='${isPending?'#e2e8f0':'#fecaca'}'" onmouseout="this.style.background='${isPending?'#f1f5f9':'#fee2e2'}'">${isPending?'<i class="fa-solid fa-upload" style="font-size:9px;"></i> Upload':'<i class="fa-solid fa-rotate" style="font-size:9px;"></i> Re-upload'}</button>`;
+        const lsMap = {Hot:'background:#fee2e2;color:#b91c1c', Warm:'background:#fef3c7;color:#b45309', Cool:'background:#dbeafe;color:#1d4ed8'};
+        return `<div style="display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr 110px;gap:0;padding:10px 14px;border-bottom:1px solid #f8fafc;align-items:center;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''" onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(d.leadId).padStart(3,'0')}'">
+            <div>
+                <div style="font-size:10px;font-weight:700;color:#0f172a;">${d.leadName}</div>
+                <div style="font-size:8px;font-weight:600;color:#94a3b8;margin-top:1px;">${d.docType}${d.reason ? ' · <span style="color:#ef4444;">'+d.reason+'</span>' : ''}</div>
+            </div>
+            <div style="font-size:9px;font-weight:600;color:#475569;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${d.businessName||'—'}</div>
+            <div><span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:5px;text-transform:uppercase;${lsMap[d.leadStatus]||''}">${d.leadStatus||'—'}</span></div>
+            <div><span style="font-size:8px;font-weight:800;padding:2px 8px;border-radius:5px;text-transform:uppercase;${statusStyle}">${d.status}</span></div>
+            <div>${actionBtn}</div>
+        </div>`;
+    }).join('');
+    document.getElementById('doc-footer-txt').textContent = `${list.length} item${list.length!==1?'s':''}`;
+}
+
+function uploadDoc(docId) {
+    const doc = DOCS.find(d => d.id === docId);
+    if (!doc) return;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,.jpg,.jpeg,.png,.doc,.docx';
+    input.onchange = () => {
+        if (input.files && input.files[0]) {
+            doc.status = 'Uploaded';
+            renderDocList();
+        }
+    };
+    input.click();
+}
 
 function renderTasks(){
     const prioColor={high:'#b91c1c',medium:'#b45309',low:'#64748b'};
@@ -719,6 +875,213 @@ function renderTasks(){
         </div>`).join('');
 }
 function toggleTask(id){ const t=TASKS.find(x=>x.id===id); if(t){ t.done=!t.done; renderTasks(); } }
+
+/* ── Follow-ups (matches admin dashboard) ── */
+let _currentFollowupCard = null;
+
+function formatDateHuman(val) {
+    if (!val) return 'Today, 00:00';
+    const d = new Date(val);
+    const now = new Date();
+    const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (d.toDateString() === now.toDateString()) return `Today, ${time}`;
+    const tmr = new Date(now); tmr.setDate(now.getDate() + 1);
+    if (d.toDateString() === tmr.toDateString()) return `Tmr, ${time}`;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + `, ${time}`;
+}
+
+function initFollowupLeads(selectId, selectedId = null) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    select.innerHTML = '<option value="">-- Select Lead --</option>';
+    MY_LEADS.forEach(l => {
+        const opt = document.createElement('option');
+        const leadIdStr = `#AF-${l.id.toString().padStart(3, '0')}`;
+        opt.value = `${l.name}|${leadIdStr}`;
+        opt.textContent = `${l.name} (${leadIdStr})`;
+        if (selectedId && leadIdStr === selectedId) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
+function toggleFollowupForm() {
+    const form = document.getElementById('followupForm');
+    const list = document.getElementById('followupList');
+    const willShow = form.classList.contains('hidden');
+    if (willShow) {
+        closeFollowupDetail();
+        list.classList.add('hidden');
+        form.classList.remove('hidden');
+        initFollowupLeads('fLead');
+    } else {
+        form.classList.add('hidden');
+        list.classList.remove('hidden');
+    }
+}
+
+function addFollowup() {
+    const title = document.getElementById('fTitle').value.trim();
+    const priority = document.getElementById('fPriority').value;
+    const timeRaw = document.getElementById('fTime').value;
+    const leadVal = document.getElementById('fLead').value;
+    const desc = document.getElementById('fRemarks').value.trim();
+    if (!title || !timeRaw || !leadVal) { alert('Please fill in all required fields.'); return; }
+    const time = formatDateHuman(timeRaw);
+    const [client, id] = leadVal.split('|');
+    const prioColor = priority === 'Hot' ? 'text-red-600' : priority === 'Warm' ? 'text-amber-600' : 'text-slate-600';
+    const prioBg = priority === 'Hot' ? 'bg-red-50/50 border-red-100' : priority === 'Warm' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-100';
+    const div = document.createElement('div');
+    div.className = `followup-item p-3 ${prioBg} border rounded-xl group hover:opacity-90 transition-all cursor-pointer`;
+    div.dataset.priority = priority; div.dataset.time = time; div.dataset.rawTime = timeRaw;
+    div.dataset.title = title; div.dataset.desc = desc || 'No additional remarks.';
+    div.dataset.client = client; div.dataset.id = id;
+    div.onclick = () => openFollowupDetail(div);
+    div.innerHTML = `
+        <div class="flex items-center justify-between mb-1">
+            <span class="text-[8px] font-black ${prioColor} uppercase">Priority: ${priority}</span>
+            <span class="text-[8px] font-bold text-slate-400">${time}</span>
+        </div>
+        <h4 class="text-[10px] font-black text-slate-900">${title}</h4>
+        <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">${desc || 'No additional remarks.'}</p>`;
+    document.getElementById('followupList').prepend(div);
+    ['fTitle', 'fTime', 'fRemarks'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('fLead').selectedIndex = 0;
+    toggleFollowupForm();
+}
+
+function openFollowupDetail(card) {
+    _currentFollowupCard = card;
+    const { title, priority, time, desc, client, id } = card.dataset;
+    document.getElementById('followupHeaderList').classList.add('hidden');
+    document.getElementById('followupHeaderDetail').classList.remove('hidden');
+    document.getElementById('followupList').classList.add('hidden');
+    document.getElementById('followupForm').classList.add('hidden');
+    document.getElementById('followupEditBtn').classList.remove('hidden');
+    renderFollowupDetailView(title, priority, time, desc, client, id);
+    document.getElementById('followupDetail').classList.remove('hidden');
+}
+
+function closeFollowupDetail() {
+    _currentFollowupCard = null;
+    document.getElementById('followupHeaderDetail').classList.add('hidden');
+    document.getElementById('followupHeaderList').classList.remove('hidden');
+    document.getElementById('followupDetail').classList.add('hidden');
+    if (document.getElementById('followupForm').classList.contains('hidden')) {
+        document.getElementById('followupList').classList.remove('hidden');
+    }
+}
+
+function renderFollowupDetailView(title, priority, time, desc, client, id) {
+    const prioColor = priority === 'Hot' ? 'text-red-600 bg-red-50' : priority === 'Warm' ? 'text-amber-600 bg-amber-50' : 'text-slate-600 bg-slate-50';
+    document.getElementById('followupDetail').innerHTML = `
+        <div class="p-4 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-[7px] font-black ${prioColor} uppercase tracking-widest px-2 py-0.5 rounded-full">Priority: ${priority}</span>
+                <span class="text-[7px] font-bold text-slate-400 uppercase">${time}</span>
+            </div>
+            <h2 class="text-[11px] font-black text-slate-900 leading-tight mb-3">${title}</h2>
+            <div class="space-y-2 flex-1">
+                <div class="flex items-center gap-3 p-2.5 bg-slate-50/50 border border-slate-100 rounded-xl">
+                    <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm">
+                        <i class="fa-solid fa-user text-[10px]"></i>
+                    </div>
+                    <div>
+                        <p class="text-[6px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Associated Lead</p>
+                        <p class="text-[9px] font-black text-slate-900 leading-none">${client} <span class="text-indigo-600 ml-1">${id}</span></p>
+                    </div>
+                    <button onclick="window.location.href='../loan_pipeline/lead_detail.html?id=${id.replace('#','')}'"
+                        class="ml-auto w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-700 transition-all">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                    </button>
+                </div>
+                <div class="p-3 bg-white border border-slate-100 rounded-xl">
+                    <p class="text-[6px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-align-left text-indigo-400"></i> Narrative &amp; Remarks
+                    </p>
+                    <p class="text-[9px] font-bold text-slate-600 leading-relaxed">${desc}</p>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-50 flex gap-2">
+                <button onclick="closeFollowupDetail()" class="flex-1 bg-slate-900 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-black transition-all">Complete Task</button>
+                <button class="px-3 bg-slate-100 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase hover:bg-slate-200 transition-all">Reschedule</button>
+            </div>
+        </div>`;
+}
+
+function openFollowupEditForm() {
+    const { title, priority, time, rawTime, desc, id } = _currentFollowupCard.dataset;
+    document.getElementById('followupDetailTitle').textContent = 'Edit Follow-up';
+    document.getElementById('followupEditBtn').classList.add('hidden');
+    document.getElementById('followupDetail').innerHTML = `
+        <div class="p-4 flex flex-col h-full">
+            <div class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1">
+                <div>
+                    <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Activity Title</label>
+                    <input id="editFTitle" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-[10px] font-bold outline-none focus:border-indigo-500" value="${title}">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Priority</label>
+                        <select id="editFPriority" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500">
+                            <option value="Hot" ${priority==='Hot'?'selected':''}>Hot</option>
+                            <option value="Warm" ${priority==='Warm'?'selected':''}>Warm</option>
+                            <option value="Cool" ${priority==='Cool'?'selected':''}>Cool</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Date &amp; Time</label>
+                        <input id="editFTime" type="datetime-local" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500" value="${rawTime||''}">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Linked Lead</label>
+                    <select id="editFLead" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500"></select>
+                </div>
+                <div>
+                    <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Narrative / Remarks</label>
+                    <textarea id="editFDesc" rows="3" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-[10px] font-medium outline-none focus:border-indigo-500 resize-none">${desc}</textarea>
+                </div>
+            </div>
+            <div class="flex gap-2 mt-4 pt-4 border-t border-slate-50">
+                <button onclick="saveFollowupEdit()" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all">Update Follow-up</button>
+                <button onclick="cancelFollowupEdit()" class="px-4 bg-slate-100 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase hover:bg-slate-200 transition-all">Cancel</button>
+            </div>
+        </div>`;
+    initFollowupLeads('editFLead', id);
+}
+
+function saveFollowupEdit() {
+    const newTitle = document.getElementById('editFTitle').value.trim();
+    const newPriority = document.getElementById('editFPriority').value;
+    const newTimeRaw = document.getElementById('editFTime').value;
+    const newLeadVal = document.getElementById('editFLead').value;
+    const newDesc = document.getElementById('editFDesc').value.trim();
+    if (!newTitle || !newTimeRaw || !newLeadVal) { alert('All fields are required'); return; }
+    const newTime = formatDateHuman(newTimeRaw);
+    const [newClient, newId] = newLeadVal.split('|');
+    const card = _currentFollowupCard;
+    card.dataset.title = newTitle; card.dataset.priority = newPriority;
+    card.dataset.time = newTime; card.dataset.rawTime = newTimeRaw;
+    card.dataset.desc = newDesc; card.dataset.client = newClient; card.dataset.id = newId;
+    const prioColor = newPriority === 'Hot' ? 'text-red-600' : newPriority === 'Warm' ? 'text-amber-600' : 'text-slate-600';
+    const prioBg = newPriority === 'Hot' ? 'bg-red-50/50 border-red-100' : newPriority === 'Warm' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-100';
+    card.className = `followup-item p-3 ${prioBg} border rounded-xl group hover:opacity-90 transition-all cursor-pointer`;
+    card.querySelector('span[class*="uppercase"]').className = `text-[8px] font-black ${prioColor} uppercase`;
+    card.querySelector('span[class*="uppercase"]').textContent = 'Priority: ' + newPriority;
+    card.querySelector('span[class*="text-slate-400"]').textContent = newTime;
+    card.querySelector('h4').textContent = newTitle;
+    card.querySelector('p').textContent = newDesc || 'No additional remarks.';
+    document.getElementById('followupDetailTitle').textContent = 'Follow-up Details';
+    document.getElementById('followupEditBtn').classList.remove('hidden');
+    renderFollowupDetailView(newTitle, newPriority, newTime, newDesc, newClient, newId);
+}
+
+function cancelFollowupEdit() {
+    const { title, priority, time, desc, client, id } = _currentFollowupCard.dataset;
+    document.getElementById('followupDetailTitle').textContent = 'Follow-up Details';
+    document.getElementById('followupEditBtn').classList.remove('hidden');
+    renderFollowupDetailView(title, priority, time, desc, client, id);
+}
 
 let NOTES = JSON.parse(localStorage.getItem('ta_notes')||'[]');
 let noteId = Math.max(0,...NOTES.map(n=>n.id||0))+1;
@@ -852,7 +1215,7 @@ function toggleCardSize(btn) {
 }
 
 window.addEventListener('load', () => { loadDashboardLayout(); injectResizeButtons(); updateCalculator(); });
-renderTable(); renderNotes(); renderNotifs(); renderTasks();
+renderTable(); renderNotes(); renderNotifs(); renderTasks(); renderDocList();
 
 // AI Core Assistant Functions
 function toggleAIWidget() {
