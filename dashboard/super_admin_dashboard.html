@@ -808,41 +808,118 @@
         <div class="flex-1 overflow-y-auto custom-scrollbar">
             <div class="module-grid" id="mainModuleGrid">
                 <!-- Upcoming Follow-ups -->
-                <div class="glass-card flex flex-col h-[280px]" data-id="follow-ups">
-                    <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between">
-                        <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Upcoming Follow-ups
-                        </h3>
-                        <span class="text-[8px] font-bold text-indigo-600 uppercase">View All</span>
+                <div class="glass-card flex flex-col h-[280px] overflow-hidden" data-id="follow-ups">
+                    <!-- Header: List Mode -->
+                    <div id="followupHeaderList" class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-100">
+                                <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+                            </div>
+                        <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Upcoming Follow-ups</h3>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleFollowupForm()"
+                                class="w-6 h-6 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all">
+                                <i class="fa-solid fa-plus text-[10px]"></i>
+                            </button>
+                            <span class="text-[8px] font-black text-indigo-600 uppercase cursor-pointer hover:underline">View All</span>
+                        </div>
                     </div>
-                    <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
-                        <div
-                            class="p-3 bg-red-50/50 border border-red-100 rounded-xl group hover:bg-red-50 transition-all cursor-pointer">
+
+                    <!-- Header: Detail Mode -->
+                    <div id="followupHeaderDetail" class="hidden px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                        <div class="flex items-center gap-3">
+                            <button onclick="closeFollowupDetail()"
+                                class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition-all">
+                                <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            </button>
+                            <h3 id="followupDetailTitle" class="text-[11px] font-black uppercase tracking-widest text-slate-900">Follow-up Details</h3>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button id="followupEditBtn" onclick="openFollowupEditForm()"
+                                class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all">
+                                <i class="fa-solid fa-pen text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Add Follow-up Form -->
+                    <div id="followupForm" class="hidden flex-1 flex flex-col p-3 bg-slate-50/50 animate-in slide-in-from-top duration-200 overflow-y-auto">
+                        <div class="grid grid-cols-2 gap-x-2 gap-y-2 flex-1">
+                            <div class="col-span-2">
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Title / Subject</label>
+                                <input id="fTitle" type="text" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500" placeholder="e.g. Contract Signing">
+                            </div>
+                            <div>
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Priority</label>
+                                <select id="fPriority" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                                    <option value="Hot">Hot</option>
+                                    <option value="Warm">Warm</option>
+                                    <option value="Cool">Cool</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Date & Time</label>
+                                <input id="fTime" type="datetime-local" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Linked Lead / ID</label>
+                                <select id="fLead" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                                    <option value="">-- Select Lead --</option>
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Remarks</label>
+                                <textarea id="fRemarks" rows="2" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500 resize-none" placeholder="Enter follow-up details..."></textarea>
+                            </div>
+                            <div class="col-span-2 flex gap-2 pt-1 mt-auto">
+                                <button onclick="addFollowup()" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all">Save Activity</button>
+                                <button onclick="toggleFollowupForm()" class="px-4 bg-slate-200 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase transition-all">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="followupList" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
+                        <div class="followup-item p-3 bg-red-50/50 border border-red-100 rounded-xl group hover:bg-red-50 transition-all cursor-pointer"
+                            data-priority="Hot" data-time="Today, 14:30" data-title="Johnathan Doe - Contract Signature"
+                            data-desc="Follow up on the pending expansion loan documentation. Client requires physical copies sent via courier."
+                            data-client="Johnathan Doe" data-id="#AF-045" onclick="openFollowupDetail(this)">
                             <div class="flex items-center justify-between mb-1">
-                                <span class="text-[8px] font-black text-red-600 uppercase">Priority: High</span>
+                                <span class="text-[8px] font-black text-red-600 uppercase">Priority: Hot</span>
                                 <span class="text-[8px] font-bold text-slate-400">Today, 14:30</span>
                             </div>
                             <h4 class="text-[10px] font-black text-slate-900">Johnathan Doe - Contract Signature</h4>
-                            <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Follow up on the pending expansion
-                                loan documentation.</p>
+                            <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Follow up on the pending expansion loan documentation.</p>
                         </div>
-                        <div
-                            class="p-3 bg-amber-50/50 border border-amber-100 rounded-xl group hover:bg-amber-50 transition-all cursor-pointer">
+
+                        <div class="followup-item p-3 bg-amber-50/50 border border-amber-100 rounded-xl group hover:bg-amber-50 transition-all cursor-pointer"
+                            data-priority="Warm" data-time="Tmr, 09:00" data-title="ABC Corp - Valuation Review"
+                            data-desc="Discuss the new asset valuation report with the client. Check if they agree with the commercial premises appraisal."
+                            data-client="ABC Corp" data-id="#AF-022" onclick="openFollowupDetail(this)">
                             <div class="flex items-center justify-between mb-1">
-                                <span class="text-[8px] font-black text-amber-600 uppercase">Priority: Medium</span>
+                                <span class="text-[8px] font-black text-amber-600 uppercase">Priority: Warm</span>
                                 <span class="text-[8px] font-bold text-slate-400">Tmr, 09:00</span>
                             </div>
                             <h4 class="text-[10px] font-black text-slate-900">ABC Corp - Valuation Review</h4>
-                            <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Discuss the new asset valuation
-                                report with the client.</p>
+                            <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Discuss the new asset valuation report with the client.</p>
                         </div>
-                        <div
-                            class="p-3 bg-slate-50 rounded-xl border border-slate-100 group hover:bg-slate-100 transition-all cursor-pointer">
+
+                        <div class="followup-item p-3 bg-slate-50 rounded-xl border border-slate-100 group hover:bg-slate-100 transition-all cursor-pointer"
+                            data-priority="Cool" data-time="21 Apr, 11:30" data-title="Sarah Smith - Courtesy Call"
+                            data-desc="Routine check-in call to ensure client is happy with the current application progress."
+                            data-client="Sarah Smith" data-id="#AF-018" onclick="openFollowupDetail(this)">
                             <div class="flex items-center justify-between mb-1">
-                                <span class="text-[8px] font-black text-slate-500 uppercase">Priority: Low</span>
+                                <span class="text-[8px] font-black text-slate-500 uppercase">Priority: Cool</span>
                                 <span class="text-[8px] font-bold text-slate-400">21 Apr, 11:30</span>
                             </div>
                             <h4 class="text-[10px] font-black text-slate-900">Sarah Smith - Courtesy Call</h4>
+                            <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Routine check-in call.</p>
                         </div>
+                    </div>
+
+                    <!-- Detail Page View -->
+                    <div id="followupDetail" class="hidden flex-1 flex flex-col">
+                        <!-- Detail content injected by JS -->
                     </div>
                 </div>
 
@@ -2068,7 +2145,7 @@
         function rndInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
         function rndDate() { const d = new Date(2026, 0, 1); d.setDate(d.getDate() + rndInt(0, 110)); return d.toISOString().slice(0, 10); }
 
-        let LEADS = Array.from({ length: 45 }, (_, i) => ({
+        window.LEADS = Array.from({ length: 45 }, (_, i) => ({
             id: i + 1,
             name: [['James', 'Oliver', 'Henry', 'Liam', 'Noah', 'William', 'Ethan', 'Lucas'], ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Davis', 'Miller', 'Wilson']].map(a => rnd(a)).join(' '),
             stage: rnd(STAGES),
@@ -2082,7 +2159,7 @@
         function renderTable(filter = 'all') {
             const tbody = document.getElementById('leadPortfolioBody');
             if (!tbody) return;
-            const visible = (filter === 'all' ? LEADS : LEADS.filter(l => l.status === filter)).slice(0, 5);
+            const visible = (filter === 'all' ? window.LEADS : window.LEADS.filter(l => l.status === filter)).slice(0, 5);
             tbody.innerHTML = visible.map(l => `
                 <tr class="group hover:bg-slate-50/50 transition-all lead-row" data-quality="${l.status}" onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3, '0')}'">
                     <td class="py-2.5">
@@ -2519,13 +2596,6 @@
             calculateAdvanced();
         }
 
-
-
-
-
-
-
-
         function findMonthlyRate(P, M, n) {
             if (M * n <= P) return 0;
             let low = 0, high = 1, tolerance = 0.0000001, iterations = 0;
@@ -2536,6 +2606,253 @@
                 iterations++;
             }
             return (low + high) / 2;
+        }
+
+        // Upcoming Follow-ups Detail Logic
+        let _currentFollowupCard = null;
+
+        function formatDateHuman(val) {
+            if (!val) return 'Today, 00:00';
+            const d = new Date(val);
+            const now = new Date();
+            const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            if (d.toDateString() === now.toDateString()) return `Today, ${time}`;
+            const tmr = new Date(now); tmr.setDate(now.getDate() + 1);
+            if (d.toDateString() === tmr.toDateString()) return `Tmr, ${time}`;
+            
+            return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + `, ${time}`;
+        }
+
+        function initFollowupLeads(selectId, selectedId = null) {
+            const select = document.getElementById(selectId);
+            if (!select || !window.LEADS) return;
+            select.innerHTML = '<option value="">-- Select Lead --</option>';
+            window.LEADS.forEach(l => {
+                const opt = document.createElement('option');
+                const leadIdStr = `#AF-${l.id.toString().padStart(3, '0')}`;
+                opt.value = `${l.name}|${leadIdStr}`;
+                opt.textContent = `${l.name} (${leadIdStr})`;
+                if (selectedId && leadIdStr === selectedId) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function toggleFollowupForm() {
+            const form = document.getElementById('followupForm');
+            const list = document.getElementById('followupList');
+            const willShow = form.classList.contains('hidden');
+            
+            if (willShow) {
+                // Showing form: hide everything else
+                closeFollowupDetail();
+                list.classList.add('hidden');
+                form.classList.remove('hidden');
+                initFollowupLeads('fLead');
+            } else {
+                // Hiding form: show list
+                form.classList.add('hidden');
+                list.classList.remove('hidden');
+            }
+        }
+
+        function addFollowup() {
+            const title = document.getElementById('fTitle').value.trim();
+            const priority = document.getElementById('fPriority').value;
+            const timeRaw = document.getElementById('fTime').value;
+            const leadVal = document.getElementById('fLead').value;
+            const desc = document.getElementById('fRemarks').value.trim();
+
+            if (!title || !timeRaw || !leadVal) { alert('Please enter all required fields.'); return; }
+
+            const time = formatDateHuman(timeRaw);
+            const [client, id] = leadVal.split('|');
+
+            const prioColor = priority === 'Hot' ? 'text-red-600' : priority === 'Warm' ? 'text-amber-600' : 'text-slate-600';
+            const prioBg = priority === 'Hot' ? 'bg-red-50/50 border-red-100' : priority === 'Warm' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-100';
+
+            const div = document.createElement('div');
+            div.className = `followup-item p-3 ${prioBg} border rounded-xl group hover:opacity-90 transition-all cursor-pointer animate-in slide-in-from-bottom duration-300`;
+            div.dataset.priority = priority;
+            div.dataset.time = time;
+            div.dataset.rawTime = timeRaw;
+            div.dataset.title = title;
+            div.dataset.desc = desc || 'No additional remarks.';
+            div.dataset.client = client;
+            div.dataset.id = id;
+            div.onclick = () => openFollowupDetail(div);
+
+            div.innerHTML = `
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-[8px] font-black ${prioColor} uppercase">Priority: ${priority}</span>
+                    <span class="text-[8px] font-bold text-slate-400">${time}</span>
+                </div>
+                <h4 class="text-[10px] font-black text-slate-900">${title}</h4>
+                <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">${desc || 'No additional remarks.'}</p>
+            `;
+
+            document.getElementById('followupList').prepend(div);
+            
+            // Clear inputs
+            ['fTitle', 'fTime', 'fRemarks'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('fLead').selectedIndex = 0;
+            toggleFollowupForm();
+        }
+
+        function openFollowupDetail(card) {
+            _currentFollowupCard = card;
+            const { title, priority, time, desc, client, id } = card.dataset;
+            document.getElementById('followupHeaderList').classList.add('hidden');
+            document.getElementById('followupHeaderDetail').classList.remove('hidden');
+            document.getElementById('followupList').classList.add('hidden');
+            document.getElementById('followupForm').classList.add('hidden');
+            document.getElementById('followupEditBtn').classList.remove('hidden');
+            
+            renderFollowupDetailView(title, priority, time, desc, client, id);
+            document.getElementById('followupDetail').classList.remove('hidden');
+        }
+
+        function closeFollowupDetail() {
+            _currentFollowupCard = null;
+            document.getElementById('followupHeaderDetail').classList.add('hidden');
+            document.getElementById('followupHeaderList').classList.remove('hidden');
+            document.getElementById('followupDetail').classList.add('hidden');
+            // Show list ONLY if the form is NOT visible
+            if (document.getElementById('followupForm').classList.contains('hidden')) {
+                document.getElementById('followupList').classList.remove('hidden');
+            }
+        }
+
+        function renderFollowupDetailView(title, priority, time, desc, client, id) {
+            const prioColor = priority === 'Hot' ? 'text-red-600 bg-red-50' : priority === 'Warm' ? 'text-amber-600 bg-amber-50' : 'text-slate-600 bg-slate-50';
+            
+            document.getElementById('followupDetail').innerHTML = `
+                <div class="p-4 flex flex-col h-full animate-in fade-in slide-in-from-right duration-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[7px] font-black ${prioColor} uppercase tracking-widest px-2 py-0.5 rounded-full">Priority: ${priority}</span>
+                        <span class="text-[7px] font-bold text-slate-400 uppercase">${time}</span>
+                    </div>
+                    
+                    <h2 class="text-[11px] font-black text-slate-900 leading-tight mb-3">${title}</h2>
+                    
+                    <div class="space-y-2 flex-1">
+                        <div class="flex items-center gap-3 p-2.5 bg-slate-50/50 border border-slate-100 rounded-xl">
+                            <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm">
+                                <i class="fa-solid fa-user text-[10px]"></i>
+                            </div>
+                            <div>
+                                <p class="text-[6px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Associated Lead</p>
+                                <p class="text-[9px] font-black text-slate-900 leading-none">${client} <span class="text-indigo-600 ml-1">${id}</span></p>
+                            </div>
+                            <button onclick="window.location.href='../loan_pipeline/lead_detail.html?id=${id.replace('#','')}'" 
+                                class="ml-auto w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-700 transition-all">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                            </button>
+                        </div>
+
+                        <div class="p-3 bg-white border border-slate-100 rounded-xl">
+                            <p class="text-[6px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                                <i class="fa-solid fa-align-left text-indigo-400"></i> Narrative & Remarks
+                            </p>
+                            <p class="text-[9px] font-bold text-slate-600 leading-relaxed">${desc}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-50 flex gap-2">
+                        <button onclick="closeFollowupDetail()" class="flex-1 bg-slate-900 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-black transition-all">Complete Task</button>
+                        <button class="px-3 bg-slate-100 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase hover:bg-slate-200 transition-all">Reschedule</button>
+                    </div>
+                </div>`;
+        }
+
+        function openFollowupEditForm() {
+            const { title, priority, time, rawTime, desc, id } = _currentFollowupCard.dataset;
+            document.getElementById('followupDetailTitle').textContent = 'Edit Follow-up';
+            document.getElementById('followupEditBtn').classList.add('hidden');
+            
+            document.getElementById('followupDetail').innerHTML = `
+                <div class="p-4 flex flex-col h-full animate-in slide-in-from-bottom duration-300">
+                    <div class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1">
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Activity Title</label>
+                            <input id="editFTitle" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-[10px] font-bold outline-none focus:border-indigo-500" value="${title}">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Priority</label>
+                                <select id="editFPriority" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500">
+                                    <option value="Hot" ${priority==='Hot'?'selected':''}>Hot</option>
+                                    <option value="Warm" ${priority==='Warm'?'selected':''}>Warm</option>
+                                    <option value="Cool" ${priority==='Cool'?'selected':''}>Cool</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Date & Time</label>
+                                <input id="editFTime" type="datetime-local" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500" value="${rawTime || ''}">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Linked Lead</label>
+                            <select id="editFLead" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500">
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Narrative / Remarks</label>
+                            <textarea id="editFDesc" rows="3" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-[10px] font-medium outline-none focus:border-indigo-500 resize-none">${desc}</textarea>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-4 pt-4 border-t border-slate-50">
+                        <button onclick="saveFollowupEdit()" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all">Update Follow-up</button>
+                        <button onclick="cancelFollowupEdit()" class="px-4 bg-slate-100 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase hover:bg-slate-200 transition-all">Cancel</button>
+                    </div>
+                </div>`;
+            
+            initFollowupLeads('editFLead', id);
+        }
+
+        function saveFollowupEdit() {
+            const newTitle = document.getElementById('editFTitle').value.trim();
+            const newPriority = document.getElementById('editFPriority').value;
+            const newTimeRaw = document.getElementById('editFTime').value;
+            const newLeadVal = document.getElementById('editFLead').value;
+            const newDesc = document.getElementById('editFDesc').value.trim();
+
+            if (!newTitle || !newTimeRaw || !newLeadVal) { alert('All fields are required'); return; }
+
+            const newTime = formatDateHuman(newTimeRaw);
+            const [newClient, newId] = newLeadVal.split('|');
+            const card = _currentFollowupCard;
+            
+            card.dataset.title = newTitle;
+            card.dataset.priority = newPriority;
+            card.dataset.time = newTime;
+            card.dataset.rawTime = newTimeRaw;
+            card.dataset.desc = newDesc;
+            card.dataset.client = newClient;
+            card.dataset.id = newId;
+
+            // Update main list view UI
+            const prioColor = newPriority === 'Hot' ? 'text-red-600' : newPriority === 'Warm' ? 'text-amber-600' : 'text-slate-600';
+            const prioBg = newPriority === 'Hot' ? 'bg-red-50/50 border-red-100' : newPriority === 'Warm' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-100';
+            
+            card.className = `followup-item p-3 ${prioBg} border rounded-xl group hover:opacity-90 transition-all cursor-pointer`;
+            card.querySelector('span[class*="uppercase"]').className = `text-[8px] font-black ${prioColor} uppercase`;
+            card.querySelector('span[class*="uppercase"]').textContent = 'Priority: ' + newPriority;
+            card.querySelector('span[class*="text-slate-400"]').textContent = newTime;
+            card.querySelector('h4').textContent = newTitle;
+            card.querySelector('p').textContent = newDesc || 'No additional remarks.';
+
+            document.getElementById('followupDetailTitle').textContent = 'Follow-up Details';
+            document.getElementById('followupEditBtn').classList.remove('hidden');
+            renderFollowupDetailView(newTitle, newPriority, newTime, newDesc, newClient, newId);
+        }
+
+        function cancelFollowupEdit() {
+            const { title, priority, time, desc, client, id } = _currentFollowupCard.dataset;
+            document.getElementById('followupDetailTitle').textContent = 'Follow-up Details';
+            document.getElementById('followupEditBtn').classList.remove('hidden');
+            renderFollowupDetailView(title, priority, time, desc, client, id);
         }
 
         // Licenses & Insurance Logic
