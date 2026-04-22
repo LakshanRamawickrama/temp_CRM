@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1266,8 +1266,8 @@ document.addEventListener('click', (e) => {
                     <button onclick="closeDocsDrawer()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
-            <!-- Search + Filter -->
-            <div style="padding:10px 16px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;align-items:center;flex-shrink:0;background:#f8fafc;">
+            <!-- Search + Filter (list view only) -->
+            <div id="drawer-search-bar" style="padding:10px 16px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;align-items:center;flex-shrink:0;background:#f8fafc;">
                 <div style="position:relative;flex:1;">
                     <input type="text" id="drawer-search" placeholder="Search documents..." oninput="renderDrawerDocs()" style="width:100%;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px 6px 28px;font-size:9px;font-weight:600;color:#1e293b;outline:none;">
                     <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:8px;color:#94a3b8;"></i>
@@ -1279,6 +1279,61 @@ document.addEventListener('click', (e) => {
             </div>
             <!-- Document List -->
             <div style="flex:1;overflow-y:auto;" id="drawer-doc-list"></div>
+
+            <!-- Document Detail View (hidden, shown on doc click) -->
+            <div id="drawer-doc-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+                <!-- Detail sub-header -->
+                <div id="ddm-header" style="padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+                    <button onclick="closeDocDetail()" style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fa-solid fa-arrow-left" style="font-size:11px;"></i>
+                    </button>
+                    <div id="ddm-icon" style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"></div>
+                    <div style="flex:1;min-width:0;">
+                        <div id="ddm-title" style="font-size:10px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+                        <div id="ddm-cat" style="font-size:7px;font-weight:700;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.06em;margin-top:1px;"></div>
+                    </div>
+                    <button title="Download" style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.12);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fa-solid fa-download" style="font-size:10px;"></i>
+                    </button>
+                </div>
+                <!-- Detail body: scrollable -->
+                <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0;">
+                    <!-- Metadata strip -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
+                        <div style="padding:8px 12px;border-right:1px solid #f1f5f9;">
+                            <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Type</div>
+                            <div id="ddm-type" style="font-size:9px;font-weight:800;color:#0f172a;text-transform:uppercase;"></div>
+                        </div>
+                        <div style="padding:8px 12px;border-right:1px solid #f1f5f9;">
+                            <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Size</div>
+                            <div id="ddm-size" style="font-size:9px;font-weight:800;color:#0f172a;"></div>
+                        </div>
+                        <div style="padding:8px 12px;border-right:1px solid #f1f5f9;">
+                            <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Version</div>
+                            <div id="ddm-version" style="font-size:9px;font-weight:800;color:#0f172a;"></div>
+                        </div>
+                        <div style="padding:8px 12px;">
+                            <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Uploaded</div>
+                            <div id="ddm-date" style="font-size:9px;font-weight:800;color:#0f172a;"></div>
+                        </div>
+                    </div>
+                    <!-- Description -->
+                    <div style="padding:12px 16px;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
+                        <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Description</div>
+                        <div id="ddm-desc" style="font-size:10px;font-weight:500;color:#334155;line-height:1.65;"></div>
+                    </div>
+                    <!-- Document preview page -->
+                    <div style="background:#e8ecf0;padding:20px 16px;flex:1;">
+                        <div id="ddm-preview-page" style="background:#fff;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:32px 28px;font-family:'Inter',system-ui,sans-serif;min-height:500px;display:flex;flex-direction:column;position:relative;"></div>
+                    </div>
+                    <!-- Actions -->
+                    <div style="padding:12px 16px;border-top:1px solid #f1f5f9;display:flex;gap:6px;flex-shrink:0;background:#fafbfc;">
+                        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:8px;background:#f1f5f9;border:1px solid #e2e8f0;cursor:pointer;font-size:8px;font-weight:800;color:#475569;text-transform:uppercase;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'"><i class="fa-solid fa-share-nodes" style="color:#6366f1;"></i> Share</button>
+                        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:8px;background:#f1f5f9;border:1px solid #e2e8f0;cursor:pointer;font-size:8px;font-weight:800;color:#475569;text-transform:uppercase;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'"><i class="fa-solid fa-print" style="color:#0ea5e9;"></i> Print</button>
+                        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:8px;background:#0f172a;border:none;cursor:pointer;font-size:8px;font-weight:800;color:#fff;text-transform:uppercase;"><i class="fa-solid fa-download"></i> Download</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 <script>
@@ -1334,7 +1389,7 @@ function renderDrawerDocs(){
         const fi=FILE_ICONS_D[d.fileType]||{icon:'fa-solid fa-file',bg:'#f1f5f9',color:'#475569'};
         const cc=CAT_COLORS[d.category]||'#475569';
         const date=new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
-        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid #f8fafc;transition:background .1s;cursor:default;" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'#fff\'">'
+        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid #f8fafc;transition:background .1s;cursor:pointer;" onclick="openDocDetail('+d.id+')" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'#fff\'">'
             +'<div style="width:36px;height:36px;border-radius:10px;background:'+fi.bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="'+fi.icon+'" style="color:'+fi.color+';font-size:14px;"></i></div>'
             +'<div style="flex:1;min-width:0;">'
             +'<div style="font-size:10px;font-weight:800;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+d.title+'</div>'
@@ -1355,29 +1410,150 @@ function renderDrawerDocs(){
 
 
 
+const DOC_PREVIEW_CONTENT = {
+    "Products": (d) => `
+        <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#6366f1;clip-path:polygon(100% 0,0 0,100% 100%);"></div>
+        <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;">Alpha Funding CRM</div>
+        <div style="font-size:22px;font-weight:900;color:#0f172a;letter-spacing:-.5px;border-bottom:3px solid #6366f1;padding-bottom:10px;margin-bottom:18px;">${d.title}</div>
+        <div style="font-size:9px;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;">${d.category} · ${d.version}</div>
+        <div style="background:#f8fafc;border-left:4px solid #6366f1;padding:14px 16px;margin-bottom:20px;border-radius:0 8px 8px 0;">
+            <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;margin-bottom:6px;">Overview</div>
+            <p style="font-size:10px;color:#334155;line-height:1.7;font-style:italic;">${d.desc}</p>
+        </div>
+        ${['Key Rates & Features','Eligibility Criteria','Application Process','Commission Structure'].map(s=>`
+        <div style="margin-bottom:14px;">
+            <div style="font-size:9px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;border-bottom:1px solid #f1f5f9;padding-bottom:4px;">${s}</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+                ${['Competitive variable rate from 5.99% p.a.','Maximum LVR 90% with LMI','Minimum loan amount £50,000','Fast-track approval available'].map(b=>`<div style="display:flex;align-items:center;gap:8px;font-size:9px;color:#64748b;"><span style="width:5px;height:5px;border-radius:50%;background:#6366f1;flex-shrink:0;"></span>${b}</div>`).join('')}
+            </div>
+        </div>`).join('')}
+        <div style="margin-top:auto;padding-top:20px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:7px;font-weight:700;color:#cbd5e1;text-transform:uppercase;">Ref: AF-${d.id.toString().padStart(4,'0')}-${d.version.replace('.','')}</div>
+            <div style="font-size:7px;font-weight:700;color:#cbd5e1;text-transform:uppercase;">Issued: ${new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}</div>
+        </div>`,
+    "Policies": (d) => `
+        <div style="text-align:center;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #0f172a;">
+            <div style="font-size:10px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Official Policy Document</div>
+            <div style="font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-.3px;margin-bottom:4px;">${d.title}</div>
+            <div style="font-size:9px;font-weight:700;color:#64748b;">${d.version} &nbsp;·&nbsp; ${new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})}</div>
+        </div>
+        <div style="font-size:9px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">1. Purpose</div>
+        <p style="font-size:10px;color:#334155;line-height:1.8;margin-bottom:16px;">${d.desc} This document establishes the mandatory procedures all staff and brokers must follow when processing applications under this policy framework.</p>
+        <div style="font-size:9px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">2. Scope</div>
+        <p style="font-size:10px;color:#334155;line-height:1.8;margin-bottom:16px;">Applicable to all Alpha Funding personnel, contracted brokers, and third-party introducers operating within the Australian jurisdiction or handling Australian resident clients.</p>
+        <div style="font-size:9px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">3. Key Requirements</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+            ${['Mandatory identity verification for all applicants','Record retention minimum 7 years','Suspicious transaction reporting within 24 hours','Annual compliance training required for all staff'].map((r,i)=>`<div style="display:flex;align-items:flex-start;gap:8px;font-size:9px;color:#475569;"><span style="font-weight:800;color:#0f172a;min-width:16px;">${i+1}.</span>${r}</div>`).join('')}
+        </div>
+        <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:auto;">
+            <div style="font-size:8px;font-weight:900;color:#b45309;text-transform:uppercase;margin-bottom:3px;">⚠ Compliance Notice</div>
+            <p style="font-size:9px;color:#92400e;line-height:1.6;">Non-compliance may result in immediate suspension of broker accreditation and referral to the relevant regulatory authority.</p>
+        </div>`,
+    "Guides": (d) => `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #f1f5f9;">
+            <div style="width:40px;height:40px;border-radius:10px;background:#7e22ce;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-book-open" style="color:#fff;font-size:14px;"></i></div>
+            <div>
+                <div style="font-size:8px;font-weight:900;color:#7e22ce;text-transform:uppercase;letter-spacing:.08em;">Step-by-Step Guide</div>
+                <div style="font-size:14px;font-weight:900;color:#0f172a;">${d.title}</div>
+            </div>
+        </div>
+        <p style="font-size:10px;color:#64748b;line-height:1.7;margin-bottom:20px;">${d.desc}</p>
+        ${['Getting Started','Step-by-Step Process','Important Checkpoints','Final Review'].map((step,i)=>`
+        <div style="display:flex;gap:12px;margin-bottom:16px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:#7e22ce;color:#fff;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">${i+1}</div>
+            <div>
+                <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:4px;">${step}</div>
+                <p style="font-size:9px;color:#64748b;line-height:1.6;">Ensure all mandatory fields are completed and supporting documentation is attached before proceeding to the next stage of the process.</p>
+            </div>
+        </div>`).join('')}`,
+    "FAQs": (d) => `
+        <div style="font-size:20px;font-weight:900;color:#0f172a;margin-bottom:4px;">${d.title}</div>
+        <div style="font-size:9px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.08em;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #f1f5f9;">${d.category} · ${d.version}</div>
+        ${['What documents are required?','How long does the process take?','Who is eligible to apply?','What are the fees involved?','Can I track the application status?','Who do I contact for escalations?'].map((q,i)=>`
+        <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f8fafc;">
+            <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:5px;">Q${i+1}. ${q}</div>
+            <p style="font-size:9px;color:#64748b;line-height:1.7;">Please refer to the relevant section of the portal or contact your account manager for detailed guidance on this topic. Additional resources are available in the Knowledge Base.</p>
+        </div>`).join('')}`,
+    "Scripts": (d) => `
+        <div style="background:#0f172a;border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+            <i class="fa-solid fa-headset" style="color:#6366f1;font-size:16px;"></i>
+            <div>
+                <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;">Call Script</div>
+                <div style="font-size:12px;font-weight:800;color:#fff;">${d.title}</div>
+            </div>
+        </div>
+        <div style="margin-bottom:16px;">
+            <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Opening</div>
+            <div style="background:#f8fafc;border-radius:8px;padding:12px 14px;border-left:3px solid #6366f1;font-size:10px;color:#334155;line-height:1.7;font-style:italic;">"Good [morning/afternoon], may I speak with [Client Name]? This is [Your Name] calling from Alpha Funding regarding your recent enquiry about [Product]. Is now a good time to talk?"</div>
+        </div>
+        <div style="margin-bottom:16px;">
+            <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Qualification Questions</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                ${['What is your current financial situation?','Have you explored other lenders?','What is your desired loan amount and term?','Do you have any outstanding debts?'].map((q,i)=>`<div style="font-size:9px;color:#475569;padding:6px 10px;background:#f8fafc;border-radius:6px;"><span style="font-weight:800;color:#6366f1;margin-right:6px;">${i+1}.</span>${q}</div>`).join('')}
+            </div>
+        </div>
+        <div>
+            <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Closing</div>
+            <div style="background:#f8fafc;border-radius:8px;padding:12px 14px;border-left:3px solid #16a34a;font-size:10px;color:#334155;line-height:1.7;font-style:italic;">"Based on what you've shared, I believe we can find a great solution for you. I'd like to schedule a formal consultation — are you available [Day] at [Time]?"</div>
+        </div>`,
+    "Knowledge Base": (d) => `
+        <div style="font-size:20px;font-weight:900;color:#0f172a;margin-bottom:4px;">${d.title}</div>
+        <div style="font-size:9px;color:#1d4ed8;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #dbeafe;">${d.category} · ${d.version}</div>
+        <p style="font-size:10px;color:#64748b;line-height:1.7;margin-bottom:18px;">${d.desc}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+            ${['Getting Started','Lead Management','Pipeline Stages','Document Upload','Reporting & Exports','User Settings'].map(t=>`<div style="background:#eff6ff;border-radius:8px;padding:10px 12px;cursor:pointer;"><div style="font-size:9px;font-weight:800;color:#1d4ed8;margin-bottom:2px;">${t}</div><div style="font-size:8px;color:#64748b;">Click to expand</div></div>`).join('')}
+        </div>
+        <div style="background:#f1f5f9;border-radius:8px;padding:12px 14px;">
+            <div style="font-size:8px;font-weight:900;color:#475569;text-transform:uppercase;margin-bottom:6px;">Recent Updates · ${d.version}</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+                ${['New pipeline stage filters added','Document vault redesign','AI Summary feature launched','Improved notification system'].map(u=>`<div style="font-size:9px;color:#64748b;display:flex;gap:6px;"><span style="color:#16a34a;font-weight:800;">✓</span>${u}</div>`).join('')}
+            </div>
+        </div>`
+};
+
 function openDocDetail(id){
-    const d=DRAWER_DOCS.find(x=>x.id===id);
-    if(!d)return;
-    const fi=FILE_ICONS_D[d.fileType]||{icon:'fa-solid fa-file',bg:'#f1f5f9',color:'#475569'};
-    const cc=CAT_COLORS[d.category]||'#475569';
-    const date=new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
-    document.getElementById('ddm-header').style.background=cc;
-    document.getElementById('ddm-icon').style.background='rgba(255,255,255,.15)';
-    document.getElementById('ddm-icon').innerHTML='<i class="'+fi.icon+'" style="color:#fff;font-size:18px;"></i>';
-    document.getElementById('ddm-title').textContent=d.title;
-    document.getElementById('ddm-cat').textContent=d.category;
-    document.getElementById('ddm-desc').textContent=d.desc;
-    document.getElementById('ddm-type').textContent=d.fileType.toUpperCase();
-    document.getElementById('ddm-size').textContent=d.fileSize;
-    document.getElementById('ddm-version').textContent=d.version;
-    document.getElementById('ddm-date').textContent=date;
-    const _m=document.getElementById('docDetailModal');
-    document.body.appendChild(_m);
-    _m.style.display='flex';
+    const d = DRAWER_DOCS.find(x => x.id === id);
+    if (!d) return;
+    const fi = FILE_ICONS_D[d.fileType] || {icon:'fa-solid fa-file', bg:'#f1f5f9', color:'#475569'};
+    const cc = CAT_COLORS[d.category] || '#475569';
+    const date = new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+
+    // Style the detail sub-header with category colour
+    document.getElementById('ddm-header').style.background = cc;
+    document.getElementById('ddm-icon').style.background = 'rgba(255,255,255,.18)';
+    document.getElementById('ddm-icon').innerHTML = `<i class="${fi.icon}" style="color:#fff;font-size:13px;"></i>`;
+    document.getElementById('ddm-title').textContent = d.title;
+    document.getElementById('ddm-cat').textContent = d.category + ' · ' + d.fileType.toUpperCase();
+
+    // Metadata strip
+    document.getElementById('ddm-type').textContent = d.fileType.toUpperCase();
+    document.getElementById('ddm-size').textContent = d.fileSize;
+    document.getElementById('ddm-version').textContent = d.version;
+    document.getElementById('ddm-date').textContent = date;
+
+    // Description
+    document.getElementById('ddm-desc').textContent = d.desc;
+
+    // Preview page content
+    const previewFn = DOC_PREVIEW_CONTENT[d.category] || DOC_PREVIEW_CONTENT['Knowledge Base'];
+    document.getElementById('ddm-preview-page').innerHTML = previewFn(d);
+
+    // Swap: hide list view, show detail view
+    document.getElementById('drawer-search-bar').style.display = 'none';
+    document.getElementById('drawer-doc-list').style.display = 'none';
+    const detail = document.getElementById('drawer-doc-detail');
+    detail.style.display = 'flex';
+
+    // Update main drawer header subtitle
+    document.getElementById('drawer-doc-count').textContent = '← Back to vault';
 }
+
 function closeDocDetail(){
-    document.getElementById('docDetailModal').style.display='none';
-    document.getElementById('docDetailModal').style.display='none';
+    // Swap back: show list view, hide detail view
+    document.getElementById('drawer-search-bar').style.display = 'flex';
+    document.getElementById('drawer-doc-list').style.display = 'block';
+    document.getElementById('drawer-doc-detail').style.display = 'none';
+    renderDrawerDocs();
 }
 
 // Calculator Logic
@@ -1568,44 +1744,6 @@ function initModalCalculator() {
 </div>
 
 
-<!-- Doc Detail Modal -->
-<div id="docDetailModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeDocDetail();">
-    <div style="background:#fff;border-radius:24px;width:520px;max-width:95vw;box-shadow:0 25px 60px rgba(0,0,0,0.2);overflow:hidden;">
-        <div id="ddm-header" style="padding:18px 24px;display:flex;align-items:center;gap:12px;">
-            <div id="ddm-icon" style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"></div>
-            <div style="flex:1;min-width:0;">
-                <div id="ddm-title" style="font-size:13px;font-weight:800;color:#fff;line-height:1.3;"></div>
-                <div id="ddm-cat" style="font-size:9px;font-weight:700;color:rgba(255,255,255,.6);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;"></div>
-            </div>
-            <button onclick="closeDocDetail()" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
-            <div style="background:#f8fafc;border-radius:12px;padding:14px 16px;">
-                <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Description</div>
-                <div id="ddm-desc" style="font-size:11px;font-weight:500;color:#334155;line-height:1.6;"></div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
-                    <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">File Type</div>
-                    <div id="ddm-type" style="font-size:12px;font-weight:800;color:#0f172a;text-transform:uppercase;"></div>
-                </div>
-                <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
-                    <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">File Size</div>
-                    <div id="ddm-size" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
-                </div>
-                <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
-                    <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">Version</div>
-                    <div id="ddm-version" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
-                </div>
-                <div style="background:#f8fafc;border-radius:12px;padding:12px 14px;">
-                    <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;">Uploaded</div>
-                    <div id="ddm-date" style="font-size:12px;font-weight:800;color:#0f172a;"></div>
-                </div>
-            </div>
-            <button onclick="closeDocDetail()" style="width:100%;padding:11px;border-radius:12px;background:#f1f5f9;border:none;font-size:10px;font-weight:800;color:#64748b;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;">Close</button>
-        </div>
-    </div>
-</div>
     <!-- AI Chatbot FAB -->
     <div class="ai-fab" onclick="toggleAIWidget()">
         <i class="fa-solid fa-robot text-2xl"></i>
