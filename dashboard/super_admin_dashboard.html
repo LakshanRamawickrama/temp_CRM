@@ -1097,66 +1097,72 @@
                             <span class="text-[8px] font-black text-slate-400 uppercase">Live Now</span>
                         </div>
                     </div>
-                    <div class="p-4 space-y-3 overflow-y-auto custom-scrollbar">
-                        <!-- Agent Item: Contact Focus -->
-                        <div
-                            class="p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-100 transition-all group">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-[11px] font-black">
-                                        TM</div>
-                                    <div>
-                                        <h4 class="text-[10px] font-black text-slate-900">Thanushika M.</h4>
-                                        <p class="text-[7px] font-bold text-slate-400 uppercase tracking-tighter">Tele
-                                            Agent</p>
-                                    </div>
+                    <div class="p-3 space-y-2 overflow-y-auto custom-scrollbar">
+                        <!-- Agent Item 1 -->
+                        <div onclick="openAgentDrawer('Thanushika M.', 'TM', 'bg-indigo-600', 'thanushika@whiterock.com', '+44 7700 900123', 'ACTIVE', 42)"
+                            class="px-3 py-2 cursor-pointer bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-[9px] font-black shrink-0">TM</div>
+                                <div>
+                                    <h4 class="text-[10px] font-black text-slate-900 leading-tight">Thanushika M.</h4>
+                                    <p class="text-[7px] font-bold text-slate-500 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-envelope text-[8px] w-3"></i> thanushika@whiterock.com</p>
+                                    <p class="text-[7px] font-bold text-slate-500 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-phone text-[8px] w-3"></i> +44 7700 900123</p>
                                 </div>
-                                <span
-                                    class="bg-emerald-50 text-emerald-600 text-[7px] font-black px-1.5 py-0.5 rounded">ACTIVE</span>
                             </div>
-                            <div class="space-y-1 pl-12 border-l-2 border-slate-50 ml-4.5">
-                                <p class="text-[8px] font-bold text-slate-500 flex items-center gap-2">
-                                    <i class="fa-solid fa-envelope text-[7px] w-3"></i> thanushika@whiterock.com
-                                </p>
-                                <p class="text-[8px] font-bold text-slate-500 flex items-center gap-2">
-                                    <i class="fa-solid fa-phone text-[7px] w-3"></i> +44 7700 900123
-                                </p>
-                                <div class="flex items-center justify-between pt-1">
-                                    <span class="text-[8px] font-black text-indigo-600 uppercase tracking-widest">Total
-                                        Leads: 42</span>
-                                </div>
+                            <div class="text-right flex flex-col items-end justify-between h-full gap-1.5">
+                                <span class="bg-emerald-50 text-emerald-600 text-[6px] font-black px-1.5 py-0.5 rounded uppercase">ACTIVE</span>
+                                <span class="text-[7px] font-black text-indigo-600 uppercase tracking-widest">Leads: 42</span>
                             </div>
                         </div>
 
-                        <!-- Agent Item: Contact Focus -->
-                        <div
-                            class="p-3 bg-white border border-slate-100 rounded-xl hover:border-slate-100 transition-all group opacity-70 grayscale">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-9 h-9 rounded-lg bg-slate-400 flex items-center justify-center text-white text-[11px] font-black">
-                                        JS</div>
-                                    <div>
-                                        <h4 class="text-[10px] font-black text-slate-900">John Smith</h4>
-                                        <p class="text-[7px] font-bold text-slate-400 uppercase tracking-tighter">Tele
-                                            Agent</p>
-                                    </div>
+                        <!-- Agent Item 2 -->
+                        <div onclick="openAgentDrawer('John Smith', 'JS', 'bg-slate-400', 'john.smith@whiterock.com', '+44 7700 900555', 'OFFLINE', 28)"
+                            class="px-3 py-2 cursor-pointer bg-white border border-slate-100 rounded-xl hover:border-slate-300 transition-all group flex items-center justify-between opacity-80 grayscale hover:grayscale-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-slate-400 flex items-center justify-center text-white text-[9px] font-black shrink-0">JS</div>
+                                <div>
+                                    <h4 class="text-[10px] font-black text-slate-900 leading-tight">John Smith</h4>
+                                    <p class="text-[7px] font-bold text-slate-500 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-envelope text-[8px] w-3"></i> john.smith@whiterock.com</p>
+                                    <p class="text-[7px] font-bold text-slate-500 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-phone text-[8px] w-3"></i> +44 7700 900555</p>
                                 </div>
-                                <span
-                                    class="bg-slate-100 text-slate-500 text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Offline</span>
                             </div>
-                            <div class="space-y-1 pl-12 border-l-2 border-slate-50 ml-4.5">
-                                <p class="text-[8px] font-bold text-slate-400 flex items-center gap-2">
-                                    <i class="fa-solid fa-envelope text-[7px] w-3"></i> john.smith@whiterock.com
-                                </p>
-                                <p class="text-[8px] font-bold text-slate-400 flex items-center gap-2">
-                                    <i class="fa-solid fa-phone text-[7px] w-3"></i> +44 7700 900555
-                                </p>
-                                <div class="flex items-center justify-between pt-1">
-                                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Total
-                                        Leads: 28</span>
+                            <div class="text-right flex flex-col items-end justify-between h-full gap-1.5">
+                                <span class="bg-slate-100 text-slate-500 text-[6px] font-black px-1.5 py-0.5 rounded uppercase">OFFLINE</span>
+                                <span class="text-[7px] font-black text-slate-500 uppercase tracking-widest">Leads: 28</span>
+                            </div>
+                        </div>
+
+                        <!-- Agent Item 3 -->
+                        <div onclick="openAgentDrawer('Sarah Jones', 'SJ', 'bg-rose-500', 'sarah.jones@whiterock.com', '+44 7700 900222', 'ACTIVE', 35)"
+                            class="px-3 py-2 cursor-pointer bg-white border border-slate-100 rounded-xl hover:border-rose-200 transition-all group flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-rose-500 flex items-center justify-center text-white text-[9px] font-black shrink-0">SJ</div>
+                                <div>
+                                    <h4 class="text-[10px] font-black text-slate-900 leading-tight">Sarah Jones</h4>
+                                    <p class="text-[7px] font-bold text-slate-500 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-envelope text-[8px] w-3"></i> sarah.jones@whiterock.com</p>
+                                    <p class="text-[7px] font-bold text-slate-500 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-phone text-[8px] w-3"></i> +44 7700 900222</p>
                                 </div>
+                            </div>
+                            <div class="text-right flex flex-col items-end justify-between h-full gap-1.5">
+                                <span class="bg-emerald-50 text-emerald-600 text-[6px] font-black px-1.5 py-0.5 rounded uppercase">ACTIVE</span>
+                                <span class="text-[7px] font-black text-indigo-600 uppercase tracking-widest">Leads: 35</span>
+                            </div>
+                        </div>
+
+                        <!-- Agent Item 4 -->
+                        <div onclick="openAgentDrawer('Michael Brown', 'MB', 'bg-teal-500', 'michael.b@whiterock.com', '+44 7700 900333', 'ACTIVE', 19)"
+                            class="px-3 py-2 cursor-pointer bg-white border border-slate-100 rounded-xl hover:border-teal-200 transition-all group flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-white text-[9px] font-black shrink-0">MB</div>
+                                <div>
+                                    <h4 class="text-[10px] font-black text-slate-900 leading-tight">Michael Brown</h4>
+                                    <p class="text-[7px] font-bold text-slate-500 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-envelope text-[8px] w-3"></i> michael.b@whiterock.com</p>
+                                    <p class="text-[7px] font-bold text-slate-500 mt-0.5 flex items-center gap-1.5"><i class="fa-solid fa-phone text-[8px] w-3"></i> +44 7700 900333</p>
+                                </div>
+                            </div>
+                            <div class="text-right flex flex-col items-end justify-between h-full gap-1.5">
+                                <span class="bg-emerald-50 text-emerald-600 text-[6px] font-black px-1.5 py-0.5 rounded uppercase">ACTIVE</span>
+                                <span class="text-[7px] font-black text-indigo-600 uppercase tracking-widest">Leads: 19</span>
                             </div>
                         </div>
                     </div>
@@ -1179,31 +1185,35 @@
                             </div>
                             <div class="flex items-center gap-1.5">
                                 <!-- Quality Filter (More Compact) -->
-                                <div class="flex bg-white border border-slate-100 rounded-lg p-0.5 shadow-sm">
-                                    <button onclick="filterLeads('all')"
-                                        class="lead-filter-btn active px-1.5 py-0.5 text-[7px] font-black uppercase tracking-widest rounded transition-all">All</button>
-                                    <button onclick="filterLeads('hot')"
+                                <div class="flex bg-white border border-slate-200 shadow-sm rounded-lg p-0.5" id="leadFilters">
+                                    <button onclick="filterLeads(event, 'all')"
+                                        class="lead-filter-btn px-1.5 py-0.5 text-[7px] font-black uppercase tracking-widest rounded transition-all bg-slate-900 text-white">All</button>
+                                    <button onclick="filterLeads(event, 'hot')"
                                         class="lead-filter-btn px-1.5 py-0.5 text-[7px] font-black uppercase tracking-widest rounded text-rose-500 hover:bg-rose-50 transition-all">Hot</button>
+                                    <button onclick="filterLeads(event, 'warm')"
+                                        class="lead-filter-btn px-1.5 py-0.5 text-[7px] font-black uppercase tracking-widest rounded text-amber-500 hover:bg-amber-50 transition-all">Warm</button>
+                                    <button onclick="filterLeads(event, 'cool')"
+                                        class="lead-filter-btn px-1.5 py-0.5 text-[7px] font-black uppercase tracking-widest rounded text-blue-500 hover:bg-blue-50 transition-all">Cool</button>
                                 </div>
                             </div>
                         </div>
                         <div class="p-3">
-                            <table class="w-full text-left" id="leadPortfolioTable">
+                            <table class="w-full text-left table-fixed" id="leadPortfolioTable">
                                 <thead>
                                     <tr class="border-b border-slate-50">
-                                        <th class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest">
+                                        <th class="w-[60%] pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none">
                                             Client</th>
                                         <th
-                                            class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-center">
+                                            class="w-[20%] pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-center leading-none">
                                             Status</th>
                                         <th
-                                            class="pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-right">
+                                            class="w-[20%] pb-2 text-[7px] font-black text-slate-400 uppercase tracking-widest text-right leading-none">
                                             #</th>
                                     </tr>
                                 </thead>
                             </table>
-                            <div style="max-height:138px;overflow-y:auto;" class="custom-scrollbar">
-                                <table class="w-full text-left">
+                            <div style="max-height:185px;overflow-y:auto;" class="custom-scrollbar">
+                                <table class="w-full text-left table-fixed">
                                     <tbody class="divide-y divide-slate-50" id="leadPortfolioBody"></tbody>
                                 </table>
                             </div>
@@ -1212,9 +1222,13 @@
 
 
                     <script>
-                        function filterLeads(quality) {
-                            document.querySelectorAll('.lead-filter-btn').forEach(btn => btn.classList.remove('bg-slate-100', 'text-slate-700'));
-                            event.currentTarget.classList.add('bg-slate-100', 'text-slate-700');
+                        function filterLeads(e, quality) {
+                            document.querySelectorAll('.lead-filter-btn').forEach(btn => {
+                                btn.classList.remove('bg-slate-900', 'text-white');
+                                if (btn.textContent.toLowerCase() === 'all') btn.classList.add('text-slate-600');
+                            });
+                            e.currentTarget.classList.add('bg-slate-900', 'text-white');
+                            e.currentTarget.classList.remove('text-rose-500', 'text-amber-500', 'text-blue-500');
                             renderTable(quality);
                         }
                     </script>
@@ -1454,79 +1468,92 @@
                             <span class="text-[10px] font-black text-emerald-600">£124,500</span>
                         </div>
                     </div>
-                    <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
+                    <div class="flex-1 p-2 overflow-y-auto custom-scrollbar space-y-1.5">
                         <!-- Payout Item -->
-                        <div
-                            class="p-3 bg-white border border-slate-100 rounded-xl hover:border-emerald-200 transition-all group cursor-pointer"
+                        <div class="p-2 bg-white border border-slate-100 rounded-xl flex flex-col gap-1 hover:border-emerald-200 transition-all group cursor-pointer"
                             onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-028'">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="flex justify-between items-start">
                                 <div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-[9px] font-black text-indigo-600">#AF-028</span>
-                                        <span class="text-[9px] font-black text-slate-900">A. Thompson</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[8px] font-black text-indigo-600 text-slate-900 leading-none">#AF-028</span>
+                                        <span class="text-[9px] font-black text-slate-900 leading-none">A. Thompson</span>
                                     </div>
-                                    <p class="text-[8px] font-bold text-slate-400 uppercase">Lender: Lloyds Bank</p>
+                                    <p class="text-[6px] font-bold text-slate-400 uppercase mt-1 leading-none">Lender: Lloyds Bank</p>
                                 </div>
-                                <div class="text-right">
-                                    <div class="text-[10px] font-black text-slate-900">£4,250</div>
-                                    <span class="text-[7px] font-black text-emerald-500 uppercase">Est. Payout</span>
+                                <div class="text-right flex flex-col justify-between">
+                                    <div class="text-[9px] font-black text-slate-900 leading-none">£4,250</div>
+                                    <span class="text-[5px] font-black text-emerald-500 uppercase tracking-widest block mt-1 leading-none">Est. Payout</span>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between pt-2 border-t border-slate-50">
-                                <span
-                                    class="bg-amber-50 text-amber-600 text-[7px] font-black px-1.5 py-0.5 rounded">PENDING
-                                    SUBMISSION</span>
-                                <span class="text-[8px] font-bold text-slate-400">Sent: 2h ago</span>
+                            <div class="flex items-center justify-between pt-1 mt-0.5 border-t border-slate-50">
+                                <span class="bg-amber-50 text-amber-600 text-[5px] font-black px-1.5 py-0.5 rounded uppercase leading-none">PENDING SUBMISSION</span>
+                                <span class="text-[6px] font-bold text-slate-400 uppercase leading-none">Sent: 2h ago</span>
                             </div>
                         </div>
 
                         <!-- Payout Item -->
-                        <div
-                            class="p-3 bg-white border border-slate-100 rounded-xl hover:border-emerald-200 transition-all group cursor-pointer"
+                        <div class="p-2 bg-white border border-slate-100 rounded-xl flex flex-col gap-1 hover:border-emerald-200 transition-all group cursor-pointer"
                             onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-027'">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="flex justify-between items-start">
                                 <div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-[9px] font-black text-indigo-600">#AF-027</span>
-                                        <span class="text-[9px] font-black text-slate-900">Global Logistics</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[8px] font-black text-indigo-600 text-slate-900 leading-none">#AF-027</span>
+                                        <span class="text-[9px] font-black text-slate-900 leading-none">Global Logistics</span>
                                     </div>
-                                    <p class="text-[8px] font-bold text-slate-400 uppercase">Lender: Funding Circle</p>
+                                    <p class="text-[6px] font-bold text-slate-400 uppercase mt-1 leading-none">Lender: Funding Circle</p>
                                 </div>
-                                <div class="text-right">
-                                    <div class="text-[10px] font-black text-slate-900">£12,800</div>
-                                    <span class="text-[7px] font-black text-emerald-500 uppercase">Est. Payout</span>
+                                <div class="text-right flex flex-col justify-between">
+                                    <div class="text-[9px] font-black text-slate-900 leading-none">£12,800</div>
+                                    <span class="text-[5px] font-black text-emerald-500 uppercase tracking-widest block mt-1 leading-none">Est. Payout</span>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between pt-2 border-t border-slate-50">
-                                <span
-                                    class="bg-blue-50 text-blue-600 text-[7px] font-black px-1.5 py-0.5 rounded">LENDER
-                                    REVIEW</span>
-                                <span class="text-[8px] font-bold text-slate-400">Sent: Yesterday</span>
+                            <div class="flex items-center justify-between pt-1 mt-0.5 border-t border-slate-50">
+                                <span class="bg-blue-50 text-blue-600 text-[5px] font-black px-1.5 py-0.5 rounded uppercase leading-none">LENDER REVIEW</span>
+                                <span class="text-[6px] font-bold text-slate-400 uppercase leading-none">Sent: Yesterday</span>
                             </div>
                         </div>
 
                         <!-- Payout Item -->
-                        <div
-                            class="p-3 bg-white border border-slate-100 rounded-xl hover:border-emerald-200 transition-all group cursor-pointer"
+                        <div class="p-2 bg-white border border-slate-100 rounded-xl flex flex-col gap-1 hover:border-emerald-200 transition-all group cursor-pointer"
                             onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-026'">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="flex justify-between items-start">
                                 <div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-[9px] font-black text-indigo-600">#AF-026</span>
-                                        <span class="text-[9px] font-black text-slate-900">Retail Ventures</span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[8px] font-black text-indigo-600 text-slate-900 leading-none">#AF-026</span>
+                                        <span class="text-[9px] font-black text-slate-900 leading-none">Retail Ventures</span>
                                     </div>
-                                    <p class="text-[8px] font-bold text-slate-400 uppercase">Lender: Allica Bank</p>
+                                    <p class="text-[6px] font-bold text-slate-400 uppercase mt-1 leading-none">Lender: Allica Bank</p>
                                 </div>
-                                <div class="text-right">
-                                    <div class="text-[10px] font-black text-slate-900">£7,400</div>
-                                    <span class="text-[7px] font-black text-emerald-500 uppercase">Est. Payout</span>
+                                <div class="text-right flex flex-col justify-between">
+                                    <div class="text-[9px] font-black text-slate-900 leading-none">£7,400</div>
+                                    <span class="text-[5px] font-black text-emerald-500 uppercase tracking-widest block mt-1 leading-none">Est. Payout</span>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between pt-2 border-t border-slate-50">
-                                <span
-                                    class="bg-amber-50 text-amber-600 text-[7px] font-black px-1.5 py-0.5 rounded">PENDING
-                                    SUBMISSION</span>
-                                <span class="text-[8px] font-bold text-slate-400">Sent: 5h ago</span>
+                            <div class="flex items-center justify-between pt-1 mt-0.5 border-t border-slate-50">
+                                <span class="bg-amber-50 text-amber-600 text-[5px] font-black px-1.5 py-0.5 rounded uppercase leading-none">PENDING SUBMISSION</span>
+                                <span class="text-[6px] font-bold text-slate-400 uppercase leading-none">Sent: 5h ago</span>
+                            </div>
+                        </div>
+
+                        <!-- Payout Item 4 -->
+                        <div class="p-2 bg-white border border-slate-100 rounded-xl flex flex-col gap-1 hover:border-emerald-200 transition-all group cursor-pointer"
+                            onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-025'">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[8px] font-black text-indigo-600 text-slate-900 leading-none">#AF-025</span>
+                                        <span class="text-[9px] font-black text-slate-900 leading-none">Cresthold Dev</span>
+                                    </div>
+                                    <p class="text-[6px] font-bold text-slate-400 uppercase mt-1 leading-none">Lender: Shawbrook</p>
+                                </div>
+                                <div class="text-right flex flex-col justify-between">
+                                    <div class="text-[9px] font-black text-slate-900 leading-none">£9,100</div>
+                                    <span class="text-[5px] font-black text-emerald-500 uppercase tracking-widest block mt-1 leading-none">Est. Payout</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between pt-1 mt-0.5 border-t border-slate-50">
+                                <span class="bg-blue-50 text-blue-600 text-[5px] font-black px-1.5 py-0.5 rounded uppercase leading-none">LENDER REVIEW</span>
+                                <span class="text-[6px] font-bold text-slate-400 uppercase leading-none">Sent: 1d ago</span>
                             </div>
                         </div>
                     </div>
@@ -1546,59 +1573,64 @@
                         <a href="../lenders/lender_management.html"
                             class="text-[8px] font-black text-indigo-600 uppercase hover:underline">Manage All</a>
                     </div>
-                    <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
+                    <div class="flex-1 p-2 overflow-y-auto custom-scrollbar space-y-1.5">
                         <!-- Promotion Item -->
-                        <div
-                            class="p-3 bg-indigo-50/30 border border-indigo-100 rounded-xl hover:border-indigo-200 transition-all group">
-                            <div class="flex justify-between items-start mb-1">
-                                <span
-                                    class="bg-indigo-600 text-white text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Exclusive</span>
-                                <span class="text-[8px] font-bold text-slate-400 uppercase">Exp: 30 Apr</span>
+                        <div class="p-2 bg-indigo-50/30 border border-indigo-100 rounded-xl hover:border-indigo-200 transition-all group flex flex-col gap-1">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-indigo-600 text-white text-[5px] font-black px-1.5 py-0.5 rounded uppercase leading-none">Exclusive</span>
+                                <span class="text-[6px] font-bold text-slate-400 uppercase leading-none">Exp: 30 Apr</span>
                             </div>
-                            <h4 class="text-[10px] font-black text-slate-900">Lloyds Bank: 0.25% Rate Cut</h4>
-                            <p class="text-[9px] text-slate-500 leading-tight mt-1">Applicable to all new business
-                                expansion loans over £250k.</p>
-                            <div class="mt-2 pt-2 border-t border-indigo-100/50 flex justify-between items-center">
-                                <span class="text-[8px] font-bold text-indigo-600 uppercase">Code: LLOYDS25</span>
-                                <button class="text-indigo-600 hover:text-indigo-900"><i
-                                        class="fa-solid fa-copy text-[9px]"></i></button>
+                            <div>
+                                <h4 class="text-[8px] font-black text-slate-900 leading-none">Lloyds Bank: 0.25% Rate Cut</h4>
+                                <p class="text-[7px] text-slate-500 leading-none mt-1 whitespace-nowrap overflow-hidden text-ellipsis">Applicable to all new business expansion loans...</p>
+                            </div>
+                            <div class="pt-1 border-t border-indigo-100/50 flex justify-end">
+                                <button onclick="openPromoDoc(1)" class="text-[6px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1 transition-colors leading-none"><i class="fa-solid fa-file-contract"></i> View Doc</button>
                             </div>
                         </div>
 
                         <!-- Promotion Item -->
-                        <div
-                            class="p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group">
-                            <div class="flex justify-between items-start mb-1">
-                                <span
-                                    class="bg-emerald-50 text-emerald-600 text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Bonus</span>
-                                <span class="text-[8px] font-bold text-slate-400 uppercase">Exp: 15 May</span>
+                        <div class="p-2 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group flex flex-col gap-1">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-emerald-50 text-emerald-600 text-[5px] font-black px-1.5 py-0.5 rounded uppercase leading-none">Bonus</span>
+                                <span class="text-[6px] font-bold text-slate-400 uppercase leading-none">Exp: 15 May</span>
                             </div>
-                            <h4 class="text-[10px] font-black text-slate-900">Funding Circle: 1% Fee Rebate</h4>
-                            <p class="text-[9px] text-slate-500 leading-tight mt-1">Bonus commission on all asset
-                                finance deals closed this month.</p>
-                            <div class="mt-2 pt-2 border-t border-slate-50 flex justify-between items-center">
-                                <span
-                                    class="text-[8px] font-bold text-slate-400 uppercase tracking-widest italic text-indigo-600">Auto-Applied</span>
-                                <button class="text-slate-300 hover:text-indigo-600"><i
-                                        class="fa-solid fa-arrow-right-long text-[9px]"></i></button>
+                            <div>
+                                <h4 class="text-[8px] font-black text-slate-900 leading-none">Funding Circle: 1% Fee Rebate</h4>
+                                <p class="text-[7px] text-slate-500 leading-none mt-1 whitespace-nowrap overflow-hidden text-ellipsis">Bonus commission on all asset finance deals...</p>
+                            </div>
+                            <div class="pt-1 border-t border-slate-50 flex justify-end">
+                                <button onclick="openPromoDoc(2)" class="text-[6px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1 transition-colors leading-none"><i class="fa-solid fa-file-contract"></i> View Doc</button>
                             </div>
                         </div>
 
                         <!-- Promotion Item -->
-                        <div
-                            class="p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group">
-                            <div class="flex justify-between items-start mb-1">
-                                <span
-                                    class="bg-amber-50 text-amber-600 text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Limited</span>
-                                <span class="text-[8px] font-bold text-slate-400 uppercase">Exp: 22 Apr</span>
+                        <div class="p-2 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group flex flex-col gap-1">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-amber-50 text-amber-600 text-[5px] font-black px-1.5 py-0.5 rounded uppercase leading-none">Limited</span>
+                                <span class="text-[6px] font-bold text-slate-400 uppercase leading-none">Exp: 22 Apr</span>
                             </div>
-                            <h4 class="text-[10px] font-black text-slate-900">Allica: Fast-Track Processing</h4>
-                            <p class="text-[9px] text-slate-500 leading-tight mt-1">Guaranteed 24-hour turnaround on
-                                commercial mortgage apps.</p>
-                            <div class="mt-2 pt-2 border-t border-slate-50 flex justify-between items-center">
-                                <span class="text-[8px] font-bold text-slate-400 uppercase">Standard T&Cs</span>
-                                <button class="text-slate-300 hover:text-indigo-600"><i
-                                        class="fa-solid fa-arrow-right-long text-[9px]"></i></button>
+                            <div>
+                                <h4 class="text-[8px] font-black text-slate-900 leading-none">Allica: Fast-Track Processing</h4>
+                                <p class="text-[7px] text-slate-500 leading-none mt-1 whitespace-nowrap overflow-hidden text-ellipsis">Guaranteed 24-hour turnaround on commercial...</p>
+                            </div>
+                            <div class="pt-1 border-t border-slate-50 flex justify-end">
+                                <button onclick="openPromoDoc(3)" class="text-[6px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1 transition-colors leading-none"><i class="fa-solid fa-file-contract"></i> View Doc</button>
+                            </div>
+                        </div>
+
+                        <!-- Promotion Item 4 -->
+                        <div class="p-2 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group flex flex-col gap-1">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-rose-50 text-rose-600 text-[5px] font-black px-1.5 py-0.5 rounded uppercase leading-none">New</span>
+                                <span class="text-[6px] font-bold text-slate-400 uppercase leading-none">Exp: 01 Jun</span>
+                            </div>
+                            <div>
+                                <h4 class="text-[8px] font-black text-slate-900 leading-none">Shawbrook: EV Finance</h4>
+                                <p class="text-[7px] text-slate-500 leading-none mt-1 whitespace-nowrap overflow-hidden text-ellipsis">Lowered rates for electric fleet vehicle funding...</p>
+                            </div>
+                            <div class="pt-1 border-t border-slate-50 flex justify-end">
+                                <button onclick="openPromoDoc(4)" class="text-[6px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1 transition-colors leading-none"><i class="fa-solid fa-file-contract"></i> View Doc</button>
                             </div>
                         </div>
                     </div>
@@ -2159,21 +2191,21 @@
         function renderTable(filter = 'all') {
             const tbody = document.getElementById('leadPortfolioBody');
             if (!tbody) return;
-            const visible = (filter === 'all' ? window.LEADS : window.LEADS.filter(l => l.status === filter)).slice(0, 5);
+            const visible = (filter === 'all' ? window.LEADS : window.LEADS.filter(l => l.status === filter)).slice(0, 10);
             tbody.innerHTML = visible.map(l => `
-                <tr class="group hover:bg-slate-50/50 transition-all lead-row" data-quality="${l.status}" onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3, '0')}'">
-                    <td class="py-2.5">
-                        <div class="text-[9px] font-black text-slate-900 leading-tight">${l.name}</div>
-                        <div class="text-[7px] font-bold text-slate-400 uppercase tracking-tighter">${l.bizName}</div>
+                <tr class="group hover:bg-slate-50/50 transition-all lead-row cursor-pointer" data-quality="${l.status}" onclick="window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3, '0')}'">
+                    <td class="w-[60%] py-2.5 pr-2">
+                        <div class="text-[9px] font-black text-slate-900 leading-tight truncate">${l.name}</div>
+                        <div class="text-[7px] font-bold text-slate-400 uppercase tracking-tighter truncate">${l.bizName}</div>
                     </td>
-                    <td class="py-2.5">
-                        <span class="mx-auto ${l.status === 'hot' ? 'bg-rose-50 text-rose-600 border-rose-100' : l.status === 'warm' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-blue-50 text-blue-600 border-blue-100'} text-[6px] font-black px-1 py-0.5 rounded border flex items-center gap-0.5 w-fit uppercase">
+                    <td class="w-[20%] py-2.5 text-center">
+                        <span class="mx-auto ${l.status === 'hot' ? 'bg-rose-50 text-rose-600 border-rose-100' : l.status === 'warm' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-blue-50 text-blue-600 border-blue-100'} text-[6px] font-black px-1 py-0.5 rounded border inline-flex items-center gap-0.5 uppercase">
                             <i class="fa-solid ${l.status === 'hot' ? 'fa-fire' : l.status === 'warm' ? 'fa-bolt' : 'fa-snowflake'} text-[6px]"></i> ${l.status}
                         </span>
                     </td>
-                    <td class="py-2.5 text-right">
-                        <div class="text-[8px] font-black text-slate-900">£${(l.loanAmt / 1000).toFixed(0)}k</div>
-                        <div class="text-[6px] font-bold text-slate-400">#AF-${String(l.id).padStart(3, '0')}</div>
+                    <td class="w-[20%] py-2.5 text-right">
+                        <div class="text-[8px] font-black text-slate-900 leading-tight">£${(l.loanAmt / 1000).toFixed(0)}k</div>
+                        <div class="text-[6px] font-bold text-slate-400 leading-none">#AF-${String(l.id).padStart(3, '0')}</div>
                     </td>
                 </tr>`).join('');
         }
@@ -3508,7 +3540,191 @@ document.addEventListener('click', (e) => {
     </div>
 </div>
 
+    <!-- Promo Doc Viewer Modal CSS -->
+    <style>
+        .modal-overlay { position:fixed; inset:0; background:rgba(15,23,42,0.5); backdrop-filter:blur(4px); z-index:2000; display:none; align-items:center; justify-content:center; }
+        .modal-overlay.active { display:flex; }
+    </style>
+
+    <!-- Promo Doc Viewer Modal -->
+    <div id="promoDocModal" class="modal-overlay" style="background:rgba(15,23,42,0.85);z-index:2000;" onclick="if(event.target===this)closePromoDoc();">
+        <div style="background:#fff;width:800px;max-width:95vw;height:90vh;border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.3);position:relative;">
+            <!-- Header -->
+            <div style="padding:14px 24px;background:#fff;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="width:36px;height:36px;border-radius:10px;background:#f5f3ff;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-file-pdf text-indigo-600 text-lg"></i></div>
+                    <div>
+                        <div id="pdm-filename" style="font-size:11px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;">PROMOTION_BRIEF.PDF</div>
+                        <div style="font-size:8px;font-weight:700;color:#94a3b8;text-transform:uppercase;">Lender Reference Document</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <button class="w-8 h-8 rounded-lg hover:bg-slate-50 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-print"></i></button>
+                    <button class="w-8 h-8 rounded-lg hover:bg-slate-50 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-download"></i></button>
+                    <div style="width:1px;height:20px;background:#f1f5f9;margin:0 4px;"></div>
+                    <button onclick="closePromoDoc()" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+            </div>
+            <!-- Doc Body -->
+            <div style="flex:1;overflow-y:auto;background:#f1f5f9;padding:40px 0;display:flex;justify-content:center;">
+                <div style="width:100%;max-width:650px;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,0.05);min-height:900px;padding:60px 50px;display:flex;flex-direction:column;position:relative;">
+                    <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:#6366f1;clip-path:polygon(100% 0, 0 0, 100% 100%);display:flex;align-items:center;justify-content:center;">
+                        <span style="transform:rotate(45deg) translateY(-10px);color:#fff;font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;">OFFICIAL</span>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #6366f1;padding-bottom:12px;margin-bottom:40px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="font-size:18px;font-weight:900;color:#0f172a;letter-spacing:-.5px;">WHITEROCK</span>
+                            <div style="width:1.5px;height:24px;background:#cbd5e1;"></div>
+                            <span style="font-size:16px;font-weight:700;color:#64748b;letter-spacing:.5px;">LENDER PROMO</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;">Issued: 21 APR 2026</div>
+                        </div>
+                    </div>
+
+                    <h1 id="pdm-title" style="font-size:32px;font-weight:900;color:#0f172a;margin-bottom:4px;letter-spacing:-1px;"></h1>
+                    <h2 id="pdm-lender" style="font-size:12px;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:.15em;margin-bottom:32px;"></h2>
+
+                    <div style="background:#f8fafc;border-left:4px solid #6366f1;padding:24px;margin-bottom:32px;">
+                        <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">Promotion Summary</div>
+                        <p id="pdm-summary" style="font-size:14px;font-weight:600;color:#334155;line-height:1.6;font-style:italic;"></p>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:40px;">
+                        <div>
+                            <div style="font-size:10px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;border-bottom:1px solid #f1f5f9;padding-bottom:8px;">Terms & Conditions</div>
+                            <ul id="pdm-terms" style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;"></ul>
+                        </div>
+                        <div>
+                            <div style="font-size:10px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;border-bottom:1px solid #f1f5f9;padding-bottom:8px;">Eligibility</div>
+                            <p id="pdm-eligibility" style="font-size:10px;font-weight:500;color:#64748b;line-height:1.7;margin-bottom:20px;"></p>
+                            <div style="background:#eef2ff;padding:12px 16px;border-radius:12px;">
+                                <div style="font-size:7px;font-weight:900;color:#6366f1;text-transform:uppercase;letter-spacing:.05em;">Valid Until</div>
+                                <div id="pdm-expiry" style="font-size:16px;font-weight:900;color:#0f172a;margin-top:2px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;padding-top:40px;border-top:1px solid #f1f5f9;">
+                        <div style="font-size:7px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Ref: WR-LENDER-PROMO-2026</div>
+                        <div style="text-align:right;">
+                            <div style="font-size:7px;font-weight:900;color:#cbd5e1;text-transform:uppercase;letter-spacing:.02em;">Whiterock CRM Ecosystem</div>
+                            <div style="font-size:7px;font-weight:700;color:#cbd5e1;text-transform:uppercase;">Authorized Electronic Document</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<script>
+    const PROMO_DATA = {
+        1: { title: "0.25% Rate Cut", lender: "Lloyds Bank", summary: '"Applicable to all new business expansion loans over £250k."', expiry: "30 April 2026", filename: "LLOYDS_RATE_CUT.PDF", terms: ["Minimum loan amount £250,000", "Available for commercial business expansion only", "Subject to credit risk approval", "Special rate code must be applied on submission"], eligibility: "This promotion is exclusively available to platinum-tier brokers. Electronic submission via Whiterock CRM is required." },
+        2: { title: "1% Fee Rebate", lender: "Funding Circle", summary: '"Bonus commission on all asset finance deals closed this month."', expiry: "15 May 2026", filename: "FC_FEE_REBATE.PDF", terms: ["Applies to asset finance products only", "Minimum settlement of £50k", "Bonus paid on next commission cycle", "Offer valid for registered active brokers"], eligibility: "Available for all accredited brokers within the Whiterock partner network. Auto-applied on eligible settled deals." },
+        3: { title: "Fast-Track Processing", lender: "Allica Bank", summary: '"Guaranteed 24-hour turnaround on commercial mortgage apps."', expiry: "22 April 2026", filename: "ALLICA_FAST_TRACK.PDF", terms: ["Completed application package required", "Commercial mortgages up to £5M", "Excludes complex multi-layered corporate structures", "Standard lending criteria still applies"], eligibility: "Priority processing available for all 'clean' applications submitted through the Alpha Funding portal." },
+        4: { title: "EV Finance Promo", lender: "Shawbrook Bank", summary: '"Lowered rates for electric fleet vehicle funding."', expiry: "01 June 2026", filename: "SHAWBROOK_EV.PDF", terms: ["Applies exclusively to EVs", "Minimum lease of 24 months", "Special ESG criteria applies"], eligibility: "Available to all agents actively funding green initiatives." }
+    };
+    
+    function openPromoDoc(id) {
+        const data = PROMO_DATA[id];
+        if (!data) return;
+        document.getElementById('pdm-filename').textContent = data.filename;
+        document.getElementById('pdm-title').textContent = data.title;
+        document.getElementById('pdm-lender').textContent = data.lender;
+        document.getElementById('pdm-summary').textContent = data.summary;
+        document.getElementById('pdm-expiry').textContent = data.expiry;
+        document.getElementById('pdm-eligibility').textContent = data.eligibility;
+        document.getElementById('pdm-terms').innerHTML = data.terms.map(t => `<li style="font-size:10px;font-weight:500;color:#64748b;display:flex;gap:8px;"><span style="color:#6366f1;">•</span> ${t}</li>`).join('');
+        document.getElementById('promoDocModal').classList.add('active');
+    }
+    function closePromoDoc() { document.getElementById('promoDocModal').classList.remove('active'); }
+</script>
+
+<!-- Agent Details Drawer -->
+<div class="day-drawer" id="agentDrawer">
+    <div class="day-drawer-backdrop" onclick="closeAgentDrawer()"></div>
+    <div class="day-drawer-panel" style="max-width:400px; padding-bottom:20px;">
+        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+            <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">Agent Profile</h2>
+            <button onclick="closeAgentDrawer()" class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+        <div class="p-6 flex flex-col items-center border-b border-slate-100 bg-slate-50/50">
+            <div id="ad-avatar" class="w-20 h-20 rounded-2xl bg-indigo-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-indigo-200 mb-4">TM</div>
+            <h3 id="ad-name" class="text-lg font-black text-slate-900">Thanushika M.</h3>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Tele Agent</p>
+            <span id="ad-status" class="mt-3 bg-emerald-50 text-emerald-600 text-[9px] font-black px-2.5 py-1 rounded-md uppercase">ACTIVE</span>
+        </div>
+        <div class="p-6 space-y-4 flex-1 overflow-y-auto custom-scrollbar">
+            <div>
+                <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Contact Information</h4>
+                <div class="space-y-2 bg-white border border-slate-100 rounded-xl p-3">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-envelope text-slate-300 w-4"></i><span id="ad-email" class="text-[10px] font-bold text-slate-700">email@example.com</span></div>
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-phone text-slate-300 w-4"></i><span id="ad-phone" class="text-[10px] font-bold text-slate-700">+44 7700 900123</span></div>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Performance Metrics</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <div onclick="window.location.href='../lead_management/lead_management.html'"
+                        class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 flex flex-col items-center cursor-pointer hover:bg-indigo-100 hover:border-indigo-300 transition-all group shadow-sm hover:shadow-md">
+                        <span id="ad-leads" class="text-xl font-black text-indigo-600 group-hover:scale-110 transition-transform">42</span>
+                        <span class="text-[8px] font-bold text-indigo-400 uppercase tracking-widest mt-1 group-hover:text-indigo-600 transition-colors">Total Leads</span>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex flex-col items-center">
+                        <span class="text-xl font-black text-emerald-600">85%</span>
+                        <span class="text-[8px] font-bold text-emerald-400 uppercase tracking-widest mt-1">Conversion</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Recent Activity</h4>
+                <div class="space-y-2 bg-white border border-slate-100 rounded-xl p-3">
+                    <div class="flex justify-between items-center"><span class="text-[9px] font-bold text-slate-600">Converted Lead #AF-026</span><span class="text-[7px] font-bold text-slate-400">2h ago</span></div>
+                    <div class="flex justify-between items-center"><span class="text-[9px] font-bold text-slate-600">Added note to James Smith</span><span class="text-[7px] font-bold text-slate-400">4h ago</span></div>
+                    <div class="flex justify-between items-center"><span class="text-[9px] font-bold text-slate-600">Logged In</span><span class="text-[7px] font-bold text-slate-400">08:00 AM</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 border-t border-slate-100 bg-white grid grid-cols-2 gap-2 shrink-0">
+            <button class="py-2.5 rounded-lg bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase tracking-widest hover:bg-indigo-100 transition-colors">Message</button>
+            <button class="py-2.5 rounded-lg bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest hover:bg-slate-800 transition-colors">Assign Leads</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openAgentDrawer(name, init, color, email, phone, status, leads) {
+        document.getElementById('ad-name').textContent = name;
+        const avatar = document.getElementById('ad-avatar');
+        avatar.className = `w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg mb-4 ${color}`;
+        avatar.textContent = init;
+        
+        document.getElementById('ad-email').textContent = email;
+        document.getElementById('ad-phone').textContent = phone;
+        document.getElementById('ad-leads').textContent = leads;
+        
+        const statusEl = document.getElementById('ad-status');
+        if (status === 'ACTIVE') {
+            statusEl.className = 'mt-3 bg-emerald-50 text-emerald-600 text-[9px] font-black px-2.5 py-1 rounded-md uppercase';
+            statusEl.textContent = 'ACTIVE';
+        } else {
+            statusEl.className = 'mt-3 bg-slate-100 text-slate-500 text-[9px] font-black px-2.5 py-1 rounded-md uppercase';
+            statusEl.textContent = 'OFFLINE';
+        }
+
+        document.getElementById('agentDrawer').classList.add('open');
+    }
+
+    function closeAgentDrawer() {
+        document.getElementById('agentDrawer').classList.remove('open');
+    }
+</script>
+
 <script src="../profile/profile_drawer.js"></script>
 </body>
+
 
 </html>
