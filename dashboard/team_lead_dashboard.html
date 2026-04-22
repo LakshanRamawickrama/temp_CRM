@@ -233,6 +233,7 @@
         .day-evt-task{border-left:3px solid #6366f1;}
         .day-evt-followup{border-left:3px solid #f59e0b;}
         .day-evt-done{opacity:0.48;}
+        .day-evt-overdue{border-left:3px solid #ef4444;}
         .dd-tab-btn{flex:1;padding:9px 6px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:none;border:none;border-bottom:2px solid transparent;color:#94a3b8;cursor:pointer;transition:all .15s;}
         .dd-tab-btn.active{color:#6366f1;border-bottom-color:#6366f1;}
         .cal-day{height:26px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border-radius:7px;position:relative;cursor:pointer;transition:all .15s;color:#1e293b;}
@@ -339,7 +340,7 @@
                     <input id="srch" type="text" placeholder="SearchÃ¢â‚¬Â¦" class="dark-input" style="width:130px;" oninput="renderTable()">
                     <select id="f-stage" class="dark-select" onchange="renderTable()">
                         <option value="">All Stages</option>
-                        <option>Inquiry</option><option>Qualified</option><option>Proposal</option><option>Negotiation</option><option>Closed</option>
+                        <option>Create Lead</option><option>Pending Documents</option><option>Document Verification</option><option>Lender Selection</option><option>Approved</option><option>Reject</option>
                     </select>
                     <select id="f-agent" class="dark-select" onchange="renderTable()">
                         <option value="">All Agents</option>
@@ -348,8 +349,8 @@
                 </div>
                 <div class="flex-1 overflow-y-auto custom-scrollbar" id="tbl-scroll">
                     <table class="data-table">
-                        <colgroup><col style="width:22%;"><col style="width:16%;"><col style="width:13%;"><col style="width:10%;"><col style="width:14%;"><col style="width:11%;"><col style="width:14%;"></colgroup>
-                        <thead><tr><th>Lead Name</th><th>Agent</th><th>Stage</th><th>Status</th><th>Loan Amount</th><th>Date</th><th>Actions</th></tr></thead>
+                        <colgroup><col style="width:20%;"><col style="width:15%;"><col style="width:13%;"><col style="width:9%;"><col style="width:14%;"><col style="width:29%;"></colgroup>
+                        <thead><tr><th>Lead Name</th><th>Agent</th><th>Stage</th><th>Status</th><th>Loan Amount</th><th>Business Name</th></tr></thead>
                         <tbody id="tbody"></tbody>
                     </table>
                 </div>
@@ -367,8 +368,8 @@
                         <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Pipeline Snapshot</h3>
                     </div>
                 </div>
-                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar">
-                    <div class="flex gap-2 mb-4" id="pipe-stages"></div>
+                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar" style="display:flex;flex-direction:column;gap:0;">
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;" id="pipe-stages"></div>
                     <p class="text-[7.5px] font-800 uppercase tracking-widest text-gray-400 mb-3">Agent Performance</p>
                     <div id="agent-bars"></div>
                 </div>
@@ -384,26 +385,107 @@
             </div>
 
             <!-- Upcoming Follow-ups -->
-            <div class="glass-card flex flex-col" style="height:280px;" data-id="followups">
-                <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between">
-                    <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Upcoming Follow-ups</h3>
-                    <span class="text-[8px] font-bold text-indigo-600 uppercase">View All</span>
+            <div class="glass-card flex flex-col overflow-hidden" style="height:280px;" data-id="followups">
+                <!-- Header: List Mode -->
+                <div id="followupHeaderList" class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-100">
+                            <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+                        </div>
+                        <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Upcoming Follow-ups</h3>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleFollowupForm()" class="w-6 h-6 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all">
+                            <i class="fa-solid fa-plus text-[10px]"></i>
+                        </button>
+                        <a href="../task_and_followups/task_management.html" class="text-[8px] font-black text-indigo-600 uppercase hover:underline">View All</a>
+                    </div>
                 </div>
-                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
-                    <div class="p-3 bg-red-50/50 border border-red-100 rounded-xl cursor-pointer hover:bg-red-50 transition-all">
-                        <div class="flex items-center justify-between mb-1"><span class="text-[8px] font-black text-red-600 uppercase">Priority: High</span><span class="text-[8px] font-bold text-slate-400">Today, 14:30</span></div>
+                <!-- Header: Detail Mode -->
+                <div id="followupHeaderDetail" class="hidden px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                    <div class="flex items-center gap-3">
+                        <button onclick="closeFollowupDetail()" class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition-all">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                        </button>
+                        <h3 id="followupDetailTitle" class="text-[11px] font-black uppercase tracking-widest text-slate-900">Follow-up Details</h3>
+                    </div>
+                    <button id="followupEditBtn" onclick="openFollowupEditForm()" class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center hover:bg-black transition-all">
+                        <i class="fa-solid fa-pen text-[10px]"></i>
+                    </button>
+                </div>
+                <!-- Quick Add Form -->
+                <div id="followupForm" class="hidden flex-1 flex flex-col p-3 bg-slate-50/50 overflow-y-auto custom-scrollbar">
+                    <div class="grid grid-cols-2 gap-x-2 gap-y-2 flex-1">
+                        <div class="col-span-2">
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Title / Subject</label>
+                            <input id="fTitle" type="text" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500" placeholder="e.g. Contract Signing">
+                        </div>
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Priority</label>
+                            <select id="fPriority" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                                <option value="Hot">Hot</option>
+                                <option value="Warm">Warm</option>
+                                <option value="Cool">Cool</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Date &amp; Time</label>
+                            <input id="fTime" type="datetime-local" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Linked Lead / ID</label>
+                            <select id="fLead" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500">
+                                <option value="">-- Select Lead --</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-[7px] font-black text-slate-400 uppercase mb-0.5 block">Remarks</label>
+                            <textarea id="fRemarks" rows="2" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-[9px] outline-none focus:border-indigo-500 resize-none" placeholder="Enter follow-up details..."></textarea>
+                        </div>
+                        <div class="col-span-2 flex gap-2 pt-1 mt-auto">
+                            <button onclick="addFollowup()" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all">Save Activity</button>
+                            <button onclick="toggleFollowupForm()" class="px-4 bg-slate-200 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase transition-all">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- List -->
+                <div id="followupList" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
+                    <div class="followup-item p-3 bg-red-50/50 border border-red-100 rounded-xl group hover:bg-red-50 transition-all cursor-pointer"
+                        data-priority="Hot" data-time="Today, 14:30" data-title="Johnathan Doe - Contract Signature"
+                        data-desc="Follow up on the pending expansion loan documentation. Client requires physical copies sent via courier."
+                        data-client="Johnathan Doe" data-id="#AF-045" onclick="openFollowupDetail(this)">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[8px] font-black text-red-600 uppercase">Priority: Hot</span>
+                            <span class="text-[8px] font-bold text-slate-400">Today, 14:30</span>
+                        </div>
                         <h4 class="text-[10px] font-black text-slate-900">Johnathan Doe - Contract Signature</h4>
-                        <p class="text-[8px] text-slate-500 mt-1">Follow up on the pending expansion loan documentation.</p>
+                        <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Follow up on the pending expansion loan documentation.</p>
                     </div>
-                    <div class="p-3 bg-amber-50/50 border border-amber-100 rounded-xl cursor-pointer hover:bg-amber-50 transition-all">
-                        <div class="flex items-center justify-between mb-1"><span class="text-[8px] font-black text-amber-600 uppercase">Priority: Medium</span><span class="text-[8px] font-bold text-slate-400">Tmr, 09:00</span></div>
+                    <div class="followup-item p-3 bg-amber-50/50 border border-amber-100 rounded-xl group hover:bg-amber-50 transition-all cursor-pointer"
+                        data-priority="Warm" data-time="Tmr, 09:00" data-title="ABC Corp - Valuation Review"
+                        data-desc="Discuss the new asset valuation report with the client. Check if they agree with the commercial premises appraisal."
+                        data-client="ABC Corp" data-id="#AF-022" onclick="openFollowupDetail(this)">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[8px] font-black text-amber-600 uppercase">Priority: Warm</span>
+                            <span class="text-[8px] font-bold text-slate-400">Tmr, 09:00</span>
+                        </div>
                         <h4 class="text-[10px] font-black text-slate-900">ABC Corp - Valuation Review</h4>
+                        <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Discuss the new asset valuation report with the client.</p>
                     </div>
-                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 cursor-pointer hover:bg-slate-100 transition-all">
-                        <div class="flex items-center justify-between mb-1"><span class="text-[8px] font-black text-slate-500 uppercase">Priority: Low</span><span class="text-[8px] font-bold text-slate-400">21 Apr, 11:30</span></div>
+                    <div class="followup-item p-3 bg-slate-50 rounded-xl border border-slate-100 group hover:bg-slate-100 transition-all cursor-pointer"
+                        data-priority="Cool" data-time="21 Apr, 11:30" data-title="Sarah Smith - Courtesy Call"
+                        data-desc="Routine check-in call to ensure client is happy with the current application progress."
+                        data-client="Sarah Smith" data-id="#AF-018" onclick="openFollowupDetail(this)">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[8px] font-black text-slate-500 uppercase">Priority: Cool</span>
+                            <span class="text-[8px] font-bold text-slate-400">21 Apr, 11:30</span>
+                        </div>
                         <h4 class="text-[10px] font-black text-slate-900">Sarah Smith - Courtesy Call</h4>
+                        <p class="text-[8px] text-slate-500 mt-1 line-clamp-1">Routine check-in call.</p>
                     </div>
                 </div>
+                <!-- Detail View -->
+                <div id="followupDetail" class="hidden flex-1 flex flex-col"></div>
             </div>
 
             <!-- My Notes -->
@@ -416,6 +498,52 @@
                 <div class="p-3 border-t border-amber-100 flex gap-2 items-center bg-white">
                     <input id="noteInput" type="text" class="flex-1 bg-white border border-amber-100 rounded-lg px-3 py-2 text-[10px] font-medium focus:outline-none focus:border-amber-400 placeholder:text-slate-300" placeholder="Type a note & press Enter..." onkeypress="if(event.key==='Enter')addNote()">
                     <button onclick="addNote()" class="bg-[#fbbf24] hover:bg-[#f59e0b] text-white px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Add</button>
+                </div>
+            </div>
+
+            <!-- Lender Promotions -->
+            <div class="glass-card flex flex-col" style="height:280px;" data-id="promotions">
+                <div class="px-5 py-2.5 border-b border-slate-50 flex items-center justify-between bg-white/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-100"><i class="fa-solid fa-tags text-xs"></i></div>
+                        <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-900">Lender Promotions</h3>
+                    </div>
+                    <a href="..\task_and_followups\task_management.html" class="text-[8px] font-black text-indigo-600 uppercase hover:underline">Manage All</a>
+                </div>
+                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3">
+                    <div class="p-3 bg-indigo-50/30 border border-indigo-100 rounded-xl hover:border-indigo-200 transition-all group">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="bg-indigo-600 text-white text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Exclusive</span>
+                            <span class="text-[8px] font-bold text-slate-400 uppercase">Exp: 30 Apr</span>
+                        </div>
+                        <h4 class="text-[10px] font-black text-slate-900">Lloyds Bank: 0.25% Rate Cut</h4>
+                        <p class="text-[9px] text-slate-500 leading-tight mt-1">Applicable to all new business expansion loans over £250k.</p>
+                        <div class="mt-2 pt-2 border-t border-indigo-100/50 flex justify-end">
+                            <button onclick="openPromoDoc(1)" class="text-[8px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-file-contract"></i> View Doc</button>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="bg-emerald-50 text-emerald-600 text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Bonus</span>
+                            <span class="text-[8px] font-bold text-slate-400 uppercase">Exp: 15 May</span>
+                        </div>
+                        <h4 class="text-[10px] font-black text-slate-900">Funding Circle: 1% Fee Rebate</h4>
+                        <p class="text-[9px] text-slate-500 leading-tight mt-1">Bonus commission on all asset finance deals closed this month.</p>
+                        <div class="mt-2 pt-2 border-t border-slate-50 flex justify-end">
+                            <button onclick="openPromoDoc(2)" class="text-[8px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-file-contract"></i> View Doc</button>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 transition-all group">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="bg-amber-50 text-amber-600 text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Limited</span>
+                            <span class="text-[8px] font-bold text-slate-400 uppercase">Exp: 22 Apr</span>
+                        </div>
+                        <h4 class="text-[10px] font-black text-slate-900">Allica: Fast-Track Processing</h4>
+                        <p class="text-[9px] text-slate-500 leading-tight mt-1">Guaranteed 24-hour turnaround on commercial mortgage apps.</p>
+                        <div class="mt-2 pt-2 border-t border-slate-50 flex justify-end">
+                            <button onclick="openPromoDoc(3)" class="text-[8px] font-black text-indigo-600 uppercase hover:text-indigo-900 flex items-center gap-1.5 transition-colors"><i class="fa-solid fa-file-contract"></i> View Doc</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -448,6 +576,69 @@
         </div>
     </div>
 </main>
+<!-- Promo Doc Viewer Modal -->
+<div id="promoDocModal" class="modal-overlay" style="background:rgba(15,23,42,0.85);z-index:1000;" onclick="if(event.target===this)closePromoDoc();">
+    <div style="background:#fff;width:800px;max-width:95vw;height:90vh;border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.3);position:relative;">
+        <div style="padding:14px 24px;background:#fff;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:36px;height:36px;border-radius:10px;background:#f5f3ff;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-file-pdf text-indigo-600 text-lg"></i></div>
+                <div>
+                    <div id="pdm-filename" style="font-size:11px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;">PROMOTION_BRIEF.PDF</div>
+                    <div style="font-size:8px;font-weight:700;color:#94a3b8;text-transform:uppercase;">Lender Reference Document</div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <button class="w-8 h-8 rounded-lg hover:bg-slate-50 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-print"></i></button>
+                <button class="w-8 h-8 rounded-lg hover:bg-slate-50 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-download"></i></button>
+                <div style="width:1px;height:20px;background:#f1f5f9;margin:0 4px;"></div>
+                <button onclick="closePromoDoc()" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+        </div>
+        <div style="flex:1;overflow-y:auto;background:#f1f5f9;padding:40px 0;display:flex;justify-content:center;">
+            <div style="width:100%;max-width:650px;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,0.05);min-height:900px;padding:60px 50px;display:flex;flex-direction:column;position:relative;">
+                <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:#6366f1;clip-path:polygon(100% 0, 0 0, 100% 100%);display:flex;align-items:center;justify-content:center;">
+                    <span style="transform:rotate(45deg) translateY(-10px);color:#fff;font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;">OFFICIAL</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #6366f1;padding-bottom:12px;margin-bottom:40px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:18px;font-weight:900;color:#0f172a;letter-spacing:-.5px;">WHITEROCK</span>
+                        <div style="width:1.5px;height:24px;background:#cbd5e1;"></div>
+                        <span style="font-size:16px;font-weight:700;color:#64748b;letter-spacing:.5px;">LENDER PROMO</span>
+                    </div>
+                    <div style="text-align:right;"><div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;">Issued: 21 APR 2026</div></div>
+                </div>
+                <h1 id="pdm-title" style="font-size:32px;font-weight:900;color:#0f172a;margin-bottom:4px;letter-spacing:-1px;"></h1>
+                <h2 id="pdm-lender" style="font-size:12px;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:.15em;margin-bottom:32px;"></h2>
+                <div style="background:#f8fafc;border-left:4px solid #6366f1;padding:24px;margin-bottom:32px;">
+                    <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">Promotion Summary</div>
+                    <p id="pdm-summary" style="font-size:14px;font-weight:600;color:#334155;line-height:1.6;font-style:italic;"></p>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:40px;">
+                    <div>
+                        <div style="font-size:10px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;border-bottom:1px solid #f1f5f9;padding-bottom:8px;">Terms &amp; Conditions</div>
+                        <ul id="pdm-terms" style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;"></ul>
+                    </div>
+                    <div>
+                        <div style="font-size:10px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;border-bottom:1px solid #f1f5f9;padding-bottom:8px;">Eligibility</div>
+                        <p id="pdm-eligibility" style="font-size:10px;font-weight:500;color:#64748b;line-height:1.7;margin-bottom:20px;"></p>
+                        <div style="background:#eef2ff;padding:12px 16px;border-radius:12px;">
+                            <div style="font-size:7px;font-weight:900;color:#6366f1;text-transform:uppercase;letter-spacing:.05em;">Valid Until</div>
+                            <div id="pdm-expiry" style="font-size:16px;font-weight:900;color:#0f172a;margin-top:2px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;padding-top:40px;border-top:1px solid #f1f5f9;">
+                    <div style="font-size:7px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Ref: WR-LENDER-PROMO-2026</div>
+                    <div style="text-align:right;">
+                        <div style="font-size:7px;font-weight:900;color:#cbd5e1;text-transform:uppercase;letter-spacing:.02em;">Whiterock CRM Ecosystem</div>
+                        <div style="font-size:7px;font-weight:700;color:#cbd5e1;text-transform:uppercase;">Authorized Electronic Document</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Create Lead Modal -->
 <div class="modal-overlay" id="createLeadModal">
     <div style="background:#fff;border-radius:24px;width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.15);">
@@ -486,7 +677,7 @@ document.getElementById('u-avatar').textContent = SESSION?.avatar||'TL';
 if(SESSION?.avatarBg) document.getElementById('u-avatar').style.background = SESSION.avatarBg;
 
 const AGENTS = ['Thanushika','Ravindu','Priya','Amal','Nirosha','Kasun'];
-const STAGES = ['Inquiry','Qualified','Proposal','Negotiation','Closed'];
+const STAGES = ['Create Lead','Pending Documents','Document Verification','Lender Selection','Approved','Reject'];
 const LENDERS = ['Westpac','ANZ','NAB','CBA','Macquarie'];
 const PALETTE = ['#6366f1','#0891b2','#16a34a','#b45309','#b91c1c','#7c3aed'];
 const AGENT_COLORS = {};
@@ -497,6 +688,7 @@ function rndDate(){ const d=new Date(2026,0,1); d.setDate(d.getDate()+rndInt(0,1
 
 let LEADS = Array.from({length:120},(_,i)=>({
     id:i+1, name:[['James','Oliver','Henry','Liam','Noah','William','Ethan','Lucas'],['Smith','Johnson','Williams','Brown','Jones','Davis','Miller','Wilson']].map(a=>rnd(a)).join(' '),
+    business:rnd(['Alpha Tech Ltd','Bright Build Co','Summit Retail','Nova Finance','Peak Homes','Crest Advisory','Blue Sky Trading','Apex Ventures']),
     agent:rnd(AGENTS), stage:rnd(STAGES), status:rnd(['Hot','Warm','Cool']),
     loanAmt:rndInt(50,800)*1000, lender:rnd(LENDERS), date:rndDate(),
 }));
@@ -506,7 +698,7 @@ document.getElementById('chip-total').innerHTML = LEADS.length + ' <span class="
 AGENTS.forEach(a=>{ const o=document.createElement('option'); o.value=a; o.textContent=a; document.getElementById('f-agent').appendChild(o); });
 
 let page=1; const PAGE=15;
-function stageStyle(s){ const m={Inquiry:'background:#f1f5f9;color:#475569',Qualified:'background:#dbeafe;color:#1d4ed8',Proposal:'background:#fef3c7;color:#b45309',Negotiation:'background:#f5f3ff;color:#7c3aed',Closed:'background:#dcfce7;color:#15803d'}; return m[s]||''; }
+function stageStyle(s){ const m={'Create Lead':'background:#f1f5f9;color:#475569','Pending Documents':'background:#fef3c7;color:#b45309','Document Verification':'background:#dbeafe;color:#1d4ed8','Lender Selection':'background:#f5f3ff;color:#7c3aed','Approved':'background:#dcfce7;color:#15803d','Reject':'background:#fee2e2;color:#b91c1c'}; return m[s]||''; }
 function statusBadge(s){ const m={Hot:'background:#fee2e2;color:#b91c1c',Warm:'background:#fef3c7;color:#b45309',Cool:'background:#dbeafe;color:#1d4ed8'}; return '<span class="badge" style="'+m[s]+'">'+s+'</span>'; }
 function fmtAmt(n){ return '£'+n.toLocaleString(); }
 function fmtDate(d){ return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}); }
@@ -530,11 +722,7 @@ function renderTable(){
             <td><span class="stage-chip" style="${stageStyle(l.stage)}">${l.stage}</span></td>
             <td>${statusBadge(l.status)}</td>
             <td style="font-weight:700;">${fmtAmt(l.loanAmt)}</td>
-            <td style="font-size:9px;color:#94a3b8;">${fmtDate(l.date)}</td>
-            <td><div style="display:flex;gap:4px;">
-                <button onclick="event.stopPropagation();window.location.href='../loan_pipeline/lead_detail.html?id=AF-${String(l.id).padStart(3,'0')}'" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-eye" style="font-size:9px;"></i></button>
-                <button onclick="event.stopPropagation();" style="width:26px;height:26px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-message" style="font-size:9px;"></i></button>
-            </div></td>
+            <td style="font-size:10px;font-weight:600;color:#374151;">${l.business||'—'}</td>
         </tr>`).join('');
     document.getElementById('count-txt').textContent=`Showing ${(page-1)*PAGE+1}Ã¢â‚¬â€œ${Math.min(page*PAGE,total)} of ${total}`;
     let pg=`<div class="pg-btn ${page===1?'opacity-30 pointer-events-none':''}" onclick="goPage(${page-1})"><i class="fa-solid fa-chevron-left" style="font-size:8px;"></i></div>`;
@@ -547,14 +735,176 @@ function renderTable(){
 }
 function goPage(p){ page=p; renderTable(); document.getElementById('tbl-scroll').scrollTop=0; }
 
+/* ── Follow-ups (matches tele agent dashboard) ── */
+let _currentFollowupCard = null;
+
+function formatDateHuman(val) {
+    if (!val) return 'Today, 00:00';
+    const d = new Date(val), now = new Date();
+    const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (d.toDateString() === now.toDateString()) return `Today, ${time}`;
+    const tmr = new Date(now); tmr.setDate(now.getDate() + 1);
+    if (d.toDateString() === tmr.toDateString()) return `Tmr, ${time}`;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + `, ${time}`;
+}
+
+function initFollowupLeads(selectId, selectedId = null) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    select.innerHTML = '<option value="">-- Select Lead --</option>';
+    LEADS.forEach(l => {
+        const opt = document.createElement('option');
+        const leadIdStr = `#AF-${l.id.toString().padStart(3, '0')}`;
+        opt.value = `${l.name}|${leadIdStr}`;
+        opt.textContent = `${l.name} (${leadIdStr})`;
+        if (selectedId && leadIdStr === selectedId) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
+function toggleFollowupForm() {
+    const form = document.getElementById('followupForm');
+    const list = document.getElementById('followupList');
+    const willShow = form.classList.contains('hidden');
+    if (willShow) { closeFollowupDetail(); list.classList.add('hidden'); form.classList.remove('hidden'); initFollowupLeads('fLead'); }
+    else { form.classList.add('hidden'); list.classList.remove('hidden'); }
+}
+
+function addFollowup() {
+    const title = document.getElementById('fTitle').value.trim();
+    const priority = document.getElementById('fPriority').value;
+    const timeRaw = document.getElementById('fTime').value;
+    const leadVal = document.getElementById('fLead').value;
+    const desc = document.getElementById('fRemarks').value.trim();
+    if (!title || !timeRaw || !leadVal) { alert('Please fill in all required fields.'); return; }
+    const time = formatDateHuman(timeRaw);
+    const [client, id] = leadVal.split('|');
+    const prioColor = priority === 'Hot' ? 'text-red-600' : priority === 'Warm' ? 'text-amber-600' : 'text-slate-600';
+    const prioBg = priority === 'Hot' ? 'bg-red-50/50 border-red-100' : priority === 'Warm' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-100';
+    const div = document.createElement('div');
+    div.className = `followup-item p-3 ${prioBg} border rounded-xl group hover:opacity-90 transition-all cursor-pointer`;
+    div.dataset.priority = priority; div.dataset.time = time; div.dataset.rawTime = timeRaw;
+    div.dataset.title = title; div.dataset.desc = desc || 'No additional remarks.'; div.dataset.client = client; div.dataset.id = id;
+    div.onclick = () => openFollowupDetail(div);
+    div.innerHTML = `<div class="flex items-center justify-between mb-1"><span class="text-[8px] font-black ${prioColor} uppercase">Priority: ${priority}</span><span class="text-[8px] font-bold text-slate-400">${time}</span></div><h4 class="text-[10px] font-black text-slate-900">${title}</h4><p class="text-[8px] text-slate-500 mt-1 line-clamp-1">${desc || 'No additional remarks.'}</p>`;
+    document.getElementById('followupList').prepend(div);
+    ['fTitle','fTime','fRemarks'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('fLead').selectedIndex = 0;
+    toggleFollowupForm();
+}
+
+function openFollowupDetail(card) {
+    _currentFollowupCard = card;
+    const { title, priority, time, desc, client, id } = card.dataset;
+    document.getElementById('followupHeaderList').classList.add('hidden');
+    document.getElementById('followupHeaderDetail').classList.remove('hidden');
+    document.getElementById('followupList').classList.add('hidden');
+    document.getElementById('followupForm').classList.add('hidden');
+    document.getElementById('followupEditBtn').classList.remove('hidden');
+    renderFollowupDetailView(title, priority, time, desc, client, id);
+    document.getElementById('followupDetail').classList.remove('hidden');
+}
+
+function closeFollowupDetail() {
+    _currentFollowupCard = null;
+    document.getElementById('followupHeaderDetail').classList.add('hidden');
+    document.getElementById('followupHeaderList').classList.remove('hidden');
+    document.getElementById('followupDetail').classList.add('hidden');
+    if (document.getElementById('followupForm').classList.contains('hidden')) document.getElementById('followupList').classList.remove('hidden');
+}
+
+function renderFollowupDetailView(title, priority, time, desc, client, id) {
+    const prioColor = priority === 'Hot' ? 'text-red-600 bg-red-50' : priority === 'Warm' ? 'text-amber-600 bg-amber-50' : 'text-slate-600 bg-slate-50';
+    document.getElementById('followupDetail').innerHTML = `
+        <div class="p-4 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-[7px] font-black ${prioColor} uppercase tracking-widest px-2 py-0.5 rounded-full">Priority: ${priority}</span>
+                <span class="text-[7px] font-bold text-slate-400 uppercase">${time}</span>
+            </div>
+            <h2 class="text-[11px] font-black text-slate-900 leading-tight mb-3">${title}</h2>
+            <div class="space-y-2 flex-1">
+                <div class="flex items-center gap-3 p-2.5 bg-slate-50/50 border border-slate-100 rounded-xl">
+                    <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm"><i class="fa-solid fa-user text-[10px]"></i></div>
+                    <div>
+                        <p class="text-[6px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Associated Lead</p>
+                        <p class="text-[9px] font-black text-slate-900 leading-none">${client} <span class="text-indigo-600 ml-1">${id}</span></p>
+                    </div>
+                    <button onclick="window.location.href='../loan_pipeline/lead_detail.html?id=${id.replace('#','')}'" class="ml-auto w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-700 transition-all"><i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i></button>
+                </div>
+                <div class="p-3 bg-white border border-slate-100 rounded-xl">
+                    <p class="text-[6px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><i class="fa-solid fa-align-left text-indigo-400"></i> Narrative &amp; Remarks</p>
+                    <p class="text-[9px] font-bold text-slate-600 leading-relaxed">${desc}</p>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-50 flex gap-2">
+                <button onclick="closeFollowupDetail()" class="flex-1 bg-slate-900 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-black transition-all">Complete Task</button>
+                <button class="px-3 bg-slate-100 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase hover:bg-slate-200 transition-all">Reschedule</button>
+            </div>
+        </div>`;
+}
+
+function openFollowupEditForm() {
+    const { title, priority, rawTime, desc, id } = _currentFollowupCard.dataset;
+    document.getElementById('followupDetailTitle').textContent = 'Edit Follow-up';
+    document.getElementById('followupEditBtn').classList.add('hidden');
+    document.getElementById('followupDetail').innerHTML = `
+        <div class="p-4 flex flex-col h-full">
+            <div class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1">
+                <div><label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Activity Title</label><input id="editFTitle" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-[10px] font-bold outline-none focus:border-indigo-500" value="${title}"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Priority</label><select id="editFPriority" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500"><option value="Hot" ${priority==='Hot'?'selected':''}>Hot</option><option value="Warm" ${priority==='Warm'?'selected':''}>Warm</option><option value="Cool" ${priority==='Cool'?'selected':''}>Cool</option></select></div>
+                    <div><label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Date &amp; Time</label><input id="editFTime" type="datetime-local" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500" value="${rawTime||''}"></div>
+                </div>
+                <div><label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Linked Lead</label><select id="editFLead" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-[10px] font-bold outline-none focus:border-indigo-500"></select></div>
+                <div><label class="text-[7px] font-black text-slate-400 uppercase mb-1 block">Narrative / Remarks</label><textarea id="editFDesc" rows="3" class="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-[10px] font-medium outline-none focus:border-indigo-500 resize-none">${desc}</textarea></div>
+            </div>
+            <div class="flex gap-2 mt-4 pt-4 border-t border-slate-50">
+                <button onclick="saveFollowupEdit()" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all">Update Follow-up</button>
+                <button onclick="cancelFollowupEdit()" class="px-4 bg-slate-100 text-slate-600 py-2 rounded-lg text-[8px] font-black uppercase hover:bg-slate-200 transition-all">Cancel</button>
+            </div>
+        </div>`;
+    initFollowupLeads('editFLead', id);
+}
+
+function saveFollowupEdit() {
+    const newTitle = document.getElementById('editFTitle').value.trim();
+    const newPriority = document.getElementById('editFPriority').value;
+    const newTimeRaw = document.getElementById('editFTime').value;
+    const newLeadVal = document.getElementById('editFLead').value;
+    const newDesc = document.getElementById('editFDesc').value.trim();
+    if (!newTitle || !newTimeRaw || !newLeadVal) { alert('All fields are required'); return; }
+    const newTime = formatDateHuman(newTimeRaw);
+    const [newClient, newId] = newLeadVal.split('|');
+    const card = _currentFollowupCard;
+    card.dataset.title = newTitle; card.dataset.priority = newPriority; card.dataset.time = newTime; card.dataset.rawTime = newTimeRaw; card.dataset.desc = newDesc; card.dataset.client = newClient; card.dataset.id = newId;
+    const prioColor = newPriority === 'Hot' ? 'text-red-600' : newPriority === 'Warm' ? 'text-amber-600' : 'text-slate-600';
+    const prioBg = newPriority === 'Hot' ? 'bg-red-50/50 border-red-100' : newPriority === 'Warm' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-100';
+    card.className = `followup-item p-3 ${prioBg} border rounded-xl group hover:opacity-90 transition-all cursor-pointer`;
+    card.querySelector('span[class*="uppercase"]').className = `text-[8px] font-black ${prioColor} uppercase`;
+    card.querySelector('span[class*="uppercase"]').textContent = 'Priority: ' + newPriority;
+    card.querySelector('span[class*="text-slate-400"]').textContent = newTime;
+    card.querySelector('h4').textContent = newTitle;
+    card.querySelector('p').textContent = newDesc || 'No additional remarks.';
+    document.getElementById('followupDetailTitle').textContent = 'Follow-up Details';
+    document.getElementById('followupEditBtn').classList.remove('hidden');
+    renderFollowupDetailView(newTitle, newPriority, newTime, newDesc, newClient, newId);
+}
+
+function cancelFollowupEdit() {
+    const { title, priority, time, desc, client, id } = _currentFollowupCard.dataset;
+    document.getElementById('followupDetailTitle').textContent = 'Follow-up Details';
+    document.getElementById('followupEditBtn').classList.remove('hidden');
+    renderFollowupDetailView(title, priority, time, desc, client, id);
+}
+
 function renderPipeline(){
     const counts={}; STAGES.forEach(s=>{ counts[s]=LEADS.filter(l=>l.stage===s).length; });
-    const styles={Inquiry:{bg:'#f1f5f9',border:'#e2e8f0',cnt:'#475569'},Qualified:{bg:'#dbeafe',border:'#93c5fd',cnt:'#1d4ed8'},Proposal:{bg:'#fef3c7',border:'#fcd34d',cnt:'#b45309'},Negotiation:{bg:'#f5f3ff',border:'#c4b5fd',cnt:'#7c3aed'},Closed:{bg:'#dcfce7',border:'#86efac',cnt:'#15803d'}};
-    document.getElementById('pipe-stages').innerHTML=STAGES.map((s,i)=>`
-        ${i>0?'<div style="color:#cbd5e1;font-size:9px;align-self:center;"><i class="fa-solid fa-chevron-right"></i></div>':''}
-        <div style="flex:1;text-align:center;padding:8px 4px;border-radius:8px;background:${styles[s].bg};border:1px solid ${styles[s].border};cursor:pointer;" onclick="document.getElementById('f-stage').value='${s}';renderTable();">
+    const styles={'Create Lead':{bg:'#f8fafc',border:'#e2e8f0',cnt:'#475569'},'Pending Documents':{bg:'#fffbeb',border:'#fcd34d',cnt:'#b45309'},'Document Verification':{bg:'#eff6ff',border:'#93c5fd',cnt:'#1d4ed8'},'Lender Selection':{bg:'#f5f3ff',border:'#c4b5fd',cnt:'#7c3aed'},'Approved':{bg:'#f0fdf4',border:'#86efac',cnt:'#15803d'},'Reject':{bg:'#fff5f5',border:'#fca5a5',cnt:'#b91c1c'}};
+    const labels={'Create Lead':'Created','Pending Documents':'Pending Docs','Document Verification':'Doc Verify','Lender Selection':'Lender','Approved':'Approved','Reject':'Rejected'};
+    document.getElementById('pipe-stages').innerHTML=STAGES.map(s=>`
+        <div style="text-align:center;padding:8px 4px;border-radius:8px;background:${styles[s].bg};border:1px solid ${styles[s].border};cursor:pointer;" onclick="document.getElementById('f-stage').value='${s}';renderTable();">
             <div style="font-size:18px;font-weight:900;color:${styles[s].cnt};">${counts[s]}</div>
-            <div style="font-size:6.5px;font-weight:700;text-transform:uppercase;color:${styles[s].cnt};margin-top:2px;">${s}</div>
+            <div style="font-size:6.5px;font-weight:700;text-transform:uppercase;color:${styles[s].cnt};margin-top:2px;">${labels[s]}</div>
         </div>`).join('');
     const agCounts={}; AGENTS.forEach(a=>{ agCounts[a]=LEADS.filter(l=>l.agent===a).length; });
     const maxAg=Math.max(...Object.values(agCounts));
@@ -596,6 +946,24 @@ function addNote(){
 }
 function deleteNote(id){ NOTES=NOTES.filter(n=>n.id!==id); localStorage.setItem('tl_notes',JSON.stringify(NOTES)); renderNotes(); }
 function clearNotes(){ NOTES=[]; localStorage.setItem('tl_notes',JSON.stringify(NOTES)); renderNotes(); }
+
+const PROMO_DATA = {
+    1: { title: "0.25% Rate Cut", lender: "Lloyds Bank", summary: '"Applicable to all new business expansion loans over £250k."', expiry: "30 April 2026", filename: "LLOYDS_RATE_CUT.PDF", terms: ["Minimum loan amount £250,000", "Available for commercial business expansion only", "Subject to credit risk approval", "Special rate code must be applied on submission"], eligibility: "This promotion is exclusively available to platinum-tier brokers. Electronic submission via Whiterock CRM is required." },
+    2: { title: "1% Fee Rebate", lender: "Funding Circle", summary: '"Bonus commission on all asset finance deals closed this month."', expiry: "15 May 2026", filename: "FC_FEE_REBATE.PDF", terms: ["Applies to asset finance products only", "Minimum settlement of £50k", "Bonus paid on next commission cycle", "Offer valid for registered active brokers"], eligibility: "Available for all accredited brokers within the Whiterock partner network. Auto-applied on eligible settled deals." },
+    3: { title: "Fast-Track Processing", lender: "Allica Bank", summary: '"Guaranteed 24-hour turnaround on commercial mortgage apps."', expiry: "22 April 2026", filename: "ALLICA_FAST_TRACK.PDF", terms: ["Completed application package required", "Commercial mortgages up to £5M", "Excludes complex multi-layered corporate structures", "Standard lending criteria still applies"], eligibility: "Priority processing available for all 'clean' applications submitted through the Alpha Funding portal." }
+};
+function openPromoDoc(id) {
+    const data = PROMO_DATA[id]; if (!data) return;
+    document.getElementById('pdm-filename').textContent = data.filename;
+    document.getElementById('pdm-title').textContent = data.title;
+    document.getElementById('pdm-lender').textContent = data.lender;
+    document.getElementById('pdm-summary').textContent = data.summary;
+    document.getElementById('pdm-expiry').textContent = data.expiry;
+    document.getElementById('pdm-eligibility').textContent = data.eligibility;
+    document.getElementById('pdm-terms').innerHTML = data.terms.map(t => `<li style="font-size:10px;font-weight:500;color:#64748b;display:flex;gap:8px;"><span style="color:#6366f1;">•</span> ${t}</li>`).join('');
+    document.getElementById('promoDocModal').classList.add('active');
+}
+function closePromoDoc() { document.getElementById('promoDocModal').classList.remove('active'); }
 
 // Create Lead Modal
 function openCreateLead(){ document.getElementById('createLeadModal').classList.add('active'); }
@@ -732,8 +1100,8 @@ document.addEventListener('click', (e) => {
                     <button onclick="closeDocsDrawer()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
-            <!-- Search + Filter -->
-            <div style="padding:10px 16px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;align-items:center;flex-shrink:0;background:#f8fafc;">
+            <!-- Search + Filter (list view only) -->
+            <div id="drawer-search-bar" style="padding:10px 16px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;align-items:center;flex-shrink:0;background:#f8fafc;">
                 <div style="position:relative;flex:1;">
                     <input type="text" id="drawer-search" placeholder="Search documents..." oninput="renderDrawerDocs()" style="width:100%;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px 6px 28px;font-size:9px;font-weight:600;color:#1e293b;outline:none;">
                     <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:8px;color:#94a3b8;"></i>
@@ -745,6 +1113,61 @@ document.addEventListener('click', (e) => {
             </div>
             <!-- Document List -->
             <div style="flex:1;overflow-y:auto;" id="drawer-doc-list"></div>
+
+            <!-- Document Detail View (hidden, shown on doc click) -->
+            <div id="drawer-doc-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+                <!-- Detail sub-header -->
+                <div id="ddm-header" style="padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+                    <button onclick="closeDocDetail()" style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fa-solid fa-arrow-left" style="font-size:11px;"></i>
+                    </button>
+                    <div id="ddm-icon" style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"></div>
+                    <div style="flex:1;min-width:0;">
+                        <div id="ddm-title" style="font-size:10px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+                        <div id="ddm-cat" style="font-size:7px;font-weight:700;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.06em;margin-top:1px;"></div>
+                    </div>
+                    <button title="Download" style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.12);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fa-solid fa-download" style="font-size:10px;"></i>
+                    </button>
+                </div>
+                <!-- Detail body: scrollable -->
+                <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0;">
+                    <!-- Metadata strip -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
+                        <div style="padding:8px 12px;border-right:1px solid #f1f5f9;">
+                            <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Type</div>
+                            <div id="ddm-type" style="font-size:9px;font-weight:800;color:#0f172a;text-transform:uppercase;"></div>
+                        </div>
+                        <div style="padding:8px 12px;border-right:1px solid #f1f5f9;">
+                            <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Size</div>
+                            <div id="ddm-size" style="font-size:9px;font-weight:800;color:#0f172a;"></div>
+                        </div>
+                        <div style="padding:8px 12px;border-right:1px solid #f1f5f9;">
+                            <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Version</div>
+                            <div id="ddm-version" style="font-size:9px;font-weight:800;color:#0f172a;"></div>
+                        </div>
+                        <div style="padding:8px 12px;">
+                            <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Uploaded</div>
+                            <div id="ddm-date" style="font-size:9px;font-weight:800;color:#0f172a;"></div>
+                        </div>
+                    </div>
+                    <!-- Description -->
+                    <div style="padding:12px 16px;border-bottom:1px solid #f1f5f9;flex-shrink:0;">
+                        <div style="font-size:7px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Description</div>
+                        <div id="ddm-desc" style="font-size:10px;font-weight:500;color:#334155;line-height:1.65;"></div>
+                    </div>
+                    <!-- Document preview page -->
+                    <div style="background:#e8ecf0;padding:20px 16px;flex:1;">
+                        <div id="ddm-preview-page" style="background:#fff;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:32px 28px;font-family:'Inter',system-ui,sans-serif;min-height:500px;display:flex;flex-direction:column;position:relative;"></div>
+                    </div>
+                    <!-- Actions -->
+                    <div style="padding:12px 16px;border-top:1px solid #f1f5f9;display:flex;gap:6px;flex-shrink:0;background:#fafbfc;">
+                        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:8px;background:#f1f5f9;border:1px solid #e2e8f0;cursor:pointer;font-size:8px;font-weight:800;color:#475569;text-transform:uppercase;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'"><i class="fa-solid fa-share-nodes" style="color:#6366f1;"></i> Share</button>
+                        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:8px;background:#f1f5f9;border:1px solid #e2e8f0;cursor:pointer;font-size:8px;font-weight:800;color:#475569;text-transform:uppercase;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'"><i class="fa-solid fa-print" style="color:#0ea5e9;"></i> Print</button>
+                        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:8px;background:#0f172a;border:none;cursor:pointer;font-size:8px;font-weight:800;color:#fff;text-transform:uppercase;"><i class="fa-solid fa-download"></i> Download</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 <script>
@@ -800,7 +1223,7 @@ function renderDrawerDocs(){
         const fi=FILE_ICONS_D[d.fileType]||{icon:'fa-solid fa-file',bg:'#f1f5f9',color:'#475569'};
         const cc=CAT_COLORS[d.category]||'#475569';
         const date=new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
-        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid #f8fafc;transition:background .1s;cursor:default;" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'#fff\'">'
+        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid #f8fafc;transition:background .1s;cursor:pointer;" onclick="openDocDetail('+d.id+')" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'#fff\'">'
             +'<div style="width:36px;height:36px;border-radius:10px;background:'+fi.bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="'+fi.icon+'" style="color:'+fi.color+';font-size:14px;"></i></div>'
             +'<div style="flex:1;min-width:0;">'
             +'<div style="font-size:10px;font-weight:800;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+d.title+'</div>'
@@ -821,6 +1244,139 @@ function renderDrawerDocs(){
 
 
 
+
+const DOC_PREVIEW_CONTENT = {
+    "Products": (d) => `
+        <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#6366f1;clip-path:polygon(100% 0,0 0,100% 100%);"></div>
+        <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;">Alpha Funding CRM</div>
+        <div style="font-size:22px;font-weight:900;color:#0f172a;letter-spacing:-.5px;border-bottom:3px solid #6366f1;padding-bottom:10px;margin-bottom:18px;">${d.title}</div>
+        <div style="font-size:9px;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;">${d.category} · ${d.version}</div>
+        <div style="background:#f8fafc;border-left:4px solid #6366f1;padding:14px 16px;margin-bottom:20px;border-radius:0 8px 8px 0;">
+            <div style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;margin-bottom:6px;">Overview</div>
+            <p style="font-size:10px;color:#334155;line-height:1.7;font-style:italic;">${d.desc}</p>
+        </div>
+        ${['Key Rates & Features','Eligibility Criteria','Application Process','Commission Structure'].map(s=>`
+        <div style="margin-bottom:14px;">
+            <div style="font-size:9px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;border-bottom:1px solid #f1f5f9;padding-bottom:4px;">${s}</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+                ${['Competitive variable rate from 5.99% p.a.','Maximum LVR 90% with LMI','Minimum loan amount £50,000','Fast-track approval available'].map(b=>`<div style="display:flex;align-items:center;gap:8px;font-size:9px;color:#64748b;"><span style="width:5px;height:5px;border-radius:50%;background:#6366f1;flex-shrink:0;"></span>${b}</div>`).join('')}
+            </div>
+        </div>`).join('')}
+        <div style="margin-top:auto;padding-top:20px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:7px;font-weight:700;color:#cbd5e1;text-transform:uppercase;">Ref: AF-${d.id.toString().padStart(4,'0')}-${d.version.replace('.','')}</div>
+            <div style="font-size:7px;font-weight:700;color:#cbd5e1;text-transform:uppercase;">Issued: ${new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}</div>
+        </div>`,
+    "Policies": (d) => `
+        <div style="text-align:center;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #0f172a;">
+            <div style="font-size:10px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Official Policy Document</div>
+            <div style="font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-.3px;margin-bottom:4px;">${d.title}</div>
+            <div style="font-size:9px;font-weight:700;color:#64748b;">${d.version} &nbsp;·&nbsp; ${new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})}</div>
+        </div>
+        <div style="font-size:9px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">1. Purpose</div>
+        <p style="font-size:10px;color:#334155;line-height:1.8;margin-bottom:16px;">${d.desc} This document establishes the mandatory procedures all staff and brokers must follow when processing applications under this policy framework.</p>
+        <div style="font-size:9px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">2. Scope</div>
+        <p style="font-size:10px;color:#334155;line-height:1.8;margin-bottom:16px;">Applicable to all Alpha Funding personnel, contracted brokers, and third-party introducers operating within the Australian jurisdiction or handling Australian resident clients.</p>
+        <div style="font-size:9px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">3. Key Requirements</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+            ${['Mandatory identity verification for all applicants','Record retention minimum 7 years','Suspicious transaction reporting within 24 hours','Annual compliance training required for all staff'].map((r,i)=>`<div style="display:flex;align-items:flex-start;gap:8px;font-size:9px;color:#475569;"><span style="font-weight:800;color:#0f172a;min-width:16px;">${i+1}.</span>${r}</div>`).join('')}
+        </div>
+        <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:auto;">
+            <div style="font-size:8px;font-weight:900;color:#b45309;text-transform:uppercase;margin-bottom:3px;">⚠ Compliance Notice</div>
+            <p style="font-size:9px;color:#92400e;line-height:1.6;">Non-compliance may result in immediate suspension of broker accreditation and referral to the relevant regulatory authority.</p>
+        </div>`,
+    "Guides": (d) => `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #f1f5f9;">
+            <div style="width:40px;height:40px;border-radius:10px;background:#7e22ce;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="fa-solid fa-book-open" style="color:#fff;font-size:14px;"></i></div>
+            <div>
+                <div style="font-size:8px;font-weight:900;color:#7e22ce;text-transform:uppercase;letter-spacing:.08em;">Step-by-Step Guide</div>
+                <div style="font-size:14px;font-weight:900;color:#0f172a;">${d.title}</div>
+            </div>
+        </div>
+        <p style="font-size:10px;color:#64748b;line-height:1.7;margin-bottom:20px;">${d.desc}</p>
+        ${['Getting Started','Step-by-Step Process','Important Checkpoints','Final Review'].map((step,i)=>`
+        <div style="display:flex;gap:12px;margin-bottom:16px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:#7e22ce;color:#fff;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">${i+1}</div>
+            <div>
+                <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:4px;">${step}</div>
+                <p style="font-size:9px;color:#64748b;line-height:1.6;">Ensure all mandatory fields are completed and supporting documentation is attached before proceeding to the next stage of the process.</p>
+            </div>
+        </div>`).join('')}`,
+    "FAQs": (d) => `
+        <div style="font-size:20px;font-weight:900;color:#0f172a;margin-bottom:4px;">${d.title}</div>
+        <div style="font-size:9px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.08em;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #f1f5f9;">${d.category} · ${d.version}</div>
+        ${['What documents are required?','How long does the process take?','Who is eligible to apply?','What are the fees involved?','Can I track the application status?','Who do I contact for escalations?'].map((q,i)=>`
+        <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f8fafc;">
+            <div style="font-size:10px;font-weight:800;color:#0f172a;margin-bottom:5px;">Q${i+1}. ${q}</div>
+            <p style="font-size:9px;color:#64748b;line-height:1.7;">Please refer to the relevant section of the portal or contact your account manager for detailed guidance on this topic. Additional resources are available in the Knowledge Base.</p>
+        </div>`).join('')}`,
+    "Scripts": (d) => `
+        <div style="background:#0f172a;border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+            <i class="fa-solid fa-headset" style="color:#6366f1;font-size:16px;"></i>
+            <div>
+                <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;">Call Script</div>
+                <div style="font-size:12px;font-weight:800;color:#fff;">${d.title}</div>
+            </div>
+        </div>
+        <div style="margin-bottom:16px;">
+            <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Opening</div>
+            <div style="background:#f8fafc;border-radius:8px;padding:12px 14px;border-left:3px solid #6366f1;font-size:10px;color:#334155;line-height:1.7;font-style:italic;">"Good [morning/afternoon], may I speak with [Client Name]? This is [Your Name] calling from Alpha Funding regarding your recent enquiry about [Product]. Is now a good time to talk?"</div>
+        </div>
+        <div style="margin-bottom:16px;">
+            <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Qualification Questions</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                ${['What is your current financial situation?','Have you explored other lenders?','What is your desired loan amount and term?','Do you have any outstanding debts?'].map((q,i)=>`<div style="font-size:9px;color:#475569;padding:6px 10px;background:#f8fafc;border-radius:6px;"><span style="font-weight:800;color:#6366f1;margin-right:6px;">${i+1}.</span>${q}</div>`).join('')}
+            </div>
+        </div>
+        <div>
+            <div style="font-size:8px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Closing</div>
+            <div style="background:#f8fafc;border-radius:8px;padding:12px 14px;border-left:3px solid #16a34a;font-size:10px;color:#334155;line-height:1.7;font-style:italic;">"Based on what you've shared, I believe we can find a great solution for you. I'd like to schedule a formal consultation — are you available [Day] at [Time]?"</div>
+        </div>`,
+    "Knowledge Base": (d) => `
+        <div style="font-size:20px;font-weight:900;color:#0f172a;margin-bottom:4px;">${d.title}</div>
+        <div style="font-size:9px;color:#1d4ed8;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #dbeafe;">${d.category} · ${d.version}</div>
+        <p style="font-size:10px;color:#64748b;line-height:1.7;margin-bottom:18px;">${d.desc}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+            ${['Getting Started','Lead Management','Pipeline Stages','Document Upload','Reporting & Exports','User Settings'].map(t=>`<div style="background:#eff6ff;border-radius:8px;padding:10px 12px;cursor:pointer;"><div style="font-size:9px;font-weight:800;color:#1d4ed8;margin-bottom:2px;">${t}</div><div style="font-size:8px;color:#64748b;">Click to expand</div></div>`).join('')}
+        </div>
+        <div style="background:#f1f5f9;border-radius:8px;padding:12px 14px;">
+            <div style="font-size:8px;font-weight:900;color:#475569;text-transform:uppercase;margin-bottom:6px;">Recent Updates · ${d.version}</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+                ${['New pipeline stage filters added','Document vault redesign','AI Summary feature launched','Improved notification system'].map(u=>`<div style="font-size:9px;color:#64748b;display:flex;gap:6px;"><span style="color:#16a34a;font-weight:800;">✓</span>${u}</div>`).join('')}
+            </div>
+        </div>`
+};
+
+function openDocDetail(id){
+    const d = DRAWER_DOCS.find(x => x.id === id);
+    if (!d) return;
+    const fi = FILE_ICONS_D[d.fileType] || {icon:'fa-solid fa-file', bg:'#f1f5f9', color:'#475569'};
+    const cc = CAT_COLORS[d.category] || '#475569';
+    const date = new Date(d.uploaded+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+    document.getElementById('ddm-header').style.background = cc;
+    document.getElementById('ddm-icon').style.background = 'rgba(255,255,255,.18)';
+    document.getElementById('ddm-icon').innerHTML = `<i class="${fi.icon}" style="color:#fff;font-size:13px;"></i>`;
+    document.getElementById('ddm-title').textContent = d.title;
+    document.getElementById('ddm-cat').textContent = d.category + ' · ' + d.fileType.toUpperCase();
+    document.getElementById('ddm-type').textContent = d.fileType.toUpperCase();
+    document.getElementById('ddm-size').textContent = d.fileSize;
+    document.getElementById('ddm-version').textContent = d.version;
+    document.getElementById('ddm-date').textContent = date;
+    document.getElementById('ddm-desc').textContent = d.desc;
+    const previewFn = DOC_PREVIEW_CONTENT[d.category] || DOC_PREVIEW_CONTENT['Knowledge Base'];
+    document.getElementById('ddm-preview-page').innerHTML = previewFn(d);
+    document.getElementById('drawer-search-bar').style.display = 'none';
+    document.getElementById('drawer-doc-list').style.display = 'none';
+    const detail = document.getElementById('drawer-doc-detail');
+    detail.style.display = 'flex';
+    document.getElementById('drawer-doc-count').textContent = '← Back to vault';
+}
+
+function closeDocDetail(){
+    document.getElementById('drawer-search-bar').style.display = 'flex';
+    document.getElementById('drawer-doc-list').style.display = 'block';
+    document.getElementById('drawer-doc-detail').style.display = 'none';
+    renderDrawerDocs();
+}
 
 // Calculator Logic
 function openCalculator() {
@@ -1148,7 +1704,7 @@ function tlRenderCalendar(){
         d.textContent=i;
         const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(i).padStart(2,'0');
         if(CAL_EVENTS[key]&&CAL_EVENTS[key].length){const dot=document.createElement('div');dot.className='evt-dot';d.appendChild(dot);}
-        d.onclick=()=>{_tlSelDate=new Date(y,m,i);tlRenderCalendar();openDayDrawer(y,m,i);};
+        d.onclick=(ev)=>{ev.stopPropagation();_tlSelDate=new Date(y,m,i);tlRenderCalendar();openDayDrawer(y,m,i);};
         grid.appendChild(d);
     }
 }
